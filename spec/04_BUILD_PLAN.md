@@ -16,7 +16,7 @@ Work up to 10 h on a stretch day, but don't stack 10-hour days. If a day's exit 
 | **Wed 4** | Hotfix only. Finals kit (90 s and 3 min versions, second device, hotspot). | Live link checked. |
 
 ## Cut order (take the next one when a day slips)
-1. Optional extras (Monte Carlo cross-check, software pack).
+1. Optional extras (model panel, effort comparison, Monte Carlo cross-check, software pack).
 2. Spot the bluff (the landing replay stays).
 3. Third template (ship T1 + T2).
 4. Mid-sentence interruption → after-turn challenge.

@@ -10,7 +10,7 @@ Vision (pitch and roadmap only): one interview engine for every high-stakes inte
 ## What is built (committed)
 **Quant pack:** probability interview puzzles (conditional probability / Bayes), three templates with fresh numbers, a "same puzzle, new numbers" twin, exact checks, voice and text.
 
-Optional only if ahead by Friday: Monte Carlo cross-check; software-engineering pack. Pack builder: roadmap slide only.
+Optional only if ahead by Friday, in this order: (1) a small "which model did what" panel on each turn (model, latency, cost); (2) a low/medium/high reasoning-effort comparison in the results; (3) Monte Carlo cross-check; (4) software-engineering pack. Pack builder: roadmap slide only.
 
 ## Screens and flows
 

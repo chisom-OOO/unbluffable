@@ -22,6 +22,9 @@ State each arm's tools explicitly.
 - One-sided 95% upper bounds for zero-event results: 0/20 → ≤ 13.9%; 0/40 → ≤ 7.2%; 0/60 → ≤ 4.9%; 1/40 → ≤ 11.3%.
 - Latency: median and maximum with counts (p95 from small samples is unstable).
 
+## Optional: reasoning-effort comparison
+Run the frozen hard set through Muse Spark at reasoning_effort low, medium and high. Report accuracy, median latency and cost per answer for each. Only if ahead by Friday.
+
 ## Human attackers
 Invite people from quant and CS student communities (Thursday). Collect attempts with consent; store raw; rescore with the frozen prompt; "fooled" = credited "Evidence supports understanding" without valid reasoning, hand-labelled (state who labelled). Report "fooled by k of N". If fewer than 15 people take part, lead with the AI red team tally instead.
 
