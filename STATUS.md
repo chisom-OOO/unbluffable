@@ -2,7 +2,7 @@
 
 Living checklist. Update it at the end of every day. Any new chat or agent should read this first, then `spec/00_START_HERE.md`.
 
-**Last updated:** Mon 26 Oct, 12:15 UK (pre-kickoff)
+**Last updated:** Mon 26 Oct, 12:20 UK (pre-kickoff)
 **Phase:** setup; spec frozen (v12); no code yet
 **Next decision points:** Mon realtime gate (`spec/03`); Wed careful-chatbot check (`spec/05`)
 
@@ -15,11 +15,11 @@ Living checklist. Update it at the end of every day. Any new chat or agent shoul
 ## Before kickoff (16:00 UK)
 - [x] `git pull` in the local repo
 - [x] dev.meta.ai account; claim the $150 credits via the organiser's form (deadline Wed 4 Nov, 9 PM ET); add a card on Billing; set the $150 spend notification
-- [ ] Join the Discord; post a teammate request (front end, video; accepted participants only)
+- [ ] Join the Discord (announcements, office hours, workshops). Building solo, no teammate
 - [x] Install Python 3.12, ffmpeg, Docker Desktop; check `claude` and `codex` start
 - [x] Muse Code installed and logged in (Contributor mode for coding only)
 - [ ] API key saved to `.env` in the repo folder (`Set-Content -Path .env -Value "MODEL_API_KEY=..."`)
-- [x] Render account (signed in with GitHub); no service yet, first deploy Tue. Switch to an always-on paid instance for judging (4–9 Nov)
+- [x] Render account (signed in with GitHub); no service yet. First deploy Tue as a **Web Service**; plan persistence for tester data (see `spec/03`, Ops). Switch to an always-on paid instance for judging (4–9 Nov)
 - [ ] Mic and headphones tested
 - [ ] Two-sentence firsthand story written
 - [ ] Gate-clip script written (10 wrong posteriors; 10 restated givens, hypotheticals and self-corrections; 10 correct answers)

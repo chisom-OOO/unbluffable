@@ -64,3 +64,4 @@ Fail any criterion, or not passed by **13:00 UK Tuesday** → after-turn challen
 - Record/replay every live call during development; replay mode labelled with run ID and date.
 - Logs: no raw answers or keys in routine logs. Consent text before testers submit audio.
 - Tag the build at submission; hotfix only during judging.
+- **Render persistence:** deploy as a Web Service. Its filesystem is wiped on every redeploy unless a persistent disk is attached (paid instances only). Before testers use the live link (Thu), either attach a disk to the always-on instance, or write attempts to durable storage (e.g. a managed database) and export them daily into `eval/raw/` locally. Never lose tester attempts to a redeploy.

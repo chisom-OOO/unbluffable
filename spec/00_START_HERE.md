@@ -37,7 +37,7 @@ This folder is the **authoritative specification** for the Unbluffable entry to 
 ## Kickoff checklist (Mon 26 Oct, before 17:00)
 - [ ] Read and save the Official Rules: eligibility (UK student), pre-existing work (disclose this plan pack if required), AI-assistance disclosure, video length, IP/usage rights, team changes, portal time zone.
 - [ ] Credits: Meta Model API credits; partner credits (Baseten, Modal, Fireworks) if offered. Join the Discord.
-- [ ] Post a teammate request (front end, video, recruiting testers) — only already-accepted participants can join.
+- [x] Building solo (decided 26 Oct).
 - [ ] Re-check Meta docs: quickstart, models, structured output, speech-to-text, pricing (facts in `03` were verified 25 Oct).
 - [ ] Accounts ready: GitHub repo (empty), hosting with WebSocket support (Render or Fly).
 - [ ] Headphones + mic tested (prevents the interviewer's voice feeding back into the mic).
