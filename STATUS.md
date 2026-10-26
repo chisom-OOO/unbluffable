@@ -1,6 +1,6 @@
 # Status
 
-Living checklist. Update it at the end of every day. Any new chat or agent should read this first, then `spec/00_START_HERE.md`.
+Living checklist. Update it at the end of every day. Any new chat or agent should read `ADVISOR_BRIEFING.md` and this file first, then `spec/00_START_HERE.md`.
 
 **Last updated:** Mon 26 Oct, 17:20 UK (kickoff done)
 **Phase:** kickoff done; building starts now
