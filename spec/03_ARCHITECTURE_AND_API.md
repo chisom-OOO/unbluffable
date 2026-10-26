@@ -44,7 +44,7 @@ Code (not the model) locates every quote in the transcript, normalises numbers, 
 ## Voice path
 - **Realtime (if the gate passes):** browser mic → app WebSocket → server relay → Meta realtime (key added server-side) → partials back to the browser. Mute the mic stream while the browser's built-in voice speaks a challenge (Meta has no text-to-speech; disclose the browser voice). Headphones recommended.
 - **File fallback (always available):** browser records (webm/opus) → server converts with ffmpeg to 16 kHz mono WAV → `POST /v1/asr/transcribe` → editable transcript → user confirms → scored.
-- **Number normalisation:** at least: "two over thirteen", "two thirteenths", "fifteen point four percent", "about fifteen percent", "nought point one five", "0.15", "15%". Use `keywords` for terms like "sensitivity", "prevalence", "false positive".
+- **Number normalisation:** at least: "two over thirteen", "two thirteenths", "fifteen point four percent", "about fifteen percent", "nought point one five", "0.15", "15%". Use `keywords` for terms like "fraud", "flagged", "false alarm", "base rate", "defective", "biased coin".
 
 ## Open-weights backend (committed light; targets the $10K "Best Build on Meta Open Weights" bonus)
 - A config switch `LLM_BACKEND=meta_api|open_weights` runs the same extraction on Muse Glimmer or Muse Spark Open served by a partner (Baseten, Fireworks or Modal; OpenAI-compatible endpoint). Same schema; if the host lacks strict JSON schema support, use JSON mode + local validation + one repair.
