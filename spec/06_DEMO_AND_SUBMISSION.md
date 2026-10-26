@@ -1,14 +1,18 @@
 # 06 — Demo, submission and finals
 
-## 2:00 video (every number from a saved run)
-| Time | Show | Says |
-| --- | --- | --- |
-| 0:00–0:08 | You | [FIRSTHAND STORY, one sentence]. "Sounding right isn't the same as being right." |
-| 0:08–1:05 | A live quant interview on your voice: the wrong posterior is challenged (mid-sentence if the gate passed), the follow-up, then the same puzzle with new numbers | "It checks the maths, not the confidence." |
-| 1:05–1:20 | The evidence line | "Caught k/N; a careful chatbot caught j/N; fooled by k of N people." |
-| 1:20–1:35 | A second puzzle by voice (or the software pack if built) | "Same engine, different checker." |
-| 1:35–1:45 | Roadmap slide: software, cloud, medicine, Oxbridge; verified professionals | "Any high-stakes interview, once an expert checks the questions." |
-| 1:45–2:00 | Meta stack (Spark, Voice Transcribe, Wonder) and the link | Name and tagline |
+## Judging facts (kickoff, 26 Oct)
+Rubric (stage 2 and finals, 0–10 per criterion): **Impact 30%** (real-world potential, who benefits, fit with the problem statement) · **Use of Meta AI tooling 25%** (creative use beyond a basic integration) · **Technical depth 20%** · **Demo 25%** (a working demo that holds up, and a video worth watching). Stage 1 is pass/fail on theme fit and use of Meta AI products. In the finals (top 5 per track, 9 Nov, 12:00 PM ET = 17:00 UK) judges watch the **3-minute video** live and rank. The video is scored at every stage.
+
+## 3:00 video (primary; every number from a saved run)
+| Time | Show | Says | Rubric |
+| --- | --- | --- | --- |
+| 0:00–0:15 | You | [FIRSTHAND STORY]. "Sounding right isn't the same as being right." Who it's for: anyone facing a high-stakes interview without a coach to push back on their reasoning. | Impact |
+| 0:15–1:20 | A live spoken interview on your voice: the interviewer asks aloud, you commit a wrong answer, it challenges you (mid-sentence if the gate passed), the follow-up, then the same puzzle with new numbers | "It checks the maths, not the confidence." | Demo |
+| 1:20–1:45 | Spot the bluff: two confident answers, same right number; new numbers expose the reciter; a plain chatbot's verdict alongside | "A chatbot grades the sound. This grades the reasoning." | Demo, Impact |
+| 1:45–2:15 | How Meta's models do the work: Voice Transcribe live partials + claim-stability rules; Muse Spark extraction with quotes constrained to the candidate's own words; Muse Wonder as the red-team bluffer; the same interview running on open weights (Glimmer / Spark Open via a partner) | One line per model; show the model panel | Meta tooling |
+| 2:15–2:40 | Evidence line, with counts and bounds; tester quote | "Caught k/N; a careful chatbot caught j/N; false challenges k/N; fooled by k of N people." | Technical depth |
+| 2:40–3:00 | Vision: one engine for every high-stakes interview (software, medicine, PhD, Oxbridge), questions from verified professionals; link | Name and tagline | Impact |
+
 Record against warmed endpoints; trim waits with a visible "trimmed" tag; keep one unedited take as backup; label any replay footage.
 
 ## Gallery card
@@ -20,7 +24,7 @@ Cover frame: the challenge moment (transcript with the wrong posterior highlight
 > **Measured:** caught [k/N] bluffs vs [j/N] for a carefully prompted chatbot (paired, McNemar); [k/N] false challenges on [N] tricky non-errors; fooled by [k] of [N] people; median challenge latency [x] s.
 > **Meta models:** Muse Spark 1.3 (reasoning extraction, strict JSON), Muse Voice Transcribe (spoken answers), Muse Wonder (bluffs and red team). [Muse Code if used.]
 > **Limits:** likelihoods are assumptions, not calibrated; a practice tool, not a hiring tool.
-> **Disclosures:** [pre-kickoff planning documents; AI assistance as the rules require].
+> **Disclosures:** prior work = planning documents in `spec/` written before kickoff (no code); all code written from 26 Oct. AI-assisted with Claude Code, Codex and Muse Code; all code reviewed and tested by me.
 
 ## README first screen
 1. Name, tagline, 10-second GIF of the challenge moment.
@@ -30,9 +34,14 @@ Cover frame: the challenge moment (transcript with the wrong posterior highlight
 5. Run in 3 commands; replay mode works without a key.
 6. Limits and disclosures.
 
-## Finals (9 Nov)
-- Versions: 90 s and 3 min. Second device and a phone hotspot ready.
-- Run live; if any call takes more than 6 s, switch to replay, say so, keep talking.
+## Finals (9 Nov, 17:00 UK)
+- Judges watch the submitted 3-minute video live and rank the top 5; the video must stand alone.
+- Be online and reachable on Discord; keep the live link up (always-on instance) in case judges try it.
+
+## Bonus prizes to enter
+- **Best Build on Meta Open Weights ($10K):** flag it in the submission; document the open-weights run (`03`).
+- **Most Viral ($20K):** post a 30–45 s cut of the challenge moment on X on submission day; submit the link in the form; engagement counted to 8 Nov 11:59 PM ET.
+- **Community Vote ($10K):** share the gallery link with friends, societies and Discord after submission; one vote per verified account; winner 16 Nov.
 
 ## Q&A to rehearse
 - **Why not just a calculator?** The calculator is half of it; the model reads spoken reasoning and quotes it, and the engine decides what to ask next and when it has seen enough.

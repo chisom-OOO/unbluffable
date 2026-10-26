@@ -4,13 +4,14 @@ All figures below were checked with exact fractions. Likelihoods are **assumptio
 
 ## 1. Puzzle templates (fresh numbers each session)
 
-### T1 — Medical test (flagship)
-Parameters: prevalence p, sensitivity s, false-positive rate f.
-Answer: P(D | +) = p·s / (p·s + (1−p)·f).
-Flagship: p = 1%, s = 90%, f = 5%. Out of 2,000: 20 sick, 18 test positive; 1,980 healthy, 99 test positive → 18/117 = **2/13 ≈ 15.38%**.
-Named wrong values (all → Misconception): s = 90% (transposed conditional), 1 − f = 95%, f = 5% and P(+) = 5.85% (base rate / denominator errors; near-identical, reported together).
+### T1 — Fraud alert (flagship)
+Parameters: base rate p (share of transactions that are fraudulent), detection rate s (share of fraud the detector flags), false-alarm rate f (share of genuine transactions flagged).
+Answer: P(fraud | flagged) = p·s / (p·s + (1−p)·f).
+Flagship: p = 1%, s = 90%, f = 5%. Out of 2,000 transactions: 20 fraudulent, 18 flagged; 1,980 genuine, 99 flagged → 18/117 = **2/13 ≈ 15.38%**.
+(Framed as fraud, not a medical test, to stay clear of the hackathon's "AI medical advice" anti-project list; the maths is the classic medical-test problem.)
+Named wrong values (all → Misconception): s = 90% (transposed conditional: "90% of fraud is flagged" read as "90% of flags are fraud"), 1 − f = 95%, f = 5% and P(+) = 5.85% (base rate / denominator errors; near-identical, reported together).
 Flagship twin: p = 2% → 36/134 = **18/67 ≈ 26.87%**; P(+) = 6.7%.
-Note: overall test accuracy at the flagship numbers is 94.95% — never call 90% "accuracy".
+Note: the detector's overall accuracy at the flagship numbers is 94.95% — never call 90% "accuracy"; it is the detection rate.
 
 ### T2 — Two machines
 Machine A makes fraction a of items with defect rate dA; B makes 1 − a with rate dB. Given an item is defective, P(A | defect) = a·dA / (a·dA + (1−a)·dB).
@@ -88,4 +89,4 @@ Stop at the first label other than "More evidence needed", or after 4 questions.
 | Named wrong → twin named wrong | 0.003 | 0.910 | 0.087 | Misconception detected |
 | Vague (one answer) | 0.211 | 0.197 | 0.592 | (none yet) |
 | Correct (one answer) | 0.764 | 0.101 | 0.135 | (none yet) |
-Also test: selection table in §4; generator collision filter; tolerance rules; "the test has 90% sensitivity" is not coded as an answer; flagship and twin answers (2/13, 18/67).
+Also test: selection table in §4; generator collision filter; tolerance rules; "the detector catches 90% of fraud" (a restated given) is not coded as an answer; flagship and twin answers (2/13, 18/67).

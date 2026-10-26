@@ -7,6 +7,9 @@ Quant-pack claim (only if the Monday gate passes): "The interviewer that hears y
 
 Vision (pitch and roadmap only): one interview engine for every high-stakes interview — quant, software and cloud engineering, medicine, PhD, Oxbridge — checking answers against exact maths, running code, or expert rubrics; content from permitted web sources and verified, anonymous professionals paid for **original** questions and rubrics (never employers' confidential questions).
 
+## Positioning against the organisers' anti-project list
+Not an "AI for Education" chatbot: Unbluffable is a voice-first interviewer with a deterministic verification engine (exact maths, adaptive Bayesian question selection, live challenge of committed claims). Candidate-side practice only: not a job-application screener, never used to assess or rank candidates. No medical advice anywhere (the flagship is framed as fraud detection). Always lead with what a chatbot cannot do: interrupt a spoken mistake, verify numbers exactly, and re-test with new numbers.
+
 ## What is built (committed)
 **Quant pack:** probability interview puzzles (conditional probability / Bayes), three templates with fresh numbers, a "same puzzle, new numbers" twin, exact checks, voice and text.
 
@@ -17,9 +20,9 @@ Optional only if ahead by Friday, in this order: (0) a hosted, more natural inte
 ### Landing (the hook — first 20 seconds)
 - Title, tagline, and the quant interview card with the **mic ready**.
 - If the visitor doesn't speak within 3 s, a **replay** plays (labelled "recorded run"):
-  - Candidate: "…so if you test positive, you're about 90 percent likely to have it."
-  - Interviewer: "Careful. 90% is the chance a sick person tests positive, not the chance that someone who tests positive is sick. Out of 2,000 people, how many healthy people also test positive?"
-- A correct statement such as "the test has 90% sensitivity" must **never** trigger a challenge.
+  - Candidate: "…so if a transaction gets flagged, it's about 90 percent likely to be fraud."
+  - Interviewer: "Careful. 90% is the chance a fraudulent transaction gets flagged, not the chance a flagged transaction is fraud. Out of 2,000 transactions, how many genuine ones get flagged too?"
+- A correct restated given such as "the detector catches 90% of fraud" must **never** trigger a challenge.
 - Small switcher: "Quant (live)" and "More interviews coming" (roadmap).
 
 ### Spot the bluff (second card)

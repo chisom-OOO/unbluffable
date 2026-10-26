@@ -35,7 +35,7 @@ This folder is the **authoritative specification** for the Unbluffable entry to 
 - Judging 4–8 Nov (keep the link alive and budgeted). Live finals 9 Nov.
 
 ## Kickoff checklist (Mon 26 Oct, before 17:00)
-- [ ] Read and save the Official Rules: eligibility (UK student), pre-existing work (disclose this plan pack if required), AI-assistance disclosure, video length, IP/usage rights, team changes, portal time zone.
+- [x] Kickoff rules (26 Oct): new work only (call out prior work: this plan pack); public GitHub repo; 3-minute demo video; demo only what you built; no code, data or assets you don't have rights to; avoid the anti-project list (see `01`). Still check the details page for anything else (eligibility, IP/usage terms).
 - [ ] Credits: Meta Model API credits; partner credits (Baseten, Modal, Fireworks) if offered. Join the Discord.
 - [x] Building solo (decided 26 Oct).
 - [ ] Re-check Meta docs: quickstart, models, structured output, speech-to-text, pricing (facts in `03` were verified 25 Oct).

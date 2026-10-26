@@ -46,6 +46,12 @@ Code (not the model) locates every quote in the transcript, normalises numbers, 
 - **File fallback (always available):** browser records (webm/opus) → server converts with ffmpeg to 16 kHz mono WAV → `POST /v1/asr/transcribe` → editable transcript → user confirms → scored.
 - **Number normalisation:** at least: "two over thirteen", "two thirteenths", "fifteen point four percent", "about fifteen percent", "nought point one five", "0.15", "15%". Use `keywords` for terms like "sensitivity", "prevalence", "false positive".
 
+## Open-weights backend (committed light; targets the $10K "Best Build on Meta Open Weights" bonus)
+- A config switch `LLM_BACKEND=meta_api|open_weights` runs the same extraction on Muse Glimmer or Muse Spark Open served by a partner (Baseten, Fireworks or Modal; OpenAI-compatible endpoint). Same schema; if the host lacks strict JSON schema support, use JSON mode + local validation + one repair.
+- The live claim classifier (is this a committed claim, a restated given, a hypothetical or a self-correction?) runs on the open-weights backend first; the keyword rules remain the fallback.
+- Eligibility check: the prize requires the project to run on an eligible open-weight model, verified by the partner. Keep a documented one-command way to run the whole interview on the open-weights backend, and record a replay of it.
+- Go/no-go Fri 30: if no host returns valid extractions on the frozen tuning set by then, keep only the comparison row and drop the bonus attempt (log it).
+
 ## Content sources
 - Puzzle templates are written by us and generated with fresh numbers; no third-party questions are copied into the app or repo.
 - Lemma (a crowd-compiled quant question bank: questions gathered from other apps and user-reported interviews and assessments; provenance unclear) may be used only to see which puzzle types come up most and to collect classic wrong answers. Never copy its questions into the app, repo, prompts or evaluation sets: their wording may belong to other apps, and reported questions may breach candidates' confidentiality agreements. Classic problem ideas are fine when rewritten as our own templates with our own numbers.
@@ -54,12 +60,12 @@ Code (not the model) locates every quote in the transcript, normalises numbers, 
 Runs on every partial. Fires a challenge only when ALL hold:
 1. A number follows a **claim marker** ("so the probability is", "so it's", "the answer is", "you're about … likely").
 2. The same claim appears in **2 consecutive partials** and persists **≥ 500 ms**.
-3. It is not a restated given ("the test has 90% sensitivity"), a hypothetical ("if it were…"), or after "maybe"/"no"/"wait".
+3. It is not a restated given ("the detector catches 90% of fraud"), a hypothetical ("if it were…"), or after "maybe"/"no"/"wait".
 4. The exact check says the number is wrong, or it matches a named wrong value.
 The slow lane (Spark extraction) runs after each pause/turn end.
 
 ## Monday realtime gate (measurable)
-Test set: 30 clips you record — 10 committed wrong posteriors, 10 non-errors (restated sensitivity, hypotheticals, self-corrections), 10 correct answers. Mark each clip's end-of-claim time by hand.
+Test set: 30 clips you record — 10 committed wrong posteriors, 10 non-errors (restated givens such as "it catches 90% of fraud", hypotheticals, self-corrections), 10 correct answers. Mark each clip's end-of-claim time by hand.
 Pass (all): ≥ 8/10 committed errors challenged; **0/20** false challenges; latency from end of claim median ≤ 1.5 s and max ≤ 3 s.
 Fail any criterion, or not passed by **13:00 UK Tuesday** → after-turn challenge on `speechEnd`/`speechComplete` (or file fallback). Log the decision. Spend no more time on mid-sentence interruption.
 
