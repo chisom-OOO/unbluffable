@@ -1,0 +1,91 @@
+# 02 — Engine spec (maths)
+
+All figures below were checked with exact fractions. Likelihoods are **assumptions** (illustrative, versioned), not calibrated probabilities. Keep them in `content/likelihoods.yaml` with a version number.
+
+## 1. Puzzle templates (fresh numbers each session)
+
+### T1 — Medical test (flagship)
+Parameters: prevalence p, sensitivity s, false-positive rate f.
+Answer: P(D | +) = p·s / (p·s + (1−p)·f).
+Flagship: p = 1%, s = 90%, f = 5%. Out of 2,000: 20 sick, 18 test positive; 1,980 healthy, 99 test positive → 18/117 = **2/13 ≈ 15.38%**.
+Named wrong values (all → Misconception): s = 90% (transposed conditional), 1 − f = 95%, f = 5% and P(+) = 5.85% (base rate / denominator errors; near-identical, reported together).
+Flagship twin: p = 2% → 36/134 = **18/67 ≈ 26.87%**; P(+) = 6.7%.
+Note: overall test accuracy at the flagship numbers is 94.95% — never call 90% "accuracy".
+
+### T2 — Two machines
+Machine A makes fraction a of items with defect rate dA; B makes 1 − a with rate dB. Given an item is defective, P(A | defect) = a·dA / (a·dA + (1−a)·dB).
+Named wrong values: dA/(dA + dB) (ignores production shares), a (base rate only), dA (transposed).
+
+### T3 — Two coins
+A bag holds a biased coin (P(H) = b) with probability q and a fair coin otherwise. One coin is drawn and flipped k times; all heads. P(biased | k heads) = q·b^k / (q·b^k + (1−q)·0.5^k).
+Named wrong values: q (ignores the flips), b^k / (b^k + 0.5^k) (ignores the prior), b^k (likelihood, not posterior).
+
+### Generator rules (all templates)
+- Natural-frequency counts must be whole numbers for the chosen population size (e.g. "out of 2,000").
+- Reject any draw where the answer is within **2 percentage points** of any named wrong value.
+- The twin keeps the template, changes one parameter, and must move the answer by **≥ 10 percentage points**; run the collision filter on the twin too, including the original answer (added as "Recited").
+- Demo uses a fixed, labelled seed; practice and "try to fool it" use fresh numbers.
+- Answer tolerance: exact fraction match, or within ±1 percentage point when stated as a percentage or decimal.
+
+## 2. Observation coding (per answer)
+Inputs: deterministic number check + Muse Spark extraction (`03` schema).
+- **Correct:** number correct AND reasoning code is valid reasoning.
+- **Named wrong:** number matches a named wrong value.
+- **Other wrong:** number wrong, not a named value.
+- **Vague:** no committed number, or correct number with unsupported/vague reasoning.
+- **Recited** (twin only): the twin answer equals the original puzzle's answer.
+- **System abstain** (no update): empty or unintelligible audio, transcription failure, injection-only text, off-topic.
+Rule: a wrong number can never be coded Correct.
+
+## 3. State and likelihoods
+Per skill: probability over **Sound (S), Misconception (M), Gap (G)**; prior **0.4 / 0.3 / 0.3**.
+
+### First answer: P(outcome | class)
+| Outcome | S | M | G |
+| --- | --- | --- | --- |
+| Correct | 0.85 | 0.15 | 0.20 |
+| Named wrong | 0.03 | 0.70 | 0.20 |
+| Other wrong | 0.04 | 0.05 | 0.30 |
+| Vague | 0.08 | 0.10 | 0.30 |
+
+### Twin: P(twin outcome | class, first outcome) — not independent of the first answer
+Cells read S / M / G. Every row sums to 1 per class.
+| First → twin | Correct | Recited | Named wrong | Other wrong | Vague |
+| --- | --- | --- | --- | --- | --- |
+| After correct | .90/.20/.15 | .01/.50/.55 | .02/.15/.10 | .03/.10/.10 | .04/.05/.10 |
+| After named wrong | .70/.10/.15 | — | .05/.75/.25 | .15/.10/.35 | .10/.05/.25 |
+| After other wrong | .60/.15/.20 | — | .05/.50/.20 | .25/.25/.40 | .10/.10/.20 |
+| After vague | .70/.15/.15 | — | .05/.55/.20 | .10/.15/.30 | .15/.15/.35 |
+
+Same tables for all three templates (an assumption to revisit with data). A new puzzle after the twin uses the first-answer table again.
+
+## 4. Question selection
+Candidates at each step: the current puzzle's twin (if not yet asked) or a new puzzle from an unused template. Pick the maximum **expected information gain per minute** (entropy in bits; new puzzle = 2 min, twin = 1 min). Ties: fixed order (twin, T1, T2, T3).
+
+Checked values (from the prior):
+| After first answer | Twin (bits/min) | New puzzle (bits/min) | Engine asks |
+| --- | --- | --- | --- |
+| Correct | 0.389 | 0.170 | Twin |
+| Named wrong | 0.207 | 0.110 | Twin |
+| Vague | 0.242 | 0.185 | Twin |
+| Other wrong | 0.104 | 0.129 | New puzzle |
+At the prior, a new puzzle carries 0.249 bits/min.
+
+## 5. Labels and stopping
+Applied after **≥ 2 answers**, in order:
+1. S ≥ 0.80 → Evidence supports understanding
+2. M ≥ 0.70 → Misconception detected (name it)
+3. S ≤ 0.10 → Understanding not shown
+4. otherwise → More evidence needed
+Stop at the first label other than "More evidence needed", or after 4 questions.
+
+## 6. Pinned unit tests (expected posteriors, tolerance ±0.002)
+| Sequence | S | M | G | Label |
+| --- | --- | --- | --- | --- |
+| Correct → twin correct | 0.944 | 0.028 | 0.028 | Evidence supports understanding |
+| Correct → twin recited | 0.058 | 0.382 | 0.560 | Understanding not shown |
+| Named wrong (one answer) | 0.043 | 0.745 | 0.213 | (none yet; ≥2 answers) |
+| Named wrong → twin named wrong | 0.003 | 0.910 | 0.087 | Misconception detected |
+| Vague (one answer) | 0.211 | 0.197 | 0.592 | (none yet) |
+| Correct (one answer) | 0.764 | 0.101 | 0.135 | (none yet) |
+Also test: selection table in §4; generator collision filter; tolerance rules; "the test has 90% sensitivity" is not coded as an answer; flagship and twin answers (2/13, 18/67).
