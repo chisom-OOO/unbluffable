@@ -27,6 +27,11 @@ tests/       pinned engine tests, gate tests, injection tests
 - Voice Transcribe, file: `POST /v1/asr/transcribe`, multipart, WAV mono 16-bit PCM at 16 or 24 kHz, ≤ 10 min, ≤ 32 MB, key in the `Authorization` header.
 - Voice Transcribe, realtime: `wss://api.meta.ai/v1/asr/realtime`; authenticate in the **first JSON frame** (`authorization.accessToken = "Bearer <key>"`) within 10 s; the HTTP header is ignored; no key in query strings. `ENDPOINTING` mode emits `speechStart`, `transcript`, `speechEnd`, `speechComplete`. Partials are cumulative and **a new partial can revise or remove earlier text**. **No word-level timestamps or confidence scores.** `keywords` (set in the handshake) bias recognition.
 
+## Coding tools and Meta (observed 26 Oct)
+- Muse Code 1.4.13 installs on Windows with `irm https://dev.meta.ai/install.ps1 | iex`; it reads `AGENTS.md` (ignores `CLAUDE.md` when both exist) and defaulted to `muse-spark-1.3-contributor`. Contributor mode is acceptable for coding on this repo, never for the app's runtime calls.
+- dev.meta.ai offers configs that point Claude Code and Codex at Meta's API (Muse Wonder). Not used by default: it bills the $150 Meta credits at Wonder prices. Emergency only, in one terminal window, with the Billing page watched.
+- Meta's Python example uses `POST /v1/responses`. The app uses `/v1/chat/completions` (`response_format`). If anything uses Responses, structured output goes in `text.format` instead.
+
 ## Extraction schema (Muse Spark, strict)
 Flat object, all keys required:
 - `committed_answer_text`: string — verbatim span of the final claimed answer, or `"none"`.

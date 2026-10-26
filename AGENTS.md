@@ -1,5 +1,7 @@
 # Unbluffable — instructions for coding agents
 
+> `CLAUDE.md` (Claude Code) and `AGENTS.md` (Codex, Muse Code) must stay identical. Edit both together.
+
 This repo builds **Unbluffable** for the Meta Global AI Developer Hackathon (Indie track). The authoritative specification is in `spec/` (frozen v12). Read `spec/00_START_HERE.md` first, then the files your task needs:
 - `spec/01_PRODUCT_SPEC.md`: screens, flows, labels, copy rules
 - `spec/02_ENGINE_SPEC.md`: templates, likelihood tables, selection, labels, pinned tests
@@ -16,4 +18,6 @@ This repo builds **Unbluffable** for the Meta Global AI Developer Hackathon (Ind
 6. **Exact maths:** use `fractions.Fraction`; a wrong number can never be coded Correct.
 7. **Copy:** never write "can't be fooled", "calibrated", "proves understanding", "first", or hiring claims. Internal probabilities are "model estimates (assumed likelihoods)".
 8. **Record/replay** every live model call during development; replay mode must work without a key.
-9. **Small commits** with clear messages. End every session by listing which exit tests in `04` pass and which fail, with the exact command used.
+9. **Never open, print or quote `.env`** or any file containing keys. If a task needs the key, use `os.environ["MODEL_API_KEY"]` in code; never read its value.
+10. **Model modes:** the app's runtime calls use Standard IDs only (`muse-spark-1.3`, never `-contributor`). Coding tools (e.g. Muse Code) may run in Contributor mode on this repo, but never paste tester answers, recordings or personal data into any coding session.
+11. **Small commits** with clear messages. End every session by listing which exit tests in `04` pass and which fail, with the exact command used.
