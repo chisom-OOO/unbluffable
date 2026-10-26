@@ -1,0 +1,42 @@
+# Likelihood tables for the engine (spec/02 §3).
+# These are model estimates (assumed likelihoods): illustrative and versioned,
+# not calibrated probabilities. Change them only through spec/DECISION_LOG.md.
+# Values are quoted strings so they load as exact fractions.
+# Same tables for all three templates (an assumption to revisit with data).
+
+version: 1
+classes: [S, M, G]  # Sound, Misconception, Gap
+
+prior: {S: "0.4", M: "0.3", G: "0.3"}
+
+# P(outcome | class) for the first answer to a puzzle.
+first_answer:
+  correct:     {S: "0.85", M: "0.15", G: "0.20"}
+  named_wrong: {S: "0.03", M: "0.70", G: "0.20"}
+  other_wrong: {S: "0.04", M: "0.05", G: "0.30"}
+  vague:       {S: "0.08", M: "0.10", G: "0.30"}
+
+# P(twin outcome | class, first outcome). Not independent of the first answer.
+# "recited" only exists after a correct first answer.
+twin:
+  after_correct:
+    correct:     {S: "0.90", M: "0.20", G: "0.15"}
+    recited:     {S: "0.01", M: "0.50", G: "0.55"}
+    named_wrong: {S: "0.02", M: "0.15", G: "0.10"}
+    other_wrong: {S: "0.03", M: "0.10", G: "0.10"}
+    vague:       {S: "0.04", M: "0.05", G: "0.10"}
+  after_named_wrong:
+    correct:     {S: "0.70", M: "0.10", G: "0.15"}
+    named_wrong: {S: "0.05", M: "0.75", G: "0.25"}
+    other_wrong: {S: "0.15", M: "0.10", G: "0.35"}
+    vague:       {S: "0.10", M: "0.05", G: "0.25"}
+  after_other_wrong:
+    correct:     {S: "0.60", M: "0.15", G: "0.20"}
+    named_wrong: {S: "0.05", M: "0.50", G: "0.20"}
+    other_wrong: {S: "0.25", M: "0.25", G: "0.40"}
+    vague:       {S: "0.10", M: "0.10", G: "0.20"}
+  after_vague:
+    correct:     {S: "0.70", M: "0.15", G: "0.15"}
+    named_wrong: {S: "0.05", M: "0.55", G: "0.20"}
+    other_wrong: {S: "0.10", M: "0.15", G: "0.30"}
+    vague:       {S: "0.15", M: "0.15", G: "0.35"}

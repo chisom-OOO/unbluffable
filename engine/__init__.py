@@ -1,1 +1,2 @@
-"""Pure exact-math engine package; implementation is added in later tasks."""
+"""Pure exact-maths engine (spec/02): templates, generator, coding, likelihoods,
+posterior, selection, labels and the interview loop. No network, no model calls."""
