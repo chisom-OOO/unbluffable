@@ -7,13 +7,18 @@ Quant-pack claim (only if the Monday gate passes): "The interviewer that hears y
 
 Vision (pitch and roadmap only): one interview engine for every high-stakes interview — quant, software and cloud engineering, medicine, PhD, Oxbridge — checking answers against exact maths, running code, or expert rubrics; content from permitted web sources and verified, anonymous professionals paid for **original** questions and rubrics (never employers' confidential questions).
 
+## Impact (30% of the score): who benefits
+Candidates facing high-stakes interviews (quant, software, engineering, medical-school, PhD, Oxbridge) without access to a coach who pushes back on their reasoning: students outside target universities, first-generation applicants, anyone who can't pay for mock interviews. Theme: **Build for Your World** (the builder prepares for these interviews firsthand); name the theme explicitly in the video, README and submission form. Evidence of impact comes from real users (see `05`, human testers), not only from benchmarks.
+
 ## Positioning against the organisers' anti-project list
 Not an "AI for Education" chatbot: Unbluffable is a voice-first interviewer with a deterministic verification engine (exact maths, adaptive Bayesian question selection, live challenge of committed claims). Candidate-side practice only: not a job-application screener, never used to assess or rank candidates. No medical advice anywhere (the flagship is framed as fraud detection). Always lead with what a chatbot cannot do: interrupt a spoken mistake, verify numbers exactly, and re-test with new numbers.
 
 ## What is built (committed)
 **Quant pack:** probability interview puzzles (conditional probability / Bayes), three templates with fresh numbers, a "same puzzle, new numbers" twin, exact checks, voice and text.
 
-Optional only if ahead by Friday, in this order: (0) a hosted, more natural interviewer voice (e.g. a Meta open-weights speech model on a sponsor's GPUs; quality unverified), behind a flag with the browser voice as fallback; (1) a small "which model did what" panel on each turn (model, latency, cost); (2) a low/medium/high reasoning-effort comparison in the results; (3) Monte Carlo cross-check; (4) software-engineering pack. Pack builder: roadmap slide only.
+**Committed (Meta tooling is 25% of the score):** a small "which model did what" panel on each turn (model, job, latency, cost), visible in the demo.
+
+Optional only if ahead by Friday, in this order: (0) a hosted, more natural interviewer voice (e.g. a Meta open-weights speech model on a sponsor's GPUs; quality unverified), behind a flag with the browser voice as fallback; (2) a low/medium/high reasoning-effort comparison in the results; (3) Monte Carlo cross-check; (4) software-engineering pack. Pack builder: roadmap slide only.
 
 ## Screens and flows
 

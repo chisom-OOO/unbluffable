@@ -25,8 +25,8 @@ State each arm's tools explicitly.
 ## Optional: reasoning-effort comparison
 Run the frozen hard set through Muse Spark at reasoning_effort low, medium and high. Report accuracy, median latency and cost per answer for each. Only if ahead by Friday.
 
-## Human attackers
-Invite people from quant and CS student communities (Thursday). Collect attempts with consent; store raw; rescore with the frozen prompt; "fooled" = credited "Evidence supports understanding" without valid reasoning, hand-labelled (state who labelled). Report "fooled by k of N". If fewer than 15 people take part, lead with the AI red team tally instead.
+## Real users (impact evidence) and human attackers
+Recruit 15–40 real candidates who prepare for these interviews, starting with the builder's own trading society, plus quant and CS student communities (invite Thursday). Collect, with consent: completed sessions, "fooled it" attempts, and 2–3 short honest quotes about whether it changed how they reason (for the video). Invite Collect attempts with consent; store raw; rescore with the frozen prompt; "fooled" = credited "Evidence supports understanding" without valid reasoning, hand-labelled (state who labelled). Report "fooled by k of N". If fewer than 15 people take part, lead with the AI red team tally instead.
 
 ## Never claim
 "Can't be fooled", calibrated, first, proves understanding, or interruption in packs that don't do it. Exact arithmetic validates an answer; the twin and reasoning check are the transfer test.
