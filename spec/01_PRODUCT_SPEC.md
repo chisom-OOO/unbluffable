@@ -10,7 +10,7 @@ Vision (pitch and roadmap only): one interview engine for every high-stakes inte
 ## What is built (committed)
 **Quant pack:** probability interview puzzles (conditional probability / Bayes), three templates with fresh numbers, a "same puzzle, new numbers" twin, exact checks, voice and text.
 
-Optional only if ahead by Friday, in this order: (1) a small "which model did what" panel on each turn (model, latency, cost); (2) a low/medium/high reasoning-effort comparison in the results; (3) Monte Carlo cross-check; (4) software-engineering pack. Pack builder: roadmap slide only.
+Optional only if ahead by Friday, in this order: (0) a hosted, more natural interviewer voice (e.g. a Meta open-weights speech model on a sponsor's GPUs; quality unverified), behind a flag with the browser voice as fallback; (1) a small "which model did what" panel on each turn (model, latency, cost); (2) a low/medium/high reasoning-effort comparison in the results; (3) Monte Carlo cross-check; (4) software-engineering pack. Pack builder: roadmap slide only.
 
 ## Screens and flows
 
@@ -36,6 +36,13 @@ Optional only if ahead by Friday, in this order: (1) a small "which model did wh
 4. The engine picks the next question (twin or a new puzzle) by information gain (`02`).
 5. Stops at a label (after ≥2 answers) or after 4 questions.
 6. End card: label, the quoted evidence, one practice tip for the diagnosed error.
+
+### Interviewer voice (committed)
+- The interviewer **speaks everything**: each question, each challenge, the follow-up, and the verdict. The same text appears on screen.
+- Uses the browser's speech synthesis (Meta has no text-to-speech model; disclose this). Prefer the best natural-sounding English voice available (Chrome/Edge "Natural"/"Online" voices on Windows), with a fixed fallback order.
+- Mic input is muted while the interviewer speaks (no echo). Headphones recommended on the landing page.
+- A visible "mute interviewer" toggle; text-only mode always works.
+- Interruptions use the same voice and start immediately (browser speech has near-zero start-up delay).
 
 ### Labels (the only verdict vocabulary)
 - **Evidence supports understanding**

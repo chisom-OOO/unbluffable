@@ -2,7 +2,7 @@
 
 Living checklist. Update it at the end of every day. Any new chat or agent should read this first, then `spec/00_START_HERE.md`.
 
-**Last updated:** Mon 26 Oct, 12:20 UK (pre-kickoff)
+**Last updated:** Mon 26 Oct, 13:55 UK (pre-kickoff)
 **Phase:** setup; spec frozen (v12); no code yet
 **Next decision points:** Mon realtime gate (`spec/03`); Wed careful-chatbot check (`spec/05`)
 
@@ -23,7 +23,7 @@ Living checklist. Update it at the end of every day. Any new chat or agent shoul
 - [ ] Mic and headphones tested
 - [ ] Two-sentence firsthand story written
 - [ ] Gate-clip script written (10 wrong posteriors; 10 restated givens, hypotheticals and self-corrections; 10 correct answers)
-- [ ] 3 flagship puzzles chosen, with their classic wrong answers
+- [ ] 3 flagship puzzles confirmed (medical test, two machines, two coins in `spec/02`), or swapped after skimming Lemma for the most common types; classic wrong answers listed
 
 ## At kickoff
 - [ ] Watch the livestream; read the details page (problem statements, judging, submission requirements, rules)

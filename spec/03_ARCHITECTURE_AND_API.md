@@ -46,6 +46,10 @@ Code (not the model) locates every quote in the transcript, normalises numbers, 
 - **File fallback (always available):** browser records (webm/opus) → server converts with ffmpeg to 16 kHz mono WAV → `POST /v1/asr/transcribe` → editable transcript → user confirms → scored.
 - **Number normalisation:** at least: "two over thirteen", "two thirteenths", "fifteen point four percent", "about fifteen percent", "nought point one five", "0.15", "15%". Use `keywords` for terms like "sensitivity", "prevalence", "false positive".
 
+## Content sources
+- Puzzle templates are written by us and generated with fresh numbers; no third-party questions are copied into the app or repo.
+- Lemma (third-party quant question bank the builder has access to) may be used only to choose which puzzle types are most common and to collect classic wrong answers. Do not copy Lemma questions into the app, repo, prompts or evaluation sets unless Lemma grants written permission.
+
 ## Fast lane (no model) and claim rules
 Runs on every partial. Fires a challenge only when ALL hold:
 1. A number follows a **claim marker** ("so the probability is", "so it's", "the answer is", "you're about … likely").
