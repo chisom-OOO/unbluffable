@@ -20,6 +20,9 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title="Unbluffable", lifespan=lifespan)
 app.include_router(voice_router)
 app.mount("/voice-static", StaticFiles(directory=Path(__file__).parent / "static"), name="voice-static")
+app.mount("/ui-static", StaticFiles(directory=Path(__file__).parent / "static" / "ui"), name="ui-static")
+
+TEMPLATES = Path(__file__).parent / "templates"
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -37,3 +40,19 @@ def voice_practice():
 def health() -> dict[str, str]:
     """Return machine-readable service health."""
     return {"status": "ok"}
+
+
+# UI preview screens (Exam Room design, fake data; not wired to the engine yet).
+@app.get("/ui")
+def ui_landing():
+    return FileResponse(TEMPLATES / "landing.html")
+
+
+@app.get("/ui/interview")
+def ui_interview():
+    return FileResponse(TEMPLATES / "interview.html")
+
+
+@app.get("/ui/end")
+def ui_end():
+    return FileResponse(TEMPLATES / "end.html")
