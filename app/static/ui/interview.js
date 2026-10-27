@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let state = "ready";
   let turn = 0;
-  let hints = 0, nudges = 0, challenges = 0;
+  let hints = 0, nudges = 0, challenges = 0, acks = 0;
   let typing = false, answered = false, offered = false;
   let editing = null;
   let timers = [];
@@ -99,8 +99,10 @@ document.addEventListener("DOMContentLoaded", () => {
     speakTimer = setTimeout(() => { speakTimer = pendingThen = null; then && then(); }, ms);
   }
 
+  // While the answer is checked, a neutral acknowledgement is said first (decision log 6).
   function think(then) {
     setState("thinking");
+    addInterviewer(data.acks[acks++ % data.acks.length], null);
     setTimeout(then, T.think);
   }
 

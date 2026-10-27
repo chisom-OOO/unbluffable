@@ -43,6 +43,10 @@ window.UB_FAKE = {
 
   offerHelp: "Is there anything you're stuck on?",
 
+  // Neutral acknowledgements, one before each interviewer reply (decision log 6). Fixed list, no model call.
+  // Never anything that signals correctness before the check: no "Right", "Good", "Exactly", "Correct".
+  acks: ["Got it.", "Understood.", "Okay.", "Thanks."],
+
   models: [
     { model: "muse-spark-1.3", job: "Pull out the committed number", ms: 842, cost: "$0.0004" },
     { model: "engine (code)", job: "Exact check: 2/13, not 9/10", ms: 2, cost: "$0" },
