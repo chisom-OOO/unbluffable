@@ -78,19 +78,29 @@ failed source runs cannot pass. No live gate was run during implementation.
 
 ## Claim rules and timing
 
-Recognized markers include “so the probability is”, “so it's”, “the answer is”,
-and “you're about X likely”. “If the alert goes off / if flagged / given a flag,
-it's X” is a committed conditional claim. Generic “if” is not an exclusion.
-Hypotheticals include “if I”, “suppose”, “if it were/was”, and “would be”.
-“Maybe”, “no”, “wait”, and explicit correction phrases suppress the current
-turn's candidate. Exclusions are checked across the current cumulative turn,
-including trailing words; they are not removed just because punctuation changes.
-A restated detector rate has no eligible posterior marker; an immediate
-“of fraud/genuine…” suffix is also rejected as a given. This is a deterministic
-rule set whose recall and false challenges must be measured with the gate.
+Recognized markers include “so the probability is”, “it's”, “I think/reckon/guess/
+believe it's”, “I'd say ... is”, “I'd go with”, “I'd put it at”, “it comes out at/to”,
+“the chance/odds (of fraud) is”, and “with probability”. Number-first commitments
+include “X, that's my (final) answer”, “X is my answer”, and “X's my answer”.
+Fillers “um”, “uh”, “er”, “like”, and “you know” may occur between marker words.
 
-The latest marker must be followed immediately by a parseable number (allowing
-“about”, approximation words and “uh/um”). The parser supports digit/spoken
+“The answer would be X” and “my answer would be X” are commitments. Other “would
+be” constructions remain hypothetical, as do “suppose” and generic “if” clauses.
+“If the alert goes off / if flagged / given a flag, it's X” remains a committed
+conditional claim; an “if ... would be” construction remains hypothetical.
+
+Givens, quoted/attributed answers (including “people say” and “my first instinct”),
+negated commitments, questions, and corrections (“no”, “wait”, “actually”, “scratch
+that”) suppress the current candidate. Given suffixes include “of fraud/genuine”,
+“detection rate”, “false-alarm rate”, “specificity”, “base rate”, and “flagged”.
+Incomplete suffixes such as “detection” defer judgment while the phrase grows.
+Exclusions apply across the current cumulative turn, including trailing words;
+punctuation alone does not clear them. Detector-rate subjects are also excluded.
+
+For prefix commitments the latest marker must be followed immediately by a
+parseable number (allowing approximation words). For number-first commitments,
+the number must be adjacent to a completed answer suffix; its stability interval
+starts when that suffix is observed. The parser supports digit/spoken
 percentages, decimals, fractions with `over` or `/`, and ordinal fractions such as
 “two thirteenths”. Bare “ninety”, “two over”, or “point” remains incomplete.
 Bare integers above one await a percentage/fraction unit to avoid challenging an
@@ -134,16 +144,41 @@ checks against the two existing realtime probe captures. Those two captures are
 local ignored test inputs; they are not the 30-clip gate and have no invented
 `claim_end_s` annotations. No raw recording is copied into a test fixture.
 
-Verified on 26 October: **76 passed** (0.79 s), with one existing scaffold
-FastAPI/Starlette deprecation warning:
+Verified on 27 October: **360 passed, 1 deselected** (1.41 s), with one existing
+scaffold FastAPI/Starlette deprecation warning:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests scripts/probes/test_probes.py scripts/gate/test_gate.py
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests scripts/probes/test_probes.py scripts/gate/test_gate.py -k "not live_probe_captures" --tb=short
 ```
 
-Offline analysis of capture `voice_realtime-live-01.json` produces no challenge;
-capture `voice_realtime-live-02.json` produces a challenge at stream time
-`8.806442` s. Neither establishes latency without a hand-labelled claim end.
-Monday's gate decision remains pending the builder's full live run. The existing
-capability sheet separately records a passing strict Spark probe; pinned engine
-tests are not present in this checkout. No environment was created or modified.
+The capture-based regression test was deliberately excluded for this update.
+New tests use invented sentences for the four authorized failure types and near
+misses, including growing partial givens and unchanged stability requirements.
+Rules were frozen after those checks, before replaying only `live-02`. No other
+recordings were inspected or used for tuning. No environment was modified.
+
+## Replay of live-02 after the phrasing update
+
+```powershell
+.\.venv\Scripts\python.exe scripts/gate/run_gate.py --mode replay --capture scripts/gate/runs/live-02/manifest.json --run-dir scripts/gate/runs/replay-02b
+```
+
+Replay run `1df1a3d3c18445b2946ca1ee6b32204e`, 27 October, produced:
+
+| Criterion | Result | Pass |
+| --- | --- | --- |
+| Committed errors challenged | 8/10 (previous live rules: 2/10) | Yes |
+| False challenges | 0/20 | Yes |
+| Median latency | 1.5274575 s | No; limit 1.5 s |
+| Maximum latency | 2.127448 s | Yes; limit 3 s |
+| Complete set / successful transports | 30 clips / 30 completed | Yes |
+
+Overall: **FAIL / NOT PASSED**, exit code 1. This is a replay result, with no new
+API calls. No rule changes were made after observing it. Thresholds, exact-number
+checks, and the 500 ms/two-partial requirement are unchanged. Full captures and
+per-clip reports remain local under ignored `runs/`; only these summaries are committed.
+
+Monday exit evidence: the strict Spark probe is recorded as passing in the
+capability sheet; pinned engine tests pass in the command above; the realtime
+gate remains not passed because of median latency. The gate decision-log entry
+has not been completed by this harness update.

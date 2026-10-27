@@ -60,6 +60,153 @@ def partial(text, when):
     return {"stream_elapsed_s": when, "event": {"type": "transcript", "transcript": text, "final": False}}
 
 
+@pytest.mark.parametrize("text", [
+    "The probability um is 95% for this transaction",
+    "The uh probability er is 95% for this transaction",
+    "The probability, you know, is like 95% for this transaction",
+    "I um think uh it's er 95% for this transaction",
+    "I'd er go um with 95% for this transaction",
+    "The answer um would uh be 95% for this transaction",
+])
+def test_fillers_inside_commitments_fire(text):
+    tracker = ClaimTracker()
+    assert tracker.consume(partial(text, 1)) is None
+    assert tracker.consume(partial(text + " overall", 1.5)) is not None
+
+
+@pytest.mark.parametrize("text", [
+    "It's 95% for this payment", "It is 95% for this payment",
+    "I think it's 95% for this payment", "I reckon it's 95% for this payment",
+    "I guess it's 95% for this payment", "I believe it's 95% for this payment",
+    "I'd say the probability of fraud is 95%", "I'd say the posterior is 95%",
+    "I'd say it is 95% for this payment", "I'd go with 95% for this payment",
+    "I'd put it at 95% for this payment", "It comes out at 95% for this payment",
+    "It comes out to 95% for this payment", "The chance is 95% for this payment",
+    "The odds of fraud is 95%", "The chance of fraud is 95%",
+    "This payment is fraudulent with probability 95%",
+])
+def test_common_commitment_phrasings_fire(text):
+    tracker = ClaimTracker()
+    assert tracker.consume(partial(text, 2)) is None
+    fired = tracker.consume(partial(text + " overall", 2.5))
+    assert fired and fired["claimed_value"] == "19/20"
+
+
+@pytest.mark.parametrize("text", [
+    "95%, that's my answer", "95%, that's my final answer",
+    "Ninety five percent is my answer", "95%'s my answer",
+    "Ninety five percent's my answer", "Point nine is my answer",
+    "Um, 95%, that's um my er final answer",
+])
+def test_number_first_commitments_fire(text):
+    tracker = ClaimTracker()
+    assert tracker.consume(partial(text, 3)) is None
+    assert tracker.consume(partial(text + " for this payment", 3.5)) is not None
+
+
+def test_number_first_stability_starts_only_when_commitment_is_complete():
+    tracker = ClaimTracker()
+    assert tracker.consume(partial("95%", 1)) is None
+    assert tracker.consume(partial("95%, that's my", 1.7)) is None
+    assert tracker.consume(partial("95%, that's my answer", 2)) is None
+    assert tracker.consume(partial("95%, that's my answer overall", 2.499999)) is None
+    assert tracker.consume(partial("95%, that's my answer overall", 2.5)) is not None
+
+
+@pytest.mark.parametrize("text", [
+    "The answer would be 95% for this payment",
+    "My answer would be ninety five percent for this payment",
+    "My um answer uh would er be like 95% for this payment",
+])
+def test_answer_would_be_is_a_commitment(text):
+    tracker = ClaimTracker()
+    tracker.consume(partial(text, 4))
+    assert tracker.consume(partial(text + " overall", 4.5)) is not None
+
+
+@pytest.mark.parametrize("text", [
+    "The probability, um, is not 95% for this payment",
+    "The uh probability might be 95% for this payment",
+    "I like 95% as a number on a page",
+    "I don't think it's 95% for this payment",
+    "I do not believe it's 95% for this payment",
+    "I wouldn't say it's 95% for this payment",
+    "Is it true that it's 95%?",
+    "I'd say the detection rate is 95%",
+    "I'd put it at 95% detection rate",
+    "It comes out at 95% false-alarm rate",
+    "I think it's 95% specificity",
+    "The chance is 95% base rate",
+    "It's 95% flagged",
+    "It's 95% of genuine payments",
+    "It's 95% of fraud caught",
+    "It's 95%, um, of fraud caught",
+    "It's 95%, you know, detection rate",
+    "The detector catches fraud with probability 95%",
+    "95%, that's the detection rate",
+    "95%, that's somebody else's final answer",
+    "95% is my answer in a quotation from somebody else",
+    "95% of fraud, that's my final answer",
+    "95% specificity is my answer",
+    "Two over zero, that's my answer",
+    "People say it's 95% for this payment",
+    "A lot of people would say it's 95% for this payment",
+    "My first instinct is that it's 95% for this payment",
+    "People um say the probability uh is 95%",
+    'A colleague wrote "the chance is 95%" in their notes',
+    "A colleague wrote 'it's 95%' in their notes",
+    "No, it's 95% for this payment",
+    "Wait, I'd go with 95% for this payment",
+    "Actually, it comes out to 95% for this payment",
+    "I'd go with 95% scratch that",
+    "I guess it's 95% no wait",
+    "If the prior changed, the answer would be 95%",
+    "Suppose we had more alerts, my answer would be 95%",
+    "If flagged, my answer would be 95%",
+    "If I discarded the counts, it's 95% for this payment",
+    "Suppose it's 95% for this payment",
+    "It would be 95% under a different setup",
+    "Maybe 95%, that's my answer",
+])
+def test_widened_grammar_near_misses_never_fire(text):
+    tracker = ClaimTracker()
+    assert tracker.consume(partial(text, 1)) is None
+    assert tracker.consume(partial(text + " um", 1.5)) is None
+    assert tracker.consume(partial(text + " um", 3)) is None
+
+
+def test_fillers_and_corrections_do_not_bypass_stability():
+    tracker = ClaimTracker()
+    tracker.consume(partial("I think it's 95%", 1))
+    assert tracker.consume(partial("I uh think um it's 95% overall", 1.499999)) is None
+    assert tracker.consume(partial("I think it's 95% actually", 1.5)) is None
+    assert tracker.challenge is None
+
+
+@pytest.mark.parametrize("beginning,ending", [
+    ("of", "of fraud caught"), ("of the", "of the genuine payments"),
+    ("detection", "detection rate"), ("false", "false alarm rate"),
+    ("false alarm", "false alarm rate"), ("base", "base rate"),
+])
+def test_growing_given_suffix_blocks_before_the_rate_phrase_is_complete(beginning, ending):
+    tracker = ClaimTracker()
+    tracker.consume(partial("It's 95%", 1))
+    assert tracker.consume(partial("It's 95% " + beginning, 1.6)) is None
+    assert tracker.consume(partial("It's 95% " + ending, 2.2)) is None
+    assert tracker.challenge is None
+
+
+@pytest.mark.parametrize("text", [
+    "It's 2/13 for this payment", "I'd go with two thirteenths",
+    "15.4%, that's my final answer", "The answer would be point one five",
+    "This payment is fraud with probability fifteen point four percent",
+])
+def test_new_grammar_still_accepts_correct_answers(text):
+    tracker = ClaimTracker()
+    tracker.consume(partial(text, 1))
+    assert tracker.consume(partial(text + " overall", 2)) is None
+
+
 def test_number_persists_while_full_partial_grows():
     tracker = ClaimTracker()
     assert tracker.consume(partial("So it's 90%", 1)) is None

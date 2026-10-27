@@ -26,20 +26,64 @@ ORDINALS = {
 }
 TOKEN = re.compile(r"\d+(?:\.\d+)?|[a-z]+(?:'[a-z]+)?|[%/.,!?;:]")
 MARKER = re.compile(
-    r"\b(?:(?:so\s+)?the\s+probability\s+is|(?:the|my)\s+answer\s+is|"
-    r"so\s+(?:it's|it\s+is)|you(?:'re|\s+are)\s+about|"
+    r"\b(?:(?:so\s+)?the\s+probability(?:\s+of\s+fraud)?\s+is|"
+    r"(?:the|my)\s+answer\s+(?:is|would\s+be)|"
+    r"(?:it's|it\s+is)|you(?:'re|\s+are)\s+about|"
+    r"i(?:'d|\s+would)\s+say\s+(?:[a-z']+\s+){0,8}is|"
+    r"i(?:'d|\s+would)\s+(?:go\s+with|put\s+it\s+at)|"
+    r"it\s+comes\s+out\s+(?:at|to)|"
+    r"(?:the\s+)?(?:chance|odds)(?:\s+of\s+fraud)?\s+(?:is|are)|"
+    r"with\s+probability|"
     r"(?:if\s+(?:the\s+alert\s+goes\s+off|flagged)|given\s+(?:a|the)\s+flag)"
     r"\s*[,;:]?\s*(?:then\s+)?(?:it's|it\s+is|the\s+probability\s+is))\b"
 )
+POSTFIX_MARKER = re.compile(r"(?:\bthat(?:'s|\s+is)|\bis|'s)\s+my\s+(?:final\s+)?answer\b")
+FILLER = re.compile(r"(?:,\s*)?\b(?:um|uh|er|like|you\s+know)\b(?:\s*,)?")
 EXCLUDED = re.compile(
-    r"\b(?:maybe|no|wait|suppose|if\s+i|if\s+it\s+(?:were|was)|would\s+be|"
-    r"i\s+mean|scratch\s+that|let\s+me\s+correct|on\s+second\s+thought)\b"
+    r"\b(?:maybe|no|wait|actually|suppose|if\s+i|if\s+it\s+(?:were|was)|"
+    r"i\s+mean|scratch\s+that|let\s+me\s+correct|on\s+second\s+thought|"
+    r"people\s+(?:say|would\s+say)|my\s+first\s+instinct|"
+    r"(?:someone|somebody|they|he|she)\s+(?:says?|said)|"
+    r"according\s+to|quot(?:e|ed|ing|ation)|"
+    r"i\s+(?:don't|do\s+not|wouldn't|would\s+not)\s+(?:think|reckon|guess|believe|say))\b"
 )
-GIVEN_SUFFIX = re.compile(r"^\s*(?:of\s+(?:the\s+)?fraud\b|of\s+(?:the\s+)?genuine\b)")
+GIVEN_SUFFIX = re.compile(
+    r"^[\s,;:.!?]*(?:of\s+(?:the\s+)?(?:fraud|genuine)|detection\s+rate|"
+    r"false\s+alarm\s+rate|specificity|base\s+rate|flagged)\b"
+)
+PENDING_GIVEN_SUFFIX = re.compile(r"^[\s,;:]*?(?:of(?:\s+the)?|detection|false(?:\s+alarm)?|base)[\s,;:]*$")
+GIVEN_SUBJECT = re.compile(
+    r"\b(?:detector\s+(?:catches|detects|flags)|detection\s+rate|false\s+alarm\s+rate|"
+    r"specificity|base\s+rate|fraud\s+(?:is|gets)\s+(?:detected|flagged))\b"
+)
 
 
 def normalize(text):
     return re.sub(r"(?<=[a-z])-(?=[a-z])", " ", text.lower().replace("’", "'"))
+
+
+def without_fillers(text):
+    text = normalize(text)
+    # Repeat to handle disfluencies inside "you uh know" as well as between words.
+    while True:
+        cleaned = " ".join(FILLER.sub(" ", text).split())
+        if cleaned == text:
+            return cleaned
+        text = cleaned
+
+
+def excluded_context(text):
+    if (EXCLUDED.search(text) or any(char in text for char in '?"“”')
+            or re.search(r"(?:^|[\s:(])'", text)):
+        return True
+    # Known conditioning on an observed flag remains a commitment with "it's".
+    # Every other "if", and any "if ... would be", remains hypothetical.
+    if re.search(r"\bif\b", text):
+        if (re.search(r"\bwould\s+be\b", text)
+                or re.search(r"\bif\b(?!\s+(?:the\s+alert\s+goes\s+off|flagged)\b)", text)):
+            return True
+    remainder = re.sub(r"\b(?:the|my)\s+answer\s+would\s+be\b", " ", text)
+    return re.search(r"\bwould\s+be\b", remainder) is not None
 
 
 @dataclass(frozen=True)
@@ -163,24 +207,60 @@ class Claim:
         return self.occurrence, self.number.span, self.number.kind
 
 
+def number_before(text, end):
+    """Find a complete adjacent number before an answer-commitment suffix."""
+    prefix = text[:end]
+    tokens = list(TOKEN.finditer(prefix))
+    for index, token in enumerate(tokens):
+        # Do not rescue an incomplete/invalid number by reading its denominator
+        # or a decimal tail as a new, standalone answer.
+        if index:
+            previous = tokens[index - 1].group()
+            if previous in {*ONES, *TENS, "over", "point", "/", ".", "hundred"}:
+                continue
+        start = token.start()
+        if start and prefix[start - 1] == "-":
+            continue
+        number = parse_number(prefix[start:])
+        if number and not prefix[start + number.end:].strip(" \t,;:.!"):
+            return number, start
+    return None
+
+
 def find_claim(text):
-    text = normalize(text)
-    if EXCLUDED.search(text):
+    text = without_fillers(text)
+    if excluded_context(text):
         return None
-    markers = list(MARKER.finditer(text))
+    markers = sorted(
+        [(match.start(), "prefix", match) for match in MARKER.finditer(text)]
+        + [(match.start(), "postfix", match) for match in POSTFIX_MARKER.finditer(text)],
+        key=lambda item: item[0],
+    )
     if not markers:
         return None
-    marker = markers[-1]
-    tail = text[marker.end():]
-    filler = re.match(r"\s*(?:(?:about|approximately|roughly|around|uh|um)\s+)*", tail)
-    number_start = marker.end() + filler.end()
-    number = parse_number(text[number_start:])
-    if number is None:
-        return None
+    _, direction, marker = markers[-1]
+    if direction == "postfix":
+        found = number_before(text, marker.start())
+        if found is None:
+            return None
+        number, number_start = found
+        context_end = number_start
+    else:
+        tail = text[marker.end():]
+        approximation = re.match(r"\s*(?:(?:about|approximately|roughly|around)\s+)*", tail)
+        number_start = marker.end() + approximation.end()
+        number = parse_number(text[number_start:])
+        if number is None:
+            return None
+        context_end = marker.end()
+    # Keep earlier completed sentences from contaminating a later committed
+    # posterior, while refusing a detector-rate subject in the current clause.
+    clause = re.split(r"[.!?;]\s+", text[:context_end])[-1]
     suffix = text[number_start + number.end:]
-    if GIVEN_SUFFIX.search(suffix):
+    if (GIVEN_SUBJECT.search(clause) or GIVEN_SUFFIX.search(suffix)
+            or PENDING_GIVEN_SUFFIX.search(suffix)):
         return None
-    if marker.group().startswith(("you're", "you are")) and not re.search(r"\blikely\b", suffix):
+    if direction == "prefix" and marker.group().startswith(("you're", "you are")) and not re.search(r"\blikely\b", suffix):
         return None
     return Claim(number, len(markers) - 1)
 
