@@ -251,9 +251,10 @@ def test_backend_switch(monkeypatch):
         get_backend()
 
 
-def test_open_weights_stub_fails_cleanly(store):
+def test_open_weights_without_key_fails_cleanly(store, monkeypatch):
+    monkeypatch.delenv("BASETEN_API_KEY", raising=False)
     result = extract(flagship(), WORKED, mode="live", backend=OpenWeightsBackend(), store=store)
-    assert not result.ok and result.error == "backend_unavailable"
+    assert not result.ok and result.error == "missing_key"
     assert not list(store.directory.glob("*.json"))
 
 
