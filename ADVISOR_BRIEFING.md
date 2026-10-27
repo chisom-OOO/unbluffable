@@ -26,10 +26,18 @@ For any new Claude chat or account helping with Unbluffable. Read this first, th
 - Open-weights backend + live claim classifier on a partner host for the $10K bonus (go/no-go Fri 30 Oct).
 
 ## Decision points
-- **Mon 26:** realtime gate (30 recorded clips; pass = ≥8/10 errors caught, 0/20 false challenges, median ≤1.5 s, max ≤3 s). Fail or not passed by 13:00 UK Tue → after-turn challenge.
+- **Mon 26 (done):** realtime gate failed: 2/10 errors caught (0/20 false). One held-out retry with widened rules: 8/10 on the old clips but **1/10 on 30 new clips** (decision log 1, 1a, 1b). **After-turn challenge is final.** Do not reopen mid-sentence interruption unless a fast open-weights classifier is available (needs sponsor GPU credits, not granted) and a fresh held-out gate passes.
 - **Wed 28:** a carefully prompted Muse Spark chatbot vs Unbluffable on 10 bluffs + 10 real answers. If no advantage, change the headline before building more.
 - **Fri 30:** open-weights go/no-go.
 - Every deviation goes in `spec/DECISION_LOG.md`; update `STATUS.md` every night.
+
+## Where things stand (Tue 27 Oct, 00:45 UK)
+- `main` has: FastAPI skeleton + CI; engine (`engine/`, pinned tests pass); Meta capability probes (`scripts/probes/`, `docs/capability_sheet.md`); realtime gate harness (`scripts/gate/`). 273+ tests pass.
+- Live probe facts: strict Spark returns schema-valid JSON with verbatim quotes, but each extraction call took **7–10 s**. Realtime transcription works on the builder's voice; partials arrive word by word ~0.3–0.5 s apart, ~0.1 s behind the audio, no revisions seen. The realtime service ends a turn at every short pause.
+- Consequences for the voice path (Tue): wait for the whole answer (merge turns until ~1.5–2 s silence or a Done tap), speak an instant neutral acknowledgement ("Okay, let me check your working") from the app, use a **minimal** Spark schema for the challenge (committed number + is it a commitment) and measure its latency first; full extraction runs alongside for scoring and the model panel. Probe 1 mislabelled the natural-frequency set-up as a "hypothetical" step: define that step in the extraction prompt.
+- Test data: 60 builder-recorded flagship clips with labels (`recordings/gate/` E/N/C01–10, `recordings/gate2/` E/N/C11–20; git-ignored, never paste into coding sessions). After-turn target: all 20 E clips challenged, none of the 40 others.
+- Tue plan: Codex makes the `voice` worktree and builds the after-turn voice path, file fallback and number normaliser; Claude Code builds the Spark extraction; first Render deploy; Meta workshop 16:00 UK.
+- The builder's API key lives only in `.env` (git-ignored) and is loaded per PowerShell window; agents never see it.
 
 ## Impact plan (largest rubric weight)
 Real users: 15–40 candidates, starting with the builder's trading society, plus quant/CS student communities; consent; "fooled it" attempts; 2–3 honest quotes for the video. Name the theme explicitly everywhere.
