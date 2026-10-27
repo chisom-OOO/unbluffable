@@ -1,10 +1,10 @@
-// Landing: show the puzzle; if the visitor hasn't started within 3 s, play the labelled recorded run.
+// Landing: show the puzzle; if the visitor hasn't started within 3 s, play the labelled sample
+// (to be swapped for a real recorded run once one exists).
 document.addEventListener("DOMContentLoaded", () => {
   const data = window.UB_FAKE;
   const { highlight, escapeHtml, reducedMotion } = window.UB;
 
   document.getElementById("landing-puzzle").textContent = data.puzzle.text;
-  document.getElementById("replay-note").textContent = `Recorded on ${data.replay.recordedOn}. Replay works without a live model.`;
 
   const body = document.getElementById("replay-body");
   const bar = document.getElementById("replay-bar");
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const clear = () => { timers.forEach(clearTimeout); timers = []; };
 
   function setButton(state) {
-    toggleLabel.textContent = state === "playing" ? "Stop" : state === "done" ? "Play again" : "Play recorded run";
+    toggleLabel.textContent = state === "playing" ? "Stop" : state === "done" ? "Play again" : "Play sample";
   }
 
   function play() {

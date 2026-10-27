@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `<p class="verdict ${L.cls}">${svg(L.icon)}<span>${L.text}</span></p>` +
     (e.misconception ? `<p class="misconception-name">${escapeHtml(e.misconception)}: reading “fraud gets flagged” as “a flag is fraud”.</p>` : "");
 
-  $("end-sub").textContent = `${e.questions} questions. Only your opening answer to each question is scored.`;
+  $("end-sub").textContent = `${e.questions} questions. Scored on where you end up, discounted by the help it took.`;
 
   $("evidence").innerHTML = e.evidence.map((q) =>
     `<blockquote class="evidence"><p>“${highlight(q.quote, q.challenge)}”</p><footer>${escapeHtml(q.note)}</footer></blockquote>`).join("");

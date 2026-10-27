@@ -9,12 +9,12 @@ window.UB_FAKE = {
     kind: "New puzzle",
   },
 
-  // Landing replay (spec/01 "Landing"). Labelled as a recorded run.
+  // Landing sample (spec/01 "Landing"). Written text, labelled as a sample until a real run is recorded.
+  // Challenges are Socratic questions about the candidate's own words, never explanations.
   replay: {
-    recordedOn: "2026-10-21",
     lines: [
       { who: "candidate", text: "…so if a transaction gets flagged, it's about 90 percent likely to be fraud.", challenge: "90 percent" },
-      { who: "interviewer", kind: "challenge", text: "Careful. 90% is the chance a fraudulent transaction gets flagged, not the chance a flagged transaction is fraud. Out of 2,000 transactions, how many genuine ones get flagged too?" },
+      { who: "interviewer", kind: "challenge", text: "You said 90 percent. Is that the chance a flag is fraud, or the chance fraud gets flagged?" },
     ],
   },
 
@@ -24,11 +24,11 @@ window.UB_FAKE = {
     {
       candidate: "The detector catches 90% of fraud and flags 5% of genuine ones. So if a transaction gets flagged, it's about 90 percent likely to be fraud.",
       challenge: "90 percent",
-      reply: { kind: "nudge", text: "You said 90 percent. Is that the chance a flag is fraud, or the chance fraud gets flagged?" },
+      reply: { kind: "challenge", text: "You said 90 percent. Is that the chance a flag is fraud, or the chance fraud gets flagged?" },
     },
     {
       candidate: "Hmm. The chance fraud gets flagged, I think. So I need the other direction, but I'm not sure how to count the genuine ones.",
-      reply: { kind: "nudge", text: "Good. What would you need to know about the genuine transactions to get the other direction?" },
+      reply: { kind: "nudge", text: "Which transactions get flagged, apart from the fraudulent ones?" },
     },
     {
       candidate: "So 20 are fraud and 18 of those get flagged. 1,980 are genuine and 99 get flagged. That's 18 out of 117, about 15 percent.",
@@ -56,8 +56,8 @@ window.UB_FAKE = {
     label: "misconception",
     misconception: "Transposed conditional",
     evidence: [
-      { quote: "So if a transaction gets flagged, it's about 90 percent likely to be fraud.", challenge: "90 percent", note: "Scored answer, question 1" },
-      { quote: "That's 18 out of 117, about 15 percent.", note: "After 2 nudges and 1 hint" },
+      { quote: "So if a transaction gets flagged, it's about 90 percent likely to be fraud.", challenge: "90 percent", note: "Opening answer, question 1 (challenged)" },
+      { quote: "That's 18 out of 117, about 15 percent.", note: "Where you ended up: right, after 2 nudges and 1 hint" },
     ],
     check: { said: "90%", exact: "18/117 = 2/13 ≈ 15.4%" },
     hints: [

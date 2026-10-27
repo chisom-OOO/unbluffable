@@ -1,11 +1,12 @@
-// Interview preview: a scripted run through idle → listening → thinking → speaking, with fake data.
+// Interview preview: hands-free after one Start tap (decision log 4), with fake data.
+// The mic shows Listening / Thinking / Speaking on its own; Done is only a fallback.
 // No microphone, model or speech calls are made here; the real voice path lives in /practice and voice/.
 document.addEventListener("DOMContentLoaded", () => {
   const data = window.UB_FAKE;
   const { highlight, escapeHtml, reducedMotion } = window.UB;
   const $ = (id) => document.getElementById(id);
 
-  const mic = $("mic"), micState = $("mic-state"), done = $("done"), stuck = $("stuck");
+  const start = $("start"), mic = $("mic"), micState = $("mic-state"), done = $("done"), stuck = $("stuck");
   const log = $("log"), live = $("live"), liveText = $("live-text"), editRow = $("edit-row");
   const typePanel = $("type-panel"), typeAnswer = $("type-answer"), typeToggle = $("type-toggle");
   const mute = $("mute");
@@ -14,39 +15,48 @@ document.addEventListener("DOMContentLoaded", () => {
   $("puzzle-kind").textContent = data.puzzle.kind;
 
   const STATE_TEXT = {
-    idle: "Tap to talk",
+    ready: "One tap starts the interview",
     listening: "Listening",
     thinking: "Thinking",
-    speaking: "Interviewer speaking",
-    finished: "Interview finished",
-  };
-  const MIC_LABEL = {
-    idle: "Start talking",
-    listening: "Finish answer",
-    thinking: "Interviewer is thinking",
-    speaking: "Interrupt the interviewer",
+    speaking: "Speaking",
     finished: "Interview finished",
   };
 
-  let state = "idle";
+  const reduced = reducedMotion();
+  const T = {
+    beforeTalk: reduced ? 600 : 1200,   // candidate starts talking
+    word: 150,                          // live transcript pace
+    endPause: reduced ? 900 : 1400,     // pause read as "finished" (end-of-answer detection)
+    think: reduced ? 400 : 900,
+  };
+
+  let state = "ready";
   let turn = 0;
   let hints = 0, nudges = 0;
-  let streamTimer = null, editing = null, answered = false, offered = false;
-  let typing = false;
+  let typing = false, answered = false, offered = false;
+  let editing = null;
+  let timers = [];
+  let streamTimer = null;
   let speakTimer = null, pendingThen = null;
+
+  const later = (fn, ms) => { const id = setTimeout(fn, ms); timers.push(id); return id; };
+  function cancelListening() {
+    timers.forEach(clearTimeout); timers = [];
+    clearInterval(streamTimer); streamTimer = null;
+  }
 
   function setState(next) {
     state = next;
-    mic.dataset.state = next === "finished" ? "idle" : next;
-    mic.setAttribute("aria-label", MIC_LABEL[next]);
-    micState.textContent = STATE_TEXT[next];
-    mic.disabled = next === "thinking" || next === "finished";
-    done.disabled = !(next === "listening" || (typing && next === "idle"));
-    stuck.disabled = next === "thinking" || next === "speaking" || next === "finished";
+    mic.dataset.state = next === "listening" || next === "thinking" || next === "speaking" ? next : "idle";
+    micState.textContent = typing && next === "listening" ? "Waiting for your typed answer" : STATE_TEXT[next];
+    done.disabled = next !== "listening";
+    stuck.disabled = next !== "listening";
+    typeToggle.disabled = next === "ready" || next === "finished";
+    document.querySelector(".action-bar").classList.toggle("ready", next === "ready");
   }
 
   function scrollTo(el) {
-    el.scrollIntoView({ block: "nearest", behavior: reducedMotion() ? "auto" : "smooth" });
+    el.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
   }
 
   function addInterviewer(text, kind) {
@@ -81,63 +91,71 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   $("model-rows").innerHTML = `<tr><td colspan="4">Nothing yet. Rows appear after your answer.</td></tr>`;
 
-  // Interviewer "speaks" for a time proportional to the line (simulated; muted just skips the wait).
+  // Interviewer "speaks" for a time proportional to the line (simulated; muted just shortens it).
   function speak(text, kind, then) {
     setState("speaking");
-    const el = addInterviewer(text, kind);
+    addInterviewer(text, kind);
     const ms = mute.getAttribute("aria-pressed") === "true" ? 400 : Math.min(5000, 900 + text.length * 28);
     pendingThen = then;
-    speakTimer = setTimeout(() => { speakTimer = pendingThen = null; then && then(el); }, ms);
+    speakTimer = setTimeout(() => { speakTimer = pendingThen = null; then && then(); }, ms);
   }
 
   function think(then) {
     setState("thinking");
-    setTimeout(then, reducedMotion() ? 400 : 900);
+    setTimeout(then, T.think);
   }
 
-  // ---- Listening ----
-  function startListening() {
+  // ---- Listening: the mic is open; the candidate talks; a pause ends the answer ----
+  function listen() {
     const script = data.script[turn];
     if (!script) return;
     setState("listening");
+    if (typing) { typeAnswer.value = script.candidate; return; }
+
     live.hidden = false;
     editRow.hidden = true;
     liveText.hidden = false;
     liveText.textContent = "";
-    scrollTo(live);
 
-    const words = script.candidate.split(" ");
-    let i = 0;
-    clearInterval(streamTimer);
-    streamTimer = setInterval(() => {
-      liveText.textContent = words.slice(0, ++i).join(" ");
-      if (i >= words.length) { clearInterval(streamTimer); streamTimer = null; editRow.hidden = false; }
-    }, 150);
+    later(() => {
+      scrollTo(live);
+      const words = script.candidate.split(" ");
+      let i = 0;
+      streamTimer = setInterval(() => {
+        liveText.textContent = words.slice(0, ++i).join(" ");
+        if (i >= words.length) {
+          clearInterval(streamTimer); streamTimer = null;
+          editRow.hidden = false;
+          later(() => submit(takeLiveText()), T.endPause);
+        }
+      }, T.word);
+    }, T.beforeTalk);
   }
 
-  function beginEdit() {
-    clearInterval(streamTimer); streamTimer = null;
+  // Editing pauses end-of-answer detection; Done (or Space) sends.
+  $("edit-btn").addEventListener("click", () => {
+    cancelListening();
     editing = document.createElement("textarea");
     editing.className = "transcript-edit";
-    editing.setAttribute("aria-label", "Edit your transcript before sending");
+    editing.setAttribute("aria-label", "Edit your transcript, then press Done");
     editing.value = data.script[turn].candidate;
     liveText.hidden = true;
     editRow.hidden = true;
     live.insertBefore(editing, editRow);
     editing.focus();
-  }
-  $("edit-btn").addEventListener("click", beginEdit);
+  });
 
   function takeLiveText() {
-    clearInterval(streamTimer); streamTimer = null;
-    let text = data.script[turn].candidate;
+    cancelListening();
+    let text = liveText.textContent.trim() || data.script[turn].candidate;
     if (editing) { text = editing.value.trim() || text; editing.remove(); editing = null; }
     live.hidden = true;
     return text;
   }
 
-  // ---- Submitting an answer (voice Done, Space, or typed) ----
+  // ---- An answer is in: think, then the interviewer replies and the mic reopens ----
   function submit(text) {
+    if (state !== "listening") return;
     const script = data.script[turn];
     answered = true;
     const node = addCandidate(text);
@@ -145,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fillModels();
       if (script.challenge) node.querySelector(".says").innerHTML = highlight(text, script.challenge);
       const kind = script.reply.kind === "close" ? null : script.reply.kind;
-      if (kind === "nudge") { nudges++; updateCounts(); }
+      if (kind) { nudges++; updateCounts(); }
       speak(script.reply.text, kind, () => {
         turn++;
         if (script.reply.kind === "close") {
@@ -154,41 +172,52 @@ document.addEventListener("DOMContentLoaded", () => {
           scrollTo($("finish"));
           $("finish").querySelector("a").focus({ preventScroll: true });
         } else {
-          setState("idle");
+          listen();
         }
       });
     });
   }
 
-  function finishAnswer() {
-    if (state === "listening") submit(takeLiveText());
-    else if (typing && state === "idle" && typeAnswer.value.trim()) {
+  // Done is a fallback for noisy rooms or typed answers.
+  function finishNow() {
+    if (state !== "listening") return;
+    if (typing) {
       const text = typeAnswer.value.trim();
+      if (!text) return;
       typeAnswer.value = "";
       submit(text);
+    } else {
+      submit(takeLiveText());
     }
   }
+  done.addEventListener("click", finishNow);
 
-  mic.addEventListener("click", () => {
-    if (state === "idle") startListening();
-    else if (state === "listening") finishAnswer();
-    // Barge-in: stop the interviewer; the line stays on screen.
-    else if (state === "speaking") { clearTimeout(speakTimer); const then = pendingThen; speakTimer = pendingThen = null; then && then(); }
-  });
-  done.addEventListener("click", finishAnswer);
-
-  // ---- I'm stuck: ask, candidate says what's wrong, then a hint ----
+  // ---- I'm stuck: the interviewer asks what about, then gives a hint for that ----
   stuck.addEventListener("click", () => {
-    if (state === "listening") { clearInterval(streamTimer); streamTimer = null; live.hidden = true; if (editing) { editing.remove(); editing = null; } }
+    if (state !== "listening") return;
+    cancelListening();
+    live.hidden = true;
+    if (editing) { editing.remove(); editing = null; }
     speak(data.stuck.ask, null, () => {
       setState("listening");
-      addCandidate(data.stuck.candidate);
-      think(() => {
-        hints++; updateCounts();
-        speak(data.stuck.hint, "hint", () => setState("idle"));
-      });
+      later(() => {
+        addCandidate(data.stuck.candidate);
+        think(() => {
+          hints++; updateCounts();
+          speak(data.stuck.hint, "hint", listen);
+        });
+      }, T.beforeTalk);
     });
   });
+
+  // ---- Start: the one tap (browsers need a gesture for mic and speech) ----
+  function begin() {
+    start.hidden = true;
+    mic.hidden = false;
+    startClock();
+    speak("Take your time. Talk me through it out loud.", null, listen);
+  }
+  start.addEventListener("click", begin);
 
   // ---- Typed answers ----
   typeToggle.addEventListener("click", () => {
@@ -196,11 +225,16 @@ document.addEventListener("DOMContentLoaded", () => {
     typeToggle.setAttribute("aria-pressed", String(typing));
     typeToggle.textContent = typing ? "Use voice" : "Type instead";
     typePanel.hidden = !typing;
-    if (typing) { typeAnswer.value = data.script[turn]?.candidate ?? ""; typeAnswer.focus(); }
-    setState(state);
+    if (state === "listening") {
+      cancelListening();
+      live.hidden = true;
+      if (editing) { editing.remove(); editing = null; }
+      listen();
+      if (typing) typeAnswer.focus();
+    }
   });
   typeAnswer.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); finishAnswer(); }
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); finishNow(); }
   });
 
   mute.addEventListener("click", () => {
@@ -216,28 +250,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const editable = t.closest && t.closest("textarea, input, select, [contenteditable='true']");
     if (editable || state !== "listening") return;
     e.preventDefault();
-    finishAnswer();
+    finishNow();
   }, true);
 
   // ---- Timer vs guide, and help offered at 60% of the guide ----
   const guide = data.puzzle.guideSeconds;
   const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   $("timer-guide").textContent = `${fmt(guide)} guide`;
-  let elapsed = 0;
-  const tick = setInterval(() => {
-    if (state === "finished") { clearInterval(tick); return; }
-    elapsed++;
-    $("timer-text").textContent = fmt(elapsed);
-    const timer = $("timer");
-    timer.classList.toggle("over", elapsed > guide);
-    timer.setAttribute("aria-label", `${fmt(elapsed)} elapsed, guide ${fmt(guide)}${elapsed > guide ? ", over guide" : ""}`);
-    if (!answered && !offered && elapsed >= Math.round(guide * 0.6) && state === "idle") {
-      offered = true;
-      speak(data.offerHelp, null, () => setState("idle"));
-    }
-  }, 1000);
+  function startClock() {
+    let elapsed = 0;
+    const tick = setInterval(() => {
+      if (state === "finished") { clearInterval(tick); return; }
+      elapsed++;
+      $("timer-text").textContent = fmt(elapsed);
+      const timer = $("timer");
+      timer.classList.toggle("over", elapsed > guide);
+      timer.setAttribute("aria-label", `${fmt(elapsed)} elapsed, guide ${fmt(guide)}${elapsed > guide ? ", over guide" : ""}`);
+      if (!answered && !offered && elapsed >= Math.round(guide * 0.6) && state === "listening" && !streamTimer) {
+        offered = true;
+        cancelListening();
+        live.hidden = true;
+        speak(data.offerHelp, null, listen);
+      }
+    }, 1000);
+  }
 
-  // Opening line.
-  addInterviewer("Take your time. Talk me through it out loud.", null);
-  setState("idle");
+  setState("ready");
+  // Preview only: arriving from the landing's Start tap begins straight away.
+  if (new URLSearchParams(location.search).get("start") === "1") begin();
 });
