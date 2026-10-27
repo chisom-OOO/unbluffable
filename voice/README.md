@@ -75,8 +75,13 @@ uploaded source hash without invoking ffmpeg. Live file conversion uses ffmpeg
 The separate acceptance runner reads the original 60 event streams without
 printing transcripts or writing into the source captures. It simulates provider
 boundaries and 0.8-second partial-idle checks, incorporates recorded model latency,
-invalidates stale decisions, and checks for one complete answer with no early
-boundary. Output contains only clip IDs, timing, counts and decision cues. A missing
+invalidates stale decisions, and checks for one completion at a valid semantic
+boundary. A committed answer, question, help request or explicit closer permits
+completion even when speech continues later; an unfinished thought does not.
+The last provider speech boundary and equality with the full clip transcript are
+not acceptance requirements. Ambiguous content relies on the recorded endpoint
+decision; this is not an independent human-labelled check of model accuracy.
+Output contains only clip IDs, timing, counts and decision cues. A missing
 model result fails acceptance; a longer silence window or forced Done cannot pass it.
 
 ```powershell
@@ -85,7 +90,14 @@ model result fails acceptance; a longer silence window or forced Done cannot pas
 
 Its default records live outside both worktrees, in the system temporary directory
 under `unbluffable-turn-taking`. For a live acceptance run with an available server
-key, use `--mode live`; every model response is recorded there. Re-run with
+key, run this command from the worktree; every endpoint-model response is recorded
+outside both repositories:
+
+```powershell
+.\.venv\Scripts\python.exe -m voice.acceptance --mode live --capture-root "C:\Users\chiso\unbluffable\scripts\gate\runs" --records "$env:TEMP\unbluffable-turn-taking"
+```
+
+`MODEL_API_KEY` must already be exported in that PowerShell session. Re-run with
 `--mode replay` to verify keyless reproduction. `--records PATH` selects an existing
 external store. Records containing private gate text must never go into the repo.
 The source worktree's `live-02` and `live-03` captures are read only.
@@ -115,11 +127,18 @@ records unavailable for every `live-02/clip-01.json` through `clip-30.json` and
 not responses to the new endpoint schema. A key or matching external endpoint
 records is still needed to verify the model-backed detector.
 
-One additional boundary is flagged: **live-02/clip-10.json**, **7.984 s**, cue
-**explicit_closer**, before the final provider speech boundary. This is a
-potential early cut-off under the conservative provider-boundary acceptance
-check. The cue rules were not tuned to this clip. No recorded speech was copied
-into the repository or printed. No live model calls were made in this session.
+After the builder's semantic-criterion clarification, the replay reports **zero
+early completions**. **live-02/clip-10.json**, **7.984 s**, cue **explicit_closer**,
+is a permitted completion even though speech follows. All 60 clips remain
+unverified because endpoint-model records are missing. The detector's cue rules
+and model prompt were not changed. No recorded speech was copied into the
+repository or printed. No live model calls were made in this session.
+
+The updated acceptance unit tests pass **10/10**:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests/test_voice_acceptance.py --tb=short
+```
 
 Spec/04 status: Monday's offline engine checks pass; Tuesday's public-link
 challenge/non-challenge exit test and Wednesday's complete voice interview remain

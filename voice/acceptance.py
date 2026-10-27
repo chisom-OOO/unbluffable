@@ -10,25 +10,27 @@ import json
 from pathlib import Path
 import tempfile
 
-from voice.endpointing import classify
+from voice.endpointing import classify, cues
 from voice.provider import MetaVoice
 from voice.recording import VoiceError
 from voice.turns import AnswerMerger
 
 
+def semantic_boundary(text, decision):
+    """Judge the content at completion, irrespective of subsequent speech.
+
+    Known unfinished content vetoes completion. Ambiguous commitments/questions
+    rely on the recorded endpoint-model decision; this is not a human-labelled
+    oracle for model errors.
+    """
+    cue = cues(text)
+    evidence = cue if cue is not None else decision
+    return evidence.finished and evidence.kind in {"answer", "question", "help"}
+
+
 async def replay_clip(rows, provider):
     events = [(row.get("stream_elapsed_s", row.get("elapsed_s")), row["event"]) for row in rows]
     events = [(elapsed, event) for elapsed, event in events if elapsed is not None]
-    speech = [(elapsed, event) for elapsed, event in events
-              if event.get("type") in {"speechStart", "speechEnd", "speechComplete", "transcript"}]
-    final_boundary = max((elapsed for elapsed, event in speech if event.get("type") == "speechEnd"), default=0)
-    finals = {}
-    for _, event in speech:
-        if event.get("type") == "speechStart":
-            finals.setdefault(event["turnId"], "")
-        if event.get("type") == "speechComplete":
-            finals[event["turnId"]] = event.get("transcript", "")
-    expected = " ".join(value.strip() for value in finals.values() if value.strip())
     merger = AnswerMerger()
     index, now, pending, missing = 0, 0, None, False
     last_cue = "no_speech"
@@ -46,9 +48,10 @@ async def replay_clip(rows, provider):
             pending = None
             last_cue = decision.cue
             if decision.finished:
-                # The production relay drains final hypotheses after endStream.
-                # Never treat that drain as permission to accept later speech.
-                early = now < final_boundary
+                # A commitment, question, help request or closer ends a valid
+                # conversational turn even if the candidate continues speaking.
+                # Evaluate the snapshot before draining any later hypotheses.
+                early = not semantic_boundary(merger.transcript, decision)
                 # Drain only finals of turns already seen, just as endStream
                 # does. Future candidate speech must never be swept into a pass.
                 for _, event in events[index:]:
@@ -58,7 +61,7 @@ async def replay_clip(rows, provider):
                     answer = merger.finish(decision.cue)
                 except ValueError:
                     answer = None
-                complete = bool(answer) and bool(expected) and answer["transcript"] == expected
+                complete = bool(answer) and bool(answer["transcript"].strip())
                 once = bool(answer) and merger.finish(decision.cue) is None
                 return {"passed": not early and complete and once and not missing,
                         "completions": int(bool(answer)), "early": early,
