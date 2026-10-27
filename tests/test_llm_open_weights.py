@@ -164,3 +164,90 @@ def test_scoring_is_the_same_code_path(store):
     turn = assess(flagship(), TEXT, mode="replay", backend=OpenWeightsBackend(), store=store)
     assert turn.source == "model"
     assert turn.observation.outcome is Outcome.NAMED_WRONG
+
+
+# --- One repair attempt (spec/03: schema in prompt + local validation + one repair) ---
+
+BAD_JSON = "```json\n" + json.dumps(GOOD) + "\n```"
+BAD_SCHEMA = json.dumps({**GOOD, "reasoning_code": "correct"})
+
+
+def saved(store):
+    files = list(store.directory.glob("*.json"))
+    assert len(files) == 1
+    return json.loads(files[0].read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("bad, detail", [(BAD_JSON, "not valid JSON"), (BAD_SCHEMA, "reasoning_code")])
+def test_invalid_output_is_repaired_once(store, bad, detail):
+    result, client = live(store, [with_reasoning(bad), with_reasoning(GOOD)])
+    assert result.ok and result.repaired and result.attempts == 2
+    assert result.extraction == GOOD
+    assert len(client.calls) == 2
+
+    first, repair = client.calls
+    # The repair repeats the request, then sends back the invalid reply and the error.
+    assert repair["messages"][: len(first["messages"])] == first["messages"]
+    assistant, user = repair["messages"][-2:]
+    assert assistant == {"role": "assistant", "content": bad}
+    assert user["role"] == "user" and detail in user["content"]
+    assert {k: v for k, v in repair.items() if k != "messages"} == {
+        k: v for k, v in first.items() if k != "messages"
+    }
+
+    record = saved(store)
+    assert record["repaired"] is True
+    assert len(record["attempts"]) == 2
+    assert record["latency_s"] == pytest.approx(sum(a["latency_s"] for a in record["attempts"]), abs=0.002)
+    assert result.latency_s == record["latency_s"]
+
+
+def test_second_invalid_output_is_a_failure(store):
+    result, client = live(store, [with_reasoning(BAD_JSON), with_reasoning(BAD_SCHEMA)])
+    assert not result.ok and result.error == "schema_invalid"
+    assert result.repaired and result.attempts == 2
+    assert len(client.calls) == 2  # exactly one repair, never a second
+    assert saved(store)["repaired"] is True
+
+
+def test_valid_output_needs_no_repair(store):
+    result, client = live(store, [with_reasoning(GOOD)])
+    assert result.ok and not result.repaired and result.attempts == 1
+    assert len(client.calls) == 1
+    record = saved(store)
+    assert record["repaired"] is False and len(record["attempts"]) == 1
+
+
+@pytest.mark.parametrize("body, error", [
+    (with_reasoning(json.dumps(GOOD), finish_reason="length"), "finish_length"),
+    (with_reasoning("", refusal="no"), "refusal"),
+])
+def test_truncation_and_refusal_are_not_repaired(store, body, error):
+    result, client = live(store, [body, with_reasoning(GOOD)])
+    assert not result.ok and result.error == error and len(client.calls) == 1
+
+
+def test_meta_backend_is_strict_and_never_repaired(store):
+    from llm.backends import MetaAPIBackend
+
+    client = FakeClient([chat_response(BAD_JSON), chat_response(GOOD)])
+    result = extract(flagship(), TEXT, mode="live", backend=MetaAPIBackend(client=client), store=store)
+    assert not result.ok and result.error == "invalid_json" and not result.repaired
+    assert len(client.calls) == 1
+
+
+def test_repaired_call_replays_without_a_key(store):
+    first, _ = live(store, [with_reasoning(BAD_JSON), with_reasoning(GOOD)])
+    again = extract(flagship(), TEXT, mode="replay", backend=OpenWeightsBackend(), store=store)
+    assert again.ok and again.replayed and again.repaired and again.attempts == 2
+    assert again.extraction == GOOD and again.latency_s == first.latency_s
+
+
+def test_failed_repair_call_is_recorded_and_replays_as_a_failure(store):
+    result, client = live(store, [with_reasoning(BAD_JSON), TimeoutError("synthetic")])
+    assert not result.ok and result.error == "call_failed:TimeoutError"
+    assert result.repaired and len(client.calls) == 2
+    record = saved(store)
+    assert record["repair_error"] == "call_failed:TimeoutError"
+    again = extract(flagship(), TEXT, mode="replay", backend=OpenWeightsBackend(), store=store)
+    assert not again.ok and again.error == "call_failed:TimeoutError"

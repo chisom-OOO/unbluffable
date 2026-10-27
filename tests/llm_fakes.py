@@ -33,7 +33,11 @@ def chat_response(content, finish_reason="stop", refusal=None):
 
 
 class FakeClient:
-    """Stands in for openai.OpenAI; records every create() call."""
+    """Stands in for openai.OpenAI; records every create() call.
+
+    `response` is returned for every call; pass a list to return them in turn
+    (an Exception in the list is raised instead).
+    """
 
     def __init__(self, response):
         self.calls = []
@@ -42,4 +46,9 @@ class FakeClient:
 
     def _create(self, **kwargs):
         self.calls.append(kwargs)
-        return SimpleNamespace(model_dump=lambda: self.response)
+        body = self.response
+        if isinstance(body, list):
+            body = body[min(len(self.calls), len(body)) - 1]
+        if isinstance(body, Exception):
+            raise body
+        return SimpleNamespace(model_dump=lambda: body)
