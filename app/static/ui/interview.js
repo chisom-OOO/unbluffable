@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     listening: "Listening",
     thinking: "Thinking",
     speaking: "Speaking",
-    finished: "Interview finished",
+    finished: "Preview ends here",
   };
 
   const reduced = reducedMotion();

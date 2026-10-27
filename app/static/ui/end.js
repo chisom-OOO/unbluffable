@@ -21,23 +21,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const L = LABELS[e.label];
   $("verdict").innerHTML =
     `<p class="verdict ${L.cls}">${svg(L.icon)}<span>${L.text}</span></p>` +
-    (e.misconception ? `<p class="misconception-name">${escapeHtml(e.misconception)}: reading “fraud gets flagged” as “a flag is fraud”.</p>` : "");
+    (e.label === "misconception" && e.misconception ? `<p class="misconception-name">${escapeHtml(e.misconception)}: reading “fraud gets flagged” as “a flag is fraud”.</p>` : "");
 
   $("end-sub").textContent = `${e.questions} questions. Scored on where you end up, discounted by the help it took.`;
 
   $("evidence").innerHTML = e.evidence.map((q) =>
     `<blockquote class="evidence"><p>“${highlight(q.quote, q.challenge)}”</p><footer>${escapeHtml(q.note)}</footer></blockquote>`).join("");
 
-  $("check").innerHTML = `Exact check: you said <span class="mono">${escapeHtml(e.check.said)}</span>; the answer is <span class="mono">${escapeHtml(e.check.exact)}</span>.`;
+  $("check").innerHTML = e.checks.map((c) =>
+    `${escapeHtml(c.q)}, exact check: you said <span class="mono">${escapeHtml(c.said)}</span>; the answer is <span class="mono">${escapeHtml(c.exact)}</span>.`).join("<br>");
 
   const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-  const over = e.time.seconds > e.time.guide;
   const levelBars = Array.from({ length: e.levels }, (_, i) => `<span class="${i < e.level ? "on" : ""}"></span>`).join("");
   $("stats").innerHTML = [
-    `<div class="stat"><dt>Hints used</dt><dd>${e.hints.length}</dd></div>`,
+    `<div class="stat"><dt>Challenges</dt><dd>${e.challenges}</dd></div>`,
     `<div class="stat"><dt>Nudges</dt><dd>${e.nudges}</dd></div>`,
-    `<div class="stat"><dt>Time vs guide</dt><dd class="${over ? "over" : ""}">${fmt(e.time.seconds)}<small>guide ${fmt(e.time.guide)}${over ? " · over" : ""}</small></dd></div>`,
-    `<div class="stat wide"><dt>After the challenge</dt><dd>${e.recovered ? `Recovered after ${e.nudges} nudges` : "Not recovered"}</dd></div>`,
+    `<div class="stat"><dt>Hints used</dt><dd>${e.hints.length}</dd></div>`,
+    ...e.times.map((t) => {
+      const over = t.seconds > t.guide;
+      return `<div class="stat"><dt>${escapeHtml(t.q)} vs guide</dt><dd class="${over ? "over" : ""}">${fmt(t.seconds)}<small>guide ${fmt(t.guide)}${over ? " · over" : ""}</small></dd></div>`;
+    }),
+    // The challenge is its own help step (decision log 3b), so it is not counted as a nudge here.
+    `<div class="stat wide"><dt>After the challenge</dt><dd>${e.recovered ? `Recovered after ${e.nudges} nudge${e.nudges === 1 ? "" : "s"}` : "Not recovered"}</dd></div>`,
     `<div class="stat wide"><dt>Level reached</dt><dd>${e.level} of ${e.levels}<small>Shown separately from the label.</small><div class="level-track" aria-hidden="true">${levelBars}</div></dd></div>`,
   ].join("");
 

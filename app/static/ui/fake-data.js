@@ -32,7 +32,7 @@ window.UB_FAKE = {
     },
     {
       candidate: "So 20 are fraud and 18 of those get flagged. 1,980 are genuine and 99 get flagged. That's 18 out of 117, about 15 percent.",
-      reply: { kind: "close", text: "That's right: 18 out of 117. Let's stop there." },
+      reply: { kind: "close", text: "That's right: 18 out of 117. Now the same puzzle with new numbers." },
     },
   ],
 
@@ -52,28 +52,47 @@ window.UB_FAKE = {
     { model: "browser speech", job: "Interviewer voice", ms: 40, cost: "$0" },
   ],
 
+  // Sample end card (spec/02 §3, §5, §7), consistent with the script above plus a twin the preview doesn't play.
+  // Q1 help load, solution map T1 (1 population, 2 fraud count, 3 flagged fraud, 4 flagged genuine, 5 total, 6 divide):
+  //   challenge "Is that the chance a flag is fraud...?" points at no step: strength 0 (counted as the +1 below).
+  //   candidate position stays 0 (the 90% and 5% are restated givens; turn 2 states no step value).
+  //   nudge "Which transactions get flagged, apart from the fraudulent ones?" targets step 4: max(0, 4 - 0) = 4.
+  //   hint "Picture all 2,000 transactions..." targets step 1: max(0, 1 - 0) = 1.  H = 5.
+  // Q1 recovered: w = 2/(2 + 5 + 1) = 1/4; Correct row L' = w*L + (1-w)/4 = S 2/5, M 9/40, G 19/80.
+  //   prior 4/10, 3/10, 3/10 -> unnormalised 4/25, 27/400, 57/800.
+  // Q2 twin (p = 2%, 18/67), correct with no help: "after correct" row .90 / .20 / .15.
+  //   -> S 256/299 = 0.856, M 24/299 = 0.080, G 19/299 = 0.064. Two answers, S >= 0.80: Evidence supports understanding.
+  // Escalation needs H <= 1 on the scored answers; H = 5, so no follow-ups: level 1 of 3.
   end: {
-    label: "misconception",
-    misconception: "Transposed conditional",
+    label: "supports",
     evidence: [
       { quote: "So if a transaction gets flagged, it's about 90 percent likely to be fraud.", challenge: "90 percent", note: "Opening answer, question 1 (challenged)" },
-      { quote: "That's 18 out of 117, about 15 percent.", note: "Where you ended up: right, after 2 nudges and 1 hint" },
+      { quote: "That's 18 out of 117, about 15 percent.", note: "Question 1, where you ended up: right, after the challenge, 1 nudge and 1 hint" },
+      { quote: "40 are fraud and 36 get flagged; 1,960 genuine and 98 flagged. 36 out of 134, so 18 out of 67, about 27 percent.", note: "Question 2, same puzzle with new numbers (2% fraud): right, no help" },
     ],
-    check: { said: "90%", exact: "18/117 = 2/13 ≈ 15.4%" },
+    checks: [
+      { q: "Question 1", said: "90%, then 18/117", exact: "18/117 = 2/13 ≈ 15.4%" },
+      { q: "Question 2", said: "18/67", exact: "36/134 = 18/67 ≈ 26.9%" },
+    ],
     hints: [
       { kind: "hint", text: "Picture all 2,000 transactions. How many of them are genuine?" },
     ],
-    nudges: 2,
+    challenges: 1,
+    nudges: 1,
     recovered: true,
-    time: { seconds: 161, guide: 120 },
+    // Guides per spec/01 and 02 §4: new puzzle 2 min, twin 1 min.
+    times: [
+      { q: "Question 1", seconds: 161, guide: 120 },
+      { q: "Question 2 (twin)", seconds: 52, guide: 60 },
+    ],
     level: 1,
     levels: 3,
     questions: 2,
     tip: "Before you answer, say which way the condition runs: \"given flagged, how likely fraud?\" Then count both groups that get flagged out of a round total, like 2,000.",
     estimate: [
-      { label: "Transposed conditional", p: "0.71" },
-      { label: "Understands the base rate", p: "0.18" },
-      { label: "Other error", p: "0.11" },
+      { label: "Sound (S)", p: "0.856" },
+      { label: "Misconception (M)", p: "0.080" },
+      { label: "Gap (G)", p: "0.064" },
     ],
   },
 };
