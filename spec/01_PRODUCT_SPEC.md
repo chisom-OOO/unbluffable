@@ -61,8 +61,10 @@ Real quant interviews push back, give hints and get harder. Unbluffable does the
 ### Interviewer voice (committed)
 - The interviewer **speaks everything**: each question, each challenge, the follow-up, and the verdict. The same text appears on screen.
 - Uses the browser's speech synthesis (Meta has no text-to-speech model; disclose this). Prefer the best natural-sounding English voice available (Chrome/Edge "Natural"/"Online" voices on Windows), with a fixed fallback order.
-- Mic input is muted while the interviewer speaks (no echo). Headphones recommended on the landing page.
-- A visible "mute interviewer" toggle; text-only mode always works.
+- **Hands-free conversation (decision log 4).** One "Start interview" tap (browsers require one gesture for mic and speech); after that the candidate never presses anything. The mic stays open; the interviewer speaks automatically.
+- **Knowing when the candidate has finished:** after a short pause (~0.8 s) the app decides from *what* was said, not only silence: committed answer, question, help request or closer ("that's my answer") → respond now; mid-thought ("so the flagged ones are… um") → keep listening (thinking aloud is normal and never interrupted); ~8 s of silence → a gentle prompt (*"Want to talk me through where you are?"*). Cheap cues first; Muse Spark (`minimal`) only for unclear cases.
+- **Barge-in:** with the "Using headphones" toggle on, the candidate can talk over the interviewer and it stops speaking. Without headphones, mic input is muted while the interviewer speaks (no echo).
+- A small Done control remains as a fallback (noisy rooms, accessibility); never required. A visible "mute interviewer" toggle; text-only mode always works.
 - Interruptions use the same voice and start immediately (browser speech has near-zero start-up delay).
 
 ### Labels (the only verdict vocabulary)
