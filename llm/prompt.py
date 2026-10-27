@@ -4,9 +4,11 @@ decides the outcome (spec/02 §2, spec/03)."""
 from __future__ import annotations
 
 import hashlib
+import json
 from fractions import Fraction
 
 from engine.templates import Puzzle
+from llm.schema import EXTRACTION_SCHEMA
 
 PROMPT_VERSION = 1
 
@@ -64,6 +66,15 @@ Fill every field of the schema:
 - self_corrected: true if the candidate revised an earlier answer or step, otherwise false."""
 
 PROMPT_SHA256 = hashlib.sha256(SYSTEM_PROMPT.encode("utf-8")).hexdigest()
+
+
+def schema_appendix() -> str:
+    """For backends that accept but do not enforce json_schema (Muse Spark Open)."""
+    schema = json.dumps(EXTRACTION_SCHEMA, separators=(",", ":"))
+    return (
+        "\n\nReply with only one JSON object, with no other text and no code fences. "
+        f"It must match this JSON Schema exactly: {schema}"
+    )
 
 
 def _pct(x: Fraction) -> str:

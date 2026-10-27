@@ -1,26 +1,31 @@
 """Muse Spark extraction with the strict schema (spec/03).
 
 `strict: true`, `reasoning_effort: "low"`, a 4,000-token cap, and any finish
-other than "stop" is a failure. Code finds every quote verbatim in the
-transcript and drops the rest; outcomes are decided by llm.score / engine.coding.
+other than "stop" is a failure. Only message.content is parsed (open-weights
+reasoning in message.reasoning_content is ignored), and every response is
+validated in code, which matters for backends that do not enforce the schema.
+Code finds every quote verbatim in the transcript and drops the rest; outcomes
+are decided by llm.score / engine.coding.
 """
 
 from __future__ import annotations
 
 import json
 import os
+import re
 import time
 from dataclasses import dataclass, field
 
 from engine.templates import Puzzle
 from llm.backends import BackendUnavailable, get_backend
-from llm.client import STANDARD_MODEL, assert_standard_model
-from llm.prompt import build_messages
+from llm.client import OPEN_WEIGHTS_MODEL, STANDARD_MODEL, MissingKey, assert_standard_model
+from llm.prompt import build_messages, schema_appendix
 from llm.replay import CallStore
 from llm.schema import EXTRACTION_SCHEMA, SCHEMA_NAME, SchemaError, validate_extraction
 
 MAX_TOKENS = 4000
 MODES = ("live", "replay")
+_THINK = re.compile(r"^\s*<think>.*?</think>\s*", re.DOTALL)
 
 
 @dataclass(frozen=True)
@@ -44,11 +49,21 @@ class ExtractionResult:
     backend: str = ""
 
 
-def build_request(puzzle: Puzzle, transcript: str, model: str = STANDARD_MODEL) -> dict:
-    assert_standard_model(model)
+def build_request(puzzle: Puzzle, transcript: str, backend: str = "meta_api") -> dict:
+    messages = build_messages(puzzle, transcript)
+    if backend == "meta_api":
+        model = STANDARD_MODEL
+        assert_standard_model(model)
+    elif backend == "open_weights":
+        # Baseten accepts json_schema for Muse Spark Open but does not enforce it,
+        # so the schema is also spelled out in the prompt; code still validates.
+        model = OPEN_WEIGHTS_MODEL
+        messages[0] = {**messages[0], "content": messages[0]["content"] + schema_appendix()}
+    else:
+        raise ValueError(f"unknown backend {backend!r}")
     return {
         "model": model,
-        "messages": build_messages(puzzle, transcript),
+        "messages": messages,
         "response_format": {
             "type": "json_schema",
             "json_schema": {"name": SCHEMA_NAME, "strict": True, "schema": EXTRACTION_SCHEMA},
@@ -72,7 +87,7 @@ def extract(
         raise ValueError(f"LLM_MODE must be one of {MODES}, not {mode!r}")
     backend = backend or get_backend()
     store = store or CallStore()
-    request = build_request(puzzle, transcript)
+    request = build_request(puzzle, transcript, backend.name)
     meta = {"backend": backend.name, "replayed": mode == "replay"}
 
     if mode == "replay":
@@ -85,6 +100,8 @@ def extract(
             response = backend.complete(request)
         except BackendUnavailable:
             return ExtractionResult(ok=False, error="backend_unavailable", **meta)
+        except MissingKey:
+            return ExtractionResult(ok=False, error="missing_key", **meta)
         except Exception as exc:  # exception text can echo request details: keep only the type
             return ExtractionResult(ok=False, error=f"call_failed:{type(exc).__name__}", **meta)
         record = store.save(backend.name, request, response, time.perf_counter() - start)
@@ -104,7 +121,9 @@ def _parse(response: dict, transcript: str, meta: dict) -> ExtractionResult:
     message = choice.get("message") or {}
     if message.get("refusal"):
         return ExtractionResult(ok=False, error="refusal", **meta)
-    content = message.get("content")
+    content = message.get("content")  # the final answer only, never reasoning_content
+    if isinstance(content, str):
+        content = _THINK.sub("", content)
     if not isinstance(content, str) or not content.strip():
         return ExtractionResult(ok=False, error="empty_content", **meta)
     try:

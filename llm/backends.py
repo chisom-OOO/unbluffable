@@ -1,15 +1,25 @@
 """Model backends, chosen by LLM_BACKEND=meta_api|open_weights (spec/03).
 
 A backend takes a Chat Completions request dict and returns the response as a
-plain dict. `open_weights` (Muse Glimmer / Spark Open on a partner host) is a
-stub until the Friday go/no-go.
+plain dict. Responses are parsed in llm.extract from message.content only.
+
+open_weights is Muse Spark Open on Baseten Model APIs. Per Baseten's docs it
+always reasons (reasoning arrives separately in message.reasoning_content and is
+ignored) and it accepts json_schema without enforcing it, so llm.extract
+validates every response in code; any invalid output is a failure.
 """
 
 from __future__ import annotations
 
 import os
 
-from llm.client import assert_standard_model, make_meta_client
+from llm.client import (
+    OPEN_WEIGHTS_MODEL,
+    STANDARD_MODEL,
+    assert_standard_model,
+    make_baseten_client,
+    make_meta_client,
+)
 
 BACKENDS = ("meta_api", "open_weights")
 
@@ -20,6 +30,8 @@ class BackendUnavailable(RuntimeError):
 
 class MetaAPIBackend:
     name = "meta_api"
+    model = STANDARD_MODEL
+    enforces_schema = True
 
     def __init__(self, client=None):
         self._client = client  # created lazily so replay never needs a key
@@ -33,11 +45,18 @@ class MetaAPIBackend:
 
 class OpenWeightsBackend:
     name = "open_weights"
+    model = OPEN_WEIGHTS_MODEL
+    enforces_schema = False  # Baseten: json_schema accepted, not enforced
+
+    def __init__(self, client=None):
+        self._client = client
 
     def complete(self, request: dict) -> dict:
-        raise BackendUnavailable(
-            "open_weights backend is not implemented yet (spec/03: partner host, go/no-go Fri 30 Oct)"
-        )
+        if request["model"] != OPEN_WEIGHTS_MODEL:
+            raise ValueError(f"open_weights uses exactly {OPEN_WEIGHTS_MODEL}")
+        if self._client is None:
+            self._client = make_baseten_client()
+        return self._client.chat.completions.create(**request).model_dump()
 
 
 def get_backend(name: str | None = None):
