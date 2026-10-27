@@ -1,5 +1,5 @@
 // Fake data for the UI preview screens. Nothing here comes from a model or the engine.
-// The puzzle states percentages only (decision log 5); the hint introduces the round population of 2,000.
+// The puzzle states percentages only (decision log 9); the hint introduces the round population of 2,000.
 // Numbers are consistent with it: 20 fraud, 18 flagged; 1,980 genuine, 99 flagged; 18/117 = 2/13.
 window.UB_FAKE = {
   puzzle: {
