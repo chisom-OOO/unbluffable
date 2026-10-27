@@ -1,9 +1,22 @@
-r"""Measure 10 synthetic minimal-schema extractions per Spark effort arm.
+r"""Measure 10 synthetic minimal-schema extractions per arm.
+
+Arms: Meta muse-spark-1.3 at reasoning effort "low" and "minimal", and
+"open_weights": Muse Spark Open (meta-models/muse-spark-open-1026) on Baseten
+Model APIs at effort "low". Every arm gets the same 10 answers, prompt and schema,
+so latency and agreement with Meta's "low" arm can be compared.
 
 Run from the repo root:
   .\.venv\Scripts\python.exe scripts/probes/probe_spark_latency.py --mode live
+  .\.venv\Scripts\python.exe scripts/probes/probe_spark_latency.py --mode live --effort all
 Replay a saved run with --mode replay --capture <run-dir>/manifest.json.
-No environment file is opened; only live mode reads MODEL_API_KEY.
+No environment file is opened; live mode reads MODEL_API_KEY for the Meta arms
+and BASETEN_API_KEY for the open_weights arm.
+
+Baseten (docs checked 27 Oct 2026): Muse Spark Open always reasons; reasoning comes
+back in message.reasoning_content and is ignored here, only message.content is
+parsed. It accepts json_schema but does not enforce it, so its output is validated
+in code and any invalid output counts as a failed call (not a strict-schema
+contradiction).
 """
 
 import argparse
@@ -12,6 +25,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import statistics
 import time
 import uuid
@@ -32,7 +46,18 @@ ANSWERS = (
     "There are eighteen flagged frauds and ninety nine flagged genuine payments.",
 )
 EFFORTS = ("low", "minimal")
+OPEN_WEIGHTS = "open_weights"
+ARMS = (*EFFORTS, OPEN_WEIGHTS)
+REFERENCE_ARM = "low"
 DOCS = "https://dev.meta.ai/docs/reasoning"
+BASETEN_DOCS = (
+    "https://docs.baseten.co/inference/model-apis/reasoning",
+    "https://docs.baseten.co/inference/structured-outputs",
+)
+BASETEN_URL = "https://inference.baseten.co/v1"
+OPEN_WEIGHTS_MODEL = "meta-models/muse-spark-open-1026"
+KEY_VARIABLES = {"low": "MODEL_API_KEY", "minimal": "MODEL_API_KEY", OPEN_WEIGHTS: "BASETEN_API_KEY"}
+THINK = re.compile(r"^\s*<think>.*?</think>\s*", re.DOTALL)
 SCHEMA = probes.object_schema({
     "committed_number_text": {"type": "string"}, "is_commitment": {"type": "boolean"},
 })
@@ -47,11 +72,19 @@ PROMPT = (
 )
 
 
+def url_for(arm):
+    return (BASETEN_URL if arm == OPEN_WEIGHTS else probes.BASE_URL) + "/chat/completions"
+
+
 def request_for(answer, effort):
-    if effort not in EFFORTS:
+    if effort not in ARMS:
         raise probes.ProbeFailure("Unsupported latency arm.")
+    # Same prompt, schema and token cap for every arm; Baseten accepts the
+    # json_schema for Muse Spark Open but does not enforce it.
+    model, reasoning = ((OPEN_WEIGHTS_MODEL, "low") if effort == OPEN_WEIGHTS
+                        else (probes.SPARK, effort))
     return {
-        "model": "muse-spark-1.3", "reasoning_effort": effort, "max_tokens": 4000,
+        "model": model, "reasoning_effort": reasoning, "max_tokens": 4000,
         "messages": [{"role": "system", "content": PROMPT}, {"role": "user", "content": answer}],
         "response_format": {"type": "json_schema", "json_schema": {
             "name": "minimal_commitment", "strict": True, "schema": SCHEMA,
@@ -59,18 +92,29 @@ def request_for(answer, effort):
     }
 
 
-def parse_response(body, answer):
+def parse_response(body, answer, arm="low"):
     choices = body.get("choices", [])
     if not choices or choices[0].get("finish_reason") != "stop":
         raise probes.ProbeFailure("Incomplete, filtered, or truncated output rejected.")
     message = choices[0].get("message", {})
     if message.get("refusal"):
         raise probes.ProbeFailure("Model refused the synthetic prompt.")
-    try:
-        parsed = json.loads(message.get("content", ""))
-    except (ValueError, TypeError) as error:
-        raise probes.SpecContradiction("Strict response is not valid JSON.") from error
-    probes.validate_schema(parsed, SCHEMA)
+    content = message.get("content", "")  # final answer only; reasoning_content is ignored
+    if arm == OPEN_WEIGHTS:
+        # Schema not enforced by the host: invalid output is a failed call.
+        if isinstance(content, str):
+            content = THINK.sub("", content)
+        try:
+            parsed = json.loads(content)
+            probes.validate_schema(parsed, SCHEMA)
+        except (ValueError, TypeError, probes.SpecContradiction) as error:
+            raise probes.ProbeFailure("Open-weights output is not valid JSON for the schema.") from error
+    else:
+        try:
+            parsed = json.loads(content)
+        except (ValueError, TypeError) as error:
+            raise probes.SpecContradiction("Strict response is not valid JSON.") from error
+        probes.validate_schema(parsed, SCHEMA)
     text = parsed["committed_number_text"]
     if parsed["is_commitment"]:
         if not text.strip() or text == "none" or text not in answer:
@@ -88,11 +132,11 @@ def save_manifest(path, manifest):
 
 def measure_call(client, recorder, answer, effort, key):
     request = request_for(answer, effort)
-    recorder.data["request"] = {"url": probes.BASE_URL + "/chat/completions", "json": request}
+    recorder.data["request"] = {"url": url_for(effort), "json": request}
     recorder.save()
     start = time.perf_counter()
     try:
-        response = client.post(probes.BASE_URL + "/chat/completions", json=request,
+        response = client.post(url_for(effort), json=request,
                                headers={"Authorization": "Bearer " + key})
     finally:
         # Fully buffered HTTP request/response time, excluding validation/disk I/O.
@@ -109,7 +153,7 @@ def measure_call(client, recorder, answer, effort, key):
         raise probes.ProbeFailure(f"HTTP {response.status_code}; inspect sanitized capture.")
     if not isinstance(body, dict) or body.get("error"):
         raise probes.ProbeFailure("Endpoint returned an invalid/error response.")
-    return parse_response(body, answer)
+    return parse_response(body, answer, effort)
 
 
 def statistics_for(calls, efforts):
@@ -125,16 +169,55 @@ def statistics_for(calls, efforts):
             "median_s": statistics.median(successes) if successes else None,
             "max_s": max(successes) if successes else None,
         }
+        if effort != REFERENCE_ARM and REFERENCE_ARM in efforts:
+            summary[effort]["agreement_with_low"] = agreement(calls, effort)
     return summary
 
 
+def _same_number(a, b):
+    from engine.answers import parse_number  # pure, offline
+
+    return parse_number(a) == parse_number(b)
+
+
+def agreement(calls, arm):
+    """Per-case agreement with Meta's "low" arm, over cases where both calls passed."""
+    reference = {row["case"]: row.get("result") for row in calls
+                 if row["effort"] == REFERENCE_ARM and row["status"] == "passed"}
+    compared = same_flag = same_number = 0
+    disagreements = []
+    for row in calls:
+        ref = reference.get(row["case"])
+        if row["effort"] != arm or row["status"] != "passed" or not ref or not row.get("result"):
+            continue
+        result = row["result"]
+        compared += 1
+        flag = result["is_commitment"] == ref["is_commitment"]
+        number = _same_number(result["committed_number_text"], ref["committed_number_text"])
+        same_flag += flag
+        same_number += flag and number
+        if not (flag and number):
+            disagreements.append(row["case"])
+    return {"compared": compared, "same_is_commitment": same_flag,
+            "same_commitment_and_number": same_number, "disagreeing_cases": sorted(disagreements)}
+
+
+def keys_for(arms):
+    """Each arm's key from the process environment; checked before any call."""
+    keys = {}
+    for arm in arms:
+        variable = KEY_VARIABLES[arm]
+        key = os.environ.get(variable)
+        if key is None:
+            raise probes.ProbeFailure(f"{variable} is missing from the process environment.")
+        if not key.strip():
+            raise probes.ProbeFailure(f"{variable} is empty in the process environment.")
+        keys[arm] = key
+    return keys
+
+
 def live_run(directory, manifest):
-    try:
-        key = os.environ["MODEL_API_KEY"]
-    except KeyError as error:
-        raise probes.ProbeFailure("MODEL_API_KEY is missing from the process environment.") from error
-    if not key.strip():
-        raise probes.ProbeFailure("MODEL_API_KEY is empty in the process environment.")
+    keys = keys_for(manifest["efforts"])
     import httpx
 
     # Reuse one connection pool. Alternate arm order across cases; no warmup,
@@ -144,10 +227,10 @@ def live_run(directory, manifest):
             order = manifest["efforts"] if index % 2 else list(reversed(manifest["efforts"]))
             for effort in order:
                 filename = f"{effort}-{index:02d}.json"
-                recorder = probes.Recorder("spark_latency", directory / filename, key)
+                recorder = probes.Recorder("spark_latency", directory / filename, keys[effort])
                 recorder.data.update(case=index, effort=effort)
                 try:
-                    recorder.data["result"] = measure_call(client, recorder, answer, effort, key)
+                    recorder.data["result"] = measure_call(client, recorder, answer, effort, keys[effort])
                     recorder.data["status"] = "passed"
                 except probes.SpecContradiction as error:
                     recorder.data.update(status="contradiction", error=str(error))
@@ -160,7 +243,7 @@ def live_run(directory, manifest):
                     recorder.data.update(status="failed", error=f"{type(error).__name__}; exception text omitted.")
                 finally:
                     recorder.save()
-                    row = {name: recorder.data.get(name) for name in ["case", "effort", "status", "latency_s"]}
+                    row = {name: recorder.data.get(name) for name in ["case", "effort", "status", "latency_s", "result"]}
                     row.update(capture=filename, capture_sha256=hashlib.sha256((directory / filename).read_bytes()).hexdigest())
                     manifest["calls"].append(row)
                     save_manifest(directory / "manifest.json", manifest)
@@ -179,7 +262,7 @@ def replay_run(path, directory, manifest):
     if source.get("kind") != "spark_latency" or source.get("format_version") != 1:
         raise probes.ProbeFailure("Unsupported latency manifest.")
     if (not source.get("efforts") or len(set(source["efforts"])) != len(source["efforts"])
-            or any(effort not in EFFORTS for effort in source["efforts"])):
+            or any(effort not in ARMS for effort in source["efforts"])):
         raise probes.ProbeFailure("Invalid effort arms in latency manifest.")
     manifest.update(efforts=source["efforts"], source_run_id=source["run_id"],
                     source_recorded_at=source["recorded_at"])
@@ -194,8 +277,9 @@ def replay_run(path, directory, manifest):
         if captured.get("probe") != "spark_latency" or captured.get("format_version") != 1:
             raise probes.ProbeFailure("Unsupported call capture.")
         if captured["status"] == "passed":
-            parse_response(captured["response"], captured["request"]["json"]["messages"][-1]["content"])
-        replayed = {**row, **{name: captured.get(name) for name in ["case", "effort", "status", "latency_s"]}}
+            parse_response(captured["response"], captured["request"]["json"]["messages"][-1]["content"],
+                           captured["effort"])
+        replayed = {**row, **{name: captured.get(name) for name in ["case", "effort", "status", "latency_s", "result"]}}
         (directory / name).write_bytes(raw)
         manifest["calls"].append(replayed)
         print(json.dumps(replayed), flush=True)
@@ -206,7 +290,8 @@ def replay_run(path, directory, manifest):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mode", required=True, choices=["live", "replay"])
-    parser.add_argument("--effort", choices=["both", *EFFORTS], default="both")
+    parser.add_argument("--effort", choices=["both", "all", *ARMS], default="both",
+                        help="both = the two Meta arms; all = Meta arms plus open_weights")
     parser.add_argument("--capture", type=Path, help="Original manifest.json for offline replay.")
     parser.add_argument("--run-dir", type=Path, help="New output directory; never overwritten.")
     args = parser.parse_args(argv)
@@ -220,8 +305,8 @@ def main(argv=None):
     manifest = {
         "kind": "spark_latency", "format_version": 1, "run_id": run_id,
         "recorded_at": datetime.now(timezone.utc).isoformat(), "mode": args.mode,
-        "efforts": list(EFFORTS) if args.effort == "both" else [args.effort],
-        "reasoning_docs": DOCS, "docs_checked_on": "2026-10-27",
+        "efforts": {"both": list(EFFORTS), "all": list(ARMS)}.get(args.effort, [args.effort]),
+        "reasoning_docs": DOCS, "baseten_docs": list(BASETEN_DOCS), "docs_checked_on": "2026-10-27",
         "timing": "Buffered HTTP request/response; reused client; excludes validation and recording I/O.",
         "status": "running", "calls": [],
     }
