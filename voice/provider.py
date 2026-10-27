@@ -30,7 +30,8 @@ def api_key():
         key = os.environ["MODEL_API_KEY"]
     except KeyError as error:
         raise VoiceError("Live mode needs MODEL_API_KEY in the server environment. Recorded replay needs no key.") from error
-    if not key.strip():
+    key = key.strip()  # pasted keys often carry a trailing newline, which is illegal in HTTP headers
+    if not key:
         raise VoiceError("The server API key is empty.")
     return key
 

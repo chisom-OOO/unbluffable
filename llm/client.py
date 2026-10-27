@@ -32,7 +32,8 @@ def _key(name: str) -> str:
         key = os.environ[name]
     except KeyError:
         raise MissingKey(f"{name} is not set; use replay mode to run without a key") from None
-    if not key.strip():
+    key = key.strip()  # pasted keys often carry a trailing newline, which is illegal in HTTP headers
+    if not key:
         raise MissingKey(f"{name} is empty; use replay mode to run without a key")
     return key
 
