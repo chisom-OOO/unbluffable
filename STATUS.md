@@ -2,8 +2,8 @@
 
 Living checklist. Update it at the end of every day. Any new chat or agent should read `ADVISOR_BRIEFING.md` and this file first, then `spec/00_START_HERE.md`.
 
-**Last updated:** Tue 27 Oct, 00:35 UK
-**Phase:** day 1 done (engine, probes, gate decided: after-turn challenge)
+**Last updated:** Tue 27 Oct, 13:20 UK
+**Phase:** day 2: deployed on Render; turn-taking (Codex) and UI (Claude Code) in progress
 **Next decision points:** Mon realtime gate (`spec/03`); Wed careful-chatbot check (`spec/05`)
 
 ## Done

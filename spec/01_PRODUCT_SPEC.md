@@ -40,15 +40,15 @@ Optional only if ahead by Friday, in this order: (0) a hosted, more natural inte
 ### Interview (the core)
 1. A puzzle appears (text). The user answers by **voice (mic button)** or **text**.
 2. Voice: transcript appears live (realtime) or after speaking (fallback); the user can edit it before it is scored.
-3. Challenge right after the completed answer (decision log 1b). The challenge is a **Socratic question about the candidate's own reasoning**, never the answer (see "Nudges, help and escalation"). The conversation continues with further nudges until they get there, ask to move on, or reach the round limit; only the **first** answer is scored.
+3. Challenge right after the completed answer (decision log 1b). The challenge is a **Socratic question about the candidate's own reasoning**, never the answer (see "Nudges, help and escalation"). The conversation continues with further nudges until they get there, ask to move on, or reach the round limit. Each question is scored on **where the candidate ends up, discounted by the help it took** (decision log 3b).
 4. At any point the candidate can ask for help or ask a clarifying question; the interviewer also offers help if they are stuck past the time guide.
 5. The engine picks the next question (twin or a new puzzle) by information gain (`02`).
 6. Stops at a label (after ≥2 answers) or after 4 questions. If the label is "Evidence supports understanding" with at most a light hint, the interviewer **escalates** with up to two harder follow-ups on the same scenario instead of stopping.
-7. End card: label, the quoted evidence, hints used, time vs guide, recovery after challenge (yes/no), level reached (1–3), one practice tip for the diagnosed error.
+7. End card: label, the quoted evidence, hints used, time vs guide, recovered after N nudges / not recovered, level reached (1–3), one practice tip for the diagnosed error.
 
 ### Nudges, help and escalation (committed; decision log 3, 3a)
 Real quant interviews push back, give hints and get harder. Unbluffable does the same. Help is written for each candidate; what it costs is measured the same way for everyone.
-- **First answer is the scored one.** A wrong or vague first answer is recorded as such: in a real interview that question is already lost.
+- **Scored on where you end up, discounted by help (decision log 3b).** Right first time with no help counts fully. Recovering after a challenge still counts, but for less: the challenge itself counts as one step of help, and every nudge or hint that moves the candidate along adds more. Not recovering after the rounds counts as the wrong answer. The more help taken without progress, the lower the chance of a good label.
 - **Nudge rounds (after a wrong or vague answer):** the interviewer asks a question about the candidate's **own** reasoning, aimed at the step where it went wrong, e.g. *"You said 90%. Is that the chance a flag is fraud, or the chance fraud gets flagged?"*, *"Why would the base rate not matter here?"*, *"Are you sure the 5% applies to all transactions?"* The candidate answers; the interviewer nudges again as needed, up to **4 rounds**, until they reach the answer, ask to move on, or run out of rounds. Reported as "recovered after N nudges" or "not recovered".
 - **Help on request:** "Can I get a hint?" / "Is it okay if I ask for help?" → *"Sure, what are you stuck on?"* → a hint written for what they said and where they are in the problem. No fixed number of hints; each one is counted.
 - **Help offered:** no committed answer by 60% of the time guide → *"Is there anything you're stuck on?"* A "no" costs nothing.

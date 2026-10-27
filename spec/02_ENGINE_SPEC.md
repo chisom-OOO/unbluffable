@@ -102,7 +102,13 @@ L'(o | c) = w · L(o | c) + (1 − w) · ¼, with **w = 2 / (2 + H)**. Applies t
 Pinned (prior, one Correct answer): H = 1 (w = ⅔) → S 0.684, M 0.145, G 0.171; H = 2 (w = ½) → S 0.633, M 0.173, G 0.194; H = 4 (w = ⅓) → S 0.571, M 0.206, G 0.222.
 
 ### Nudge rounds
-Only the first answer to a question updates the posterior. Nudge rounds (≤ 4) after a wrong or vague first answer record "recovered after N" or "not recovered" and the help load; they do not update the posterior (no double counting). A twin asked after nudges is scored normally, with the discount applying only if help was given on the twin itself.
+Each question makes **one** posterior update, from its **final** outcome (decision log 3b; replaces "first answer only"):
+- Correct with no challenge and no help: Correct row, w = 1 (unchanged).
+- Correct after help but no challenge: Correct row with w = 2 / (2 + H).
+- Wrong or vague first answer, then **recovered** (Correct) within the nudge rounds: Correct row with w = 2 / (2 + H + 1): the challenge itself counts as one step of help, so a recovery never scores as well as right-first-time.
+- **Not recovered** after 4 rounds, or the candidate moves on: the first committed wrong/vague answer's outcome (Named wrong / Other wrong / Vague), undiscounted; the diagnosed misconception is named.
+- The twin's table is chosen by the question's scored outcome (Correct if recovered). Help on the twin is discounted the same way.
+Pinned (prior, one recovered answer): challenge only (H + 1 = 1, w = ⅔) → S 0.684, M 0.145, G 0.171; challenge + 2 steps (w = ⅖) → S 0.598, M 0.192, G 0.210; challenge + 3 steps (w = ⅓) → S 0.571, M 0.206, G 0.222.
 
 ### Escalation (sequential evidence, all templates)
 Trigger: label "Evidence supports understanding" reached with help load H ≤ 1 on the scored answers. Ask up to two follow-ups on the same scenario, using the current puzzle's answer q as the new prior. Escalation answers set "level reached" (1 → 2 → 3) and do not change the posterior or label.
