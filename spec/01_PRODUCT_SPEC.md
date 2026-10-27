@@ -40,21 +40,23 @@ Optional only if ahead by Friday, in this order: (0) a hosted, more natural inte
 ### Interview (the core)
 1. A puzzle appears (text). The user answers by **voice (mic button)** or **text**.
 2. Voice: transcript appears live (realtime) or after speaking (fallback); the user can edit it before it is scored.
-3. Challenge right after the completed answer (decision log 1b). The challenge is a **Socratic question about the candidate's own reasoning**, never the answer (see "Nudges, help and escalation"). The candidate may re-answer once.
+3. Challenge right after the completed answer (decision log 1b). The challenge is a **Socratic question about the candidate's own reasoning**, never the answer (see "Nudges, help and escalation"). The conversation continues with further nudges until they get there, ask to move on, or reach the round limit; only the **first** answer is scored.
 4. At any point the candidate can ask for help or ask a clarifying question; the interviewer also offers help if they are stuck past the time guide.
 5. The engine picks the next question (twin or a new puzzle) by information gain (`02`).
 6. Stops at a label (after ≥2 answers) or after 4 questions. If the label is "Evidence supports understanding" with at most a light hint, the interviewer **escalates** with up to two harder follow-ups on the same scenario instead of stopping.
 7. End card: label, the quoted evidence, hints used, time vs guide, recovery after challenge (yes/no), level reached (1–3), one practice tip for the diagnosed error.
 
-### Nudges, help and escalation (committed; decision log 3)
-Real quant interviews push back, give hints and get harder. Unbluffable does the same, and every bit of help is visible and counted.
-- **Nudge (after a wrong or vague answer):** a question about the candidate's reasoning, chosen by the diagnosed error, e.g. transposed conditional: *"You said 90%. Is that the chance a flag is fraud, or the chance fraud gets flagged?"*; base-rate neglect: *"Out of 2,000 transactions, how many genuine ones get flagged?"*; other wrong: *"Walk me through how you got that number."* Never states the answer or the next step's number. One re-answer allowed; it is reported as "recovered after challenge" and does **not** change the evidence from the first answer.
-- **Help on request:** "Can I get a hint?" / "Is it okay if I ask for help?" → *"Sure, what are you stuck on?"* → the interviewer gives the hint that matches what they say. Hints come from a fixed three-step ladder per template (H1 framing, H2 structure, H3 last step); Muse Spark only chooses which hint fits and may rephrase it, and code rejects any hint text containing the answer or a number that isn't a given.
-- **Help offered:** if there is no committed answer by 60% of the time guide, the interviewer asks *"Is there anything you're stuck on?"* A "no" costs nothing.
-- **Clarifying questions** ("are the two checks independent?") are answered from the template's fixed assumptions and never count as a hint.
-- **What counts against the candidate:** hints weaken the evidence from the next answer (H1 slightly, H3 most; `02` §7). Time vs the guide (new puzzle 2 min, twin 1 min, follow-up 1.5 min) is shown on the end card but does not change the label. Asking many hints shows up plainly in "hints used".
+### Nudges, help and escalation (committed; decision log 3, 3a)
+Real quant interviews push back, give hints and get harder. Unbluffable does the same. Help is written for each candidate; what it costs is measured the same way for everyone.
+- **First answer is the scored one.** A wrong or vague first answer is recorded as such: in a real interview that question is already lost.
+- **Nudge rounds (after a wrong or vague answer):** the interviewer asks a question about the candidate's **own** reasoning, aimed at the step where it went wrong, e.g. *"You said 90%. Is that the chance a flag is fraud, or the chance fraud gets flagged?"*, *"Why would the base rate not matter here?"*, *"Are you sure the 5% applies to all transactions?"* The candidate answers; the interviewer nudges again as needed, up to **4 rounds**, until they reach the answer, ask to move on, or run out of rounds. Reported as "recovered after N nudges" or "not recovered".
+- **Help on request:** "Can I get a hint?" / "Is it okay if I ask for help?" → *"Sure, what are you stuck on?"* → a hint written for what they said and where they are in the problem. No fixed number of hints; each one is counted.
+- **Help offered:** no committed answer by 60% of the time guide → *"Is there anything you're stuck on?"* A "no" costs nothing.
+- **Clarifying questions** ("are the two checks independent?") are answered from the template's fixed assumptions and never count as help.
+- **How help is generated and kept honest:** every template has a fixed **solution map** (its steps in order; `02` §7). Muse Spark writes each nudge or hint for the candidate's own words and labels which step it targets. Code then (1) rejects any text containing the answer or a number that is neither a given nor a number the candidate has already said, and regenerates or falls back to a plain step prompt; (2) measures how far the help moved the candidate along the map. That distance, not the model's opinion, is what counts against them.
+- **What counts against the candidate:** the help load (total steps given away) weakens the evidence from their next answer to that question (`02` §7). Time vs the guide (new puzzle 2 min, twin 1 min, follow-up 1.5 min) and the number of hints and nudges are shown on the end card; time does not change the label.
 - **Escalation:** strong candidates get harder follow-ups on the same scenario: level 2 = a second, independent piece of evidence agrees; level 3 = it disagrees (`02` §7). "Level reached" is shown separately from the label.
-- Positioning: hints are an interviewer's hints with a cost, not tutoring; the full method is shown only on the end card.
+- Positioning: an interviewer's nudges and hints with a cost, not tutoring; the full method is shown only on the end card.
 
 ### Interviewer voice (committed)
 - The interviewer **speaks everything**: each question, each challenge, the follow-up, and the verdict. The same text appears on screen.
