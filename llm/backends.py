@@ -5,8 +5,10 @@ plain dict. Responses are parsed in llm.extract from message.content only.
 
 open_weights is Muse Spark Open on Baseten Model APIs. Per Baseten's docs it
 always reasons (reasoning arrives separately in message.reasoning_content and is
-ignored) and it accepts json_schema without enforcing it, so llm.extract
-validates every response in code; any invalid output is a failure.
+ignored) and it accepts json_schema without enforcing it. Following spec/03,
+the schema is also in the prompt, llm.extract validates every response in code,
+and invalid output gets exactly one repair attempt; a second invalid output is a
+failure.
 """
 
 from __future__ import annotations

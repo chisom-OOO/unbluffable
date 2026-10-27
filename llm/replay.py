@@ -56,7 +56,9 @@ class CallStore:
     def path(self, backend: str, request: dict) -> Path:
         return self.directory / f"{request_hash(backend, request)}.json"
 
-    def save(self, backend: str, request: dict, response: dict, latency_s: float) -> dict:
+    def save(self, backend: str, request: dict, response: dict, latency_s: float, **extra) -> dict:
+        """`response` is the final one; `extra` may hold `attempts` (every call with its
+        latency), `repaired` and `repair_error`. `latency_s` covers all calls."""
         record = sanitize({
             "format_version": FORMAT_VERSION,
             "run_id": uuid.uuid4().hex,
@@ -64,6 +66,7 @@ class CallStore:
             "backend": backend,
             "request_sha256": request_hash(backend, request),
             "latency_s": round(latency_s, 3),
+            **extra,
             "request": request,
             "response": response,
         })
