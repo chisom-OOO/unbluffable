@@ -4,9 +4,10 @@ Every live call is recorded; replay looks the call up by a hash of the backend
 and the exact request, so it needs no key and no network. Records never contain
 the API key: auth-like fields are dropped and any echoed key is redacted.
 
-Recordings hold the candidate's answer text. The default directory is
-`replay/llm/` (demo runs); point LLM_REPLAY_DIR at a git-ignored folder such as
-`eval/raw/llm/` for tester or evaluation answers.
+Recordings hold the candidate's answer text, so the default directory is the
+git-ignored `eval/raw/llm/`: tester answers are never committed by default.
+Demo recordings are committed deliberately: copy them into `replay/llm/demo/`
+(the only part of `replay/llm/` that git tracks) or set LLM_REPLAY_DIR to it.
 """
 
 from __future__ import annotations
@@ -19,7 +20,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DIR = ROOT / "replay" / "llm"
+DEFAULT_DIR = ROOT / "eval" / "raw" / "llm"  # git-ignored
+DEMO_DIR = ROOT / "replay" / "llm" / "demo"  # committed on purpose
 FORMAT_VERSION = 1
 _SECRET_FIELDS = {"authorization", "accesstoken", "api_key", "apikey", "model_api_key"}
 

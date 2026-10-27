@@ -24,11 +24,11 @@ from pathlib import Path
 
 from engine.coding import Outcome
 from engine.templates import flagship, flagship_twin
-from llm.replay import ROOT, CallStore
+from llm.replay import DEFAULT_DIR, CallStore
 from llm.score import assess
 
 COLUMNS = ("clip", "transcript", "expected_outcome")
-DEFAULT_STORE = ROOT / "eval" / "raw" / "llm"
+DEFAULT_STORE = DEFAULT_DIR
 PUZZLES = {"flagship": flagship, "flagship_twin": flagship_twin}
 CHALLENGED = {Outcome.NAMED_WRONG, Outcome.OTHER_WRONG, Outcome.RECITED}
 
