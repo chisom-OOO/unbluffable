@@ -11,7 +11,7 @@ Vision (pitch and roadmap only): one interview engine for every high-stakes inte
 Candidates facing high-stakes interviews (quant, software, engineering, medical-school, PhD, Oxbridge) without access to a coach who pushes back on their reasoning: students outside target universities, first-generation applicants, anyone who can't pay for mock interviews. Theme: **Build for Your World** (the builder prepares for these interviews firsthand); name the theme explicitly in the video, README and submission form. Evidence of impact comes from real users (see `05`, human testers), not only from benchmarks.
 
 ## Positioning against the organisers' anti-project list
-Not an "AI for Education" chatbot: Unbluffable is a voice-first interviewer with a deterministic verification engine (exact maths, adaptive Bayesian question selection, live challenge of committed claims). Candidate-side practice only: not a job-application screener, never used to assess or rank candidates. No medical advice anywhere (the flagship is framed as fraud detection). Always lead with what a chatbot cannot do: interrupt a spoken mistake, verify numbers exactly, and re-test with new numbers.
+Not an "AI for Education" chatbot: Unbluffable is a voice-first interviewer with a deterministic verification engine (exact maths, adaptive Bayesian question selection, live challenge of committed claims). Candidate-side practice only: not a job-application screener, never used to assess or rank candidates. No medical advice anywhere (the flagship is framed as fraud detection). Always lead with what a chatbot cannot do: challenge the exact number a candidate committed to, verify numbers exactly, re-test with new numbers, and count every hint.
 
 ## What is built (committed)
 **Quant pack:** probability interview puzzles (conditional probability / Bayes), three templates with fresh numbers, a "same puzzle, new numbers" twin, exact checks, voice and text.
@@ -40,10 +40,21 @@ Optional only if ahead by Friday, in this order: (0) a hosted, more natural inte
 ### Interview (the core)
 1. A puzzle appears (text). The user answers by **voice (mic button)** or **text**.
 2. Voice: transcript appears live (realtime) or after speaking (fallback); the user can edit it before it is scored.
-3. Challenge: mid-sentence if the gate passed, otherwise right after the completed answer.
-4. The engine picks the next question (twin or a new puzzle) by information gain (`02`).
-5. Stops at a label (after ≥2 answers) or after 4 questions.
-6. End card: label, the quoted evidence, one practice tip for the diagnosed error.
+3. Challenge right after the completed answer (decision log 1b). The challenge is a **Socratic question about the candidate's own reasoning**, never the answer (see "Nudges, help and escalation"). The candidate may re-answer once.
+4. At any point the candidate can ask for help or ask a clarifying question; the interviewer also offers help if they are stuck past the time guide.
+5. The engine picks the next question (twin or a new puzzle) by information gain (`02`).
+6. Stops at a label (after ≥2 answers) or after 4 questions. If the label is "Evidence supports understanding" with at most a light hint, the interviewer **escalates** with up to two harder follow-ups on the same scenario instead of stopping.
+7. End card: label, the quoted evidence, hints used, time vs guide, recovery after challenge (yes/no), level reached (1–3), one practice tip for the diagnosed error.
+
+### Nudges, help and escalation (committed; decision log 3)
+Real quant interviews push back, give hints and get harder. Unbluffable does the same, and every bit of help is visible and counted.
+- **Nudge (after a wrong or vague answer):** a question about the candidate's reasoning, chosen by the diagnosed error, e.g. transposed conditional: *"You said 90%. Is that the chance a flag is fraud, or the chance fraud gets flagged?"*; base-rate neglect: *"Out of 2,000 transactions, how many genuine ones get flagged?"*; other wrong: *"Walk me through how you got that number."* Never states the answer or the next step's number. One re-answer allowed; it is reported as "recovered after challenge" and does **not** change the evidence from the first answer.
+- **Help on request:** "Can I get a hint?" / "Is it okay if I ask for help?" → *"Sure, what are you stuck on?"* → the interviewer gives the hint that matches what they say. Hints come from a fixed three-step ladder per template (H1 framing, H2 structure, H3 last step); Muse Spark only chooses which hint fits and may rephrase it, and code rejects any hint text containing the answer or a number that isn't a given.
+- **Help offered:** if there is no committed answer by 60% of the time guide, the interviewer asks *"Is there anything you're stuck on?"* A "no" costs nothing.
+- **Clarifying questions** ("are the two checks independent?") are answered from the template's fixed assumptions and never count as a hint.
+- **What counts against the candidate:** hints weaken the evidence from the next answer (H1 slightly, H3 most; `02` §7). Time vs the guide (new puzzle 2 min, twin 1 min, follow-up 1.5 min) is shown on the end card but does not change the label. Asking many hints shows up plainly in "hints used".
+- **Escalation:** strong candidates get harder follow-ups on the same scenario: level 2 = a second, independent piece of evidence agrees; level 3 = it disagrees (`02` §7). "Level reached" is shown separately from the label.
+- Positioning: hints are an interviewer's hints with a cost, not tutoring; the full method is shown only on the end card.
 
 ### Interviewer voice (committed)
 - The interviewer **speaks everything**: each question, each challenge, the follow-up, and the verdict. The same text appears on screen.

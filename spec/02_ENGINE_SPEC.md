@@ -90,3 +90,22 @@ Stop at the first label other than "More evidence needed", or after 4 questions.
 | Vague (one answer) | 0.211 | 0.197 | 0.592 | (none yet) |
 | Correct (one answer) | 0.764 | 0.101 | 0.135 | (none yet) |
 Also test: selection table in §4; generator collision filter; tolerance rules; "the detector catches 90% of fraud" (a restated given) is not coded as an answer; flagship and twin answers (2/13, 18/67).
+
+## 7. Hints, nudges and escalation (decision log 3)
+### Hint discount
+Hints weaken the evidence from the **next answer** to the same question. Mix that answer's likelihood row with an uninformative constant:
+L'(o | c) = w · L(o | c) + (1 − w) · ¼, with **w = 1** (no hint), **¾** (H1), **½** (H2), **¼** (H3); with several hints, use the highest level given.
+Applies to Correct only (a wrong answer after a hint is still wrong evidence). Exact fractions. With w = 1 every existing table and pinned test is unchanged.
+Pinned (prior, one Correct answer): w = ¾ → S 0.707, M 0.132, G 0.161; w = ½ → S 0.633, M 0.173, G 0.194; w = ¼ → S 0.536, M 0.226, G 0.238.
+
+### Nudges
+After a challenge the candidate may re-answer once. The re-answer is recorded ("recovered after challenge": yes if Correct) but the posterior uses the first answer only (no double counting).
+
+### Escalation (sequential evidence, all templates)
+Trigger: label "Evidence supports understanding" reached with hint level ≤ H1. Ask up to two follow-ups on the same scenario, using the current puzzle's answer q as the new prior. Escalation answers set "level reached" (1 → 2 → 3) and do not change the posterior or label.
+- **Level 2 — agreeing evidence:** T1: a second, independent check with the same rates also flags → q·s / (q·s + (1−q)·f). T2: a second item from the same machine is also defective → q·dA / (q·dA + (1−q)·dB). T3: one more flip, heads → q·b / (q·b + (1−q)·½).
+- **Level 3 — conflicting evidence:** T1: the second check does **not** flag → q·(1−s) / (q·(1−s) + (1−q)·(1−f)). T2: the second item is fine → q·(1−dA) / (q·(1−dA) + (1−q)·(1−dB)). T3: the next flip is tails → q·(1−b) / (q·(1−b) + ½·(1−q)).
+- Named wrong values: q (ignores the new evidence), the new evidence's rate alone (s, 1−s, dA, b, …), s² or its analogue (multiplies rates, ignores the prior); collision filter and tolerance as in §1. Reject a draw whose follow-up answers collide.
+- Flagship pinned: L2 = **36/47 ≈ 76.6%** (named: 2/13, 81%, 90%); L3 = **4/213 ≈ 1.88%** (named: 2/13, 10%, 5%). Flagship twin (p = 2%): L2 ≈ 86.9%, L3 ≈ 3.72%.
+- Interview length: at most 4 scored questions + 2 follow-ups.
+
