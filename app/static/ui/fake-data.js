@@ -1,10 +1,11 @@
 // Fake data for the UI preview screens. Nothing here comes from a model or the engine.
-// Numbers are consistent with the puzzle: 20 fraud, 18 flagged; 1,980 genuine, 99 flagged; 18/117 = 2/13.
+// The puzzle states percentages only (decision log 5); the hint introduces the round population of 2,000.
+// Numbers are consistent with it: 20 fraud, 18 flagged; 1,980 genuine, 99 flagged; 18/117 = 2/13.
 window.UB_FAKE = {
   puzzle: {
     pack: "Quant",
     title: "The flagged transaction",
-    text: "Out of 2,000 transactions, 1% are fraudulent. The detector flags 90% of fraudulent transactions and 5% of genuine ones. A transaction is flagged. What is the probability it is fraud?",
+    text: "1% of transactions are fraudulent. The detector flags 90% of fraudulent transactions and 5% of genuine ones. A transaction is flagged. What is the probability it is fraud?",
     guideSeconds: 120,
     kind: "New puzzle",
   },
@@ -31,16 +32,14 @@ window.UB_FAKE = {
       reply: { kind: "nudge", text: "Which transactions get flagged, apart from the fraudulent ones?" },
     },
     {
+      candidate: "I don't know where to start with the genuine ones.",
+      reply: { kind: "hint", text: "Imagine 2,000 transactions. How many of them would be genuine?" },
+    },
+    {
       candidate: "So 20 are fraud and 18 of those get flagged. 1,980 are genuine and 99 get flagged. That's 18 out of 117, about 15 percent.",
       reply: { kind: "close", text: "That's right: 18 out of 117. Now the same puzzle with new numbers." },
     },
   ],
-
-  stuck: {
-    ask: "Sure, what are you stuck on?",
-    candidate: "I don't know where to start with the genuine ones.",
-    hint: "Picture all 2,000 transactions. How many of them are genuine?",
-  },
 
   offerHelp: "Is there anything you're stuck on?",
 
@@ -55,9 +54,10 @@ window.UB_FAKE = {
   // Sample end card (spec/02 §3, §5, §7), consistent with the script above plus a twin the preview doesn't play.
   // Q1 help load, solution map T1 (1 population, 2 fraud count, 3 flagged fraud, 4 flagged genuine, 5 total, 6 divide):
   //   challenge "Is that the chance a flag is fraud...?" points at no step: strength 0 (counted as the +1 below).
-  //   candidate position stays 0 (the 90% and 5% are restated givens; turn 2 states no step value).
+  //   candidate position stays 0 (the 90% and 5% are restated givens; turns 2 and 3 state no step value,
+  //   and no population exists until the hint introduces one).
   //   nudge "Which transactions get flagged, apart from the fraudulent ones?" targets step 4: max(0, 4 - 0) = 4.
-  //   hint "Picture all 2,000 transactions..." targets step 1: max(0, 1 - 0) = 1.  H = 5.
+  //   hint "Imagine 2,000 transactions..." targets step 1 (pick a population): max(0, 1 - 0) = 1.  H = 5.
   // Q1 recovered: w = 2/(2 + 5 + 1) = 1/4; Correct row L' = w*L + (1-w)/4 = S 2/5, M 9/40, G 19/80.
   //   prior 4/10, 3/10, 3/10 -> unnormalised 4/25, 27/400, 57/800.
   // Q2 twin (p = 2%, 18/67), correct with no help: "after correct" row .90 / .20 / .15.
@@ -75,7 +75,7 @@ window.UB_FAKE = {
       { q: "Question 2", said: "18/67", exact: "36/134 = 18/67 ≈ 26.9%" },
     ],
     hints: [
-      { kind: "hint", text: "Picture all 2,000 transactions. How many of them are genuine?" },
+      { kind: "hint", text: "Imagine 2,000 transactions. How many of them would be genuine?" },
     ],
     challenges: 1,
     nudges: 1,

@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const { highlight, escapeHtml, reducedMotion } = window.UB;
   const $ = (id) => document.getElementById(id);
 
-  const start = $("start"), mic = $("mic"), micState = $("mic-state"), done = $("done"), stuck = $("stuck");
+  const start = $("start"), mic = $("mic"), micState = $("mic-state"), done = $("done");
   const log = $("log"), live = $("live"), liveText = $("live-text"), editRow = $("edit-row");
   const typePanel = $("type-panel"), typeAnswer = $("type-answer"), typeToggle = $("type-toggle");
   const mute = $("mute");
@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
     mic.dataset.state = next === "listening" || next === "thinking" || next === "speaking" ? next : "idle";
     micState.textContent = typing && next === "listening" ? "Waiting for your typed answer" : STATE_TEXT[next];
     done.disabled = next !== "listening";
-    stuck.disabled = next !== "listening";
     typeToggle.disabled = next === "ready" || next === "finished";
     document.querySelector(".action-bar").classList.toggle("ready", next === "ready");
   }
@@ -165,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const kind = script.reply.kind === "close" ? null : script.reply.kind;
       // The challenge is its own help step (decision log 3b), counted apart from nudges.
       if (kind === "challenge") challenges++;
+      else if (kind === "hint") hints++;
       else if (kind) nudges++;
       if (kind) updateCounts();
       speak(script.reply.text, kind, () => {
@@ -194,24 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   done.addEventListener("click", finishNow);
-
-  // ---- I'm stuck: the interviewer asks what about, then gives a hint for that ----
-  stuck.addEventListener("click", () => {
-    if (state !== "listening") return;
-    cancelListening();
-    live.hidden = true;
-    if (editing) { editing.remove(); editing = null; }
-    speak(data.stuck.ask, null, () => {
-      setState("listening");
-      later(() => {
-        addCandidate(data.stuck.candidate);
-        think(() => {
-          hints++; updateCounts();
-          speak(data.stuck.hint, "hint", listen);
-        });
-      }, T.beforeTalk);
-    });
-  });
 
   // ---- Start: the one tap (browsers need a gesture for mic and speech) ----
   function begin() {
