@@ -14,9 +14,11 @@ and BASETEN_API_KEY for the open_weights arm.
 
 Baseten (docs checked 27 Oct 2026): Muse Spark Open always reasons; reasoning comes
 back in message.reasoning_content and is ignored here, only message.content is
-parsed. It accepts json_schema but does not enforce it, so its output is validated
-in code and any invalid output counts as a failed call (not a strict-schema
-contradiction).
+parsed. It accepts json_schema but does not enforce it, so (spec/03) that arm has
+the schema in its prompt, its output is validated in code, and invalid output gets
+exactly one repair; a second invalid output fails the call (never a strict-schema
+contradiction). A case's latency covers both calls and its record is marked
+repaired.
 """
 
 import argparse
@@ -72,6 +74,24 @@ PROMPT = (
 )
 
 
+SCHEMA_APPENDIX = (
+    " Reply with only one JSON object, with no other text and no code fences, matching "
+    "this JSON Schema exactly: " + json.dumps(SCHEMA, separators=(",", ":"))
+)
+REPAIR_PROMPT = (
+    "Your previous reply was invalid: {detail}. Reply again with only one JSON object, "
+    "with no other text and no code fences, that matches the JSON Schema in the system message."
+)
+
+
+class InvalidOutput(probes.ProbeFailure):
+    """Open-weights output that is not valid JSON for the schema; gets one repair."""
+
+    def __init__(self, detail):
+        super().__init__("Open-weights output is not valid JSON for the schema.")
+        self.detail = detail
+
+
 def url_for(arm):
     return (BASETEN_URL if arm == OPEN_WEIGHTS else probes.BASE_URL) + "/chat/completions"
 
@@ -79,13 +99,15 @@ def url_for(arm):
 def request_for(answer, effort):
     if effort not in ARMS:
         raise probes.ProbeFailure("Unsupported latency arm.")
-    # Same prompt, schema and token cap for every arm; Baseten accepts the
-    # json_schema for Muse Spark Open but does not enforce it.
+    # Same answers, prompt, schema and token cap for every arm. Baseten accepts the
+    # json_schema for Muse Spark Open but does not enforce it, so (spec/03) that
+    # arm also gets the schema in its prompt, local validation and one repair.
     model, reasoning = ((OPEN_WEIGHTS_MODEL, "low") if effort == OPEN_WEIGHTS
                         else (probes.SPARK, effort))
+    prompt = PROMPT + SCHEMA_APPENDIX if effort == OPEN_WEIGHTS else PROMPT
     return {
         "model": model, "reasoning_effort": reasoning, "max_tokens": 4000,
-        "messages": [{"role": "system", "content": PROMPT}, {"role": "user", "content": answer}],
+        "messages": [{"role": "system", "content": prompt}, {"role": "user", "content": answer}],
         "response_format": {"type": "json_schema", "json_schema": {
             "name": "minimal_commitment", "strict": True, "schema": SCHEMA,
         }},
@@ -101,14 +123,18 @@ def parse_response(body, answer, arm="low"):
         raise probes.ProbeFailure("Model refused the synthetic prompt.")
     content = message.get("content", "")  # final answer only; reasoning_content is ignored
     if arm == OPEN_WEIGHTS:
-        # Schema not enforced by the host: invalid output is a failed call.
+        # Schema not enforced by the host: invalid output is repairable once, never
+        # a strict-schema contradiction.
         if isinstance(content, str):
             content = THINK.sub("", content)
         try:
             parsed = json.loads(content)
+        except (ValueError, TypeError) as error:
+            raise InvalidOutput("it is not valid JSON") from error
+        try:
             probes.validate_schema(parsed, SCHEMA)
-        except (ValueError, TypeError, probes.SpecContradiction) as error:
-            raise probes.ProbeFailure("Open-weights output is not valid JSON for the schema.") from error
+        except probes.SpecContradiction as error:
+            raise InvalidOutput(f"it does not match the schema ({error})") from error
     else:
         try:
             parsed = json.loads(content)
@@ -130,30 +156,51 @@ def save_manifest(path, manifest):
     temporary.replace(path)
 
 
-def measure_call(client, recorder, answer, effort, key):
-    request = request_for(answer, effort)
-    recorder.data["request"] = {"url": url_for(effort), "json": request}
-    recorder.save()
+def post_attempt(client, recorder, request, effort, key):
+    """One POST, appended to recorder.data["attempts"]; latency_s is the sum over attempts."""
+    attempt = {"request": request} if recorder.data["attempts"] else {}
+    recorder.data["attempts"].append(attempt)
     start = time.perf_counter()
     try:
         response = client.post(url_for(effort), json=request,
                                headers={"Authorization": "Bearer " + key})
     finally:
         # Fully buffered HTTP request/response time, excluding validation/disk I/O.
-        recorder.data["latency_s"] = time.perf_counter() - start
+        attempt["latency_s"] = time.perf_counter() - start
+        recorder.data["latency_s"] = sum(a["latency_s"] for a in recorder.data["attempts"])
         recorder.save()
     recorder.data["http_status"] = response.status_code
     try:
         body = response.json()
     except ValueError as error:
         raise probes.ProbeFailure("Endpoint returned non-JSON; body omitted from logs.") from error
-    recorder.data["response"] = probes.sanitize(body, key)
+    recorder.data["response"] = attempt["response"] = probes.sanitize(body, key)
     recorder.save()
     if response.status_code != 200:
         raise probes.ProbeFailure(f"HTTP {response.status_code}; inspect sanitized capture.")
     if not isinstance(body, dict) or body.get("error"):
         raise probes.ProbeFailure("Endpoint returned an invalid/error response.")
-    return parse_response(body, answer, effort)
+    return body
+
+
+def measure_call(client, recorder, answer, effort, key):
+    request = request_for(answer, effort)
+    recorder.data.update(request={"url": url_for(effort), "json": request}, attempts=[], repaired=False)
+    recorder.save()
+    body = post_attempt(client, recorder, request, effort, key)
+    try:
+        return parse_response(body, answer, effort)
+    except InvalidOutput as error:
+        # spec/03: exactly one repair; a second invalid output fails the call.
+        content = body["choices"][0].get("message", {}).get("content")
+        repair = {**request, "messages": [
+            *request["messages"],
+            {"role": "assistant", "content": content if isinstance(content, str) else ""},
+            {"role": "user", "content": REPAIR_PROMPT.format(detail=error.detail)},
+        ]}
+        recorder.data["repaired"] = True
+        body = post_attempt(client, recorder, repair, effort, key)
+        return parse_response(body, answer, effort)
 
 
 def statistics_for(calls, efforts):
@@ -164,6 +211,7 @@ def statistics_for(calls, efforts):
         summary[effort] = {
             "attempted": len(rows), "succeeded": len(successes),
             "failed": sum(row["status"] != "passed" for row in rows),
+            "repaired": sum(bool(row.get("repaired")) for row in rows),
             "complete": len(rows) == len(ANSWERS) and len(successes) == len(ANSWERS)
                         and {row["case"] for row in rows} == set(range(1, len(ANSWERS) + 1)),
             "median_s": statistics.median(successes) if successes else None,
@@ -243,7 +291,7 @@ def live_run(directory, manifest):
                     recorder.data.update(status="failed", error=f"{type(error).__name__}; exception text omitted.")
                 finally:
                     recorder.save()
-                    row = {name: recorder.data.get(name) for name in ["case", "effort", "status", "latency_s", "result"]}
+                    row = {name: recorder.data.get(name) for name in ["case", "effort", "status", "latency_s", "result", "repaired"]}
                     row.update(capture=filename, capture_sha256=hashlib.sha256((directory / filename).read_bytes()).hexdigest())
                     manifest["calls"].append(row)
                     save_manifest(directory / "manifest.json", manifest)
@@ -279,7 +327,7 @@ def replay_run(path, directory, manifest):
         if captured["status"] == "passed":
             parse_response(captured["response"], captured["request"]["json"]["messages"][-1]["content"],
                            captured["effort"])
-        replayed = {**row, **{name: captured.get(name) for name in ["case", "effort", "status", "latency_s", "result"]}}
+        replayed = {**row, **{name: captured.get(name) for name in ["case", "effort", "status", "latency_s", "result", "repaired"]}}
         (directory / name).write_bytes(raw)
         manifest["calls"].append(replayed)
         print(json.dumps(replayed), flush=True)
