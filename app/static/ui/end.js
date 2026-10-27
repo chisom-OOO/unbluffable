@@ -52,6 +52,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("tip").textContent = e.tip;
 
+  // ---- Report (decision log 8): summary, doing well / improve, one tab per question ----
+  const r = e.report;
+  const item = (it) =>
+    `<article class="report-item"><h3>${escapeHtml(it.title)}</h3>` +
+    `<p>${escapeHtml(it.text)}</p>` +
+    `<p class="report-quote">“${escapeHtml(it.quote)}”</p>` +
+    (it.number
+      ? `<p class="check-line">You said <span class="mono">${escapeHtml(it.number.said)}</span>; exact maths: <span class="mono">${escapeHtml(it.number.exact)}</span>.</p>`
+      : `<p class="check-line">${escapeHtml(it.verdict)}</p>`) +
+    `<p class="chips">${it.seen.map((n) => `<span class="chip">Seen in: Question ${n}</span>`).join("")}</p></article>`;
+  $("overall").textContent = r.overall;
+  $("well").innerHTML = r.well.map(item).join("");
+  $("improve").innerHTML = r.improve.map(item).join("");
+
+  $("breakdown-tabs").innerHTML = r.breakdown.map((b, i) =>
+    `<button type="button" role="tab" class="tab" id="tab-${i}" aria-controls="panel-${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${escapeHtml(b.tab)}</button>`).join("");
+  $("breakdown-panels").innerHTML = r.breakdown.map((b, i) =>
+    `<div role="tabpanel" class="tab-panel" id="panel-${i}" aria-labelledby="tab-${i}" tabindex="0"${i === 0 ? "" : " hidden"}>` +
+    `<p class="tab-sub">${escapeHtml(b.sub)}</p>${b.items.map(item).join("")}</div>`).join("");
+
+  const tabs = [...document.querySelectorAll('#breakdown-tabs [role="tab"]')];
+  function select(i, focus) {
+    tabs.forEach((t, j) => {
+      t.setAttribute("aria-selected", String(j === i));
+      t.tabIndex = j === i ? 0 : -1;
+      $(`panel-${j}`).hidden = j !== i;
+    });
+    if (focus) tabs[i].focus();
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => select(i, false));
+    t.addEventListener("keydown", (ev) => {
+      const last = tabs.length - 1;
+      const to = { ArrowRight: i === last ? 0 : i + 1, ArrowLeft: i === 0 ? last : i - 1, Home: 0, End: last }[ev.key];
+      if (to === undefined) return;
+      ev.preventDefault();
+      select(to, true);
+    });
+  });
+
   $("estimate").innerHTML = e.estimate.map((r) =>
     `<tr><td>${escapeHtml(r.label)}</td><td class="mono num-col">${escapeHtml(r.p)}</td></tr>`).join("");
 });
