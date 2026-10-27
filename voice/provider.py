@@ -15,7 +15,7 @@ import wave
 import httpx
 
 from voice.recording import RecordStore, VoiceError, redact
-from voice.schemas import FULL, FULL_PROMPT, MINIMAL, MINIMAL_PROMPT, validate
+from voice.schemas import ENDPOINT, ENDPOINT_PROMPT, FULL, FULL_PROMPT, MINIMAL, MINIMAL_PROMPT, validate
 
 
 BASE = "https://api.meta.ai/v1"
@@ -40,9 +40,9 @@ def metadata(data, mode, job):
     usage = response.get("usage") or {}
     inputs, outputs = usage.get("prompt_tokens"), usage.get("completion_tokens")
     cost = None
-    if data["kind"] in {"minimal", "extraction"} and type(inputs) is int and type(outputs) is int:
+    if data["kind"] in {"endpoint", "minimal", "extraction"} and type(inputs) is int and type(outputs) is int:
         cost = (inputs * 1.25 + outputs * 4.25) / 1_000_000  # spec/03 assumed rates.
-    return {"model": SPARK if data["kind"] in {"minimal", "extraction"} else ASR,
+    return {"model": SPARK if data["kind"] in {"endpoint", "minimal", "extraction"} else ASR,
             "job": job, "effort": data["request"].get("reasoning_effort"),
             "latency_s": data.get("latency_s"), "estimated_cost_usd": cost,
             "mode": mode, "run_id": data["run_id"], "recorded_at": data["recorded_at"]}
@@ -120,11 +120,9 @@ class MetaVoice:
             raise VoiceError("The model request failed. Your transcript is available to edit or retry.") from None
         return record.data
 
-    async def extract(self, text, full=False):
+    async def structured(self, text, kind, effort, schema, prompt):
         if not text.strip() or len(text) > 20_000:
             raise VoiceError("Enter a nonempty answer of at most 20,000 characters.")
-        kind, effort = ("extraction", "low") if full else ("minimal", "minimal")
-        schema, prompt = (FULL, FULL_PROMPT) if full else (MINIMAL, MINIMAL_PROMPT)
         request = {"model": SPARK, "reasoning_effort": effort, "max_tokens": 4000,
                    "messages": [{"role": "system", "content": prompt}, {"role": "user", "content": text}],
                    "response_format": {"type": "json_schema", "json_schema": {"name": kind, "strict": True, "schema": schema}}}
@@ -138,6 +136,15 @@ class MetaVoice:
             validate(parsed, schema)
         except (KeyError, IndexError, TypeError, ValueError):
             raise VoiceError("The model returned an invalid extraction.") from None
+        return parsed, metadata(record, self.mode, kind)
+
+    async def endpoint(self, text):
+        return await self.structured(text, "endpoint", "minimal", ENDPOINT, ENDPOINT_PROMPT)
+
+    async def extract(self, text, full=False):
+        kind, effort = ("extraction", "low") if full else ("minimal", "minimal")
+        schema, prompt = (FULL, FULL_PROMPT) if full else (MINIMAL, MINIMAL_PROMPT)
+        parsed, model = await self.structured(text, kind, effort, schema, prompt)
         if full:
             parsed["reasoning_quotes"] = [row for row in parsed["reasoning_quotes"] if row["quote"] and row["quote"] in text]
             if parsed["committed_answer_text"] not in text:
@@ -150,7 +157,7 @@ class MetaVoice:
                 parsed["committed_number_text"] = "none"
             elif not span or span == "none" or span not in text:
                 raise VoiceError("The committed number was not found verbatim in your answer.")
-        return parsed, metadata(record, self.mode, kind)
+        return parsed, model
 
     async def transcribe(self, audio):
         if not audio or len(audio) > 32_000_000:
