@@ -149,7 +149,12 @@ def ow_response(parsed=None, finish="stop", content=None, reasoning="Thinking...
 
 
 def two_host_client(monkeypatch, calls, ow_body=None):
-    """Fake httpx client for both hosts; answers agree except on case 5."""
+    """Fake httpx client for both hosts; answers agree except on case 5.
+
+    `ow_body` overrides the open-weights reply: a body, or a function of
+    (default body, attempt number for this answer) returning one.
+    """
+    attempts = Counter()
     class Client:
         def __init__(self, **kwargs):
             assert kwargs == {"timeout": 90, "follow_redirects": False}
@@ -162,7 +167,7 @@ def two_host_client(monkeypatch, calls, ow_body=None):
 
         def post(self, url, **kwargs):
             body_json = kwargs["json"]
-            answer = body_json["messages"][-1]["content"]
+            answer = body_json["messages"][1]["content"]  # the candidate answer, also in a repair
             calls.append((url, body_json))
             parsed = {"committed_number_text": "none", "is_commitment": False}
             if answer == latency.ANSWERS[0]:
@@ -172,7 +177,12 @@ def two_host_client(monkeypatch, calls, ow_body=None):
                 assert kwargs["headers"]["Authorization"] == "Bearer " + BASETEN_KEY
                 if answer == latency.ANSWERS[4]:
                     parsed = {"committed_number_text": "two over thirteen", "is_commitment": True}
-                body = ow_body or ow_response(parsed)
+                attempts[answer] += 1
+                body = ow_response(parsed)
+                if callable(ow_body):
+                    body = ow_body(body, attempts[answer])
+                elif ow_body is not None:
+                    body = ow_body
                 body = {**body, "echo": BASETEN_KEY}
             else:
                 assert url == "https://api.meta.ai/v1/chat/completions"
@@ -195,7 +205,13 @@ def test_open_weights_request_matches_the_meta_arm_except_model():
     meta = latency.request_for(latency.ANSWERS[0], "low")
     assert ow["model"] == "meta-models/muse-spark-open-1026"
     assert ow["reasoning_effort"] == "low" and ow["max_tokens"] >= 4000
-    assert {k: v for k, v in ow.items() if k != "model"} == {k: v for k, v in meta.items() if k != "model"}
+    same = lambda r: {k: v for k, v in r.items() if k not in ("model", "messages")}
+    assert same(ow) == same(meta)
+    # spec/03: the schema is also in the prompt for a host that does not enforce it.
+    assert ow["messages"][0]["content"].startswith(meta["messages"][0]["content"])
+    assert json.dumps(latency.SCHEMA, separators=(",", ":")) in ow["messages"][0]["content"]
+    assert meta["messages"][0]["content"] == latency.PROMPT
+    assert ow["messages"][1] == meta["messages"][1]
     assert latency.url_for("open_weights") == "https://inference.baseten.co/v1/chat/completions"
 
 
@@ -255,7 +271,8 @@ def test_invalid_open_weights_output_fails_the_arm_without_stopping_the_run(tmp_
     two_host_client(monkeypatch, calls, ow_body=ow_response(content="not json"))
     directory = tmp_path / "run"
     assert latency.main(["--mode", "live", "--effort", "all", "--run-dir", str(directory)]) == 1
-    assert len(calls) == 30  # no strict-schema STOP for a host that does not enforce it
+    # One repair per case and no strict-schema STOP for a host that does not enforce it.
+    assert len(calls) == 40
     summary = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))["summary"]
     assert summary["low"]["complete"] and summary["minimal"]["complete"]
     assert summary["open_weights"]["failed"] == 10
@@ -270,3 +287,54 @@ def test_missing_baseten_key_blocks_before_any_call(tmp_path, monkeypatch):
     assert calls == []
     assert latency.main(["--mode", "live", "--effort", "open_weights", "--run-dir", str(tmp_path / "s")]) == 1
     assert calls == []
+
+
+def test_invalid_open_weights_output_is_repaired_once_and_timed_in_full(tmp_path, monkeypatch):
+    calls = []
+
+    def first_reply_fenced(body, attempt):
+        if attempt == 1:
+            return ow_response(content="```json\n" + body["choices"][0]["message"]["content"] + "\n```")
+        return body
+
+    two_host_client(monkeypatch, calls, ow_body=first_reply_fenced)
+    directory = tmp_path / "run"
+    assert latency.main(["--mode", "live", "--effort", "all", "--run-dir", str(directory)]) == 0
+    ow_calls = [body for url, body in calls if "baseten" in url]
+    assert len(calls) == 40 and len(ow_calls) == 20
+    first, repair = ow_calls[0], ow_calls[1]
+    assert repair["messages"][:2] == first["messages"]
+    assert repair["messages"][2]["role"] == "assistant" and repair["messages"][2]["content"].startswith("```json")
+    assert repair["messages"][3]["role"] == "user" and "not valid JSON" in repair["messages"][3]["content"]
+
+    manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
+    ow_rows = [row for row in manifest["calls"] if row["effort"] == "open_weights"]
+    assert len(ow_rows) == 10 and all(row["repaired"] for row in ow_rows)
+    assert not any(row["repaired"] for row in manifest["calls"] if row["effort"] != "open_weights")
+    assert manifest["summary"]["open_weights"]["repaired"] == 10
+    assert manifest["summary"]["open_weights"]["complete"]
+    for row in ow_rows:
+        capture = json.loads((directory / row["capture"]).read_text(encoding="utf-8"))
+        assert capture["repaired"] is True and len(capture["attempts"]) == 2
+        assert capture["latency_s"] == pytest.approx(sum(a["latency_s"] for a in capture["attempts"]))
+        assert row["latency_s"] == capture["latency_s"]
+
+
+def test_second_invalid_open_weights_output_fails(tmp_path, monkeypatch):
+    calls = []
+    two_host_client(monkeypatch, calls, ow_body=lambda body, attempt: ow_response(content="nope"))
+    directory = tmp_path / "run"
+    assert latency.main(["--mode", "live", "--effort", "open_weights", "--run-dir", str(directory)]) == 1
+    assert len(calls) == 20  # exactly one repair per case
+    summary = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))["summary"]
+    assert summary["open_weights"]["failed"] == 10 and summary["open_weights"]["repaired"] == 10
+
+
+def test_valid_open_weights_output_is_not_repaired(tmp_path, monkeypatch):
+    calls = []
+    two_host_client(monkeypatch, calls)
+    directory = tmp_path / "run"
+    assert latency.main(["--mode", "live", "--effort", "open_weights", "--run-dir", str(directory)]) == 0
+    assert len(calls) == 10
+    summary = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))["summary"]
+    assert summary["open_weights"]["repaired"] == 0
