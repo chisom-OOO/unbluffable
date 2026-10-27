@@ -12,12 +12,15 @@ import tempfile
 import time
 import wave
 
+import logging
+
 import httpx
 
 from voice.recording import RecordStore, VoiceError, redact
 from voice.schemas import FULL, FULL_PROMPT, MINIMAL, MINIMAL_PROMPT, validate
 
 
+LOG = logging.getLogger("uvicorn.error")
 BASE = "https://api.meta.ai/v1"
 REALTIME = "wss://api.meta.ai/v1/asr/realtime"
 SPARK = "muse-spark-1.3"
@@ -108,8 +111,16 @@ class MetaVoice:
                 response = await client.post(BASE + endpoint,
                     headers={"Authorization": "Bearer " + key, "Accept": "application/json"},
                     **({"files": files} if files is not None else {"json": request}))
-            body = redact(response.json(), key)
+            try:
+                body = redact(response.json(), key)
+            except ValueError:
+                LOG.warning("model call %s failed: HTTP %s, non-JSON body", endpoint, response.status_code)
+                raise VoiceError("The model request failed. Your transcript is available to edit or retry.") from None
             if response.status_code != 200 or not isinstance(body, dict) or body.get("error") or body.get("type") == "error":
+                detail = body.get("error") if isinstance(body, dict) else None
+                if isinstance(detail, dict):
+                    detail = {k: str(detail.get(k))[:200] for k in ("type", "code", "message", "param") if k in detail}
+                LOG.warning("model call %s failed: HTTP %s, error=%s", endpoint, response.status_code, str(detail)[:400])
                 raise VoiceError("The model request failed. Your transcript is available to edit or retry.")
             record.finish(body, latency_s=time.perf_counter() - start)
         except BaseException as error:
@@ -118,6 +129,7 @@ class MetaVoice:
                 raise
             if isinstance(error, VoiceError):
                 raise
+            LOG.warning("model call %s failed before a response: %s", endpoint, type(error).__name__)
             raise VoiceError("The model request failed. Your transcript is available to edit or retry.") from None
         return record.data
 
