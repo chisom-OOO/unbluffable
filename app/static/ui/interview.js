@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let state = "ready";
   let turn = 0;
-  let hints = 0, nudges = 0;
+  let hints = 0, nudges = 0, challenges = 0;
   let typing = false, answered = false, offered = false;
   let editing = null;
   let timers = [];
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateCounts() {
-    $("help-count").textContent = `Hints ${hints} · Nudges ${nudges}`;
+    $("help-count").textContent = `Challenges ${challenges} · Nudges ${nudges} · Hints ${hints}`;
   }
 
   function fillModels() {
@@ -163,7 +163,10 @@ document.addEventListener("DOMContentLoaded", () => {
       fillModels();
       if (script.challenge) node.querySelector(".says").innerHTML = highlight(text, script.challenge);
       const kind = script.reply.kind === "close" ? null : script.reply.kind;
-      if (kind) { nudges++; updateCounts(); }
+      // The challenge is its own help step (decision log 3b), counted apart from nudges.
+      if (kind === "challenge") challenges++;
+      else if (kind) nudges++;
+      if (kind) updateCounts();
       speak(script.reply.text, kind, () => {
         turn++;
         if (script.reply.kind === "close") {
