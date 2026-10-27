@@ -47,6 +47,38 @@ def test_public_static_assets_and_consent_controls():
     assert js.status_code == 200 and "speak(event.acknowledgement)" in js.text
     assert "MODEL_API_KEY" not in html.text + js.text
     assert client.get("/voice-static/mic-worklet.js").status_code == 200
+    assert 'Start interview' in html.text and 'id="headphones"' in html.text
+
+
+def test_one_start_accepts_multiple_answers_without_another_gesture(monkeypatch):
+    provider = Provider()
+    provider.mode = "live"
+    monkeypatch.setattr(voice_routes, "provider", lambda: provider)
+    captures = []
+
+    async def capture(socket, current, start, *args):
+        captures.append(start)
+        await socket.send_json({"type": "ready", "model": {"mode": "live"}})
+        message = await socket.receive_json()
+        return message["transcript"], {}
+
+    monkeypatch.setattr(voice_routes, "realtime_answer", capture)
+    with TestClient(app).websocket_connect("/api/voice/realtime") as socket:
+        socket.send_json({"type": "start", "hands_free": True})
+        assert socket.receive_json()["type"] == "ready"
+        for _ in range(2):
+            socket.send_json({"transcript": "The detector catches 90% of fraud."})
+            acknowledged = False
+            while True:
+                event = socket.receive_json()
+                if event["type"] == "answer_complete":
+                    assert not acknowledged
+                    acknowledged = True
+                if event["type"] == "ready":
+                    assert acknowledged
+                    break
+    assert len(captures) == 3
+    assert all(start["hands_free"] for start in captures)
 
 
 def test_cross_origin_websocket_is_rejected():

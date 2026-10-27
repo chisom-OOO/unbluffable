@@ -21,9 +21,9 @@ def provider():
 
 
 def silence_threshold():
-    value = float(os.environ.get("VOICE_SILENCE_SECONDS", "1.8"))
+    value = float(os.environ.get("VOICE_PARTIAL_IDLE_SECONDS", "0.8"))
     if not math.isfinite(value) or value <= 0:
-        raise VoiceError("VOICE_SILENCE_SECONDS must be finite and positive.")
+        raise VoiceError("VOICE_PARTIAL_IDLE_SECONDS must be finite and positive.")
     return value
 
 
@@ -86,6 +86,7 @@ async def live_answer(socket: WebSocket):
         await socket.close(code=1008)
         return
     await socket.accept()
+    analyses = set()
     try:
         start = await asyncio.wait_for(socket.receive_json(), 10)
         if start.get("type") != "start":
@@ -94,9 +95,35 @@ async def live_answer(socket: WebSocket):
         speed = float(os.environ.get("VOICE_REPLAY_SPEED", "1"))
         if not math.isfinite(speed) or speed < 0:
             raise VoiceError("VOICE_REPLAY_SPEED must be finite and nonnegative.")
-        text, model = await realtime_answer(socket, current, start, silence_threshold(), speed)
-        await socket.send_json({"type": "transcription_model", "model": model})
-        await analyse_answer(current, text, socket.send_json)
+        while True:
+            text, model = await realtime_answer(socket, current, start, silence_threshold(), speed)
+            await socket.send_json({"type": "transcription_model", "model": model})
+            if not start.get("hands_free") or current.mode == "replay":
+                await analyse_answer(current, text, socket.send_json)
+                break
+            acknowledged = asyncio.Event()
+
+            async def send(event, acknowledged=acknowledged):
+                await socket.send_json(event)
+                if event["type"] == "answer_complete":
+                    acknowledged.set()
+
+            analysis = asyncio.create_task(analyse_answer(current, text, send))
+            analyses.add(analysis)
+            # Enqueue the spoken acknowledgement before opening the next capture.
+            acknowledgement = asyncio.create_task(acknowledged.wait())
+            try:
+                await asyncio.wait([analysis, acknowledgement], return_when=asyncio.FIRST_COMPLETED)
+                if analysis.done():
+                    await analysis
+            finally:
+                acknowledgement.cancel()
+                with suppress(asyncio.CancelledError):
+                    await acknowledgement
+            for completed in list(analyses):
+                if completed.done():
+                    await completed
+                    analyses.remove(completed)
     except WebSocketDisconnect:
         return
     except VoiceError as error:
@@ -106,5 +133,10 @@ async def live_answer(socket: WebSocket):
         with suppress(WebSocketDisconnect, RuntimeError):
             await socket.send_json({"type": "error", "message": "Recording could not finish. Try file transcription or type your answer."})
     finally:
+        for task in analyses:
+            task.cancel()
+        for task in analyses:
+            with suppress(asyncio.CancelledError, Exception):
+                await task
         with suppress(RuntimeError):
             await socket.close()
