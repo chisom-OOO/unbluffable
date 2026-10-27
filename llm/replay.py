@@ -31,15 +31,19 @@ def request_hash(backend: str, request: dict) -> str:
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
-def sanitize(value, key: str | None = None):
-    if key is None:
-        key = os.environ.get("MODEL_API_KEY", "").strip()
+_KEY_VARIABLES = ("MODEL_API_KEY", "BASETEN_API_KEY")
+
+
+def sanitize(value, keys: tuple[str, ...] | None = None):
+    if keys is None:
+        keys = tuple(k for k in (os.environ.get(v, "").strip() for v in _KEY_VARIABLES) if k)
     if isinstance(value, dict):
-        return {k: "[REDACTED]" if k.lower() in _SECRET_FIELDS else sanitize(v, key) for k, v in value.items()}
+        return {k: "[REDACTED]" if k.lower() in _SECRET_FIELDS else sanitize(v, keys) for k, v in value.items()}
     if isinstance(value, list):
-        return [sanitize(v, key) for v in value]
-    if isinstance(value, str) and key:
-        return value.replace(key, "[REDACTED]")
+        return [sanitize(v, keys) for v in value]
+    if isinstance(value, str):
+        for key in keys:
+            value = value.replace(key, "[REDACTED]")
     return value
 
 
@@ -52,7 +56,9 @@ class CallStore:
     def path(self, backend: str, request: dict) -> Path:
         return self.directory / f"{request_hash(backend, request)}.json"
 
-    def save(self, backend: str, request: dict, response: dict, latency_s: float) -> dict:
+    def save(self, backend: str, request: dict, response: dict, latency_s: float, **extra) -> dict:
+        """`response` is the final one; `extra` may hold `attempts` (every call with its
+        latency), `repaired` and `repair_error`. `latency_s` covers all calls."""
         record = sanitize({
             "format_version": FORMAT_VERSION,
             "run_id": uuid.uuid4().hex,
@@ -60,6 +66,7 @@ class CallStore:
             "backend": backend,
             "request_sha256": request_hash(backend, request),
             "latency_s": round(latency_s, 3),
+            **extra,
             "request": request,
             "response": response,
         })
