@@ -2,7 +2,7 @@
 
 Living checklist. Update it at the end of every day. Any new chat or agent should read `ADVISOR_BRIEFING.md` and this file first, then `spec/00_START_HERE.md`.
 
-**Last updated:** Mon 26 Oct, 23:40 UK
+**Last updated:** Tue 27 Oct, 00:35 UK
 **Phase:** day 1 done (engine, probes, gate decided: after-turn challenge)
 **Next decision points:** Mon realtime gate (`spec/03`); Wed careful-chatbot check (`spec/05`)
 
@@ -38,4 +38,4 @@ Living checklist. Update it at the end of every day. Any new chat or agent shoul
 ## Daily log
 | Date | Works | Failed | Decisions | Next |
 | --- | --- | --- | --- | --- |
-| Mon 26 | Skeleton + CI; engine merged (pinned §6 and §4 pass); probes live: strict Spark with verbatim quotes, Wonder, voice file, realtime partials (~0.1 s behind audio, no revisions); gate harness; 273 tests pass | Realtime gate: 2/10 errors caught (0/20 false, median 1.09 s) | After-turn challenge (log 1); clarifications 0i (engine), 0j (partial stability) | Tue: voice path (after-turn on speechEnd + file fallback), number normaliser, extraction prompt (define "hypothetical" step), deploy to Render; workshop 16:00 |
+| Mon 26 | Skeleton + CI; engine merged (pinned §6 and §4 pass); probes live: strict Spark with verbatim quotes, Wonder, voice file, realtime partials (~0.1 s behind audio, no revisions); gate harness; 273 tests pass | Realtime gate: 2/10 errors caught (0/20 false, median 1.09 s) | After-turn challenge final (log 1, 1a, 1b: held-out retry 1/10); clarifications 0i (engine), 0j (partial stability) | Tue: voice path (after-turn on speechEnd + file fallback), number normaliser, extraction prompt (define "hypothetical" step), deploy to Render; workshop 16:00 |
