@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const KIND_TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint" };
   const reduced = reducedMotion();
+  // Pace for revealing an interviewer line when the voice sends no word boundaries.
+  const WORD_MS = 320;
 
   let config = null, socket = null, sessionId = null;
   let phase = "ready";           // ready | listening | checking | finished
@@ -62,37 +64,86 @@ document.addEventListener("DOMContentLoaded", () => {
       || voices.find((v) => v.lang === "en-US") || voices[0] || null;
   }
 
-  function speak(text) {
-    if (mute.getAttribute("aria-pressed") === "true" || !window.speechSynthesis) return;
+  const muted = () => mute.getAttribute("aria-pressed") === "true";
+
+  // `reveal` (optional) types the line out as it is spoken; it never delays the mic.
+  function speak(text, reveal) {
+    if (muted() || !window.speechSynthesis) { reveal?.finish(); return; }
     const u = new SpeechSynthesisUtterance(text);
     u.voice = pickVoice();
     const gen = speechGen;
     let started = false, ended = false;
-    u.onstart = () => { if (gen !== speechGen) return; started = true; speaking++; speechChanged(); };
+    u.onstart = () => {
+      if (gen !== speechGen) return;
+      started = true; speaking++; speechChanged();
+      reveal?.start();
+    };
+    u.onboundary = (e) => { if (gen === speechGen && e.name === "word") reveal?.boundary(e.charIndex); };
     const finish = () => {
+      reveal?.finish();
       if (ended || gen !== speechGen) return;
       ended = true;
       if (started) { speaking = Math.max(0, speaking - 1); speechChanged(); }
     };
     u.onend = finish; u.onerror = finish;
     speechSynthesis.speak(u);
+    reveal?.watch(() => started);
   }
 
   function cancelSpeech() {
     speechGen++; speaking = 0;
     window.speechSynthesis?.cancel();
+    finishReveals();
     speechChanged();
   }
 
+  // ---------- Interviewer lines type out as they are spoken ----------
+  // Screen readers get the whole line once (a visually hidden copy); the typed-out copy is aria-hidden.
+  const reveals = new Set();
+  function finishReveals() { for (const r of [...reveals]) r.finish(); }
+
+  function revealer(target, text) {
+    const words = text.split(" ");
+    let shown = 0, timer = null, watchdog = null, byBoundary = false;
+    const show = (n) => { shown = Math.min(words.length, Math.max(shown, n)); target.textContent = words.slice(0, shown).join(" "); };
+    const r = {
+      start() {
+        if (!reveals.has(r)) return;
+        show(1);
+        timer = setInterval(() => { if (!byBoundary) { show(shown + 1); if (shown >= words.length) clearInterval(timer); } }, WORD_MS);
+      },
+      boundary(charIndex) { if (reveals.has(r)) { byBoundary = true; show(text.slice(0, charIndex).split(" ").length); } },
+      // If speech never starts (nothing speaking or queued), show the line rather than leave it blank.
+      watch(started) {
+        if (!reveals.has(r)) return;
+        watchdog = setInterval(() => {
+          if (started()) { clearInterval(watchdog); return; }
+          if (!speechSynthesis.speaking && !speechSynthesis.pending) r.finish();
+        }, 1000);
+      },
+      finish() {
+        clearInterval(timer); clearInterval(watchdog);
+        show(words.length);
+        reveals.delete(r);
+      },
+    };
+    reveals.add(r);
+    return r;
+  }
+
   // ---------- Transcript log ----------
+  // Adds a line and speaks it. Muted, reduced motion or no speech voice: the line shows at once.
   function addInterviewer(text, kind) {
     const el = document.createElement("div");
     const tag = KIND_TAG[kind];
     el.className = "utterance interviewer" + (tag ? ` is-${kind}` : "");
     el.innerHTML = `<div class="speaker"><span>Interviewer</span>${tag ? `<span class="tag tag-${kind}">${tag}</span>` : ""}</div>` +
-      `<p class="says">${escapeHtml(text)}</p>`;
+      `<p class="says"><span class="visually-hidden">${escapeHtml(text)}</span><span class="typed" aria-hidden="true"></span></p>`;
     log.appendChild(el);
     scrollTo(el);
+    const reveal = revealer(el.querySelector(".typed"), text);
+    if (reduced || muted() || !window.speechSynthesis) reveal.finish();
+    speak(text, reveal);
   }
 
   function addCandidate(text) {
@@ -143,6 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function sendTyped() {
     const text = typeAnswer.value.trim();
     if (!text || phase !== "listening") return;
+    finishReveals();
     if (!consent.checked) { setStatus("Please agree that your answer text is kept before sending."); return; }
     typeAnswer.value = "";
     phase = "checking";
@@ -161,6 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle").textContent = event.text;
         $("puzzle-eyebrow").textContent = `Question ${event.number} of up to 4`;
         $("puzzle-kind").textContent = event.kind === "twin" ? "Same puzzle, new numbers" : "New puzzle";
+        finishReveals();
         questionStart = Date.now(); answeredThisQuestion = false; offered = false;
         counts({ challenges: 0, nudges: 0, hints: 0 });
         updateTimer();
@@ -168,7 +221,6 @@ document.addEventListener("DOMContentLoaded", () => {
       case "interviewer_line":
         addInterviewer(event.text, event.kind);
         if (event.counts) counts(event.counts);
-        speak(event.text);
         break;
       case "state":
         if (event.value === "listening") openTurn();
@@ -189,7 +241,6 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "listening_prompt":
         addInterviewer(event.message, "prompt");
-        speak(event.message);
         break;
       case "capture_stopped":
         capturing = false;
@@ -200,9 +251,8 @@ document.addEventListener("DOMContentLoaded", () => {
         live.hidden = true;
         answeredThisQuestion = true;
         lastCandidate = addCandidate(event.transcript);
+        cancelSpeech();  // the turn moved on: any line still typing out finishes now
         addInterviewer(event.acknowledgement, "ack");
-        cancelSpeech();
-        speak(event.acknowledgement);
         break;
       case "challenge_result":
         modelRow(event.model);
@@ -236,6 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function finish(event) {
+    finishReveals();
     phase = "finished";
     capturing = false;
     voice.close();
@@ -275,6 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------- Done: fallback for noisy rooms, or send a typed answer ----------
   function finishNow() {
     if (phase !== "listening") return;
+    finishReveals();
     if (typing) sendTyped();
     else if (capturing) { done.disabled = true; voice.flush(); }
   }
@@ -286,6 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
     typeToggle.setAttribute("aria-pressed", String(on));
     typeToggle.textContent = on ? "Use voice" : "Type instead";
     typePanel.hidden = !on;
+    finishReveals();
     if (on && capturing) voice.flush();  // close the open capture; its words come back as a turn
     render();
     if (on && phase === "listening") typeAnswer.focus();
@@ -327,9 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
     timer.setAttribute("aria-label", `${fmt(elapsed)} elapsed, guide ${fmt(guide)}${elapsed > guide ? ", over guide" : ""}`);
     if (!answeredThisQuestion && !offered && elapsed >= Math.round(guide * 0.6) && phase === "listening" && speaking === 0) {
       offered = true;  // a "no" costs nothing (the server ignores it)
-      const offer = "Is there anything you're stuck on?";
-      addInterviewer(offer, "prompt");
-      speak(offer);
+      addInterviewer("Is there anything you're stuck on?", "prompt");
     }
   }
   function startClock() {
