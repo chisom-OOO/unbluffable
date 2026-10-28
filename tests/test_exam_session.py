@@ -296,3 +296,70 @@ def test_socket_capture_error_returns_to_listening(monkeypatch):
         socket.send_json({"type": "capture"})
         seen = drain(socket, {"answer_complete"})
         assert seen[-1]["transcript"] == Q1_RIGHT
+
+
+# --- Leak guard and written help (spec/01, decision log 3a) -----------------
+
+from app.interview_session import leak  # noqa: E402
+
+
+@pytest.mark.parametrize("text, reason", [
+    ("Which transactions get flagged, apart from the fraudulent ones?", None),
+    ("Picture 2,000 transactions. How many of them are fraudulent?", None),  # round population
+    ("The detector flags 90% of fraud and 5% of genuine ones. What does that tell you?", None),  # givens
+    ("You said 20 are fraud. How many of those get flagged?", None),  # candidate's own number
+    ("So it's 2/13, right?", "answer"),
+    ("That would be 18 out of 117.", "answer"),
+    ("Is it about 15%?", "answer"),
+    ("How many of the 99 genuine flagged ones are there?", "new number 99"),
+    ("Try 1,000 transactions instead.", "new number 1000"),
+])
+def test_leak_guard(text, reason):
+    assert leak(flagship(), text, said=[Fraction(20)], population=None) == reason
+
+
+def run_with_writer(writer, answers, table):
+    events, queue = [], list(answers)
+
+    async def send(event):
+        events.append(event)
+
+    async def listen():
+        return queue.pop(0)
+
+    session = ExamSession(send, listen, FakeAnalyzer(table), Interview(demo=True), writer=writer)
+    asyncio.run(session.run())
+    return session, events
+
+
+def test_written_nudge_is_used_and_code_computes_its_strength():
+    seen = []
+
+    async def writer(puzzle, kind, said, at):
+        seen.append((kind, said[-1], at))
+        return "Which transactions get flagged, apart from the fraudulent ones?", 4
+
+    session, events = run_with_writer(
+        writer, [Q1_OPEN, Q1_STUCK, Q1_RIGHT, Q2_RIGHT],
+        {Q1_OPEN: ("90 percent", "misconception"), Q1_RIGHT: ("18 out of 117", "valid"),
+         Q2_RIGHT: ("18 out of 67", "valid")},
+    )
+    assert seen == [("nudge", Q1_STUCK, 0)]
+    nudge = lines(events, "nudge")[0]
+    assert (nudge["text"], nudge["target_step"]) == ("Which transactions get flagged, apart from the fraudulent ones?", 4)
+    q1 = session.questions[0]
+    assert q1.help_load == 4 and q1.weight == Fraction(2, 7)  # 2/(2 + 4 + 1)
+
+
+def test_leaking_draft_falls_back_to_the_plain_step_prompt():
+    async def writer(puzzle, kind, said, at):
+        return "It's 18 out of 117, isn't it?", 6
+
+    session, events = run_with_writer(
+        writer, [Q1_OPEN, Q1_STUCK, Q1_RIGHT, Q2_RIGHT],
+        {Q1_OPEN: ("90 percent", "misconception"), Q1_RIGHT: ("18 out of 117", "valid"),
+         Q2_RIGHT: ("18 out of 67", "valid")},
+    )
+    nudge = lines(events, "nudge")[0]
+    assert (nudge["target_step"], nudge["text"]) == (1, "Picture 2,000 transactions. How many of them are fraudulent?")
+    assert session.questions[0].help_load == 1

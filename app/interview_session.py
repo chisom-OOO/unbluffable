@@ -147,6 +147,37 @@ def numbers_in(text: str) -> list[Fraction]:
     return out
 
 
+_PERCENT = re.compile(r"(\d+(?:\.\d+)?)\s*(?:%|percent\b|per\s+cent\b)", re.I)
+_RATIO = re.compile(r"(\d[\d,]*)\s*(?:/|out\s+of)\s*(\d[\d,]*)", re.I)
+
+
+def leak(puzzle: Puzzle, text: str, said: list[Fraction], population: int | None) -> str | None:
+    """Why a nudge or hint may not be spoken, or None (spec/01 leak guard, decision log 3a).
+
+    Blocks the answer in any form, and any number that is not a given, not already
+    said by the candidate, and not the template's round population.
+    """
+    plain = normalise_numbers(text)
+    givens = set(puzzle.givens)
+    allowed = set(said) | givens | {Fraction(puzzle.population)}
+    if population is not None:
+        allowed.add(Fraction(population))
+    for a, b in _RATIO.findall(plain):
+        num, den = Fraction(a.replace(",", "")), Fraction(b.replace(",", ""))
+        if den and num / den == puzzle.answer:
+            return "answer"
+    for value in _PERCENT.findall(plain):
+        share = Fraction(value) / 100
+        if matches(StatedNumber(share, "percent"), puzzle.answer):
+            return "answer"
+        if share not in givens and share not in said:
+            return f"new number {value}%"
+    for value in numbers_in(_PERCENT.sub(" ", plain)):
+        if value not in allowed and value / 100 not in givens:
+            return f"new number {value}"
+    return None
+
+
 # --- Session state ----------------------------------------------------------
 
 
@@ -172,6 +203,7 @@ class QuestionLog:
     hints: int = 0
     help_load: int = 0
     numbers: list[Fraction] = field(default_factory=list)
+    said: list[str] = field(default_factory=list)  # the candidate's own words, for written help
     population: int | None = None  # round population, once the candidate or a hint has one
     first_wrong: tuple[Observation, str | None] | None = None
     scored: str | None = None
@@ -195,8 +227,13 @@ class ExamSession:
         interview: Interview | None = None,
         deadline: float | None = None,
         clock: Callable[[], float] = time.monotonic,
+        writer=None,
     ):
-        self.send, self.listen, self.analyzer = send, listen, analyzer
+        """`writer`, if given, drafts nudges and hints for the candidate's own words:
+        `await writer(puzzle, kind, transcripts, position)` -> (text, target step or None) or None.
+        Code checks every draft with `leak` and computes its strength; a rejected or
+        missing draft falls back to the plain step prompt (spec/01)."""
+        self.send, self.listen, self.analyzer, self.writer = send, listen, analyzer, writer
         self.interview = interview if interview is not None else Interview(demo=True)
         self.deadline, self.clock = deadline, clock
         self.questions: list[QuestionLog] = []
@@ -259,6 +296,7 @@ class ExamSession:
         challenged = False
         while True:
             text = await self.listen()
+            q.said.append(text)
             q.numbers += numbers_in(text)
             self._note_population(q)
             cue = cues(text)
@@ -318,25 +356,32 @@ class ExamSession:
         return target, say.step_prompt(q.puzzle, target, q.population)
 
     async def nudge(self, q: QuestionLog, obs: Observation) -> None:
-        """Rounds 2-4: a step prompt aimed at the candidate's next step; its strength counts toward H."""
-        at = q.position
-        target, text = self._next_step(q, at)
-        if target is not None:
-            q.help_load += strength(target, at)
+        """Rounds 2-4: aimed at the candidate's next step; its strength counts toward H."""
         q.nudges += 1
-        await self.line("nudge", text, target)
+        await self.help(q, "nudge")
 
     async def give_hint(self, q: QuestionLog) -> None:
+        """Help on request: ask what they are stuck on, then hint for that (spec/01)."""
         await self.line("prompt", say.HELP_ASK)
         text = await self.listen()
+        q.said.append(text)
         q.numbers += numbers_in(text)
         self._note_population(q)
+        q.hints += 1
+        await self.help(q, "hint")
+
+    async def help(self, q: QuestionLog, kind: str) -> None:
         at = q.position
-        target, hint = self._next_step(q, at)
+        target, text = self._next_step(q, at)
+        draft = await self.writer(q.puzzle, kind, list(q.said), at) if self.writer else None
+        if draft is not None:
+            drafted, step = draft
+            valid_step = step is None or (q.puzzle.template_id == "T1" and 1 <= step <= 6)
+            if valid_step and drafted.strip() and leak(q.puzzle, drafted, q.numbers, q.population) is None:
+                target, text = step, drafted.strip()
         if target is not None:
             q.help_load += strength(target, at)
-        q.hints += 1
-        await self.line("hint", hint, target)
+        await self.line(kind, text, target)
 
     def _note_population(self, q: QuestionLog) -> None:
         if q.population is None:
