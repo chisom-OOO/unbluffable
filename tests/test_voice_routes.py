@@ -56,7 +56,8 @@ def test_one_start_accepts_multiple_answers_without_another_gesture(monkeypatch)
     monkeypatch.setattr(voice_routes, "provider", lambda: provider)
     captures = []
 
-    async def capture(socket, current, start, *args):
+    async def capture(socket, current, start, *args, **kwargs):
+        assert callable(kwargs["silence_check"])
         captures.append(start)
         await socket.send_json({"type": "ready", "model": {"mode": "live"}})
         message = await socket.receive_json()
