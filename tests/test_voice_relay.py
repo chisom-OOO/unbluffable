@@ -8,6 +8,13 @@ from voice.recording import VoiceError
 from voice.relay import realtime_answer
 
 
+@pytest.fixture(autouse=True)
+def no_live_endpoint_calls(monkeypatch):
+    async def thinking(self, text):
+        return {"finished": False, "kind": "thinking"}, {}
+    monkeypatch.setattr(MetaVoice, "endpoint", thinking)
+
+
 class Browser:
     def __init__(self, done=True):
         self.output = []
@@ -102,20 +109,24 @@ def test_initial_auth_done_draining_and_keyless_replay(tmp_path, monkeypatch):
         assert "synthetic-server-key" not in path.read_text(encoding="utf-8")
 
 
-def test_silence_ends_input_without_done(tmp_path, monkeypatch):
+def test_content_closer_ends_input_without_done(tmp_path, monkeypatch):
     monkeypatch.setenv("MODEL_API_KEY", "synthetic-server-key")
 
     class FinalizedUpstream(Upstream):
         async def send(self, frame):
+            if isinstance(frame, str) and json.loads(frame).get("type") == "endStream":
+                self.frames.append(frame)
+                await self.events.put(None)
+                return
             await super().send(frame)
             if isinstance(frame, bytes):
-                await self.events.put({"type": "speechComplete", "turnId": 2, "transcript": "So it is nineteen percent."})
+                await self.events.put({"type": "speechComplete", "turnId": 2, "transcript": "So it is nineteen percent. That's my answer."})
 
     async def exercise():
         upstream = FinalizedUpstream()
         text, _ = await asyncio.wait_for(realtime_answer(Browser(done=False), MetaVoice(record_dir=tmp_path),
             {}, silence_s=0.02, connect=lambda *a, **k: upstream), 2)
-        assert text == "There are nineteen. So it is nineteen percent."
+        assert text == "There are nineteen. So it is nineteen percent. That's my answer."
         assert json.loads(upstream.frames[-1]) == {"type": "endStream"}
 
     asyncio.run(exercise())

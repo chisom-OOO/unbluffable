@@ -6,7 +6,6 @@ class MicPCM extends AudioWorkletProcessor {
     this.port.onmessage = ({data}) => {
       if (data.type === 'mute') this.muted = data.value;
       if (data.type === 'flush') {
-        this.running = false;
         this.emit(true);
         this.port.postMessage({type: 'flushed'});
       }

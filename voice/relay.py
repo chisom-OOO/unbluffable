@@ -4,11 +4,62 @@ import asyncio
 from contextlib import suppress
 import json
 import math
+import re
 import time
 
 from voice.provider import ASR, KEYWORDS, REALTIME, api_key, metadata
 from voice.recording import VoiceError, redact
 from voice.turns import AnswerMerger
+from voice.endpointing import PROMPT, safe_classify
+
+
+async def wait_for_endpoint(merger, provider, browser, changed, now):
+    """Speech keeps flowing during Spark; a newer partial invalidates its result."""
+    pending = None
+    snapshot = None
+    try:
+        while True:
+            changed.clear()
+            if pending and (snapshot != merger.revision or merger.paused):
+                pending.cancel()
+                with suppress(asyncio.CancelledError):
+                    await pending
+                pending = None
+            if pending and pending.done():
+                result = await pending
+                pending = None
+                await browser.send_json({"type": "endpoint_decision", "finished": result.finished,
+                                         "kind": result.kind, "cue": result.cue, "model": result.model})
+                if result.finished and snapshot == merger.revision and not merger.paused:
+                    merger.accepted_revision = snapshot
+                    return result.cue
+            check = None if merger.paused else merger.remaining(now())
+            if check == 0 and pending is None:
+                snapshot = merger.revision
+                merger.checked_revision = snapshot
+                pending = asyncio.create_task(safe_classify(provider, merger.transcript))
+            prompt = None if merger.paused else merger.prompt_remaining(now())
+            if prompt == 0:
+                merger.prompted_revision = merger.revision
+                await browser.send_json({"type": "listening_prompt", "message": PROMPT})
+            delays = [value for value in (
+                None if merger.paused else merger.remaining(now()),
+                None if merger.paused else merger.prompt_remaining(now()),
+            ) if value is not None]
+            signal = asyncio.create_task(changed.wait())
+            try:
+                await asyncio.wait([signal] + ([pending] if pending else []),
+                                   timeout=min(delays) if delays else None,
+                                   return_when=asyncio.FIRST_COMPLETED)
+            finally:
+                signal.cancel()
+                with suppress(asyncio.CancelledError):
+                    await signal
+    finally:
+        if pending:
+            pending.cancel()
+            with suppress(asyncio.CancelledError):
+                await pending
 
 
 async def replay_realtime(browser, provider, start, silence_s, speed=1):
@@ -33,7 +84,7 @@ async def replay_realtime(browser, provider, start, silence_s, speed=1):
     return answer["transcript"], model
 
 
-async def realtime_answer(browser, provider, start, silence_s=1.8, replay_speed=1, connect=None):
+async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=1, connect=None):
     if not math.isfinite(silence_s) or silence_s <= 0:
         raise VoiceError("Silence threshold must be finite and positive.")
     if provider.mode == "replay":
@@ -46,6 +97,7 @@ async def realtime_answer(browser, provider, start, silence_s=1.8, replay_speed=
                 "partialMode": "CUMULATIVE", "keywords": KEYWORDS, "emitAudioProgress": False}
     record = provider.store.create("realtime", {**settings, "silence_s": silence_s}, key)
     merger = AnswerMerger(silence_s)
+    merger.paused = bool(start.get("interviewer_speaking")) and not start.get("headphones", False)
     tasks = []
     if connect is None:
         from websockets.asyncio.client import connect
@@ -73,6 +125,8 @@ async def realtime_answer(browser, provider, start, silence_s=1.8, replay_speed=
                         raise VoiceError("Live transcription stopped. Try file transcription or type your answer.")
                     merger.feed(event, elapsed)
                     changed.set()
+                    if event.get("type") == "speechStart" and not merger.paused:
+                        await browser.send_json({"type": "candidate_speech"})
                     if event.get("type") in {"transcript", "speechComplete"}:
                         await browser.send_json({"type": "transcript", "transcript": merger.transcript})
                 if upstream.close_code != 1000:
@@ -100,35 +154,49 @@ async def realtime_answer(browser, provider, start, silence_s=1.8, replay_speed=
                         control = json.loads(message["text"])
                         if control.get("type") == "done":
                             return "done"
+                        if control.get("type") == "interviewer_speaking":
+                            merger.paused = bool(control.get("value")) and not control.get("headphones", False)
+                            merger.last_activity = asyncio.get_running_loop().time() - audio_start
+                            merger.revision += 1
+                            changed.set()
+                            continue
                         raise VoiceError("Unknown recording control.")
-
-            async def wait_for_silence():
-                while True:
-                    changed.clear()
-                    remaining = merger.remaining(asyncio.get_running_loop().time() - audio_start)
-                    if remaining == 0:
-                        return "silence"
-                    try:
-                        await asyncio.wait_for(changed.wait(), remaining)
-                    except TimeoutError:
-                        return "silence"
 
             reader = asyncio.create_task(receive_provider())
             writer = asyncio.create_task(receive_browser())
-            timer = asyncio.create_task(wait_for_silence())
+            timer = asyncio.create_task(wait_for_endpoint(merger, provider, browser, changed,
+                lambda: asyncio.get_running_loop().time() - audio_start))
             tasks = [reader, writer, timer]
-            done, _ = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
-            if reader in done:
+            while True:
+                done, _ = await asyncio.wait([reader, writer, timer], return_when=asyncio.FIRST_COMPLETED)
+                if timer in done and writer not in done and reader not in done:
+                    await timer
+                    if merger.accepted_revision != merger.revision:
+                        timer = asyncio.create_task(wait_for_endpoint(merger, provider, browser, changed,
+                            lambda: asyncio.get_running_loop().time() - audio_start))
+                        tasks.append(timer)
+                        continue
+                break
+            if reader in done and writer not in done and timer not in done:
                 await reader
-                reason = "stream_end"
+                raise VoiceError("Transcription ended before an answer boundary. Your transcript remains editable.")
             else:
                 reason = await (writer if writer in done else timer)
+                decided_text = merger.transcript
+                timer.cancel()
+                with suppress(asyncio.CancelledError):
+                    await timer
                 writer.cancel()
                 with suppress(asyncio.CancelledError):
                     await writer
                 await browser.send_json({"type": "capture_stopped"})
                 await upstream.send(json.dumps({"type": "endStream"}))
                 await asyncio.wait_for(reader, 30)
+                if reason != "done" and re.findall(r"\w+", decided_text.lower()) != re.findall(r"\w+", merger.transcript.lower()):
+                    revised = await safe_classify(provider, merger.transcript)
+                    if not revised.finished:
+                        raise VoiceError("The final transcript changed during completion. Please review it or continue your answer.")
+                    reason = revised.cue
             answer = merger.finish(reason)
             if not answer or not answer["transcript"]:
                 raise VoiceError("No intelligible speech was found. Try again or type an answer.")

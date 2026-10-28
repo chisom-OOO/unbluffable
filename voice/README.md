@@ -1,144 +1,145 @@
-# After-turn voice path
+﻿# Hands-free voice path
 
-Decision-log rows 1/1a/1b are final: partials update the live transcript, and no
-challenge is evaluated until the complete answer has been assembled. This branch
-adds a fixed flagship practice page at `/practice`; it does not implement the
-remaining multi-question interview UI or deploy a public service.
+Decision log 4 replaces the fixed silence boundary. `/practice` remains a fixed
+flagship practice page; this change does not add the remaining interview packs.
 
-## Run
+After consent, **Start interview** requests the microphone and starts browser
+speech in the same gesture. Questions, acknowledgements, challenges and silence
+prompts speak automatically. The mic and audio worklet stay open until Stop;
+the server opens the next transcription session while scoring runs. Done flushes
+pending samples and finishes the current answer, while capture remains available
+for the next one. File upload, local file recording and typed input remain available.
 
-Use this checkout's existing environment. No installation or environment creation
-is performed by the voice code. The server needs the already-installed runtime
-dependencies (`httpx`, `websockets`) and ffmpeg for file conversion.
+Without **Using headphones**, browser speech mutes both the microphone track and
+the PCM worklet. With the toggle on, provider `speechStart` cancels browser speech.
+Microphone capture requests echo cancellation and noise suppression. Muting the
+interviewer keeps the displayed text and lets the candidate continue by voice.
 
-With `MODEL_API_KEY` already exported in this PowerShell window:
+## Content boundaries
+
+Each provider turn end, or 0.8 seconds without a new partial, requests a content
+check; a pause alone never finishes an answer. General cues handle explicit
+closers, simple help/clarify requests, trailing fillers, unfinished clauses and
+explicit requests for thinking time. Other cases use Standard Muse Spark at
+`minimal` effort with exactly two strict fields:
+
+```json
+{"finished": false, "kind": "thinking"}
+```
+
+`kind` is `answer`, `question`, `help` or `thinking`. Thinking always keeps listening,
+even if a model inconsistently returns `finished: true`. New speech or revisions
+invalidate an in-flight result. No retry is made for an unchanged transcript. Model
+errors keep listening. After eight seconds without activity the interviewer asks
+**Want to talk me through where you are?** once per quiet period, without scoring.
+The timer pauses during interviewer speech without headphones.
+
+The server sends `endStream` only for an accepted content boundary or Done, drains
+final hypotheses, then emits one `answer_complete`. A meaningful final revision
+must also pass content detection. Unexpected provider closure does not complete
+an answer. Cumulative partials replace earlier text within their turn; delayed
+finals do not overwrite a newer turn.
+
+`VOICE_PARTIAL_IDLE_SECONDS` can adjust the partial-idle content-check delay
+(default 0.8); it is not an automatic answer-completion threshold.
+
+## Run and replay
+
+Use this worktree's existing `.venv` with the key already in the server environment:
 
 ```powershell
 $env:VOICE_MODE = "live"
-$env:VOICE_SILENCE_SECONDS = "1.8"
 $env:DATABASE_PATH = "recordings/voice/events.sqlite3"
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Open `http://127.0.0.1:8000/practice`. Microphone capture requires HTTPS or
-localhost. The key is read only with `os.environ["MODEL_API_KEY"]`, added on the
-server, and never placed in the page, a URL, a routine log, or a browser message.
-No environment file is opened.
+Microphone access needs HTTPS or localhost. Browser speech is disclosed on screen.
+The server uses `os.environ["MODEL_API_KEY"]`, authenticates realtime transcription
+in its initial JSON frame and never sends a key to the browser. No environment file
+is read by this code.
 
-The page supports live microphone transcription, local browser recording followed
-by file transcription, audio-file upload, and typed answers. File transcription
-always waits for the user to edit/confirm the transcript before either Spark call.
-The interviewer uses browser speech with a mute toggle; microphone PCM is muted
-while speech plays. A browser without live PCM support can use file or text input.
+Every live ASR, endpoint, challenge and scoring call uses the private record store
+(`VOICE_RECORD_DIR`, default `recordings/voice`). Spark calls have strict schemas,
+a 4,000-token cap and reject truncated/refused output. Full scoring uses `low`;
+endpoint and challenge calls use `minimal`. Audio never goes to Spark.
 
-## Completion and parallel checks
+For no-key replay set `VOICE_MODE=replay` and point `VOICE_RECORD_DIR` at successful
+existing records. Realtime replay reproduces the recorded capture boundary;
+challenge, scoring and endpoint replay match exact recorded requests. Missing
+records produce an error, never a fabricated result. File replay matches the
+uploaded source hash without invoking ffmpeg. Live file conversion uses ffmpeg
+(`FFMPEG_BIN` optionally selects it) and always waits for transcript confirmation.
 
-The browser sends mono 16-bit PCM at 16 kHz in 80 ms frames. The relay paces frames,
-authenticates in the initial JSON frame, and uses Muse Voice Transcribe in
-`ENDPOINTING`/`CUMULATIVE` mode. Each partial replaces its turn's earlier hypothesis.
-Turn IDs preserve order and keep delayed finals from overwriting a newer turn.
-Repeated final messages replace the same turn rather than duplicating its text.
+## Acceptance and verification
 
-Consecutive speech turns remain one answer until `VOICE_SILENCE_SECONDS` of silence
-(default **1.8 s**), or a client `{"type":"done"}` message. The Done button flushes
-pending microphone samples before sending that control. Both completion paths end
-provider input with `endStream`, drain pending final text, and emit exactly one
-`answer_complete`. A turn with no final transcript is not scored as a partial.
-
-The app sends `answer_complete` with **“Okay, let me check your working”** before
-scheduling either Spark task. The browser immediately clears stale speech and
-enqueues that acknowledgement. The two independent jobs then run concurrently:
-
-- Challenge: `muse-spark-1.3`, `reasoning_effort="minimal"`, the two-field strict
-  schema from the latency probe. The model identifies a committed number; exact
-  `Fraction` normalization and `engine.answers.matches` decide whether it is wrong.
-- Scoring: the full spec/03 extraction schema at `reasoning_effort="low"`. Quotes
-  not found verbatim are dropped; missing quoted reasoning cannot support Correct.
-  `engine.coding.code_answer` creates the observation, so a wrong number cannot be
-  scored Correct. Natural-frequency calculations are explicitly defined as actual
-  reasoning rather than hypothetical steps.
-
-Both use Standard IDs, explicit strict schemas, and 4,000-token caps. Truncated or
-refused output fails. Either lane can report an error while the other still returns.
-The fast result does not wait for full scoring. The model panel reports each job,
-effort, elapsed time, usage-based estimated cost where available, and replay ID/date.
-Cost uses the assumed Spark rates in spec/03, not a billing guarantee.
-
-### Silence boundary in the supplied captures
-
-Timing-only inspection found one genuine **2.48 s pause** in `live-02`; the largest
-inter-turn pause in `live-03` is below 1.8 s. A 1.8 s automatic boundary necessarily
-ends an answer during that longer pause. The default is unchanged. For longer
-thinking pauses, configure a longer silence window or use explicit Done with a
-longer window. Done skips the remaining wait; it cannot undo an answer already
-completed by silence.
-
-The read-only capture tests configure a **3.0 s** window and verify all 60 full
-transcripts with explicit Done, then again with automatic silence completion. Synthetic tests
-verify the default boundary, revisions, short pauses, overlapping turns, and Done
-draining. These tests do not claim that 1.8 s preserves every long thinking pause.
-
-Proposed decision-log note for review (not applied; specification files unchanged):
-record the 2.48 s pause and distinguish full-capture Done/long-window verification
-from the default 1.8 s automatic boundary. No classification thresholds or gate
-decision are changed by this implementation.
-
-## File fallback
-
-`POST /api/voice/transcribe` accepts a raw audio request body, so browser uploads
-need no multipart parsing dependency. The server converts it with ffmpeg to
-16 kHz mono 16-bit PCM WAV, validates the ten-minute/32 MB limits, then posts
-multipart `request` and `audio` parts to `/v1/asr/transcribe`. Temporary input/output
-files are cleaned up. The returned transcript is editable and is not yet scored.
-`FFMPEG_BIN` may point to an existing ffmpeg executable if it is not on PATH.
-
-## Private records and no-key replay
-
-Each live ASR session, file transcription, minimal call, and extraction call is
-recorded under `VOICE_RECORD_DIR` (default `recordings/voice`, already git-ignored).
-JSON includes run ID/date, sanitized request/response, latency, and provider event
-arrival times for realtime sessions. WAV bytes are not retained by file fallback;
-its source hash identifies the corresponding recorded response. No captures or
-recordings belong in a commit.
-
-For offline replay of existing successful records:
+The separate acceptance runner reads the original 60 event streams without
+printing transcripts or writing into the source captures. It simulates provider
+boundaries and 0.8-second partial-idle checks, incorporates recorded model latency,
+invalidates stale decisions, and checks for one completion at a valid semantic
+boundary. A committed answer, question, help request or explicit closer permits
+completion even when speech continues later; an unfinished thought does not.
+The last provider speech boundary and equality with the full clip transcript are
+not acceptance requirements. Ambiguous content relies on the recorded endpoint
+decision; this is not an independent human-labelled check of model accuracy.
+Output contains only clip IDs, timing, counts and decision cues. A missing
+model result fails acceptance; a longer silence window or forced Done cannot pass it.
 
 ```powershell
-$env:VOICE_MODE = "replay"
-$env:VOICE_RECORD_DIR = "recordings/voice"
-$env:DATABASE_PATH = "recordings/voice/events.sqlite3"
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+.\.venv\Scripts\python.exe -m voice.acceptance --mode replay
 ```
 
-Select a recorded realtime run on the practice page. Original arrival timing is
-replayed; `VOICE_REPLAY_SPEED=0` skips delays for local diagnostics. Spark responses
-are matched by the exact saved request, including the confirmed transcript. File
-replay matches the original uploaded bytes and needs neither ffmpeg nor a key.
-Unrecorded or edited answers produce an explicit missing-replay error, never a
-fabricated model result. Choose a curated record directory when sharing replay mode.
+Its default records live outside both worktrees, in the system temporary directory
+under `unbluffable-turn-taking`. For a live acceptance run with an available server
+key, run this command from the worktree; every endpoint-model response is recorded
+outside both repositories:
 
-## Verification
+```powershell
+.\.venv\Scripts\python.exe -m voice.acceptance --mode live --capture-root "C:\Users\chiso\unbluffable\scripts\gate\runs" --records "$env:TEMP\unbluffable-turn-taking"
+```
 
-Run offline tests with the existing interpreter and no pytest cache provider:
+`MODEL_API_KEY` must already be exported in that PowerShell session. Re-run with
+`--mode replay` to verify keyless reproduction. `--records PATH` selects an existing
+external store. Records containing private gate text must never go into the repo.
+The source worktree's `live-02` and `live-03` captures are read only.
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests scripts/probes/test_probes.py scripts/probes/test_spark_latency.py --tb=short
 ```
 
-Private capture tests read only these original directories and skip if unavailable:
+Synthetic tests cover content cues, the strict model contract and keyless replay,
+stale decisions, long thinking pauses, prompts and final-transcript draining.
+The Node unit checks run through pytest and cover Start, continuous capture,
+headphone barge-in, speaker muting, stale speech callbacks, PCM and Done flushing.
+Private merging tests do not print or copy speech. They are separate from acceptance.
 
-- `C:\Users\chiso\unbluffable\scripts\gate\runs\live-02`
-- `C:\Users\chiso\unbluffable\scripts\gate\runs\live-03`
+The public-link exit tests in spec/04 still require a deployed service and real
+microphone/browser validation. Unit tests are not evidence that those checks pass.
 
-They do not print or copy transcript contents. All other speech fixtures are
-invented, and all test model calls use mocks. An installed ffmpeg performs a real
-stereo-WAV-to-mono conversion check. An installed Node runs isolated JavaScript
-unit checks for acknowledgement order, stale socket handling, echo muting, PCM
-resampling, and Done flushing; those checks do not access a real microphone/browser.
+### Validation on 27 October
 
-Tuesday's public-link exit tests are **not yet verified** by this branch. Local
-tests cover a completed wrong posterior producing a challenge and the detector's
-90% restated given producing none. A public deploy, real mic/speech playback, and
-live end-to-end confirmation remain to be checked; no live model calls were made
-during this implementation. Computer Use could not verify the active browser URL,
-so the attempted browser smoke test was stopped rather than bypassing that check.
+The pytest command above passes **397 tests** (one existing Starlette deprecation
+warning). This includes the engine pinned tests, synthetic content detection,
+continuous websocket capture, browser controller checks and mocked keyless replay.
+
+The acceptance replay command exits 1: **0/60 accepted**, with endpoint-model
+records unavailable for every `live-02/clip-01.json` through `clip-30.json` and
+`live-03/clip-01.json` through `clip-30.json`. These captures contain ASR events,
+not responses to the new endpoint schema. A key or matching external endpoint
+records is still needed to verify the model-backed detector.
+
+After the builder's semantic-criterion clarification, the replay reports **zero
+early completions**. **live-02/clip-10.json**, **7.984 s**, cue **explicit_closer**,
+is a permitted completion even though speech follows. All 60 clips remain
+unverified because endpoint-model records are missing. The detector's cue rules
+and model prompt were not changed. No recorded speech was copied into the
+repository or printed. No live model calls were made in this session.
+
+The updated acceptance unit tests pass **10/10**:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests/test_voice_acceptance.py --tb=short
+```
+
+Spec/04 status: Monday's offline engine checks pass; Tuesday's public-link
+challenge/non-challenge exit test and Wednesday's complete voice interview remain
+unverified. No public deployment or real-browser microphone check was performed.

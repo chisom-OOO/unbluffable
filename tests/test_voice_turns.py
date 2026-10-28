@@ -16,17 +16,17 @@ def test_short_pauses_revisions_and_late_finals_form_one_answer():
     merger.feed({"type": "transcript", "transcript": "There are ninety"}, 0.2)
     merger.feed({"type": "transcript", "transcript": "There are nineteen"}, 0.4)
     merger.feed({"type": "speechEnd", "turnId": 1}, 0.5)
-    assert merger.remaining(3) is None  # Do not score a provisional partial.
+    assert merger.remaining(3) == 0  # A boundary requests a content check, not completion.
     merger.feed({"type": "speechStart", "turnId": 2}, 0.8)
     merger.feed({"type": "speechComplete", "turnId": 1, "transcript": "There are nineteen."}, 0.9)
-    assert merger.remaining(3) is None  # An older final must not stop a newer turn.
+    assert merger.active == 2  # An older final must not stop a newer turn.
     merger.feed({"type": "transcript", "transcript": "So I get fifteen percent"}, 1)
     merger.feed({"type": "speechEnd", "turnId": 2}, 1.2)
     merger.feed({"type": "speechComplete", "turnId": 2, "transcript": "So I get fifteen percent."}, 1.3)
     merger.feed({"type": "transcript", "transcript": "", "final": True}, 1.4)
-    assert merger.remaining(2.9) == pytest.approx(0.1)
+    assert merger.remaining(1.3) == 0
     assert merger.remaining(3) == 0
-    assert merger.finish("silence")["transcript"] == "There are nineteen. So I get fifteen percent."
+    assert merger.finish("content")["transcript"] == "There are nineteen. So I get fifteen percent."
     assert merger.finish("done") is None
 
 
@@ -40,15 +40,18 @@ def test_done_skips_wait_but_requires_finalized_text():
     assert merger.finish("done")["transcript"] == "Nineteen percent."
 
 
-def test_default_silence_really_ends_an_answer_before_a_long_thinking_pause():
+def test_content_check_and_silence_prompt_do_not_complete_an_answer():
     merger = AnswerMerger()
     merger.feed({"type": "speechStart", "turnId": 1}, 0)
     merger.feed({"type": "speechEnd", "turnId": 1}, 0.2)
     merger.feed({"type": "speechComplete", "turnId": 1, "transcript": "Let me think."}, 0.3)
     assert merger.remaining(2) == 0
-    assert merger.finish("silence")["transcript"] == "Let me think."
+    merger.checked_revision = merger.revision
+    assert merger.remaining(20) is None
+    assert merger.prompt_remaining(8.2) == 0
+    assert not merger.emitted
     merger.feed({"type": "speechStart", "turnId": 2}, 2.68)
-    assert merger.finish("done") is None
+    assert merger.active == 2 and not merger.emitted
 
 
 @pytest.mark.parametrize("value", [0, -1, float("nan"), float("inf")])
@@ -85,8 +88,7 @@ CAPTURE_ROOT = Path(r"C:\Users\chiso\unbluffable\scripts\gate\runs")
 
 
 @pytest.mark.parametrize("run", ["live-02", "live-03"])
-@pytest.mark.parametrize("completion", ["done", "configured_silence"])
-def test_private_capture_turns_merge_without_copying(run, completion):
+def test_private_capture_turns_merge_without_copying(run):
     manifest_path = CAPTURE_ROOT / run / "manifest.json"
     if not manifest_path.exists():
         pytest.skip("Private read-only capture set is not installed on this machine.")
@@ -94,10 +96,9 @@ def test_private_capture_turns_merge_without_copying(run, completion):
     assert len(source["clips"]) == 30
     for clip in source["clips"]:
         captured = json.loads((manifest_path.parent / clip["capture"]).read_text(encoding="utf-8"))
-        # One private clip has a 2.48 s thinking pause. A configured 3 s window
-        # preserves the whole clip with either completion method. Default-1.8 s
-        # behavior is verified separately, rather than hiding that boundary.
-        merger = AnswerMerger(3)
+        # This is a merging check, not end-of-answer acceptance. The separate
+        # voice.acceptance command exercises content decisions on these captures.
+        merger = AnswerMerger()
         finals = {}
         completed = None
         elapsed = 0
@@ -106,18 +107,12 @@ def test_private_capture_turns_merge_without_copying(run, completion):
             if row.get("stream_elapsed_s") is None:
                 continue
             elapsed = row["stream_elapsed_s"]
-            if completion == "configured_silence" and merger.remaining(elapsed) == 0:
-                completed = merger.finish("silence")
             merger.feed(event, row["stream_elapsed_s"])
             if event.get("type") == "speechStart":
                 finals.setdefault(event["turnId"], "")
             if event.get("type") == "speechComplete":
                 finals[event["turnId"]] = event.get("transcript", "")
-        if completed is None:
-            if completion == "configured_silence":
-                if merger.remaining(elapsed + 3) != 0:
-                    pytest.fail("Private capture did not become idle.", pytrace=False)
-            completed = merger.finish(completion)
+        completed = merger.finish("done")
         expected = " ".join(value.strip() for value in finals.values() if value.strip())
         # Do not let assertion introspection copy private transcript text into logs.
         if completed is None or completed["transcript"] != expected or not expected:
