@@ -13,9 +13,9 @@ import time
 from collections import OrderedDict
 from contextlib import suppress
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 
-from app import voice_routes
+from app import interview_report, voice_routes
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
 from engine.interview import Interview
 from voice.recording import VoiceError
@@ -40,6 +40,16 @@ def replay_speed() -> float:
     if not math.isfinite(speed) or speed < 0:
         raise VoiceError("VOICE_REPLAY_SPEED must be finite and nonnegative.")
     return speed
+
+
+@router.get("/{session_id}/report")
+def report(session_id: str):
+    """The in-app report (decision log 8). Sessions live in memory only, so a report
+    is gone after a restart or once MAX_SESSIONS newer sessions exist."""
+    session = SESSIONS.get(session_id)
+    if session is None:
+        raise HTTPException(404, "This report is no longer available.")
+    return interview_report.build(session)
 
 
 @router.websocket("/ws")

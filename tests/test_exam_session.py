@@ -363,3 +363,72 @@ def test_leaking_draft_falls_back_to_the_plain_step_prompt():
     nudge = lines(events, "nudge")[0]
     assert (nudge["target_step"], nudge["text"]) == (1, "Picture 2,000 transactions. How many of them are fraudulent?")
     assert session.questions[0].help_load == 1
+
+
+# --- The in-app report (decision log 8) -------------------------------------
+
+from app import interview_report  # noqa: E402
+
+
+def test_report_uses_only_recorded_values():
+    session, _ = run_session(
+        [Q1_OPEN, Q1_STUCK, Q1_RIGHT, Q2_RIGHT],
+        {Q1_OPEN: ("90 percent", "misconception"), Q1_RIGHT: ("18 out of 117", "valid"),
+         Q2_RIGHT: ("18 out of 67", "valid")},
+    )
+    r = interview_report.build(session)
+    assert r["label"] == "supports" and r["misconception"] is None  # named only for "Misconception detected"
+    assert r["questions"] == 2 and r["level"] == 1
+    assert r["checks"] == [
+        {"q": "Question 1", "said": "90 percent, then 18 out of 117", "exact": "18/117 = 2/13 ≈ 15.4%"},
+        {"q": "Question 2 (twin)", "said": "18 out of 67", "exact": "36/134 = 18/67 ≈ 26.9%"},
+    ]
+    assert [o["text"] for o in r["outcomes"]] == ["Recovered after the challenge and 1 nudge", "Right, no help"]
+    assert (r["challenges"], r["nudges"], r["hints"]) == (1, 1, [])
+    assert [t["tab"] for t in r["report"]["breakdown"]] == ["Question 1", "Question 2 (twin)"]
+    q1_items = r["report"]["breakdown"][0]["items"]
+    assert q1_items[0]["number"] == {"said": "90 percent", "exact": "18/117 = 2/13 ≈ 15.4%"}
+    assert q1_items[0]["quote"] == Q1_OPEN
+    assert q1_items[-1]["number"]["said"] == "18 out of 117"
+    # The posterior is the engine's: recovered with H = 1 (w = 1/2), then twin correct.
+    assert [e["label"] for e in r["estimate"]] == ["Sound (S)", "Misconception (M)", "Gap (G)"]
+    assert r["estimate"][0]["p"] == f"{float(session.interview.posterior['S']):.3f}"
+
+    allowed = {"90", "18", "117", "2", "13", "15.4", "67", "36", "134", "26.9", "1", "3", "0", "000", "20", "1,980", "99",
+               "40", "1,960", "98", "2,000", "120", "60", "4"}
+    # Never invent numbers: everything else is a model estimate or a time.
+    extra = numbers(r) - allowed - numbers(r["estimate"]) - numbers([r["times"], [b["sub"] for b in r["report"]["breakdown"]]])
+    assert extra == set()
+
+
+def numbers(value):
+    import re
+    return set(re.findall(r"\d+(?:,\d{3})*(?:\.\d+)?", repr(value)))
+
+
+def test_report_names_the_misconception_only_for_that_label():
+    wrong = ["It's 90%.", "Still 90%.", "I'd say 90%.", "90%.", "Final answer 90%."]
+    twin = ["90% again.", "90%.", "90%.", "90%.", "90%, final."]
+    session, _ = run_session(wrong + twin, {t: ("90%", "misconception") for t in wrong + twin})
+    r = interview_report.build(session)
+    assert r["label"] == "misconception" and r["misconception"] == "Transposed conditional"
+    assert [o["text"] for o in r["outcomes"]] == ["Not recovered", "Not recovered"]
+    assert r["tip"] == interview_report.TIPS["transposed_conditional"]
+
+
+def test_report_endpoint(monkeypatch):
+    provider = FakeProvider()
+    monkeypatch.setattr(voice_routes, "provider", lambda: provider)
+    client = TestClient(app)
+    with client.websocket_connect("/api/interview/ws") as socket:
+        socket.send_json({"type": "begin", "consent": True})
+        session_id = drain(socket, {"state"})[0]["id"]
+        for answer in (Q1_RIGHT, Q2_RIGHT):
+            socket.send_json({"type": "typed", "transcript": answer})
+            seen = drain(socket, {"state", "session_end"})
+            if seen[-1]["type"] == "state" and seen[-1]["value"] == "checking":
+                drain(socket, {"state", "session_end"})
+    report = client.get(f"/api/interview/{session_id}/report")
+    assert report.status_code == 200 and report.json()["label"] == "supports"
+    assert client.get("/api/interview/nope/report").status_code == 404
+    assert client.get("/ui/end").status_code == 200  # the labelled sample still works

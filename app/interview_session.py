@@ -204,6 +204,7 @@ class QuestionLog:
     help_load: int = 0
     numbers: list[Fraction] = field(default_factory=list)
     said: list[str] = field(default_factory=list)  # the candidate's own words, for written help
+    help_lines: list[tuple[str, str]] = field(default_factory=list)  # (challenge|nudge|hint, text)
     population: int | None = None  # round population, once the candidate or a hint has one
     first_wrong: tuple[Observation, str | None] | None = None
     scored: str | None = None
@@ -243,6 +244,8 @@ class ExamSession:
 
     # --- events ---
     async def line(self, kind: str, text: str, target: int | None = None) -> None:
+        if self.questions and kind in {"challenge", "nudge", "hint"}:
+            self.questions[-1].help_lines.append((kind, text))
         await self.send({"type": "interviewer_line", "kind": kind, "text": text, "target_step": target,
                          "counts": self._counts()})
 
