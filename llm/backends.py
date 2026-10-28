@@ -15,14 +15,19 @@ from __future__ import annotations
 
 import os
 
+import httpx
+
 from llm.client import (
+    BASE_URL,
+    BASETEN_URL,
+    _key,
     OPEN_WEIGHTS_MODEL,
     STANDARD_MODEL,
     assert_standard_model,
     make_baseten_client,
     make_meta_client,
 )
-from llm.http_diagnostics import log_http_exception
+from llm.http_diagnostics import log_http_exception, log_http_failure
 
 BACKENDS = ("meta_api", "open_weights")
 
@@ -31,9 +36,36 @@ class BackendUnavailable(RuntimeError):
     pass
 
 
+class BackendResponseError(BackendUnavailable):
+    """A failed HTTP response; its body is never part of the exception text."""
+
+    def __init__(self, response):
+        super().__init__("The model request failed.")
+        self.response = response
+
+
+async def _acomplete(backend, request, transport=None):
+    """Native async transport so cancelled voice checks stop their HTTP request."""
+    key = _key(backend.key_variable)
+    async with httpx.AsyncClient(timeout=90, follow_redirects=False, transport=transport) as client:
+        response = await client.post(backend.base_url + "/chat/completions", json=request,
+            headers={"Authorization": "Bearer " + key, "Accept": "application/json"})
+    try:
+        body = response.json()
+    except ValueError:
+        log_http_failure(backend.name + " /chat/completions", response, (key,))
+        raise BackendResponseError(response) from None
+    if response.status_code != 200 or not isinstance(body, dict) or body.get("error") or body.get("type") == "error":
+        log_http_failure(backend.name + " /chat/completions", response, (key,))
+        raise BackendResponseError(response)
+    return body
+
+
 class MetaAPIBackend:
     name = "meta_api"
     model = STANDARD_MODEL
+    base_url = BASE_URL
+    key_variable = "MODEL_API_KEY"
     enforces_schema = True
 
     def __init__(self, client=None):
@@ -49,10 +81,18 @@ class MetaAPIBackend:
             log_http_exception("meta_api /chat/completions", error, (getattr(self._client, "api_key", None),))
             raise
 
+    async def acomplete(self, request: dict, *, transport=None) -> dict:
+        assert_standard_model(request["model"])
+        if request["model"] != self.model:
+            raise ValueError(f"meta_api uses exactly {self.model}")
+        return await _acomplete(self, request, transport)
+
 
 class OpenWeightsBackend:
     name = "open_weights"
     model = OPEN_WEIGHTS_MODEL
+    base_url = BASETEN_URL
+    key_variable = "BASETEN_API_KEY"
     enforces_schema = False  # Baseten: json_schema accepted, not enforced
 
     def __init__(self, client=None):
@@ -68,6 +108,11 @@ class OpenWeightsBackend:
         except Exception as error:
             log_http_exception("open_weights /chat/completions", error, (getattr(self._client, "api_key", None),))
             raise
+
+    async def acomplete(self, request: dict, *, transport=None) -> dict:
+        if request["model"] != self.model:
+            raise ValueError(f"open_weights uses exactly {self.model}")
+        return await _acomplete(self, request, transport)
 
 
 def get_backend(name: str | None = None):
