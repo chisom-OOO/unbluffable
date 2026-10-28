@@ -124,10 +124,20 @@ def test_content_closer_ends_input_without_done(tmp_path, monkeypatch):
 
     async def exercise():
         upstream = FinalizedUpstream()
-        text, _ = await asyncio.wait_for(realtime_answer(Browser(done=False), MetaVoice(record_dir=tmp_path),
+        browser = Browser(done=False)
+        text, _ = await asyncio.wait_for(realtime_answer(browser, MetaVoice(record_dir=tmp_path),
             {}, silence_s=0.02, connect=lambda *a, **k: upstream), 2)
         assert text == "There are nineteen. So it is nineteen percent. That's my answer."
         assert json.loads(upstream.frames[-1]) == {"type": "endStream"}
+        timings = [event for event in browser.output if event["type"] == "endpoint_decision"]
+        final = next(event for event in timings if event["phase"] == "final")
+        from voice.timing import STAGES
+        assert set(final["timing_ms"]) == set(STAGES)
+        assert final["timing_ms"]["partial_idle_fired"] is None
+        assert final["timing_ms"]["end_stream_sent"] is not None
+        assert final["timing_ms"]["final_transcript_received"] is not None
+        assert final["cue"] == "explicit_closer"
+        assert "nineteen" not in json.dumps(timings)
 
     asyncio.run(exercise())
 

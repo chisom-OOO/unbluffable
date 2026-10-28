@@ -115,6 +115,49 @@ Private merging tests do not print or copy speech. They are separate from accept
 The public-link exit tests in spec/04 still require a deployed service and real
 microphone/browser validation. Unit tests are not evidence that those checks pass.
 
+## Endpoint stage telemetry
+
+Live `endpoint_decision` events and server log entries include a `decision_id`,
+`phase`, `cue`, `kind`, `finished` and `timing_ms`. The decision ID joins the
+decision, endStream, final-transcript and browser updates for one check. Every
+stage is in milliseconds from the last non-final partial received by the server:
+
+- `last_partial_received` (zero)
+- `partial_idle_fired` (the actual timer firing time)
+- `endpoint_decision_started` and `endpoint_decision_finished`
+- `end_stream_sent`
+- `final_transcript_received` (latest speechComplete arrival, possibly before endStream)
+- `acknowledgement_audio_first_byte`
+- `checking_working_shown` (the browser status DOM update)
+- `acknowledgement_speech_started` (the browser SpeechSynthesis `onstart` callback)
+
+Unobserved or bypassed stages are null. In particular, a provider speech boundary
+can trigger the existing content check without the partial-idle timer firing.
+Done bypasses the content decision. A run with no non-final partial has no timing
+origin. These cases do not invent an 800 ms wait.
+
+Browser SpeechSynthesis exposes no audio bytes, so
+`acknowledgement_audio_first_byte` remains null with
+`audio_first_byte_status=unavailable_browser_speech_synthesis`. Speech start is a
+separate observable, not an audio-first-byte measurement. Browser stage times
+are anchored to answer_complete receipt using performance.now; they exclude that
+frame's network transit time. `browser_clock` explicitly identifies this estimate.
+The browser posts only the timing snapshot to `/api/voice/timing`; the server
+allowlists numeric stages, cue/kind enums and the decision ID before logging.
+Neither this event nor its routine log entry includes transcript text or keys.
+
+To inspect a live run, use a shell where MODEL_API_KEY is already exported:
+
+```powershell
+$env:VOICE_RECORD_DIR = Join-Path $env:TEMP 'unbluffable-turn-timing'
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --log-level info
+```
+
+Open http://127.0.0.1:8000/practice, consent, Start, and say the test answer once.
+Inspect the `endpoint_decision` log entries, especially `phase=browser` for the
+combined server stages and acknowledgement/UI observations. Private live model
+records go to the external directory above; the diagnostic log has no answer text.
+
 ### Validation on 27 October
 
 The pytest command above passes **397 tests** (one existing Starlette deprecation

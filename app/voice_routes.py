@@ -2,6 +2,7 @@
 
 import asyncio
 from contextlib import suppress
+import json
 import math
 import os
 
@@ -11,6 +12,7 @@ from voice.answers import QUESTION, analyse_answer
 from voice.provider import MetaVoice
 from voice.recording import VoiceError
 from voice.relay import realtime_answer
+from voice.timing import EndpointTiming, browser_timing, log_event
 
 
 router = APIRouter(prefix="/api/voice")
@@ -55,6 +57,23 @@ def same_origin(socket):
     return not origin or origin.rstrip("/") in {f"http://{socket.headers.get('host')}", f"https://{socket.headers.get('host')}"}
 
 
+@router.post("/timing")
+async def timing_feedback(request: Request):
+    if not same_origin(request):
+        raise HTTPException(403, "Timing origin is not allowed.")
+    body = bytearray()
+    async for chunk in request.stream():
+        body.extend(chunk)
+        if len(body) > 8192:
+            raise HTTPException(413, "Timing metadata is too large.")
+    try:
+        event = browser_timing(json.loads(body))
+    except (ValueError, TypeError, AttributeError):
+        raise HTTPException(422, "Invalid timing metadata.") from None
+    log_event(event)
+    return event
+
+
 @router.websocket("/answer")
 async def typed_answer(socket: WebSocket):
     if not same_origin(socket):
@@ -96,15 +115,21 @@ async def live_answer(socket: WebSocket):
         if not math.isfinite(speed) or speed < 0:
             raise VoiceError("VOICE_REPLAY_SPEED must be finite and nonnegative.")
         while True:
-            text, model = await realtime_answer(socket, current, start, silence_threshold(), speed)
+            timing = EndpointTiming()
+            text, model = await realtime_answer(socket, current, start, silence_threshold(), speed, timing=timing)
             await socket.send_json({"type": "transcription_model", "model": model})
+            async def timed_send(event, timing=timing):
+                if event["type"] == "answer_complete" and timing.decision_id:
+                    event = {**event, "endpoint_timing": timing.event("acknowledgement_queued", timing.clock())}
+                await socket.send_json(event)
+
             if not start.get("hands_free") or current.mode == "replay":
-                await analyse_answer(current, text, socket.send_json)
+                await analyse_answer(current, text, timed_send)
                 break
             acknowledged = asyncio.Event()
 
-            async def send(event, acknowledged=acknowledged):
-                await socket.send_json(event)
+            async def send(event, acknowledged=acknowledged, timed_send=timed_send):
+                await timed_send(event)
                 if event["type"] == "answer_complete":
                     acknowledged.set()
 

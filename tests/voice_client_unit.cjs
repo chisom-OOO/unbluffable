@@ -81,7 +81,7 @@ async function checkHandsFree() {
   global.document = {getElementById(id) { if (!elements.has(id)) elements.set(id, element()); return elements.get(id); }, createElement: element};
   const $ = id => document.getElementById(id);
   $('consent').checked = true;
-  const spoken = [], sockets = [], ports = [];
+  const spoken = [], sockets = [], ports = [], timingPosts = [];
   let cancellations = 0, micRequests = 0, trackStops = 0, contexts = 0;
   const track = {enabled: true, stop() { trackStops++; }};
   Object.defineProperty(global, 'navigator', {configurable: true, value: {mediaDevices: {
@@ -110,7 +110,10 @@ async function checkHandsFree() {
     disconnect() {}
   };
   global.location = {protocol: 'http:', host: 'localhost'};
-  global.fetch = async () => ({ok: true, json: async () => ({mode: 'live', silence_s: .8, replays: [], question: 'Synthetic question'})});
+  global.fetch = async (url, options) => {
+    if (url === '/api/voice/timing') timingPosts.push(JSON.parse(options.body));
+    return {ok: true, json: async () => ({mode: 'live', silence_s: .8, replays: [], question: 'Synthetic question'})};
+  };
   global.WebSocket = class {
     static OPEN = 1;
     constructor(url) { this.url = url; this.readyState = 1; this.sent = []; sockets.push(this); }
@@ -141,7 +144,20 @@ async function checkHandsFree() {
   spoken.at(-1).onend();
   assert.equal(track.enabled, true);
   await deliver({type: 'capture_stopped'});
-  await deliver({type: 'answer_complete', transcript: 'Synthetic answer', acknowledgement: 'Okay, let me check your working'});
+  const stages = ['last_partial_received', 'partial_idle_fired', 'endpoint_decision_started',
+    'endpoint_decision_finished', 'end_stream_sent', 'final_transcript_received',
+    'acknowledgement_audio_first_byte', 'checking_working_shown', 'acknowledgement_speech_started'];
+  const endpoint_timing = {type: 'endpoint_decision', decision_id: 'a'.repeat(32), observed_at_ms: 1500,
+    kind: 'answer', cue: 'spark_answer', finished: true, timing_ms: Object.fromEntries(stages.map(key => [key, null]))};
+  await deliver({type: 'answer_complete', transcript: 'Synthetic answer', acknowledgement: 'Okay, let me check your working', endpoint_timing});
+  assert.equal(timingPosts.length, 1);
+  assert(timingPosts[0].timing_ms.checking_working_shown >= 1500);
+  spoken.at(-1).onstart();
+  assert.equal(timingPosts.length, 2);
+  assert(timingPosts[1].timing_ms.acknowledgement_speech_started >= 1500);
+  assert.equal(timingPosts[1].timing_ms.acknowledgement_audio_first_byte, null);
+  assert(!JSON.stringify(timingPosts).includes('Synthetic answer'));
+  assert(!JSON.stringify(timingPosts).includes('Okay, let me check'));
   await deliver({type: 'ready', model: {mode: 'live'}});
   await deliver({type: 'analysis_complete'});
   assert.equal(micRequests, 1); assert.equal(contexts, 1); assert.equal(trackStops, 0);

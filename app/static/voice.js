@@ -22,7 +22,7 @@ function cancelSpeech() {
   speechGeneration++; speechCount = 0;
   window.speechSynthesis?.cancel(); speechState();
 }
-function speak(text) {
+function speak(text, onstart) {
   interviewer(text);
   if ($('mute').checked || !window.speechSynthesis) return;
   const utterance = new SpeechSynthesisUtterance(text);
@@ -39,7 +39,19 @@ function speak(text) {
     speechCount = Math.max(0, speechCount - 1); speechState();
   };
   utterance.onend = finished; utterance.onerror = finished;
+  if (onstart) utterance.onstart = onstart;
   speechSynthesis.speak(utterance);
+}
+function endpointBrowserTiming(snapshot) {
+  if (!snapshot || snapshot.observed_at_ms == null) return null;
+  const received = performance.now();
+  const event = {...snapshot, timing_ms: {...snapshot.timing_ms}};
+  return stage => {
+    event.timing_ms[stage] = Math.round((snapshot.observed_at_ms + performance.now() - received) * 1000) / 1000;
+    // Only the allowlisted timing snapshot is posted; never the answer event.
+    fetch('/api/voice/timing', {method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(event), keepalive: true}).catch(() => {});
+  };
 }
 function controls(value) {
   busy = value;
@@ -104,13 +116,15 @@ function openSocket(path, start) {
     if (event.type === 'transcription_model') showModel(event.model);
     if (event.type === 'endpoint_decision' && event.model) showModel(event.model);
     if (event.type === 'answer_complete') {
+      const timing = endpointBrowserTiming(event.endpoint_timing);
       candidateActive = false;
       if (!handsFree) stopCapture();
       $('transcript').value = event.transcript;
       // Synchronous speech enqueue happens before handling any model-result frame.
       cancelSpeech();
-      speak(event.acknowledgement);
+      speak(event.acknowledgement, timing ? () => timing('acknowledgement_speech_started') : undefined);
       status('Checking your working…');
+      if (timing) timing('checking_working_shown');
     }
     if (event.type === 'challenge_result') {
       showModel(event.model);

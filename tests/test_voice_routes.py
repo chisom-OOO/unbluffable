@@ -44,7 +44,7 @@ def test_public_static_assets_and_consent_controls():
     html = client.get("/practice")
     assert html.status_code == 200 and 'id="done"' in html.text and 'id="consent"' in html.text
     js = client.get("/voice-static/voice.js")
-    assert js.status_code == 200 and "speak(event.acknowledgement)" in js.text
+    assert js.status_code == 200 and "speak(event.acknowledgement," in js.text
     assert "MODEL_API_KEY" not in html.text + js.text
     assert client.get("/voice-static/mic-worklet.js").status_code == 200
     assert 'Start interview' in html.text and 'id="headphones"' in html.text
@@ -56,7 +56,7 @@ def test_one_start_accepts_multiple_answers_without_another_gesture(monkeypatch)
     monkeypatch.setattr(voice_routes, "provider", lambda: provider)
     captures = []
 
-    async def capture(socket, current, start, *args):
+    async def capture(socket, current, start, *args, **kwargs):
         captures.append(start)
         await socket.send_json({"type": "ready", "model": {"mode": "live"}})
         message = await socket.receive_json()
