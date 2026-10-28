@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const KIND_TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint" };
   const reduced = reducedMotion();
+  const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   // Pace for revealing an interviewer line when the voice sends no word boundaries.
   const WORD_MS = 320;
 
@@ -212,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
       case "question":
         question = event;
         $("puzzle").textContent = event.text;
-        $("puzzle-eyebrow").textContent = `Question ${event.number} of up to 4`;
+        $("puzzle-eyebrow").textContent = `Question ${event.number} of up to 4 · guide ${fmt(event.guide_seconds)}`;
         $("puzzle-kind").textContent = event.kind === "twin" ? "Same puzzle, new numbers" : "New puzzle";
         finishReveals();
         questionStart = Date.now(); answeredThisQuestion = false; offered = false; heard = false;
@@ -371,17 +372,11 @@ document.addEventListener("DOMContentLoaded", () => {
     finishNow();
   }, true);
 
-  // ---------- Per-question time vs guide; help offered at 60% of the guide ----------
-  const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  // ---------- Help offered at 60% of the per-question guide (shown in the question label) ----------
   function updateTimer() {
     if (!question) return;
     const elapsed = Math.floor((Date.now() - questionStart) / 1000);
     const guide = question.guide_seconds;
-    $("timer-text").textContent = fmt(elapsed);
-    $("timer-guide").textContent = `${fmt(guide)} guide`;
-    const timer = $("timer");
-    timer.classList.toggle("over", elapsed > guide);
-    timer.setAttribute("aria-label", `${fmt(elapsed)} elapsed, guide ${fmt(guide)}${elapsed > guide ? ", over guide" : ""}`);
     const offer = window.UBTurn.shouldOfferHelp({
       elapsed, guide, offered, phase, heard, answered: answeredThisQuestion, speaking: speaking > 0,
       liveText: live.hidden ? "" : liveText.textContent, typedText: typeAnswer.value,
@@ -400,14 +395,14 @@ document.addEventListener("DOMContentLoaded", () => {
   function startCountdown(seconds) {
     if (!seconds) return;
     const el = $("countdown"), ends = Date.now() + seconds * 1000;
-    el.hidden = false;
+    el.classList.remove("pending");
     const tick = () => {
       const left = Math.max(0, Math.ceil((ends - Date.now()) / 1000));
-      el.textContent = left > 0 ? `${fmt(left)} left` : "0:00 · finishing this question";
+      $("countdown-text").textContent = left > 0 ? `${fmt(left)} left` : "0:00 · finishing this question";
       el.classList.toggle("low", left <= 60);
       el.setAttribute("aria-label", left > 0 ? `${fmt(left)} left in the session` : "Time is up; finishing this question");
       if (left > 0 && phase !== "finished") setTimeout(tick, 1000);
-      if (phase === "finished") el.hidden = true;
+      if (phase === "finished") el.classList.add("pending");
     };
     tick();
   }
