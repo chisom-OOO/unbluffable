@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let speaking = 0, speechGen = 0;
   let typing = false, capturing = false, captureRequested = false;
   let question = null, questionStart = 0, answeredThisQuestion = false, offered = false;
+  let heard = false;  // any candidate speech, live transcript or typing since this question began
   let lastCandidate = null;
 
   // ---------- Indicator: derived from real state only ----------
@@ -214,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle-eyebrow").textContent = `Question ${event.number} of up to 4`;
         $("puzzle-kind").textContent = event.kind === "twin" ? "Same puzzle, new numbers" : "New puzzle";
         finishReveals();
-        questionStart = Date.now(); answeredThisQuestion = false; offered = false;
+        questionStart = Date.now(); answeredThisQuestion = false; offered = false; heard = false;
         counts({ challenges: 0, nudges: 0, hints: 0 });
         updateTimer();
         break;
@@ -232,11 +233,13 @@ document.addEventListener("DOMContentLoaded", () => {
         speechChanged();
         break;
       case "transcript":
+        if (event.transcript && event.transcript.trim()) heard = true;
         live.hidden = false;
         liveText.textContent = event.transcript;
         scrollTo(live);
         break;
       case "candidate_speech":
+        heard = true;
         if (headphones.checked && speaking > 0) cancelSpeech();  // barge-in only with headphones
         break;
       case "listening_prompt":
@@ -345,6 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!on && phase === "listening" && !capturing && !captureRequested) openTurn();
   }
   typeToggle.addEventListener("click", () => setTyping(!typing));
+  typeAnswer.addEventListener("input", () => { if (typeAnswer.value.trim()) heard = true; });
   typeAnswer.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendTyped(); }
   });
@@ -378,7 +382,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const timer = $("timer");
     timer.classList.toggle("over", elapsed > guide);
     timer.setAttribute("aria-label", `${fmt(elapsed)} elapsed, guide ${fmt(guide)}${elapsed > guide ? ", over guide" : ""}`);
-    if (!answeredThisQuestion && !offered && elapsed >= Math.round(guide * 0.6) && phase === "listening" && speaking === 0) {
+    const offer = window.UBTurn.shouldOfferHelp({
+      elapsed, guide, offered, phase, heard, answered: answeredThisQuestion, speaking: speaking > 0,
+      liveText: live.hidden ? "" : liveText.textContent, typedText: typeAnswer.value,
+    });
+    if (offer) {
       offered = true;  // a "no" costs nothing (the server ignores it)
       addInterviewer("Is there anything you're stuck on?", "prompt");
     }
