@@ -1,5 +1,5 @@
 // Fake data for the UI preview screens. Nothing here comes from a model or the engine.
-// The puzzle states percentages only (decision log 5); the hint introduces the round population of 2,000.
+// The puzzle states percentages only (decision log 9); the hint introduces the round population of 2,000.
 // Numbers are consistent with it: 20 fraud, 18 flagged; 1,980 genuine, 99 flagged; 18/117 = 2/13.
 window.UB_FAKE = {
   puzzle: {
@@ -42,6 +42,10 @@ window.UB_FAKE = {
   ],
 
   offerHelp: "Is there anything you're stuck on?",
+
+  // Neutral acknowledgements, one before each interviewer reply (decision log 6). Fixed list, no model call.
+  // Never anything that signals correctness before the check: no "Right", "Good", "Exactly", "Correct".
+  acks: ["Got it.", "Understood.", "Okay.", "Thanks."],
 
   models: [
     { model: "muse-spark-1.3", job: "Pull out the committed number", ms: 842, cost: "$0.0004" },
@@ -89,6 +93,45 @@ window.UB_FAKE = {
     levels: 3,
     questions: 2,
     tip: "Before you answer, say which way the condition runs: \"given flagged, how likely fraud?\" Then count both groups that get flagged out of a round total, like 2,000.",
+    // In-app report (decision log 8). Only values already above: Q1 90% then 18/117, Q2 twin 18/67, H = 5.
+    // An item about a number shows the committed number, the exact value and the quote; otherwise the quote and the verdict.
+    report: {
+      overall: "On question 1 you read the detector's 90% as the chance a flagged transaction is fraud. After the challenge, one nudge and one hint you counted both flagged groups and reached 18 out of 117. On the same puzzle with new numbers you reached 18 out of 67 with no help. Two answers support the label. The help on question 1 is counted against it, so no harder follow-ups were asked (level 1 of 3).",
+      well: [
+        { title: "Keep counting both flagged groups out of a round total",
+          text: "Once you had a population, you split it into fraud and genuine and counted the flagged ones in each.",
+          quote: "So 20 are fraud and 18 of those get flagged. 1,980 are genuine and 99 get flagged. That's 18 out of 117, about 15 percent.", seen: [1, 2], verdict: "Right after help on question 1; right with no help on question 2" },
+        { title: "Keep reusing the method when the numbers change",
+          text: "With 2% fraud you set up the same counts without being asked to.",
+          quote: "40 are fraud and 36 get flagged; 1,960 genuine and 98 flagged. 36 out of 134, so 18 out of 67, about 27 percent.", seen: [2], number: { said: "18/67", exact: "36/134 = 18/67 ≈ 26.9%" } },
+      ],
+      improve: [
+        { title: "Say which way the condition runs before you give a number",
+          text: "Your opening number was the chance fraud gets flagged, not the chance a flag is fraud.",
+          quote: "So if a transaction gets flagged, it's about 90 percent likely to be fraud.", seen: [1], number: { said: "90%", exact: "18/117 = 2/13 ≈ 15.4%" } },
+        { title: "Pick a population yourself instead of waiting for one",
+          text: "You needed the hint to start counting the genuine transactions.",
+          quote: "I don't know where to start with the genuine ones.", seen: [1], verdict: "Hint needed: \"Imagine 2,000 transactions. How many of them would be genuine?\"" },
+      ],
+      breakdown: [
+        { tab: "Question 1", sub: "New puzzle · 2:41 against a 2:00 guide · 1 challenge, 1 nudge, 1 hint", items: [
+          { title: "Opening answer: the condition ran the wrong way",
+            text: "You gave the detector's catch rate as the answer.",
+            quote: "So if a transaction gets flagged, it's about 90 percent likely to be fraud.", seen: [1], number: { said: "90%", exact: "18/117 = 2/13 ≈ 15.4%" } },
+          { title: "Stuck on the genuine transactions",
+            text: "After the nudge you said where you were stuck, and the hint gave you a population.",
+            quote: "I don't know where to start with the genuine ones.", seen: [1], verdict: "Hint needed" },
+          { title: "Final answer: recovered after the challenge, 1 nudge and 1 hint",
+            text: "You counted both flagged groups and divided.",
+            quote: "So 20 are fraud and 18 of those get flagged. 1,980 are genuine and 99 get flagged. That's 18 out of 117, about 15 percent.", seen: [1], number: { said: "18/117", exact: "18/117 = 2/13 ≈ 15.4%" } },
+        ] },
+        { tab: "Question 2", sub: "Twin, same puzzle with new numbers · 0:52 against a 1:00 guide · no help", items: [
+          { title: "Answer: right with no help",
+            text: "You set up the counts for 2% fraud on your own.",
+            quote: "40 are fraud and 36 get flagged; 1,960 genuine and 98 flagged. 36 out of 134, so 18 out of 67, about 27 percent.", seen: [2], number: { said: "18/67", exact: "36/134 = 18/67 ≈ 26.9%" } },
+        ] },
+      ],
+    },
     estimate: [
       { label: "Sound (S)", p: "0.856" },
       { label: "Misconception (M)", p: "0.080" },

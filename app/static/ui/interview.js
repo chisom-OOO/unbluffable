@@ -1,5 +1,5 @@
 // Interview preview: hands-free after one Start tap (decision log 4), with fake data.
-// The mic shows Listening / Thinking / Speaking on its own; Done is only a fallback.
+// The mic shows Listening / Checking your working / Speaking on its own (decision log 5); Done is only a fallback.
 // No microphone, model or speech calls are made here; the real voice path lives in /practice and voice/.
 document.addEventListener("DOMContentLoaded", () => {
   const data = window.UB_FAKE;
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const STATE_TEXT = {
     ready: "One tap starts the interview",
     listening: "Listening",
-    thinking: "Thinking",
+    thinking: "Checking your working",
     speaking: "Speaking",
     finished: "Preview ends here",
   };
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let state = "ready";
   let turn = 0;
-  let hints = 0, nudges = 0, challenges = 0;
+  let hints = 0, nudges = 0, challenges = 0, acks = 0;
   let typing = false, answered = false, offered = false;
   let editing = null;
   let timers = [];
@@ -99,8 +99,10 @@ document.addEventListener("DOMContentLoaded", () => {
     speakTimer = setTimeout(() => { speakTimer = pendingThen = null; then && then(); }, ms);
   }
 
+  // While the answer is checked, a neutral acknowledgement is said first (decision log 6).
   function think(then) {
     setState("thinking");
+    addInterviewer(data.acks[acks++ % data.acks.length], null);
     setTimeout(then, T.think);
   }
 
