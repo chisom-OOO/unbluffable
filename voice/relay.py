@@ -7,6 +7,8 @@ import math
 import re
 import time
 
+from llm.http_diagnostics import log_http_exception
+
 from voice.provider import ASR, KEYWORDS, REALTIME, api_key, metadata
 from voice.recording import VoiceError, redact
 from voice.turns import AnswerMerger
@@ -231,6 +233,7 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
             record.finish({"transcript": answer["transcript"], "reason": reason}, latency_s=time.perf_counter() - began)
             return answer["transcript"], metadata(record.data, "live", "transcription")
     except BaseException as error:
+        log_http_exception("/asr/realtime", error, (key,))
         record.finish(error="Realtime recording failed or was cancelled.", latency_s=time.perf_counter() - began)
         if isinstance(error, asyncio.CancelledError):
             raise

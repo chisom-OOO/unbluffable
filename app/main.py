@@ -8,12 +8,14 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.database import initialize_database
+from app.model_diagnostics import log_startup_models
 from app.voice_routes import router as voice_router
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     initialize_database()
+    await log_startup_models()
     yield
 
 
