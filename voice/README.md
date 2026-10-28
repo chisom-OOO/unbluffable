@@ -143,3 +143,35 @@ The updated acceptance unit tests pass **10/10**:
 Spec/04 status: Monday's offline engine checks pass; Tuesday's public-link
 challenge/non-challenge exit test and Wednesday's complete voice interview remain
 unverified. No public deployment or real-browser microphone check was performed.
+
+
+## Spark backend selection
+
+All voice Spark jobs (endpoint, fast commitment extraction, full extraction, and
+custom calls to MetaVoice.structured) use llm.backends and the same LLM_BACKEND
+switch as llm.extract. The local default is meta_api. For Baseten:
+
+```powershell
+$env:LLM_BACKEND = "open_weights"
+```
+
+Export BASETEN_API_KEY in the server process; no environment file is read by the
+app. The model is meta-models/muse-spark-open-1026. Its jobs use low reasoning
+effort, the schema in the system message, local schema validation and at most
+one repair for invalid JSON/schema output. Truncated/refused responses fail
+without repair. Meta requests retain their existing model, prompts, effort and
+request fingerprints. No automatic live fallback sends an answer to another host.
+
+Transcription still uses Muse Voice Transcribe at Meta, authenticated with
+MODEL_API_KEY. Baseten does not receive audio. Model-panel metadata names the
+actual recorded model; the Meta pricing estimate is not applied to Baseten.
+
+Each original/repair HTTP call has its own private voice record. Replay needs no
+key or network, writes no records, and first looks for an exact legacy Meta
+request, then a matching open-weights record. This preserves old flagship request
+fingerprints, record bytes and emitted metadata even when the live switch is
+open_weights. Baseten-only runs also replay with LLM_BACKEND unset.
+
+The Exam Room on exam-room-wiring already obtains voice_routes.provider() and
+calls provider.structured for the current puzzle. Its endpoint uses the same
+provider. It needs no app change for this backend switch; app/ was not edited.
