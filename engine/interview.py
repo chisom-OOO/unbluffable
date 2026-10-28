@@ -8,14 +8,19 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass
+from fractions import Fraction
 
 from engine.coding import Observation, Outcome
 from engine.generator import generate, make_twin
+from engine.help import discount
 from engine.labels import Label, label_for, should_stop
 from engine.likelihoods import Likelihoods, load_likelihoods
 from engine.posterior import update
 from engine.selection import choose_next
 from engine.templates import TEMPLATE_ORDER, Puzzle, flagship, flagship_twin
+
+
+MAX_HELP_FOR_ESCALATION = 1
 
 
 @dataclass(frozen=True)
@@ -39,6 +44,7 @@ class Interview:
         self.demo = demo
         self.posterior = dict(self.likelihoods.prior)
         self.history: list[tuple[Question, Observation]] = []
+        self.help_loads: list[int] = []  # H per scored answer, for the escalation gate
         self.label = Label.MORE_EVIDENCE
         self.finished = False
         self._pending: Question | None = None
@@ -57,6 +63,11 @@ class Interview:
             if obs.misconception:
                 return obs.misconception
         return None
+
+    @property
+    def can_escalate(self) -> bool:
+        """Escalate only on "Evidence supports understanding" with H <= 1 on each scored answer (02 §7)."""
+        return self.label is Label.SUPPORTS and all(h <= MAX_HELP_FOR_ESCALATION for h in self.help_loads)
 
     def next_question(self) -> Question | None:
         if self.finished:
@@ -80,10 +91,25 @@ class Interview:
         self._pending = Question(self.answers + 1, choice.kind, puzzle, choice.bits_per_minute)
         return self._pending
 
-    def record(self, observation: Observation) -> None:
+    def record(
+        self,
+        observation: Observation,
+        weight: Fraction = Fraction(1),
+        help_load: int = 0,
+    ) -> None:
+        """Score a question once, from its final outcome (decision log 3b).
+
+        Correct after help: weight = 2/(2+H); recovered after a challenge:
+        2/(2+H+1) (engine.help.weight_for). Not recovered: pass the first
+        wrong/vague outcome with weight 1. The weight discounts Correct only.
+        """
         question = self._pending
         if question is None:
             raise RuntimeError("no question is waiting for an answer")
+        if not 0 < weight <= 1:
+            raise ValueError("weight must be in (0, 1]")
+        if weight != 1 and observation.outcome is not Outcome.CORRECT:
+            raise ValueError("the help discount applies to Correct only")
         if observation.outcome is Outcome.ABSTAIN:
             return  # system abstain: no update, same question stays pending
         if question.kind == "twin":
@@ -95,8 +121,11 @@ class Interview:
             row = self.likelihoods.first(observation.outcome)
             self._current = question.puzzle
             self._twin_after = observation.outcome
+        if observation.outcome is Outcome.CORRECT:
+            row = discount(row, Fraction(weight))
         self.posterior = update(self.posterior, row)
         self.history.append((question, observation))
+        self.help_loads.append(help_load)
         self._pending = None
         self.label = label_for(self.posterior, self.answers)
         if should_stop(self.label, self.answers):
