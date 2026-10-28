@@ -31,6 +31,12 @@ def restated_given(text, span):
     return True
 
 
+async def silence_commitment_check(provider, text):
+    """Caller-owned fast check at the existing silence-prompt boundary."""
+    extracted, _ = await provider.extract(text)
+    return extracted["is_commitment"] and not restated_given(text, extracted["committed_number_text"])
+
+
 def decision(text, extracted):
     span = extracted["committed_number_text"]
     stated = number_from_text(span) if extracted["is_commitment"] and not restated_given(text, span) else None

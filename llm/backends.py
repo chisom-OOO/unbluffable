@@ -22,6 +22,7 @@ from llm.client import (
     make_baseten_client,
     make_meta_client,
 )
+from llm.http_diagnostics import log_http_exception
 
 BACKENDS = ("meta_api", "open_weights")
 
@@ -42,7 +43,11 @@ class MetaAPIBackend:
         assert_standard_model(request["model"])
         if self._client is None:
             self._client = make_meta_client()
-        return self._client.chat.completions.create(**request).model_dump()
+        try:
+            return self._client.chat.completions.create(**request).model_dump()
+        except Exception as error:
+            log_http_exception("meta_api /chat/completions", error, (getattr(self._client, "api_key", None),))
+            raise
 
 
 class OpenWeightsBackend:
@@ -58,7 +63,11 @@ class OpenWeightsBackend:
             raise ValueError(f"open_weights uses exactly {OPEN_WEIGHTS_MODEL}")
         if self._client is None:
             self._client = make_baseten_client()
-        return self._client.chat.completions.create(**request).model_dump()
+        try:
+            return self._client.chat.completions.create(**request).model_dump()
+        except Exception as error:
+            log_http_exception("open_weights /chat/completions", error, (getattr(self._client, "api_key", None),))
+            raise
 
 
 def get_backend(name: str | None = None):

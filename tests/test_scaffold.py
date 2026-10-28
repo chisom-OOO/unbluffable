@@ -5,6 +5,7 @@ from app.main import app
 
 
 def test_health_endpoints(tmp_path, monkeypatch) -> None:
+    monkeypatch.delenv("MODEL_API_KEY", raising=False)
     monkeypatch.setenv("DATABASE_PATH", str(tmp_path / "events.sqlite3"))
     client = TestClient(app)
 

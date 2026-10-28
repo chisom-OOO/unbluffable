@@ -7,19 +7,27 @@ import math
 import re
 import time
 
+from llm.http_diagnostics import log_http_exception
+
 from voice.provider import ASR, KEYWORDS, REALTIME, api_key, metadata
 from voice.recording import VoiceError, redact
 from voice.turns import AnswerMerger
 from voice.endpointing import PROMPT, safe_classify
 
 
-async def wait_for_endpoint(merger, provider, browser, changed, now):
+async def wait_for_endpoint(merger, provider, browser, changed, now, silence_check=None):
     """Speech keeps flowing during Spark; a newer partial invalidates its result."""
     pending = None
     snapshot = None
+    silence_pending = None
+    silence_snapshot = None
     try:
         while True:
             changed.clear()
+            if silence_pending and (silence_snapshot != merger.revision or merger.paused):
+                silence_pending.cancel()
+                await asyncio.gather(silence_pending, return_exceptions=True)
+                silence_pending = None
             if pending and (snapshot != merger.revision or merger.paused):
                 pending.cancel()
                 with suppress(asyncio.CancelledError):
@@ -33,6 +41,21 @@ async def wait_for_endpoint(merger, provider, browser, changed, now):
                 if result.finished and snapshot == merger.revision and not merger.paused:
                     merger.accepted_revision = snapshot
                     return result.cue
+            if silence_pending and silence_pending.done():
+                try:
+                    committed = await silence_pending
+                except VoiceError:
+                    committed = False
+                silence_pending = None
+                if silence_snapshot == merger.revision and not merger.paused:
+                    if committed:
+                        await browser.send_json({"type": "endpoint_decision", "finished": True,
+                                                 "kind": "answer", "cue": "silence_commitment", "model": None})
+                        if silence_snapshot == merger.revision and not merger.paused:
+                            merger.accepted_revision = silence_snapshot
+                            return "silence_commitment"
+                    else:
+                        await browser.send_json({"type": "listening_prompt", "message": PROMPT})
             check = None if merger.paused else merger.remaining(now())
             if check == 0 and pending is None:
                 snapshot = merger.revision
@@ -41,14 +64,18 @@ async def wait_for_endpoint(merger, provider, browser, changed, now):
             prompt = None if merger.paused else merger.prompt_remaining(now())
             if prompt == 0:
                 merger.prompted_revision = merger.revision
-                await browser.send_json({"type": "listening_prompt", "message": PROMPT})
+                if silence_check is None:
+                    await browser.send_json({"type": "listening_prompt", "message": PROMPT})
+                else:
+                    silence_snapshot = merger.revision
+                    silence_pending = asyncio.create_task(silence_check(merger.transcript))
             delays = [value for value in (
                 None if merger.paused else merger.remaining(now()),
                 None if merger.paused else merger.prompt_remaining(now()),
             ) if value is not None]
             signal = asyncio.create_task(changed.wait())
             try:
-                await asyncio.wait([signal] + ([pending] if pending else []),
+                await asyncio.wait([signal] + ([pending] if pending else []) + ([silence_pending] if silence_pending else []),
                                    timeout=min(delays) if delays else None,
                                    return_when=asyncio.FIRST_COMPLETED)
             finally:
@@ -56,6 +83,9 @@ async def wait_for_endpoint(merger, provider, browser, changed, now):
                 with suppress(asyncio.CancelledError):
                     await signal
     finally:
+        if silence_pending:
+            silence_pending.cancel()
+            await asyncio.gather(silence_pending, return_exceptions=True)
         if pending:
             pending.cancel()
             with suppress(asyncio.CancelledError):
@@ -84,7 +114,7 @@ async def replay_realtime(browser, provider, start, silence_s, speed=1):
     return answer["transcript"], model
 
 
-async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=1, connect=None):
+async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=1, connect=None, silence_check=None):
     if not math.isfinite(silence_s) or silence_s <= 0:
         raise VoiceError("Silence threshold must be finite and positive.")
     if provider.mode == "replay":
@@ -165,7 +195,7 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
             reader = asyncio.create_task(receive_provider())
             writer = asyncio.create_task(receive_browser())
             timer = asyncio.create_task(wait_for_endpoint(merger, provider, browser, changed,
-                lambda: asyncio.get_running_loop().time() - audio_start))
+                lambda: asyncio.get_running_loop().time() - audio_start, silence_check=silence_check))
             tasks = [reader, writer, timer]
             while True:
                 done, _ = await asyncio.wait([reader, writer, timer], return_when=asyncio.FIRST_COMPLETED)
@@ -173,7 +203,7 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
                     await timer
                     if merger.accepted_revision != merger.revision:
                         timer = asyncio.create_task(wait_for_endpoint(merger, provider, browser, changed,
-                            lambda: asyncio.get_running_loop().time() - audio_start))
+                            lambda: asyncio.get_running_loop().time() - audio_start, silence_check=silence_check))
                         tasks.append(timer)
                         continue
                 break
@@ -203,6 +233,7 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
             record.finish({"transcript": answer["transcript"], "reason": reason}, latency_s=time.perf_counter() - began)
             return answer["transcript"], metadata(record.data, "live", "transcription")
     except BaseException as error:
+        log_http_exception("/asr/realtime", error, (key,))
         record.finish(error="Realtime recording failed or was cancelled.", latency_s=time.perf_counter() - began)
         if isinstance(error, asyncio.CancelledError):
             raise

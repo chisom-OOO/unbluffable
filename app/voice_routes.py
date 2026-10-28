@@ -7,7 +7,7 @@ import os
 
 from fastapi import APIRouter, HTTPException, Request, WebSocket, WebSocketDisconnect
 
-from voice.answers import QUESTION, analyse_answer
+from voice.answers import QUESTION, analyse_answer, silence_commitment_check
 from voice.provider import MetaVoice
 from voice.recording import VoiceError
 from voice.relay import realtime_answer
@@ -95,8 +95,13 @@ async def live_answer(socket: WebSocket):
         speed = float(os.environ.get("VOICE_REPLAY_SPEED", "1"))
         if not math.isfinite(speed) or speed < 0:
             raise VoiceError("VOICE_REPLAY_SPEED must be finite and nonnegative.")
+
+        async def silence_check(text):
+            return await silence_commitment_check(current, text)
+
         while True:
-            text, model = await realtime_answer(socket, current, start, silence_threshold(), speed)
+            text, model = await realtime_answer(socket, current, start, silence_threshold(), speed,
+                                               silence_check=silence_check)
             await socket.send_json({"type": "transcription_model", "model": model})
             if not start.get("hands_free") or current.mode == "replay":
                 await analyse_answer(current, text, socket.send_json)

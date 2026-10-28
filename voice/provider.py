@@ -16,6 +16,8 @@ import logging
 
 import httpx
 
+from llm.http_diagnostics import request_id
+
 from voice.recording import RecordStore, VoiceError, redact
 from voice.schemas import ENDPOINT, ENDPOINT_PROMPT, FULL, FULL_PROMPT, MINIMAL, MINIMAL_PROMPT, validate
 
@@ -114,13 +116,15 @@ class MetaVoice:
             try:
                 body = redact(response.json(), key)
             except ValueError:
-                LOG.warning("model call %s failed: HTTP %s, non-JSON body", endpoint, response.status_code)
+                LOG.warning("model call %s failed: HTTP %s, request_id=%s, non-JSON body",
+                            endpoint, response.status_code, request_id(response, (key,)))
                 raise VoiceError("The model request failed. Your transcript is available to edit or retry.") from None
             if response.status_code != 200 or not isinstance(body, dict) or body.get("error") or body.get("type") == "error":
                 detail = body.get("error") if isinstance(body, dict) else None
                 if isinstance(detail, dict):
                     detail = {k: str(detail.get(k))[:200] for k in ("type", "code", "message", "param") if k in detail}
-                LOG.warning("model call %s failed: HTTP %s, error=%s", endpoint, response.status_code, str(detail)[:400])
+                LOG.warning("model call %s failed: HTTP %s, request_id=%s, error=%s",
+                            endpoint, response.status_code, request_id(response, (key,)), str(detail)[:400])
                 raise VoiceError("The model request failed. Your transcript is available to edit or retry.")
             record.finish(body, latency_s=time.perf_counter() - start)
         except BaseException as error:
