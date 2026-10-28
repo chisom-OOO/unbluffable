@@ -9,13 +9,14 @@ import json
 import math
 import os
 import secrets
+import time
 from collections import OrderedDict
 from contextlib import suppress
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 from app import voice_routes
-from app.interview_session import ExamSession, SessionClosed, VoiceAnalyzer
+from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
 from engine.interview import Interview
 from voice.recording import VoiceError
 from voice.relay import realtime_answer
@@ -86,9 +87,11 @@ async def interview_socket(socket: WebSocket):
                     return text
                 # interviewer_speaking and other controls outside a capture: nothing to do
 
-        session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), Interview(demo=True))
+        session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), Interview(demo=True),
+                              deadline=time.monotonic() + SESSION_SECONDS)
         session_id = keep(session)
-        await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode})
+        await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,
+                                "session_seconds": SESSION_SECONDS})
         await session.run()
     except (WebSocketDisconnect, SessionClosed):
         return

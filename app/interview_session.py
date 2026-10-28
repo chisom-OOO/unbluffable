@@ -30,6 +30,9 @@ from voice.schemas import CONTEXT, FULL, FULL_PROMPT, MINIMAL, MINIMAL_PROMPT
 # Gap filled (spec/01 says "up to 4 rounds"): the challenge is round 1, so a
 # candidate gets the challenge plus up to three nudges before "not recovered".
 MAX_ROUNDS = 4
+# Session countdown (decision log 10). ASSUMPTION for the builder to confirm: at 0:00 the
+# interviewer finishes the current question, then closes and shows the report.
+SESSION_SECONDS = 600
 GUIDE_SECONDS = {"new": 120, "twin": 60}
 _DECLINE = re.compile(r"^\s*(?:no|nope|not really|no thanks|no thank you|i'?m (?:fine|ok|okay|good))\W*$", re.I)
 

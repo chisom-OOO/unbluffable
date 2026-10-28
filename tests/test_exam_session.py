@@ -222,7 +222,7 @@ def test_socket_runs_flagship_and_twin_with_typed_answers(monkeypatch):
     with client.websocket_connect("/api/interview/ws") as socket:
         socket.send_json({"type": "begin", "consent": True})
         seen = drain(socket, {"state"})
-        assert seen[0]["type"] == "session" and seen[0]["id"]
+        assert seen[0]["type"] == "session" and seen[0]["id"] and seen[0]["session_seconds"] == 600
         assert [e["type"] for e in seen[1:]] == ["question", "interviewer_line", "state"]
         socket.send_json({"type": "typed", "transcript": Q1_OPEN})
         seen = drain(socket, {"state"})

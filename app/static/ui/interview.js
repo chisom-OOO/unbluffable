@@ -154,6 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
     switch (event.type) {
       case "session":
         sessionId = event.id;
+        startCountdown(event.session_seconds);
         break;
       case "question":
         question = event;
@@ -252,6 +253,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!consent.checked) { setStatus("Please agree that your answer text is kept before starting."); consent.focus(); return; }
     setStatus("");
     consent.disabled = true;
+    stopMeter();
+    $("device-check").hidden = true;
     start.hidden = true;
     mic.hidden = false;
     phase = "checking";
@@ -333,14 +336,64 @@ document.addEventListener("DOMContentLoaded", () => {
     const tick = setInterval(() => { if (phase === "finished") { clearInterval(tick); return; } updateTimer(); }, 1000);
   }
 
-  // ---------- Config: replay mode has no live microphone path ----------
+  // ---------- Session countdown (decision log 10); the length comes from the server ----------
+  // At 0:00 the interviewer finishes the current question, then closes (the server decides).
+  function startCountdown(seconds) {
+    if (!seconds) return;
+    const el = $("countdown"), ends = Date.now() + seconds * 1000;
+    el.hidden = false;
+    const tick = () => {
+      const left = Math.max(0, Math.ceil((ends - Date.now()) / 1000));
+      el.textContent = left > 0 ? `${fmt(left)} left` : "0:00 · finishing this question";
+      el.classList.toggle("low", left <= 60);
+      el.setAttribute("aria-label", left > 0 ? `${fmt(left)} left in the session` : "Time is up; finishing this question");
+      if (left > 0 && phase !== "finished") setTimeout(tick, 1000);
+      if (phase === "finished") el.hidden = true;
+    };
+    tick();
+  }
+
+  // ---------- Device check before the first question (decision log 10) ----------
+  // Mic level is read locally from an AnalyserNode; nothing is sent. The camera is not touched.
+  let meterFrame = null;
+  function stopMeter() { if (meterFrame) cancelAnimationFrame(meterFrame); meterFrame = null; }
+  $("mic-test").addEventListener("click", async () => {
+    const note = $("mic-note");
+    try {
+      await voice.open();
+    } catch {
+      note.textContent = "The microphone is blocked or missing. You can type your answers instead.";
+      note.className = "device-note bad";
+      return;
+    }
+    note.textContent = "Say something: the bar should move. Nothing is sent.";
+    note.className = "device-note ok";
+    const bar = $("mic-meter");
+    const draw = () => { bar.style.width = `${Math.round(voice.level() * 100)}%`; meterFrame = requestAnimationFrame(draw); };
+    stopMeter(); draw();
+  });
+  $("speaker-test").addEventListener("click", () => {
+    const note = $("speaker-note");
+    if (!window.speechSynthesis) { note.textContent = "This browser has no speech voice; lines will appear as text."; note.className = "device-note bad"; return; }
+    if (mute.getAttribute("aria-pressed") === "true") { note.textContent = "The interviewer is muted; unmute to hear the test line."; return; }
+    speak("This is how the interviewer will sound.");
+    note.textContent = "Playing a test line.";
+  });
+
+  // ---------- Config: connection check, and replay mode has no live microphone path ----------
   fetch("/api/voice/config").then((r) => (r.ok ? r.json() : Promise.reject())).then((c) => {
     config = c;
+    $("connection-note").textContent = "Connected to the Unbluffable server.";
+    $("connection-note").className = "device-note ok";
     if (c.mode === "replay") {
       setTyping(true);
       setStatus("Recorded replay mode: answers are typed and checked against recorded model calls.");
     }
-  }).catch(() => setStatus("Voice configuration is unavailable. You can still type your answers."));
+  }).catch(() => {
+    $("connection-note").textContent = "Can't reach the server. Check your connection and reload.";
+    $("connection-note").className = "device-note bad";
+    setStatus("Voice configuration is unavailable. You can still type your answers.");
+  });
 
   start.disabled = !consent.checked;
   render();
