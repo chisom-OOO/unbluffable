@@ -84,6 +84,17 @@ class VoiceAnalyzer:
     def __init__(self, provider):
         self.provider = provider
 
+    async def committed(self, puzzle: Puzzle, text: str) -> bool:
+        """The relay's check at the silence-prompt boundary, for the current puzzle: true only
+        for a committed number, found verbatim, that is not a restated given. A model error
+        raises VoiceError, which the relay reads as "not committed"."""
+        prompt = MINIMAL_PROMPT.replace(CONTEXT, context_for(puzzle))
+        parsed, _ = await self.provider.structured(text, "minimal", "minimal", MINIMAL, prompt)
+        span = parsed["committed_number_text"]
+        if not parsed["is_commitment"] or not span or span == "none" or span not in text:
+            return False
+        return stated_in(text, span) is not None
+
     async def analyse(self, puzzle: Puzzle, text: str, send) -> Analysis:
         context = context_for(puzzle)
         minimal_prompt = MINIMAL_PROMPT.replace(CONTEXT, context)
@@ -391,6 +402,13 @@ class ExamSession:
             rounds = [int(x) for x in q.numbers if x.denominator == 1 and int(x) in POPULATIONS]
             if rounds:
                 q.population = rounds[0]
+
+    async def silence_check(self, text: str) -> bool:
+        """Passed to voice.relay.realtime_answer: a committed answer to the current question
+        ends the turn at the silence prompt instead of prompting."""
+        if not self.questions:
+            return False
+        return await self.analyzer.committed(self.questions[-1].puzzle, text)
 
     def _ack(self) -> str:
         text = say.ACKNOWLEDGEMENTS[self._acks % len(say.ACKNOWLEDGEMENTS)]

@@ -254,7 +254,7 @@ def test_socket_voice_capture_uses_the_realtime_relay(monkeypatch):
     answers = [Q1_RIGHT, Q2_RIGHT]
     starts = []
 
-    async def capture(socket, current, start, *args):
+    async def capture(socket, current, start, *args, **kwargs):
         starts.append(start)
         return answers.pop(0), {"model": "fake-asr"}
 
@@ -278,7 +278,7 @@ def test_socket_capture_error_returns_to_listening(monkeypatch):
     monkeypatch.setattr(voice_routes, "provider", lambda: provider)
     calls = []
 
-    async def capture(socket, current, start, *args):
+    async def capture(socket, current, start, *args, **kwargs):
         calls.append(1)
         if len(calls) == 1:
             raise VoiceError("No intelligible speech was found. Try again or type an answer.")
@@ -432,3 +432,63 @@ def test_report_endpoint(monkeypatch):
     assert report.status_code == 200 and report.json()["label"] == "supports"
     assert client.get("/api/interview/nope/report").status_code == 404
     assert client.get("/ui/end").status_code == 200  # the labelled sample still works
+
+
+# --- Silence-prompt commitment check for the current puzzle (twin) ---------
+
+
+class ScriptedMinimal:
+    """Fake minimal extraction: text -> (committed span, is_commitment); records each prompt."""
+    mode = "live"
+
+    def __init__(self, table):
+        self.table, self.prompts = table, []
+
+    async def structured(self, text, kind, effort, schema, prompt):
+        self.prompts.append((kind, prompt))
+        span, commit = self.table[text]
+        return {"committed_number_text": span, "is_commitment": commit}, {"model": "fake"}
+
+
+TWIN_COMMIT = "So that's 36 out of 134, which is 18 out of 67."
+TWIN_GIVEN = "The detector catches 90% of fraud."
+TWIN_THINKING = "I'm still working out 18 out of 67."
+
+
+@pytest.mark.parametrize("text, expected", [(TWIN_COMMIT, True), (TWIN_GIVEN, False), (TWIN_THINKING, False)])
+def test_silence_check_uses_the_twin_context_and_guards_givens(text, expected):
+    from app.interview_session import VoiceAnalyzer
+
+    provider = ScriptedMinimal({TWIN_COMMIT: ("18 out of 67", True), TWIN_GIVEN: ("90%", True),
+                                TWIN_THINKING: ("18 out of 67", False)})
+    assert asyncio.run(VoiceAnalyzer(provider).committed(flagship_twin(), text)) is expected
+    (kind, prompt), = provider.prompts
+    assert kind == "minimal" and "2% fraud" in prompt and "1% fraud" not in prompt
+
+
+def test_socket_passes_a_puzzle_aware_silence_check_to_the_relay(monkeypatch):
+    provider = FakeProvider()
+    monkeypatch.setattr(voice_routes, "provider", lambda: provider)
+    answers, checks = [Q1_RIGHT, Q2_RIGHT], []
+
+    async def capture(socket, current, start, *args, silence_check=None, **kwargs):
+        provider.prompts.clear()
+        checks.append(await silence_check(answers[0]))
+        checks.append(await silence_check("The detector catches 90% of fraud."))
+        checks.append([prompt for kind, prompt in provider.prompts])
+        return answers.pop(0), {"model": "fake-asr"}
+
+    from app import interview_routes
+    monkeypatch.setattr(interview_routes, "realtime_answer", capture)
+    client = TestClient(app)
+    with client.websocket_connect("/api/interview/ws") as socket:
+        socket.send_json({"type": "begin", "consent": True})
+        drain(socket, {"state"})
+        socket.send_json({"type": "capture"})
+        drain(socket, {"state"}); drain(socket, {"state"})
+        socket.send_json({"type": "capture"})
+        drain(socket, {"session_end"})
+    q1_commit, q1_given, q1_prompts, q2_commit, q2_given, q2_prompts = checks
+    assert (q1_commit, q1_given, q2_commit, q2_given) == (True, False, True, False)
+    assert all("1% fraud" in p for p in q1_prompts)
+    assert all("2% fraud" in p and "1% fraud" not in p for p in q2_prompts)  # the twin's own context
