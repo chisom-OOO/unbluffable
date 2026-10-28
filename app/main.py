@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.database import initialize_database
 from app.voice_routes import router as voice_router
+from app.interview_routes import router as interview_router
 
 
 @asynccontextmanager
@@ -19,6 +20,7 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title="Unbluffable", lifespan=lifespan)
 app.include_router(voice_router)
+app.include_router(interview_router)
 app.mount("/voice-static", StaticFiles(directory=Path(__file__).parent / "static"), name="voice-static")
 app.mount("/ui-static", StaticFiles(directory=Path(__file__).parent / "static" / "ui"), name="ui-static")
 
