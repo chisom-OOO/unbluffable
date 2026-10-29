@@ -214,11 +214,17 @@ document.addEventListener("DOMContentLoaded", () => {
         question = event;
         $("puzzle").textContent = event.text;
         $("puzzle-eyebrow").textContent = `Question ${event.number} of up to 4 · guide ${fmt(event.guide_seconds)}`;
-        $("puzzle-kind").textContent = event.kind === "twin" ? "Same puzzle, new numbers" : "New puzzle";
+        $("puzzle-kind").textContent = (event.kind === "twin" ? "Same puzzle, new numbers" : "New puzzle")
+          + (event.difficulty ? ` · ${event.difficulty}` : "");
         finishReveals();
         questionStart = Date.now(); answeredThisQuestion = false; offered = false; heard = false;
         counts({ challenges: 0, nudges: 0, hints: 0 });
         updateTimer();
+        break;
+      case "part2":
+        $("puzzle").textContent = event.text;
+        $("puzzle-kind").textContent = "Part 2 · not scored";
+        finishReveals();
         break;
       case "interviewer_line":
         addInterviewer(event.text, event.kind);
@@ -308,6 +314,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!consent.checked) { setStatus("Please agree that your answer text is kept before starting."); consent.focus(); return; }
     setStatus("");
     consent.disabled = true;
+    topicSelect.disabled = true;
+    document.querySelectorAll('input[name="level"]').forEach((r) => { r.disabled = true; });
     stopMeter();
     $("device-check").hidden = true;
     start.hidden = true;
@@ -318,7 +326,9 @@ document.addEventListener("DOMContentLoaded", () => {
       try { await voice.open(); } catch { setTyping(true); setStatus("The microphone is unavailable, so you can type your answers instead."); }
     }
     socket = new WebSocket(`${location.protocol === "https:" ? "wss:" : "ws:"}//${location.host}/api/interview/ws`);
-    socket.onopen = () => socket.send(JSON.stringify({ type: "begin", consent: true, headphones: headphones.checked }));
+    const level = document.querySelector('input[name="level"]:checked')?.value || "Easy";
+    socket.onopen = () => socket.send(JSON.stringify({ type: "begin", consent: true, headphones: headphones.checked,
+                                                       topic: topicSelect.value || null, level }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
       if (phase !== "finished") { phase = "finished"; voice.close(); setStatus("The connection closed. Reload to start again."); render(); }
@@ -447,6 +457,20 @@ document.addEventListener("DOMContentLoaded", () => {
     $("connection-note").textContent = "Can't reach the server. Check your connection and reload.";
     $("connection-note").className = "device-note bad";
     setStatus("Voice configuration is unavailable. You can still type your answers.");
+  });
+
+  // ---------- Topic picker: accepted forge templates per topic, Mixed, and the fraud alert ----------
+  const topicSelect = $("topic");
+  fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {
+    topicSelect.replaceChildren(...t.topics.map((o) => {
+      const option = document.createElement("option");
+      option.value = o.id;
+      option.textContent = o.count == null ? o.name : `${o.name} (${o.count} template${o.count === 1 ? "" : "s"})`;
+      option.selected = o.id === t.default;
+      return option;
+    }));
+  }).catch(() => {
+    topicSelect.replaceChildren(new Option("Default", ""));
   });
 
   start.disabled = !consent.checked;

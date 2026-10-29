@@ -17,6 +17,7 @@ from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 
 from app import interview_report, voice_routes
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
+from engine.bank import MIXED, START_LEVELS, Bank, BankSource, load_bank
 from engine.interview import Interview
 from voice.recording import VoiceError
 from voice.relay import realtime_answer
@@ -25,6 +26,38 @@ router = APIRouter(prefix="/api/interview")
 
 MAX_SESSIONS = 200
 SESSIONS: OrderedDict[str, ExamSession] = OrderedDict()
+FRAUD = "fraud"  # the classic T1-T3 interview with the fraud alert flagship; selectable, not the default
+_BANK: Bank | None = None
+
+
+def bank() -> Bank:
+    """Accepted forge templates (content/forge/, or FORGE_DIR), loaded once per process."""
+    global _BANK
+    if _BANK is None:
+        _BANK = load_bank(os.environ.get("FORGE_DIR") or None)
+    return _BANK
+
+
+def topics() -> dict:
+    found = bank().topics()
+    options = []
+    if found:
+        options.append({"id": MIXED, "name": MIXED, "count": sum(n for _, n in found)})
+        options += [{"id": name, "name": name, "count": n} for name, n in found]
+    options.append({"id": FRAUD, "name": "Fraud alert (classic)", "count": None})
+    return {"topics": options, "default": options[0]["id"], "levels": list(START_LEVELS),
+            "default_level": START_LEVELS[0]}
+
+
+def interview_for(topic, level) -> Interview:
+    """The fraud alert is the fallback only when no forge template is accepted yet."""
+    available = {option["id"] for option in topics()["topics"]}
+    topic = topic if topic in available else topics()["default"]
+    if topic == FRAUD:
+        return Interview(demo=True)
+    if level not in START_LEVELS:
+        raise VoiceError("Choose a starting level: Easy or Medium.")
+    return Interview(source=BankSource(bank(), topic, level))
 
 
 def keep(session: ExamSession) -> str:
@@ -40,6 +73,12 @@ def replay_speed() -> float:
     if not math.isfinite(speed) or speed < 0:
         raise VoiceError("VOICE_REPLAY_SPEED must be finite and nonnegative.")
     return speed
+
+
+@router.get("/topics")
+def topic_list():
+    """Topics with accepted templates and their counts, plus Mixed and the fraud alert."""
+    return topics()
 
 
 @router.get("/{session_id}/report")
@@ -98,7 +137,8 @@ async def interview_socket(socket: WebSocket):
                     return text
                 # interviewer_speaking and other controls outside a capture: nothing to do
 
-        session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), Interview(demo=True),
+        interview = interview_for(begin.get("topic"), begin.get("level", START_LEVELS[0]))
+        session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview,
                               deadline=time.monotonic() + SESSION_SECONDS)
         session_id = keep(session)
         await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,

@@ -11,6 +11,7 @@ from __future__ import annotations
 from fractions import Fraction
 
 from app.interview_session import ExamSession, QuestionLog
+from engine.bank import ForgePuzzle
 from engine.labels import Label
 
 LABEL_KEYS = {
@@ -32,6 +33,7 @@ TIPS = {
     "ignores_prior": "Keep the starting chance in: picture a round total and split it by the prior before applying the evidence.",
     None: "Say your plan out loud before the numbers: pick a round total, count both groups that show the evidence, then divide.",
 }
+FORGE_TIP = "Say your plan out loud before the numbers, work one step at a time, and check each step against the question."
 LEVELS = 3
 
 
@@ -39,13 +41,25 @@ def pct(x: Fraction) -> str:
     return f"{float(x) * 100:.1f}%"
 
 
+def exact_value(puzzle) -> str:
+    """A forge answer as stored, with a decimal when it is not a whole number."""
+    a = puzzle.answer
+    return puzzle.answer_text + ("" if a.denominator == 1 or puzzle.answer_text == f"{float(a):g}" else f" ≈ {float(a):.4g}")
+
+
 def exact(q: QuestionLog) -> str:
+    if isinstance(q.puzzle, ForgePuzzle):
+        return exact_value(q.puzzle)
     a, c = q.puzzle.answer, q.puzzle.counts
     keys = {"T1": ("fraud_flagged", "genuine_flagged"), "T2": ("defective_a", "defective_b"),
             "T3": ("biased_all_heads", "fair_all_heads")}[q.puzzle.template_id]
     hit, other = c[keys[0]], c[keys[1]]
     ratio = f"{hit}/{hit + other} = " if Fraction(hit, hit + other) == a and (hit, hit + other) != (a.numerator, a.denominator) else ""
     return f"{ratio}{a.numerator}/{a.denominator} ≈ {pct(a)}"
+
+
+def misconception_name(key: str | None) -> str | None:
+    return MISCONCEPTIONS[key][0] if key in MISCONCEPTIONS else key
 
 
 def said(answer) -> str:
@@ -82,12 +96,29 @@ def outcome_text(q: QuestionLog) -> str:
     return "Not recovered"
 
 
-def number_item(q: QuestionLog, answer, title: str, text: str) -> dict:
+def number_item(q: QuestionLog, answer, title: str, text: str, exact_text: str | None = None) -> dict:
     item = {"title": title, "text": text, "quote": answer.transcript, "seen": [q.number]}
     if answer.stated is not None:
-        item["number"] = {"said": said(answer), "exact": exact(q)}
+        item["number"] = {"said": said(answer), "exact": exact_text or exact(q)}
     else:
         item["verdict"] = "No committed number"
+    if answer.misconception:
+        item["misconception"] = misconception_name(answer.misconception)
+        item["text"] += f" Your number matches a known error: {item['misconception']}."
+    return item
+
+
+def part2_item(q: QuestionLog) -> dict | None:
+    p = q.part2
+    checked = [a for a in p.answers if a.outcome is not None] if p else []
+    if not checked:
+        return None
+    answer = checked[-1]
+    right = p.outcome == "correct"
+    item = number_item(q, answer, "Part 2: right" if right else "Part 2: not the exact value",
+                       "The follow-up after your correct answer. It is reported, not scored.",
+                       exact_value(p.puzzle))
+    item["question"] = p.text
     return item
 
 
@@ -97,10 +128,11 @@ def question_items(q: QuestionLog) -> list[dict]:
         return []
     first, last = checked[0], checked[-1]
     items = []
+    part2 = part2_item(q)
     if first.outcome == "correct":
         items.append(number_item(q, first, "Answer: right" + (" with no help" if not (q.hints or q.nudges) else ""),
                                  "You committed to the exact answer with your reasoning."))
-        return items
+        return items + ([part2] if part2 else [])
     first_title = {"named_wrong": "Opening answer: a named error", "other_wrong": "Opening answer: not the exact value",
                    "recited": "Opening answer: the previous puzzle's answer", "vague": "Opening answer: not committed or not explained"}
     items.append(number_item(q, first, first_title.get(first.outcome, "Opening answer"),
@@ -113,7 +145,7 @@ def question_items(q: QuestionLog) -> list[dict]:
     if last is not first:
         title = "Final answer: " + outcome_text(q).lower()
         items.append(number_item(q, last, title[0].upper() + title[1:], "Where you ended up on this question."))
-    return items
+    return items + ([part2] if part2 else [])
 
 
 def build(session: ExamSession) -> dict:
@@ -123,6 +155,7 @@ def build(session: ExamSession) -> dict:
     misconception = iv.misconception if label is Label.MISCONCEPTION else None
     first_errors = [q.first_wrong[0].misconception for q in qs if q.first_wrong and q.first_wrong[0].misconception]
     tip_key = misconception or (first_errors[0] if first_errors else None)
+    forge = any(isinstance(q.puzzle, ForgePuzzle) for q in session.questions)
 
     evidence, checks, hints, times, outcomes = [], [], [], [], []
     for q in qs:
@@ -136,7 +169,7 @@ def build(session: ExamSession) -> dict:
                 checks.append({"q": name(q), "said": ", then ".join(dict.fromkeys(said(a) for a in committed)), "exact": exact(q)})
         hints += [{"text": t} for k, t in q.help_lines if k == "hint"]
         times.append({"q": name(q), "seconds": round(q.seconds or 0), "guide": q.guide_seconds})
-        outcomes.append({"q": name(q), "text": outcome_text(q)})
+        outcomes.append({"q": name(q), "text": outcome_text(q), "help": help_phrase(q), "help_load": q.help_load})
 
     well, improve = [], []
     for q in qs:
@@ -148,10 +181,12 @@ def build(session: ExamSession) -> dict:
         if q.first_wrong is not None:
             key = q.first_wrong[0].misconception
             title = {"transposed_conditional": "Say which way the condition runs before you give a number",
-                     "base_rate_neglect": "Start from the base rate and count both groups"}.get(key, "Show the counts behind your number")
+                     "base_rate_neglect": "Start from the base rate and count both groups"}.get(
+                key, "Show the steps behind your number" if forge else "Show the counts behind your number")
             improve.append({**items[0], "title": title})
         if q.hints:
-            improve.append({"title": "Pick a round total yourself before asking for help",
+            improve.append({"title": "Try the next step yourself before asking for help" if forge
+                            else "Pick a round total yourself before asking for help",
                             "text": "You asked for a hint on this question.", "quote": q.said[0] if q.said else items[0]["quote"],
                             "seen": [q.number], "verdict": f"{q.hints} hint{'s' if q.hints != 1 else ''} used"})
 
@@ -165,7 +200,7 @@ def build(session: ExamSession) -> dict:
     return {
         "sample": False,
         "label": LABEL_KEYS[label],
-        "misconception": MISCONCEPTIONS[misconception][0] if misconception in MISCONCEPTIONS else misconception,
+        "misconception": misconception_name(misconception),
         "misconception_note": MISCONCEPTIONS[misconception][1] if misconception in MISCONCEPTIONS else None,
         "questions": n,
         "evidence": evidence,
@@ -178,14 +213,15 @@ def build(session: ExamSession) -> dict:
         # Escalation levels 2-3 are not built yet, so every session ends at level 1.
         "level": 1,
         "levels": LEVELS,
-        "tip": TIPS.get(tip_key, TIPS[None]),
+        "tip": TIPS[tip_key] if tip_key in TIPS else FORGE_TIP if forge else TIPS[None],
         "estimate": [{"label": text, "p": f"{float(iv.posterior[key]):.3f}"} for key, text in estimate_names],
         "report": {
             "overall": overall,
             "well": well[:3],
             "improve": improve[:3],
             "breakdown": [{"tab": name(q), "sub": f"{'Twin, new numbers' if q.kind == 'twin' else 'New puzzle'} · "
-                           f"{round(q.seconds or 0) // 60}:{round(q.seconds or 0) % 60:02d} against a "
+                           + (f"{q.puzzle.topic}, {q.puzzle.difficulty} · " if isinstance(q.puzzle, ForgePuzzle) else "")
+                           + f"{round(q.seconds or 0) // 60}:{round(q.seconds or 0) % 60:02d} against a "
                            f"{q.guide_seconds // 60}:{q.guide_seconds % 60:02d} guide · {help_phrase(q)}",
                            "items": question_items(q)} for q in qs],
         },
