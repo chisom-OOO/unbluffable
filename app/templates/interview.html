@@ -12,7 +12,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
   <link rel="stylesheet" href="/ui-static/exam-room.css">
   <script src="/ui-static/ui.js" defer></script>
-  <script src="/ui-static/fake-data.js" defer></script>
+  <script src="/ui-static/voice-client.js" defer></script>
+  <script src="/ui-static/turn-logic.js" defer></script>
   <script src="/ui-static/interview.js" defer></script>
   <script src="/ui-static/camera.js" defer></script>
 </head>
@@ -21,9 +22,9 @@
 
 <header class="site-header">
   <a class="wordmark" href="/ui"><span class="wordmark-mark" aria-hidden="true">U</span><span class="visually-hidden">Unbluffable home</span></a>
-  <span class="timer" id="timer" role="timer" aria-live="off">
+  <span class="timer countdown pending" id="countdown" role="timer" aria-live="off">
     <svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4"/></svg>
-    <span id="timer-text">0:00</span><span aria-hidden="true">/</span><span id="timer-guide">2:00 guide</span>
+    <span id="countdown-text"></span>
   </span>
   <div class="header-tools">
     <button class="icon-btn" type="button" id="mute" aria-pressed="false" aria-label="Mute interviewer">
@@ -38,13 +39,42 @@
 
 <main id="main" class="page interview-page">
   <section class="puzzle-block" aria-labelledby="puzzle-title">
-    <p class="eyebrow" id="puzzle-eyebrow">Question 1 of up to 4</p>
+    <p class="eyebrow" id="puzzle-eyebrow">Question 1 of up to 4 · guide 2:00</p>
     <h1 id="puzzle-title" class="visually-hidden">The puzzle</h1>
-    <p class="puzzle" id="puzzle"></p>
+    <p class="puzzle" id="puzzle">The interviewer reads the first question when you start.</p>
     <div class="puzzle-meta">
       <span class="tag tag-recorded" id="puzzle-kind">New puzzle</span>
       <span>Clarifying questions are free.</span>
     </div>
+  </section>
+
+  <section class="device-check" id="device-check" aria-labelledby="device-title">
+    <h2 id="device-title" class="eyebrow">Device check</h2>
+    <div class="device-row">
+      <button class="btn btn-small" type="button" id="mic-test">Test microphone</button>
+      <div class="meter" aria-hidden="true"><span id="mic-meter"></span></div>
+      <span class="device-note" id="mic-note">Stays on this device; nothing is sent.</span>
+    </div>
+    <div class="device-row">
+      <button class="btn btn-small" type="button" id="speaker-test">Play a test line</button>
+      <span class="device-note" id="speaker-note">You should hear the interviewer's voice.</span>
+    </div>
+    <div class="device-row">
+      <span class="device-label">Connection</span>
+      <span class="device-note" id="connection-note">Checking…</span>
+    </div>
+  </section>
+
+  <section class="setup" id="setup" aria-label="Before you start">
+    <label class="check">
+      <input type="checkbox" id="consent">
+      <span>I agree that my answer text is kept for this practice session. Audio and video are never saved.</span>
+    </label>
+    <label class="check">
+      <input type="checkbox" id="headphones">
+      <span>I'm using headphones (lets me talk over the interviewer)</span>
+    </label>
+    <p class="status" id="status" role="status" hidden></p>
   </section>
 
   <section class="camera" aria-labelledby="camera-title">
@@ -73,12 +103,9 @@
     <div id="live" class="utterance candidate is-live" hidden>
       <div class="speaker"><span>You</span><span class="tag tag-live">Live transcript</span></div>
       <p class="says" id="live-text"></p>
-      <div class="edit-row" id="edit-row" hidden>
-        <button class="btn btn-quiet" type="button" id="edit-btn">Edit before sending</button>
-      </div>
     </div>
     <div class="finish-link" id="finish" hidden>
-      <a class="btn btn-primary" href="/ui/end">See a sample end card</a>
+      <a class="btn btn-primary" href="/ui/end">See your report</a>
     </div>
   </section>
 
@@ -96,9 +123,9 @@
       <table class="model-table">
         <caption class="visually-hidden">Model, job, latency and cost for the last turn</caption>
         <thead><tr><th scope="col">Model</th><th scope="col">Job</th><th scope="col" class="num-col">Time</th><th scope="col" class="num-col">Cost</th></tr></thead>
-        <tbody id="model-rows"></tbody>
+        <tbody id="model-rows"><tr><td colspan="4">Nothing yet.</td></tr></tbody>
       </table>
-      <p class="footnote">Sample data for the preview. Exact checks run in code, not in a model.</p>
+      <p class="footnote">Exact checks run in code, not in a model. Rows appear after your answer.</p>
     </div>
   </details>
 </main>
