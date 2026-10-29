@@ -16,6 +16,7 @@ from fractions import Fraction
 from typing import Awaitable, Callable
 
 from app import exam_text as say
+from app import receipts
 from engine.answers import StatedNumber, matches, normalise_numbers, parse_number
 from engine.bank import ForgePuzzle
 from engine.checker import parse_value, values_in
@@ -219,6 +220,7 @@ class Answer:
     span: str | None  # the words they used for it
     misconception: str | None = None  # the named error the number matched, if any
     quote: str | None = None  # first verbatim reasoning quote from the extraction
+    receipt: dict | None = None  # words beside the exact computation (app.receipts)
 
 
 @dataclass
@@ -289,11 +291,13 @@ class ExamSession:
         self._scored: list[QuestionLog] = []
 
     # --- events ---
-    async def line(self, kind: str, text: str, target: int | None = None) -> None:
+    async def line(self, kind: str, text: str, target: int | None = None, receipt: dict | None = None) -> None:
+        """`receipt`: the computation behind a judgement (decision log 16); redacted while
+        the question is open."""
         if self.questions and kind in {"challenge", "nudge", "hint"}:
             self.questions[-1].help_lines.append((kind, text))
         await self.send({"type": "interviewer_line", "kind": kind, "text": text, "target_step": target,
-                         "counts": self._counts()})
+                         "counts": self._counts(), "receipt": receipt})
 
     def _counts(self) -> dict:
         q = self.questions[-1] if self.questions else None
@@ -366,7 +370,8 @@ class ExamSession:
             analysis = await self.analyzer.analyse(q.puzzle, text, self.send)
             await self.send({"type": "analysis_complete"})
             obs = analysis.observation
-            q.answers.append(self._answer(text, analysis))
+            answer = self._answer(q.puzzle, text, analysis)
+            q.answers.append(answer)
             if obs is None or obs.outcome is Outcome.ABSTAIN:
                 await self.line("prompt", say.UNCHECKED)
                 continue
@@ -375,22 +380,24 @@ class ExamSession:
                 self._score(q, obs, weight, recovered=challenged)
                 part2 = getattr(q.puzzle, "part2", None)
                 if part2 is None:
-                    await self.line("close", say.CORRECT_CLOSE)
+                    await self.line("close", say.CORRECT_CLOSE, receipt=answer.receipt)
                 else:
-                    await self.line("close", f"{say.CORRECT_CLOSE} {say.PART2_INTRO}")
+                    await self.line("close", f"{say.CORRECT_CLOSE} {say.PART2_INTRO}", receipt=answer.receipt)
                     await self.ask_part2(q, part2)
                 return
             if q.first_wrong is None:
                 q.first_wrong = (obs, analysis.span)
             if rounds >= MAX_ROUNDS:
                 self._score(q, q.first_wrong[0], Fraction(1), recovered=False)
-                await self.line("close", say.NOT_RECOVERED_CLOSE)
+                scored = next(a for a in q.answers if a.outcome is not None)  # the first wrong answer
+                await self.line("close", say.NOT_RECOVERED_CLOSE, receipt=scored.receipt)
                 return
             rounds += 1
             if not challenged:
                 challenged = True
                 q.challenges += 1
-                await self.line("challenge", self._challenge_text(q, obs, analysis))
+                await self.line("challenge", self._challenge_text(q, obs, analysis),
+                                receipt=receipts.redacted(answer.receipt))
             else:
                 await self.nudge(q, obs)
 
@@ -416,21 +423,24 @@ class ExamSession:
             await self.state("checking")
             analysis = await self.analyzer.analyse(puzzle, text, self.send)
             await self.send({"type": "analysis_complete"})
-            q.part2.answers.append(self._answer(text, analysis))
+            answer = self._answer(puzzle, text, analysis)
+            q.part2.answers.append(answer)
             obs = analysis.observation
             if obs is None or obs.outcome is Outcome.ABSTAIN:
                 await self.line("prompt", say.UNCHECKED)
                 continue
             q.part2.outcome = obs.outcome.value
-            await self.line("close", say.CORRECT_CLOSE if obs.outcome is Outcome.CORRECT else say.PART2_CLOSE)
+            await self.line("close", say.CORRECT_CLOSE if obs.outcome is Outcome.CORRECT else say.PART2_CLOSE,
+                            receipt=answer.receipt)
             return
 
     @staticmethod
-    def _answer(text: str, analysis: Analysis) -> Answer:
+    def _answer(puzzle: Puzzle, text: str, analysis: Analysis) -> Answer:
         obs = analysis.observation
         return Answer(text, obs.outcome.value if obs else None,
                       str(analysis.stated.value) if analysis.stated else None, analysis.span,
-                      obs.misconception if obs else None, analysis.quote)
+                      obs.misconception if obs else None, analysis.quote,
+                      receipts.build(puzzle, text, analysis.span, analysis.stated, obs, analysis.quote))
 
     def _challenge_text(self, q: QuestionLog, obs: Observation, analysis: Analysis) -> str:
         if analysis.stated is None:
@@ -461,7 +471,7 @@ class ExamSession:
     async def nudge(self, q: QuestionLog, obs: Observation) -> None:
         """Rounds 2-4: aimed at the candidate's next step; its strength counts toward H."""
         q.nudges += 1
-        await self.help(q, "nudge")
+        await self.help(q, "nudge", receipts.redacted(q.answers[-1].receipt))
 
     async def give_hint(self, q: QuestionLog) -> None:
         """Help on request: ask what they are stuck on, then hint for that (spec/01)."""
@@ -473,7 +483,7 @@ class ExamSession:
         q.hints += 1
         await self.help(q, "hint")
 
-    async def help(self, q: QuestionLog, kind: str) -> None:
+    async def help(self, q: QuestionLog, kind: str, receipt: dict | None = None) -> None:
         at = q.position
         target, text = self._next_step(q, at)
         draft = await self.writer(q.puzzle, kind, list(q.said), at) if self.writer else None
@@ -485,7 +495,7 @@ class ExamSession:
                 target, text = step, drafted.strip()
         if target is not None:
             q.help_load += strength(target, at)
-        await self.line(kind, text, target)
+        await self.line(kind, text, target, receipt)
 
     def _note_population(self, q: QuestionLog) -> None:
         if q.population is None:

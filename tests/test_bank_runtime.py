@@ -577,3 +577,80 @@ def test_meter_line_names_a_label_the_next_answer_would_reach():
 
 async def _async(value):
     return value
+
+
+# --- Receipts (decision log 16) --------------------------------------------------------
+
+def _named_then_right(bank, seed=4):
+    def policy(session, events):
+        q = session.questions[-1]
+        if q.part2 is not None:
+            return f"My answer is {frac(q.puzzle.part2.answer)}, because it follows."
+        m, x = q.puzzle.params["mean"], q.puzzle.params["added"]
+        last = [e for e in events if e["type"] == "interviewer_line"][-1]
+        if q.kind == "new" and last["kind"] == "question":
+            return f"My answer is {frac(Fraction(m + x, 2))}, because I averaged them."
+        return f"My answer is {frac(q.puzzle.answer)}, because the new total is {4 * m + x} over 5 numbers."
+
+    return run(BankSource(bank, "Statistics", "Medium", rng=random.Random(seed)), policy)
+
+
+def test_judgement_receipts_show_words_and_computation_but_not_the_answer_mid_question(bank):
+    session, events, _ = _named_then_right(bank)
+    q1 = session.questions[0]
+    lines = [e for e in events if e["type"] == "interviewer_line"]
+    challenge = next(e for e in lines if e["kind"] == "challenge")
+    r = challenge["receipt"]
+    assert r["words"] == q1.answers[0].transcript and r["span"] in r["words"]
+    assert [row["key"] for row in r["rows"]] == ["said", "reasoning"] and r["note"]
+    # The exact answer and the matched error stay hidden until the question ends.
+    assert str(q1.puzzle.answer) not in " ".join(row["text"] for row in r["rows"])
+    assert "averages the old mean" not in str(r)
+    # Closes carry the full receipt once the question is scored.
+    closes = [e for e in lines if e["kind"] == "close" and e["receipt"]]
+    full = closes[0]["receipt"]
+    keys = [row["key"] for row in full["rows"]]
+    assert keys[:3] == ["said", "exact", "check"] and "methods" in keys and "coded" in keys
+    text = {row["key"]: row["text"] for row in full["rows"]}
+    assert text["exact"] == say.value(q1.puzzle.answer)
+    # Q1 was recovered: its close is about the final, right answer.
+    assert text["coded"].startswith("Correct") and "matches it" not in text["methods"]
+    assert "may be within" in text["check"] and text["check"].endswith("so it matches.")
+    # The opening answer's receipt, in the report, shows the matched wrong method.
+    opening = interview_report.build(session)["report"]["breakdown"][0]["items"][0]["receipt"]
+    rows = {row["key"]: row["text"] for row in opening["rows"]}
+    assert "averages the old mean with the new number: " in rows["methods"] and "(your number matches it)" in rows["methods"]
+    assert rows["coded"] == "A known wrong method (averages the old mean with the new number)"
+
+
+def test_every_report_line_opens_a_receipt(bank):
+    session, events, _ = _named_then_right(bank)
+    report = interview_report.build(session)
+    r = report["report"]
+    items = r["well"] + r["improve"] + [i for tab in r["breakdown"] for i in tab["items"]]
+    assert items and all(i["receipt"]["rows"] for i in items)
+    assert all(e["receipt"]["words"] == e["quote"] for e in report["evidence"])
+    assert all(c["receipt"] for c in report["checks"]) and all(o["receipt"] for o in report["outcomes"])
+    # Numbers: the words quoted are the candidate's own, verbatim.
+    said = {a.transcript for q in session.questions for a in q.answers + (q.part2.answers if q.part2 else [])}
+    said |= {t for q in session.questions for t in q.said}
+    assert all(i["receipt"]["words"] in said for i in items if i["receipt"]["words"])
+    # The twin's "Why these numbers?" quotes the answer that showed the suspected error.
+    why = r["breakdown"][1]["items"][-1]
+    assert why["title"] == "Why these numbers?"
+    assert why["receipt"]["words"] == session.questions[0].answers[0].transcript
+    gap = next(row for row in why["receipt"]["rows"] if row["key"] == "gap")["text"]
+    d = session.questions[1].puzzle.diagnostic
+    assert gap.endswith(say.value(abs(d.correct - d.wrong)))
+    # The help weight is shown as computed.
+    q1_outcome = report["outcomes"][0]["receipt"]
+    assert any(row["key"] == "weight" for row in q1_outcome["rows"])
+
+
+def test_receipt_check_uses_the_instance_tolerance(bank):
+    from app import receipts
+    t = bank.templates["fx_dice_total"]
+    q = instance_puzzle(t, t.instances[3], 3)  # 5/36, tolerance 0.005
+    assert receipts.check_text(q, parse_value("0.139"), q.answer) == (
+        "A decimal may be within 0.005 of the exact value: it is 0.0001111 away, so it matches.")
+    assert receipts.check_text(q, parse_value("5/37"), q.answer) == "Fractions must match exactly: 5/37 ≠ 5/36."

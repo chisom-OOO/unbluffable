@@ -11,6 +11,7 @@ from __future__ import annotations
 from fractions import Fraction
 
 from app import exam_text as say
+from app import receipts
 from app.interview_session import ExamSession, QuestionLog
 from engine.bank import ForgePuzzle
 from engine.labels import Label
@@ -98,7 +99,7 @@ def outcome_text(q: QuestionLog) -> str:
 
 
 def number_item(q: QuestionLog, answer, title: str, text: str, exact_text: str | None = None) -> dict:
-    item = {"title": title, "text": text, "quote": answer.transcript, "seen": [q.number]}
+    item = {"title": title, "text": text, "quote": answer.transcript, "seen": [q.number], "receipt": answer.receipt}
     if answer.stated is not None:
         item["number"] = {"said": said(answer), "exact": exact_text or exact(q)}
     else:
@@ -139,24 +140,39 @@ def question_items(q: QuestionLog) -> list[dict]:
     items.append(number_item(q, first, first_title.get(first.outcome, "Opening answer"),
                              "This is the answer the interviewer challenged."))
     if q.help_lines:
+        words = q.said[-1] if q.said else last.transcript
         items.append({"title": f"Help taken: {help_phrase(q)}",
                       "text": "What the interviewer said: " + " / ".join(t for _, t in q.help_lines),
-                      "quote": q.said[-1] if q.said else last.transcript, "seen": [q.number],
-                      "verdict": outcome_text(q)})
+                      "quote": words, "seen": [q.number], "verdict": outcome_text(q),
+                      "receipt": score_receipt(q, words)})
     if last is not first:
         title = "Final answer: " + outcome_text(q).lower()
         items.append(number_item(q, last, title[0].upper() + title[1:], "Where you ended up on this question."))
     return items + ([part2] if part2 else [])
 
 
-def why_item(q: QuestionLog) -> dict | None:
-    """"Why these numbers?" for a diagnostic twin (decision log 16)."""
+def score_receipt(q: QuestionLog, words: str) -> dict:
+    return receipts.weight_receipt(words, q.help_load, bool(q.recovered), q.weight, q.scored)
+
+
+def why_item(q: QuestionLog, questions: list[QuestionLog]) -> dict | None:
+    """"Why these numbers?" for a diagnostic twin (decision log 16). Its receipt quotes
+    the answer on the question before that showed the suspected error."""
     diagnostic = getattr(q.puzzle, "diagnostic", None)
     if diagnostic is None:
         return None
-    return {"title": "Why these numbers?", "text": say.why_numbers(diagnostic), "seen": [q.number],
+    words = None
+    if diagnostic.suspected:
+        earlier = [a for p in questions if p.number < q.number for a in p.answers
+                   if a.misconception == diagnostic.misconception]
+        words = earlier[-1].transcript if earlier else None
+    item = {"title": "Why these numbers?", "text": say.why_numbers(diagnostic), "seen": [q.number],
             "why": {"misconception": diagnostic.misconception, "suspected": diagnostic.suspected,
-                    "correct": say.value(diagnostic.correct), "wrong": say.value(diagnostic.wrong)}}
+                    "correct": say.value(diagnostic.correct), "wrong": say.value(diagnostic.wrong)},
+            "receipt": receipts.why_receipt(diagnostic, words, q.puzzle.recited)}
+    if words:
+        item["quote"] = words
+    return item
 
 
 def build(session: ExamSession) -> dict:
@@ -172,15 +188,19 @@ def build(session: ExamSession) -> dict:
     for q in qs:
         checked = [a for a in q.answers if a.outcome is not None]
         if checked:
-            evidence.append({"quote": checked[0].transcript, "note": f"{name(q)}, opening answer" + (" (challenged)" if q.challenges else "")})
+            evidence.append({"quote": checked[0].transcript, "note": f"{name(q)}, opening answer" + (" (challenged)" if q.challenges else ""),
+                             "receipt": checked[0].receipt})
             if len(checked) > 1:
-                evidence.append({"quote": checked[-1].transcript, "note": f"{name(q)}, where you ended up: {outcome_text(q).lower()}"})
+                evidence.append({"quote": checked[-1].transcript, "note": f"{name(q)}, where you ended up: {outcome_text(q).lower()}",
+                                 "receipt": checked[-1].receipt})
             committed = [a for a in checked if a.stated is not None]
             if committed:
-                checks.append({"q": name(q), "said": ", then ".join(dict.fromkeys(said(a) for a in committed)), "exact": exact(q)})
+                checks.append({"q": name(q), "said": ", then ".join(dict.fromkeys(said(a) for a in committed)), "exact": exact(q),
+                               "receipt": committed[-1].receipt})
         hints += [{"text": t} for k, t in q.help_lines if k == "hint"]
         times.append({"q": name(q), "seconds": round(q.seconds or 0), "guide": q.guide_seconds})
-        outcomes.append({"q": name(q), "text": outcome_text(q), "help": help_phrase(q), "help_load": q.help_load})
+        outcomes.append({"q": name(q), "text": outcome_text(q), "help": help_phrase(q), "help_load": q.help_load,
+                         "receipt": score_receipt(q, checked[-1].transcript if checked else "")})
 
     well, improve = [], []
     for q in qs:
@@ -199,7 +219,8 @@ def build(session: ExamSession) -> dict:
             improve.append({"title": "Try the next step yourself before asking for help" if forge
                             else "Pick a round total yourself before asking for help",
                             "text": "You asked for a hint on this question.", "quote": q.said[0] if q.said else items[0]["quote"],
-                            "seen": [q.number], "verdict": f"{q.hints} hint{'s' if q.hints != 1 else ''} used"})
+                            "seen": [q.number], "verdict": f"{q.hints} hint{'s' if q.hints != 1 else ''} used",
+                            "receipt": score_receipt(q, q.said[0] if q.said else items[0]["quote"])})
 
     n = len(qs)
     overall = f"{n} question{'s' if n != 1 else ''}, scored on where you ended up, discounted by the help it took. " + " ".join(
@@ -234,6 +255,6 @@ def build(session: ExamSession) -> dict:
                            + (f"{q.puzzle.topic}, {q.puzzle.difficulty} · " if isinstance(q.puzzle, ForgePuzzle) else "")
                            + f"{round(q.seconds or 0) // 60}:{round(q.seconds or 0) % 60:02d} against a "
                            f"{q.guide_seconds // 60}:{q.guide_seconds % 60:02d} guide · {help_phrase(q)}",
-                           "items": question_items(q) + [w for w in [why_item(q)] if w]} for q in qs],
+                           "items": question_items(q) + [w for w in [why_item(q, qs)] if w]} for q in qs],
         },
     }

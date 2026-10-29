@@ -2,7 +2,7 @@
 // /ui/end alone renders the labelled sample from fake data. The four labels below are the
 // only verdict vocabulary (spec/01).
 document.addEventListener("DOMContentLoaded", () => {
-  const { highlight, escapeHtml } = window.UB;
+  const { highlight, escapeHtml, receiptHtml } = window.UB;
   const $ = (id) => document.getElementById(id);
   const sessionId = new URLSearchParams(location.search).get("session");
 
@@ -43,10 +43,10 @@ document.addEventListener("DOMContentLoaded", () => {
     $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}. Scored on where you end up, discounted by the help it took.`;
 
     $("evidence").innerHTML = e.evidence.map((q) =>
-      `<blockquote class="evidence"><p>“${q.challenge ? highlight(q.quote, q.challenge) : escapeHtml(q.quote)}”</p><footer>${escapeHtml(q.note)}</footer></blockquote>`).join("");
+      `<blockquote class="evidence"><p>“${q.challenge ? highlight(q.quote, q.challenge) : escapeHtml(q.quote)}”</p><footer>${escapeHtml(q.note)}</footer>${receiptHtml(q.receipt)}</blockquote>`).join("");
 
     $("check").innerHTML = e.checks.map((c) =>
-      `${escapeHtml(c.q)}, exact check: you said <span class="mono">${escapeHtml(c.said)}</span>; the answer is <span class="mono">${escapeHtml(c.exact)}</span>.`).join("<br>");
+      `<div class="check-row">${escapeHtml(c.q)}, exact check: you said <span class="mono">${escapeHtml(c.said)}</span>; the answer is <span class="mono">${escapeHtml(c.exact)}</span>.${receiptHtml(c.receipt)}</div>`).join("");
 
     const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
     const levelBars = Array.from({ length: e.levels }, (_, i) => `<span class="${i < e.level ? "on" : ""}"></span>`).join("");
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }),
       // The challenge is its own help step (decision log 3b), so it is not counted as a nudge here.
       ...(e.outcomes
-        ? e.outcomes.map((o) => `<div class="stat wide"><dt>${escapeHtml(o.q)}</dt><dd>${escapeHtml(o.text)}</dd></div>`)
+        ? e.outcomes.map((o) => `<div class="stat wide"><dt>${escapeHtml(o.q)}</dt><dd>${escapeHtml(o.text)}${receiptHtml(o.receipt)}</dd></div>`)
         : [`<div class="stat wide"><dt>After the challenge</dt><dd>${e.recovered ? `Recovered after ${e.nudges} nudge${e.nudges === 1 ? "" : "s"}` : "Not recovered"}</dd></div>`]),
       `<div class="stat wide"><dt>Level reached</dt><dd>${e.level} of ${e.levels}<small>Shown separately from the label.</small><div class="level-track" aria-hidden="true">${levelBars}</div></dd></div>`,
     ].join("");
@@ -80,7 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
       (it.number
         ? `<p class="check-line">You said <span class="mono">${escapeHtml(it.number.said)}</span>; exact maths: <span class="mono">${escapeHtml(it.number.exact)}</span>.</p>`
         : it.verdict ? `<p class="check-line">${escapeHtml(it.verdict)}</p>` : "") +
-      `<p class="chips">${it.seen.map((n) => `<span class="chip">Seen in: Question ${n}</span>`).join("")}</p></article>`;
+      `<p class="chips">${it.seen.map((n) => `<span class="chip">Seen in: Question ${n}</span>`).join("")}</p>` +
+      receiptHtml(it.receipt) + `</article>`;
     $("overall").textContent = r.overall;
     $("well").innerHTML = r.well.map(item).join("");
     $("improve").innerHTML = r.improve.map(item).join("");

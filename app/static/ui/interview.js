@@ -4,7 +4,7 @@
 // while the server's check runs, Speaking from SpeechSynthesis start/end events.
 // Done is a fallback; Type instead completes a whole interview without the microphone.
 document.addEventListener("DOMContentLoaded", () => {
-  const { highlight, escapeHtml, reducedMotion } = window.UB;
+  const { highlight, escapeHtml, reducedMotion, receiptHtml } = window.UB;
   const voice = window.UBVoice;
   const $ = (id) => document.getElementById(id);
 
@@ -135,12 +135,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- Transcript log ----------
   // Adds a line and speaks it. Muted, reduced motion or no speech voice: the line shows at once.
-  function addInterviewer(text, kind) {
+  function addInterviewer(text, kind, receipt) {
     const el = document.createElement("div");
     const tag = KIND_TAG[kind];
     el.className = "utterance interviewer" + (tag ? ` is-${kind}` : "");
     el.innerHTML = `<div class="speaker"><span>Interviewer</span>${tag ? `<span class="tag tag-${kind}">${tag}</span>` : ""}</div>` +
-      `<p class="says"><span class="visually-hidden">${escapeHtml(text)}</span><span class="typed" aria-hidden="true"></span></p>`;
+      `<p class="says"><span class="visually-hidden">${escapeHtml(text)}</span><span class="typed" aria-hidden="true"></span></p>` +
+      receiptHtml(receipt);
     log.appendChild(el);
     scrollTo(el);
     const reveal = revealer(el.querySelector(".typed"), text);
@@ -233,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
         finishReveals();
         break;
       case "interviewer_line":
-        addInterviewer(event.text, event.kind);
+        addInterviewer(event.text, event.kind, event.receipt);
         if (event.counts) counts(event.counts);
         break;
       case "state":

@@ -47,6 +47,23 @@
 
   const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  window.UB = { store, escapeHtml, highlight, reducedMotion };
+  // Receipt (decision log 16): the candidate's exact words beside the exact computation.
+  function receiptHtml(r) {
+    if (!r) return "";
+    let words = `<p class="receipt-none">No words of yours are behind this line.</p>`;
+    if (r.words) {
+      const safe = escapeHtml(r.words), needle = r.span ? escapeHtml(r.span) : "";
+      const at = needle ? safe.lastIndexOf(needle) : -1;
+      const marked = at < 0 ? safe : `${safe.slice(0, at)}<mark>${needle}</mark>${safe.slice(at + needle.length)}`;
+      words = `<blockquote class="receipt-words">“${marked}”</blockquote>`;
+    }
+    const rows = r.rows.map((row) => `<div><dt>${escapeHtml(row.label)}</dt><dd>${escapeHtml(row.text)}</dd></div>`).join("");
+    return `<details class="receipt"><summary>Receipt</summary><div class="receipt-body">` +
+      `<div><p class="receipt-head">Your words</p>${words}</div>` +
+      `<div><p class="receipt-head">Computation</p><dl>${rows}</dl>` +
+      (r.note ? `<p class="receipt-note">${escapeHtml(r.note)}</p>` : "") + `</div></div></details>`;
+  }
+
+  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml };
   document.addEventListener("DOMContentLoaded", initTheme);
 })();
