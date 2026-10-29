@@ -110,6 +110,51 @@ GENERIC_NUDGE = "Talk me through the counts you'd need to get there."
 FORGE_NUDGE = "Talk me through the steps you'd need to get there."
 
 
+def value(x: Fraction) -> str:
+    """An exact value for display: whole numbers as they are, others as n/d ≈ decimal."""
+    x = Fraction(x)
+    return str(x.numerator) if x.denominator == 1 else f"{x.numerator}/{x.denominator} ≈ {float(x):.4g}"
+
+
+def why_numbers(diagnostic) -> str:
+    """The "Why these numbers?" note for a diagnostic twin (decision log 16). Shown only
+    after the twin is answered: before, the right value would give the answer away."""
+    right = f"Right method: {value(diagnostic.correct)}."
+    if diagnostic.suspected:
+        return (f"{right} Suspected error ({diagnostic.misconception}): {value(diagnostic.wrong)}. "
+                "These numbers were picked to keep the two far apart.")
+    return (f"{right} Closest wrong method ({diagnostic.misconception}): {value(diagnostic.wrong)}. "
+            "These numbers were picked to keep every known wrong method far from the right answer.")
+
+
+# Drill mode (decision log 16): questions only, no explanations.
+DRILL_OPENING = ("This drill has up to three questions aimed at one mistake, then one check with new numbers "
+                 "and no help. Talk me through each one out loud.")
+DRILL_CHECK_INTRO = "Last one: the check. New numbers, and no help this time."
+DRILL_NO_HELP = "This one is without help. Talk me through your best answer."
+DRILL_CHECK_THANKS = "Thanks."
+DRILL_CLOSE = "That's the end of the drill. Your result is ready."
+
+METER_CLASSES = (("S", "Sound"), ("M", "Misconception"), ("G", "Gap"))
+METER_FINAL = "No more questions, so this is the final estimate."
+
+
+def whole_pct(x: Fraction) -> str:
+    return f"{round(float(x) * 100)}%"
+
+
+def meter_line(kind: str, right: tuple, named: tuple) -> str:
+    """What would change the evidence meter: the next answer, right or a named error.
+    `right` and `named` are (posterior, label) from engine Interview.what_if."""
+    def effect(result, key, name):
+        posterior, label = result
+        text = f"move {name} to {whole_pct(posterior[key])}"
+        return text + (f" (“{label.value}”)" if label.value != "More evidence needed" else "")
+    which = "the twin" if kind == "twin" else "the next question"
+    return (f"On {which}, a right answer with reasoning would {effect(right, 'S', 'Sound')}; "
+            f"a named error would {effect(named, 'M', 'Misconception')}.")
+
+
 def forge_step_prompt(name: str) -> str:
     """A forge solution-map step, asked by its name only (no new numbers)."""
     return f"What do you get for the {name.replace('_', ' ').strip().rstrip('.?')}?"

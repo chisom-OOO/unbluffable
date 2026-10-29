@@ -2,7 +2,7 @@
 // /ui/end alone renders the labelled sample from fake data. The four labels below are the
 // only verdict vocabulary (spec/01).
 document.addEventListener("DOMContentLoaded", () => {
-  const { highlight, escapeHtml } = window.UB;
+  const { highlight, escapeHtml, receiptHtml } = window.UB;
   const $ = (id) => document.getElementById(id);
   const sessionId = new URLSearchParams(location.search).get("session");
 
@@ -34,19 +34,37 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     const svg = (k) => `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
 
-    const L = LABELS[e.label];
-    $("verdict").innerHTML =
-      `<p class="verdict ${L.cls}">${svg(L.icon)}<span>${L.text}</span></p>` +
-      (e.label === "misconception" && e.misconception
-        ? `<p class="misconception-name">${escapeHtml(e.misconception)}: ${escapeHtml(e.misconception_note || "reading “fraud gets flagged” as “a flag is fraud”.")}</p>` : "");
+    if (e.drill) {
+      // Drill mode (decision log 16): the check's result, not an interview label.
+      const cleared = e.drill.result === "Cleared";
+      $("end-title").textContent = "How the drill went";
+      $("verdict").innerHTML =
+        `<p class="verdict ${cleared ? "verdict-supports" : "verdict-misconception"}">${svg(cleared ? "check" : "cross")}<span>${escapeHtml(e.drill.result || "Not finished")}</span></p>` +
+        `<p class="misconception-name">Drilled: ${escapeHtml(e.drill.misconception)}. ${escapeHtml(e.drill.note)}</p>`;
+      $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}, including the check.`;
+    } else {
+      const L = LABELS[e.label];
+      $("verdict").innerHTML =
+        `<p class="verdict ${L.cls}">${svg(L.icon)}<span>${L.text}</span></p>` +
+        (e.label === "misconception" && e.misconception
+          ? `<p class="misconception-name">${escapeHtml(e.misconception)}: ${escapeHtml(e.misconception_note || "reading “fraud gets flagged” as “a flag is fraud”.")}</p>` : "");
+      $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}. Scored on where you end up, discounted by the help it took.`;
+    }
 
-    $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}. Scored on where you end up, discounted by the help it took.`;
+    if (sessionId && e.drills && e.drills.length) {
+      $("drills").hidden = false;
+      $("drill-list").innerHTML = e.drills.map((d) =>
+        `<div class="drill-row"><p>${escapeHtml(d.misconception)}</p>` +
+        `<a class="btn btn-small" href="/ui/interview?drill=${encodeURIComponent(sessionId)}&m=${d.index}">Drill this mistake</a></div>`).join("");
+    }
+    $("tip-section").hidden = !e.tip;
+    $("estimate-section").hidden = !(e.estimate && e.estimate.length);
 
     $("evidence").innerHTML = e.evidence.map((q) =>
-      `<blockquote class="evidence"><p>“${q.challenge ? highlight(q.quote, q.challenge) : escapeHtml(q.quote)}”</p><footer>${escapeHtml(q.note)}</footer></blockquote>`).join("");
+      `<blockquote class="evidence"><p>“${q.challenge ? highlight(q.quote, q.challenge) : escapeHtml(q.quote)}”</p><footer>${escapeHtml(q.note)}</footer>${receiptHtml(q.receipt)}</blockquote>`).join("");
 
     $("check").innerHTML = e.checks.map((c) =>
-      `${escapeHtml(c.q)}, exact check: you said <span class="mono">${escapeHtml(c.said)}</span>; the answer is <span class="mono">${escapeHtml(c.exact)}</span>.`).join("<br>");
+      `<div class="check-row">${escapeHtml(c.q)}, exact check: you said <span class="mono">${escapeHtml(c.said)}</span>; the answer is <span class="mono">${escapeHtml(c.exact)}</span>.${receiptHtml(c.receipt)}</div>`).join("");
 
     const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
     const levelBars = Array.from({ length: e.levels }, (_, i) => `<span class="${i < e.level ? "on" : ""}"></span>`).join("");
@@ -60,27 +78,28 @@ document.addEventListener("DOMContentLoaded", () => {
       }),
       // The challenge is its own help step (decision log 3b), so it is not counted as a nudge here.
       ...(e.outcomes
-        ? e.outcomes.map((o) => `<div class="stat wide"><dt>${escapeHtml(o.q)}</dt><dd>${escapeHtml(o.text)}</dd></div>`)
+        ? e.outcomes.map((o) => `<div class="stat wide"><dt>${escapeHtml(o.q)}</dt><dd>${escapeHtml(o.text)}${receiptHtml(o.receipt)}</dd></div>`)
         : [`<div class="stat wide"><dt>After the challenge</dt><dd>${e.recovered ? `Recovered after ${e.nudges} nudge${e.nudges === 1 ? "" : "s"}` : "Not recovered"}</dd></div>`]),
-      `<div class="stat wide"><dt>Level reached</dt><dd>${e.level} of ${e.levels}<small>Shown separately from the label.</small><div class="level-track" aria-hidden="true">${levelBars}</div></dd></div>`,
+      ...(e.level == null ? [] : [`<div class="stat wide"><dt>Level reached</dt><dd>${e.level} of ${e.levels}<small>Shown separately from the label.</small><div class="level-track" aria-hidden="true">${levelBars}</div></dd></div>`]),
     ].join("");
 
     $("hints").innerHTML = e.hints.length
       ? e.hints.map((h) => `<li><span class="tag tag-hint">Hint</span><p class="says">${escapeHtml(h.text)}</p></li>`).join("")
       : `<li>No hints used.</li>`;
 
-    $("tip").textContent = e.tip;
+    $("tip").textContent = e.tip || "";
 
     // ---- Report (decision log 8): summary, doing well / improve, one tab per question ----
     const r = e.report;
     const item = (it) =>
       `<article class="report-item"><h3>${escapeHtml(it.title)}</h3>` +
       `<p>${escapeHtml(it.text)}</p>` +
-      `<p class="report-quote">“${escapeHtml(it.quote)}”</p>` +
+      (it.quote ? `<p class="report-quote">“${escapeHtml(it.quote)}”</p>` : "") +
       (it.number
         ? `<p class="check-line">You said <span class="mono">${escapeHtml(it.number.said)}</span>; exact maths: <span class="mono">${escapeHtml(it.number.exact)}</span>.</p>`
-        : `<p class="check-line">${escapeHtml(it.verdict)}</p>`) +
-      `<p class="chips">${it.seen.map((n) => `<span class="chip">Seen in: Question ${n}</span>`).join("")}</p></article>`;
+        : it.verdict ? `<p class="check-line">${escapeHtml(it.verdict)}</p>` : "") +
+      `<p class="chips">${(it.seen_names || it.seen.map((n) => `Question ${n}`)).map((s) => `<span class="chip">Seen in: ${escapeHtml(s)}</span>`).join("")}</p>` +
+      receiptHtml(it.receipt) + `</article>`;
     $("overall").textContent = r.overall;
     $("well").innerHTML = r.well.map(item).join("");
     $("improve").innerHTML = r.improve.map(item).join("");

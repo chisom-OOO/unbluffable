@@ -379,7 +379,7 @@ def test_report_uses_only_recorded_values():
     r = interview_report.build(session)
     assert r["label"] == "supports" and r["misconception"] is None  # named only for "Misconception detected"
     assert r["questions"] == 2 and r["level"] == 1
-    assert r["checks"] == [
+    assert [{k: v for k, v in c.items() if k != "receipt"} for c in r["checks"]] == [
         {"q": "Question 1", "said": "90 percent, then 18 out of 117", "exact": "18/117 = 2/13 ≈ 15.4%"},
         {"q": "Question 2 (twin)", "said": "18 out of 67", "exact": "36/134 = 18/67 ≈ 26.9%"},
     ]
@@ -397,8 +397,37 @@ def test_report_uses_only_recorded_values():
     allowed = {"90", "18", "117", "2", "13", "15.4", "67", "36", "134", "26.9", "1", "3", "0", "000", "20", "1,980", "99",
                "40", "1,960", "98", "2,000", "120", "60", "4"}
     # Never invent numbers: everything else is a model estimate or a time.
-    extra = numbers(r) - allowed - numbers(r["estimate"]) - numbers([r["times"], [b["sub"] for b in r["report"]["breakdown"]]])
+    extra = numbers(without_receipts(r)) - allowed - numbers(r["estimate"]) - numbers([r["times"], [b["sub"] for b in r["report"]["breakdown"]]])
     assert extra == set()
+    # Receipts show the exact computation: every number in them comes from the candidate's
+    # words or from the engine's exact values, gaps, tolerance and help weight.
+    from app.exam_text import value
+    from fractions import Fraction
+    computed = set()
+    for q in session.questions:
+        targets = [q.puzzle.answer] + [nv.value for nv in q.puzzle.named_values] + ([q.puzzle.recited] if q.puzzle.recited else [])
+        stated = [Fraction(a.stated) for a in q.answers if a.stated is not None]
+        computed |= numbers([value(x) for x in targets + stated] + [a.transcript for a in q.answers])
+        computed |= numbers([f"{float(abs(x - t)):.4g}" for x in stated for t in targets])
+        computed |= numbers([q.help_load, value(q.weight)])
+    receipt_numbers = numbers(receipts_in(r))
+    assert receipt_numbers and receipt_numbers - computed - {"0.01", "2", "1"} == set()  # tolerance; 2/(2+H+1)
+
+
+def receipts_in(value):
+    if isinstance(value, dict):
+        return [v for k, v in value.items() if k == "receipt"] + [x for k, v in value.items() if k != "receipt" for x in receipts_in(v)]
+    if isinstance(value, list):
+        return [x for v in value for x in receipts_in(v)]
+    return []
+
+
+def without_receipts(value):
+    if isinstance(value, dict):
+        return {k: without_receipts(v) for k, v in value.items() if k != "receipt"}
+    if isinstance(value, list):
+        return [without_receipts(v) for v in value]
+    return value
 
 
 def numbers(value):

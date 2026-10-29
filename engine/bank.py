@@ -9,6 +9,9 @@ instance's tolerance.
 `BankSource` feeds engine.Interview new questions from a topic (or "Mixed") along
 a difficulty ladder: start Easy or Medium, up one level after a correct answer,
 down one after a wrong one.
+
+Twins are diagnostic (decision log 16): the twin instance is the one whose numbers
+best separate the right answer from the suspected misconception's value.
 """
 
 from __future__ import annotations
@@ -16,7 +19,7 @@ from __future__ import annotations
 import json
 import logging
 import random
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from fractions import Fraction
 from pathlib import Path
 
@@ -33,6 +36,7 @@ START_LEVELS = ("Easy", "Medium")
 MIXED = "Mixed"
 MIN_INSTANCES = 8
 WRONG_OUTCOMES = (Outcome.NAMED_WRONG, Outcome.OTHER_WRONG, Outcome.RECITED)
+PREVIOUS_ANSWER = "repeats the previous question's answer"  # Recited, as a wrong method
 
 
 class ForgeError(ValueError):
@@ -69,6 +73,17 @@ class ForgeTemplate:
 
 
 @dataclass(frozen=True)
+class Diagnostic:
+    """Why a twin uses its numbers (decision log 16): the right answer and the wrong
+    value it is kept furthest from. `suspected` is false when no misconception was
+    suspected; `misconception` is then the closest wrong method."""
+    misconception: str
+    correct: Fraction
+    wrong: Fraction
+    suspected: bool
+
+
+@dataclass(frozen=True)
 class ForgePuzzle(Puzzle):
     text: str = ""
     answer_text: str = ""
@@ -78,6 +93,7 @@ class ForgePuzzle(Puzzle):
     topic: str = ""
     difficulty: str = ""
     instance: int = -1
+    diagnostic: Diagnostic | None = None  # twins only
 
     def accepts(self, stated: StatedNumber, target: Fraction) -> bool:
         return checker.accepts(stated, target, self.tolerance)
@@ -183,7 +199,8 @@ def load_bank(directory: Path | str | None = None) -> Bank:
 
 
 def instance_puzzle(template: ForgeTemplate, instance: Instance, index: int,
-                    original: Puzzle | None = None, template_id: str | None = None) -> ForgePuzzle:
+                    original: Puzzle | None = None, template_id: str | None = None,
+                    diagnostic: Diagnostic | None = None) -> ForgePuzzle:
     part2 = None
     if instance.part2 is not None:
         part2 = instance_puzzle(template, instance.part2, index, template_id=f"{template.template_id}.part2")
@@ -204,15 +221,83 @@ def instance_puzzle(template: ForgeTemplate, instance: Instance, index: int,
         topic=template.topic,
         difficulty=template.difficulty,
         instance=index,
+        diagnostic=diagnostic,
     )
 
 
-def twin_index(template: ForgeTemplate, original: int, rng: random.Random) -> int:
-    """Another instance of the same template, preferring one with a different answer
-    so that repeating the original answer is detectable (Recited)."""
+def _wrong_methods(instance: Instance, previous: Fraction) -> list[tuple[str, Fraction]]:
+    return [(nv.misconception, nv.value) for nv in instance.wrong] + [(PREVIOUS_ANSWER, previous)]
+
+
+def _nearest(instance: Instance, previous: Fraction, skip: str | None = None) -> tuple[Fraction, str, Fraction] | None:
+    """(gap, misconception, value) of the wrong method closest to the right answer."""
+    gaps = [(abs(instance.answer - value), name, value)
+            for name, value in _wrong_methods(instance, previous) if name != skip]
+    return min(gaps, key=lambda g: g[0]) if gaps else None
+
+
+def twin_choice(template: ForgeTemplate, original: int, rng: random.Random,
+                suspect: str | None = None) -> tuple[int, Diagnostic]:
+    """The twin instance (decision log 16). Another instance, preferring one whose answer
+    differs from the original's so that repeating it is detectable (Recited). With a
+    suspected misconception that the template names: the largest gap between the right
+    answer and that misconception's value; ties go to the largest gap to the nearest
+    other wrong method. Otherwise: the largest gap to the nearest wrong method. Repeating
+    the original's answer counts as a wrong method. Remaining ties are drawn at random."""
+    first = template.instances[original]
     others = [i for i in range(len(template.instances)) if i != original]
-    different = [i for i in others if template.instances[i].answer != template.instances[original].answer]
-    return rng.choice(different or others)
+    pool = [i for i in others if template.instances[i].answer != first.answer] or others
+    aimed = [i for i in pool if suspect and any(nv.misconception == suspect for nv in template.instances[i].wrong)]
+
+    def aimed_key(i: int):
+        inst = template.instances[i]
+        gap, value = min((abs(inst.answer - nv.value), nv.value) for nv in inst.wrong if nv.misconception == suspect)
+        rest = _nearest(inst, first.answer, skip=suspect)
+        return (gap, rest[0] if rest else float("inf")), Diagnostic(suspect, inst.answer, value, True)
+
+    def spread_key(i: int):
+        gap, name, value = _nearest(template.instances[i], first.answer)
+        return (gap,), Diagnostic(name, template.instances[i].answer, value, False)
+
+    key = aimed_key if aimed else spread_key
+    scored = {i: key(i) for i in (aimed or pool)}
+    best = max(rank for rank, _ in scored.values())
+    index = rng.choice([i for i, (rank, _) in scored.items() if rank == best])
+    return index, scored[index][1]
+
+
+DRILL_ROUNDS = 3
+
+
+def drill_plan(template: ForgeTemplate, suspect: str, used: set[int],
+               rounds: int = DRILL_ROUNDS) -> tuple[list[int], int | None]:
+    """Drill mode (decision log 16): instances aimed at one misconception, none already
+    used. The check is the most diagnostic (largest gap between the right answer and
+    the misconception's value; ties: largest gap to the nearest other wrong method,
+    then the lower index); the drill questions are the next `rounds`. Only instances
+    that name the misconception and whose right answer differs from it qualify."""
+    def key(i: int):
+        inst = template.instances[i]
+        gap = min(abs(inst.answer - nv.value) for nv in inst.wrong if nv.misconception == suspect)
+        rest = [abs(inst.answer - nv.value) for nv in inst.wrong if nv.misconception != suspect]
+        return (-gap, -min(rest) if rest else float("-inf"), i)
+
+    aimed = [i for i, inst in enumerate(template.instances) if i not in used
+             and any(nv.misconception == suspect and nv.value != inst.answer for nv in inst.wrong)]
+    ranked = sorted(aimed, key=key)
+    if not ranked:
+        return [], None
+    return ranked[1:1 + rounds], ranked[0]
+
+
+def aimed_puzzle(template: ForgeTemplate, index: int, suspect: str, original: Puzzle | None = None) -> ForgePuzzle:
+    """An instance as a drill question, with its "Why these numbers?" diagnostic and no
+    part 2 (a drill asks only about the one mistake)."""
+    inst = template.instances[index]
+    wrong = min((nv.value for nv in inst.wrong if nv.misconception == suspect), key=lambda v: abs(inst.answer - v))
+    puzzle = instance_puzzle(template, inst, index, original=original,
+                             diagnostic=Diagnostic(suspect, inst.answer, wrong, True))
+    return replace(puzzle, part2=None)
 
 
 class BankSource:
@@ -257,10 +342,10 @@ class BankSource:
         self.levels.append(template.difficulty)
         return instance_puzzle(template, template.instances[index], index)
 
-    def twin(self, puzzle: ForgePuzzle) -> ForgePuzzle:
+    def twin(self, puzzle: ForgePuzzle, suspect: str | None = None) -> ForgePuzzle:
         template = self.templates[puzzle.template_id]
-        index = twin_index(template, puzzle.instance, self.rng)
-        return instance_puzzle(template, template.instances[index], index, original=puzzle)
+        index, why = twin_choice(template, puzzle.instance, self.rng, suspect)
+        return instance_puzzle(template, template.instances[index], index, original=puzzle, diagnostic=why)
 
     def step(self, first: Outcome) -> None:
         """Ladder: up after a correct first answer, down after a wrong one; vague stays."""

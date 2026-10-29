@@ -16,8 +16,8 @@ from app import interview_report, interview_routes, voice_routes
 from app.interview_session import ExamSession, VoiceAnalyzer, context_for
 from app.main import app
 from engine.answers import StatedNumber
-from engine.bank import (MIN_INSTANCES, BankSource, ForgeError, instance_puzzle, load_bank,
-                         parse_template, twin_index)
+from engine.bank import (MIN_INSTANCES, PREVIOUS_ANSWER, BankSource, Diagnostic, ForgeError,
+                         instance_puzzle, load_bank, parse_template, twin_choice)
 from engine.checker import accepts, parse_exact, parse_value, values_in
 from engine.coding import Outcome, code_answer
 from engine.help import position
@@ -144,8 +144,132 @@ def test_twin_is_another_instance_with_a_different_answer(bank):
     t = bank.templates["fx_dice_total"]
     for seed in range(20):
         for original in range(len(t.instances)):
-            i = twin_index(t, original, random.Random(seed))
-            assert i != original and t.instances[i].answer != t.instances[original].answer
+            for suspect in (None, EQUAL_TOTALS, BY_SIX):
+                i, _ = twin_choice(t, original, random.Random(seed), suspect)
+                assert i != original and t.instances[i].answer != t.instances[original].answer
+
+
+EQUAL_TOTALS = "treats the eleven possible totals as equally likely"
+BY_SIX = "divides by six instead of thirty-six outcomes"
+
+
+def test_diagnostic_twin_separates_the_suspected_misconception(bank):
+    """Decision log 16. Original: total 6, 5/36 (total 8 shares the answer, so it is never the twin)."""
+    t = bank.templates["fx_dice_total"]
+    # 1/11 everywhere: total 12 (1/36) is furthest from it.
+    assert twin_choice(t, 3, random.Random(0), EQUAL_TOTALS) == (8, Diagnostic(EQUAL_TOTALS, Fraction(1, 36), Fraction(1, 11), True))
+    # ways/6: totals 5 and 9 (1/9 against 2/3) tie on that gap and on the tie-break; either is drawn.
+    seen = {twin_choice(t, 3, random.Random(seed), BY_SIX) for seed in range(30)}
+    assert seen == {(i, Diagnostic(BY_SIX, Fraction(1, 9), Fraction(2, 3), True)) for i in (2, 5)}
+
+
+def test_diagnostic_twin_tie_break_is_the_gap_to_other_wrong_methods(bank):
+    """Mean template, suspected "divides the new total by the old count": totals over 4 vs 5.
+    Gaps tie between instances; the tie-break keeps the other methods furthest away."""
+    t = bank.templates["fx_mean_added"]
+    old_count = "divides the new total by the old count"
+    gaps = {i: abs(inst.answer - inst.wrong[1].value) for i, inst in enumerate(t.instances) if i != 0}
+    best = max(gaps.values())
+    tied = [i for i, g in gaps.items() if g == best]
+    i, why = twin_choice(t, 0, random.Random(1), old_count)
+    assert i in tied and why.suspected and why.wrong == t.instances[i].wrong[1].value
+    def rest(j):
+        inst = t.instances[j]
+        return min(abs(inst.answer - inst.wrong[0].value), abs(inst.answer - t.instances[0].answer))
+    assert rest(i) == max(rest(j) for j in tied)
+
+
+def test_without_a_suspect_the_twin_maximises_the_smallest_gap(bank):
+    t = bank.templates["fx_dice_total"]
+    i, why = twin_choice(t, 3, random.Random(0))
+    # total 12: 1/36 is 0.063 from 1/11, its closest wrong method (5/36 and 1/6 are further).
+    assert i == 8 and why == Diagnostic(EQUAL_TOTALS, Fraction(1, 36), Fraction(1, 11), False)
+    # A misconception the template does not name is not a suspect here.
+    assert twin_choice(t, 3, random.Random(0), "some other error") == (i, why)
+    # Repeating the previous answer counts as a wrong method.
+    i, why = twin_choice(t, 8, random.Random(0))
+    assert why.misconception in {EQUAL_TOTALS, PREVIOUS_ANSWER, BY_SIX}
+    others = [j for j in range(9) if j != 8 and t.instances[j].answer != t.instances[8].answer]
+    nearest = lambda j: min([abs(t.instances[j].answer - w.value) for w in t.instances[j].wrong]
+                            + [abs(t.instances[j].answer - t.instances[8].answer)])
+    assert nearest(i) == max(nearest(j) for j in others) == abs(why.correct - why.wrong)
+
+
+class _Source:
+    """Records the suspect each twin is aimed at."""
+
+    def __init__(self):
+        self.suspects, self.n = [], 0
+
+    def candidates(self):
+        return ["a", "b", "c"][self.n:]
+
+    def new(self, template_id):
+        self.n += 1
+        return template_id
+
+    def twin(self, puzzle, suspect=None):
+        self.suspects.append(suspect)
+        return puzzle + "'"
+
+
+def test_interview_aims_the_twin_at_the_suspected_misconception():
+    from engine.coding import Observation
+    # A named wrong first answer is the suspect.
+    iv = Interview(source=_Source())
+    iv.next_question()
+    iv.record(Observation(Outcome.NAMED_WRONG, misconception="m1"))
+    assert iv.next_question().kind == "twin" and iv.source.suspects == ["m1"]
+    # Recovered after a challenge: scored Correct, but the error it showed still aims the twin.
+    iv = Interview(source=_Source())
+    iv.next_question()
+    iv.record(Observation(Outcome.CORRECT), weight=Fraction(2, 3), misconception="m2")
+    iv.next_question()
+    assert iv.source.suspects == ["m2"]
+    # Right first time: no suspect from that question; an earlier one counts only while M leads.
+    iv = Interview(source=_Source())
+    iv.next_question()
+    iv.record(Observation(Outcome.CORRECT))
+    assert iv.suspected is None
+    iv._named = ["m0"]
+    iv.posterior = {"S": Fraction(2, 10), "M": Fraction(5, 10), "G": Fraction(3, 10)}
+    assert iv.suspected == "m0"
+    iv.posterior = {"S": Fraction(5, 10), "M": Fraction(3, 10), "G": Fraction(2, 10)}
+    assert iv.suspected is None
+
+
+def test_session_twin_is_aimed_and_explained_after_it_is_answered(bank):
+    """Q1 named wrong and not recovered: the twin is the instance furthest from that error,
+    and "Why these numbers?" arrives only once the twin is scored."""
+    averages = "averages the old mean with the new number"
+
+    def policy(session, events):
+        q = session.questions[-1]
+        m, x = q.puzzle.params["mean"], q.puzzle.params["added"]
+        if q.kind == "new":
+            return f"My answer is {frac(Fraction(m + x, 2))}, because I averaged them."
+        return f"My answer is {frac(q.puzzle.answer)}, because the new total is {4 * m + x} over 5 numbers."
+
+    session, events, _ = run(BankSource(bank, "Statistics", "Medium", rng=random.Random(4)), policy)
+    q1, q2 = session.questions
+    assert q1.scored == "named_wrong" and q2.kind == "twin"
+    t = bank.templates["fx_mean_added"]
+    gap = lambda j: abs(t.instances[j].answer - t.instances[j].wrong[0].value)
+    assert gap(q2.puzzle.instance) == max(gap(j) for j in range(9) if j != q1.puzzle.instance
+                                          and t.instances[j].answer != q1.puzzle.answer)
+    assert q2.puzzle.diagnostic.suspected and q2.puzzle.diagnostic.misconception == averages
+    scored = [e for e in events if e["type"] == "scored"]
+    assert [e["why"] is None for e in scored] == [True, False]
+    assert f"Suspected error ({averages})" in scored[1]["why"]
+    twin_question = next(i for i, e in enumerate(events) if e["type"] == "question" and e["kind"] == "twin")
+    assert events.index(scored[1]) > twin_question
+    assert not any("Suspected error" in str(e) for e in events[:events.index(scored[1])])
+
+    report = interview_report.build(session)
+    why = report["report"]["breakdown"][1]["items"][-1]
+    assert why["title"] == "Why these numbers?" and why["why"]["suspected"] is True
+    assert why["why"]["correct"] == say.value(q2.puzzle.answer)
+    assert all(item["title"] != "Why these numbers?" for item in report["report"]["breakdown"][0]["items"])
 
 
 def test_ladder_starts_easy_or_medium_and_steps_on_first_answers(bank):
@@ -291,7 +415,9 @@ def test_statistics_session_part2_challenge_help_and_report(bank):
     assert q1_items[-1]["question"] == q1.puzzle.part2.text
     assert q2_items[0]["misconception"] == "averages the old mean with the new number"
     assert q2_items[0]["quote"] in script
-    assert q2_items[-1]["title"] == "Part 2: right"
+    assert q2_items[-2]["title"] == "Part 2: right"
+    # Q1 was right first time: no suspect, so the twin keeps every wrong method far away.
+    assert q2_items[-1]["title"] == "Why these numbers?" and q2_items[-1]["why"]["suspected"] is False
     assert "Statistics, Medium" in report["report"]["breakdown"][0]["sub"]
     assert report["outcomes"][1]["help_load"] == 1
     assert report["tip"] == interview_report.FORGE_TIP
@@ -377,3 +503,275 @@ def test_socket_without_topic_starts_mixed_not_fraud(monkeypatch, bank):
             pass
         assert event["template"] == "fx_dice_total" and event["difficulty"] == "Easy"
         socket.send_json({"type": "end"})
+
+
+# --- Evidence meter (decision log 16) -----------------------------------------------
+
+def test_what_if_previews_the_waiting_question_without_changing_anything():
+    from engine.coding import Observation
+    from engine.likelihoods import load_likelihoods
+    from engine.posterior import update
+    lk = load_likelihoods()
+    iv = Interview(source=_Source())
+    with pytest.raises(RuntimeError):
+        iv.what_if(Outcome.CORRECT)
+    iv.next_question()
+    before = dict(iv.posterior)
+    posterior, label = iv.what_if(Outcome.CORRECT)
+    assert posterior == update(before, lk.first(Outcome.CORRECT)) and label is Label.MORE_EVIDENCE
+    assert iv.posterior == before and iv.answers == 0
+    iv.record(Observation(Outcome.NAMED_WRONG, misconception="m1"))
+    assert iv.next_question().kind == "twin"
+    posterior, label = iv.what_if(Outcome.NAMED_WRONG)
+    assert posterior == update(iv.posterior, lk.twin(Outcome.NAMED_WRONG, Outcome.NAMED_WRONG))
+    assert label is Label.MISCONCEPTION
+
+
+def test_meter_after_each_scored_answer_with_what_would_change_it(bank):
+    def policy(session, events):
+        q = session.questions[-1]
+        if q.part2 is not None:
+            return f"My answer is {frac(q.puzzle.part2.answer)}, because it follows."
+        return f"My answer is {frac(q.puzzle.answer)}, because I worked it out."
+
+    seen = []
+
+    class Watch(Interview):
+        def record(self, *args, **kwargs):
+            super().record(*args, **kwargs)
+            seen.append({k: float(v) for k, v in self.posterior.items()})
+
+    source = BankSource(bank, start="Easy", rng=random.Random(9))
+    events = []
+
+    async def send(event):
+        events.append(event)
+
+    session = ExamSession(send, lambda: _async(policy(session, events)), VoiceAnalyzer(ScriptedProvider()),
+                          Watch(rng=random.Random(5), source=source))
+    asyncio.run(session.run())
+    scored = [e for e in events if e["type"] == "scored"]
+    assert len(scored) == len([q for q in session.questions if q.scored]) == len(seen) >= 2
+    for event, posterior in zip(scored, seen):
+        rows = event["meter"]["estimate"]
+        assert [r["label"] for r in rows] == ["Sound", "Misconception", "Gap"]
+        assert [r["p"] for r in rows] == [posterior["S"], posterior["M"], posterior["G"]]
+    first = scored[0]["meter"]["line"]
+    assert first.startswith("On the twin, a right answer with reasoning would move Sound to ")
+    assert "a named error would move Misconception to " in first
+    assert scored[-1]["meter"]["line"] == say.METER_FINAL
+    # The meter arrives before the next question is asked, and peeking asks nothing extra.
+    questions = [i for i, e in enumerate(events) if e["type"] == "question"]
+    assert all(events.index(s) < q for s, q in zip(scored, questions[1:]))
+    assert len(questions) == len(session.questions)
+    assert not any(word in str(scored).lower() for word in ("calibrated", "proves understanding", "can't be fooled"))
+
+
+def test_meter_line_names_a_label_the_next_answer_would_reach():
+    right = ({"S": Fraction(85, 100), "M": Fraction(1, 10), "G": Fraction(5, 100)}, Label.SUPPORTS)
+    named = ({"S": Fraction(1, 10), "M": Fraction(6, 10), "G": Fraction(3, 10)}, Label.MORE_EVIDENCE)
+    assert say.meter_line("new", right, named) == (
+        "On the next question, a right answer with reasoning would move Sound to 85% "
+        "(“Evidence supports understanding”); a named error would move Misconception to 60%.")
+
+
+async def _async(value):
+    return value
+
+
+# --- Receipts (decision log 16) --------------------------------------------------------
+
+def _named_then_right(bank, seed=4):
+    def policy(session, events):
+        q = session.questions[-1]
+        if q.part2 is not None:
+            return f"My answer is {frac(q.puzzle.part2.answer)}, because it follows."
+        m, x = q.puzzle.params["mean"], q.puzzle.params["added"]
+        last = [e for e in events if e["type"] == "interviewer_line"][-1]
+        if q.kind == "new" and last["kind"] == "question":
+            return f"My answer is {frac(Fraction(m + x, 2))}, because I averaged them."
+        return f"My answer is {frac(q.puzzle.answer)}, because the new total is {4 * m + x} over 5 numbers."
+
+    return run(BankSource(bank, "Statistics", "Medium", rng=random.Random(seed)), policy)
+
+
+def test_judgement_receipts_show_words_and_computation_but_not_the_answer_mid_question(bank):
+    session, events, _ = _named_then_right(bank)
+    q1 = session.questions[0]
+    lines = [e for e in events if e["type"] == "interviewer_line"]
+    challenge = next(e for e in lines if e["kind"] == "challenge")
+    r = challenge["receipt"]
+    assert r["words"] == q1.answers[0].transcript and r["span"] in r["words"]
+    assert [row["key"] for row in r["rows"]] == ["said", "reasoning"] and r["note"]
+    # The exact answer and the matched error stay hidden until the question ends.
+    assert str(q1.puzzle.answer) not in " ".join(row["text"] for row in r["rows"])
+    assert "averages the old mean" not in str(r)
+    # Closes carry the full receipt once the question is scored.
+    closes = [e for e in lines if e["kind"] == "close" and e["receipt"]]
+    full = closes[0]["receipt"]
+    keys = [row["key"] for row in full["rows"]]
+    assert keys[:3] == ["said", "exact", "check"] and "methods" in keys and "coded" in keys
+    text = {row["key"]: row["text"] for row in full["rows"]}
+    assert text["exact"] == say.value(q1.puzzle.answer)
+    # Q1 was recovered: its close is about the final, right answer.
+    assert text["coded"].startswith("Correct") and "matches it" not in text["methods"]
+    assert "may be within" in text["check"] and text["check"].endswith("so it matches.")
+    # The opening answer's receipt, in the report, shows the matched wrong method.
+    opening = interview_report.build(session)["report"]["breakdown"][0]["items"][0]["receipt"]
+    rows = {row["key"]: row["text"] for row in opening["rows"]}
+    assert "averages the old mean with the new number: " in rows["methods"] and "(your number matches it)" in rows["methods"]
+    assert rows["coded"] == "A known wrong method (averages the old mean with the new number)"
+
+
+def test_every_report_line_opens_a_receipt(bank):
+    session, events, _ = _named_then_right(bank)
+    report = interview_report.build(session)
+    r = report["report"]
+    items = r["well"] + r["improve"] + [i for tab in r["breakdown"] for i in tab["items"]]
+    assert items and all(i["receipt"]["rows"] for i in items)
+    assert all(e["receipt"]["words"] == e["quote"] for e in report["evidence"])
+    assert all(c["receipt"] for c in report["checks"]) and all(o["receipt"] for o in report["outcomes"])
+    # Numbers: the words quoted are the candidate's own, verbatim.
+    said = {a.transcript for q in session.questions for a in q.answers + (q.part2.answers if q.part2 else [])}
+    said |= {t for q in session.questions for t in q.said}
+    assert all(i["receipt"]["words"] in said for i in items if i["receipt"]["words"])
+    # The twin's "Why these numbers?" quotes the answer that showed the suspected error.
+    why = r["breakdown"][1]["items"][-1]
+    assert why["title"] == "Why these numbers?"
+    assert why["receipt"]["words"] == session.questions[0].answers[0].transcript
+    gap = next(row for row in why["receipt"]["rows"] if row["key"] == "gap")["text"]
+    d = session.questions[1].puzzle.diagnostic
+    assert gap.endswith(say.value(abs(d.correct - d.wrong)))
+    # The help weight is shown as computed.
+    q1_outcome = report["outcomes"][0]["receipt"]
+    assert any(row["key"] == "weight" for row in q1_outcome["rows"])
+
+
+def test_receipt_check_uses_the_instance_tolerance(bank):
+    from app import receipts
+    t = bank.templates["fx_dice_total"]
+    q = instance_puzzle(t, t.instances[3], 3)  # 5/36, tolerance 0.005
+    assert receipts.check_text(q, parse_value("0.139"), q.answer) == (
+        "A decimal may be within 0.005 of the exact value: it is 0.0001111 away, so it matches.")
+    assert receipts.check_text(q, parse_value("5/37"), q.answer) == "Fractions must match exactly: 5/37 ≠ 5/36."
+
+
+# --- Drill mode (decision log 16) --------------------------------------------------------
+
+def test_drill_plan_aims_every_instance_at_the_misconception(bank):
+    from engine.bank import drill_plan
+    t = bank.templates["fx_dice_total"]
+    # Gaps to 1/11: total 12 (1/36) .063, total 8 (5/36) .048, totals 3 and 11 (1/18) .035, ...
+    drill, check = drill_plan(t, EQUAL_TOTALS, {3})
+    assert check == 8 and drill == [4, 0, 7]
+    assert drill_plan(t, EQUAL_TOTALS, set(range(8))) == ([], 8)
+    assert drill_plan(t, "not in this template", set()) == ([], None)
+
+
+def _dice_interview(bank):
+    """A Probability session: 1/11 (the named error) on every question."""
+    def policy(session, events):
+        return "My answer is 1/11, because there are 11 totals."
+    return run(BankSource(bank, "Probability", "Easy", rng=random.Random(1)), policy)
+
+
+def _drill(bank, parent, policy, index=0):
+    from app.drill import DrillSession, drill_targets
+    target = drill_targets(parent, bank.templates)[index]
+    events = []
+
+    async def send(event):
+        events.append(event)
+
+    async def listen():
+        return policy(session, events)
+
+    session = DrillSession(send, listen, VoiceAnalyzer(ScriptedProvider()), bank.templates[target.template_id], target)
+    asyncio.run(session.run())
+    return session, events
+
+
+def test_report_offers_a_drill_for_each_detected_misconception(bank):
+    parent, _, _ = _dice_interview(bank)
+    report = interview_report.build(parent, bank.templates)
+    assert report["drills"] == [{"index": 0, "misconception": EQUAL_TOTALS}]
+    assert interview_report.build(parent)["drills"] == []  # no templates: nothing to drill
+
+
+def test_drill_socratic_questions_then_a_check_still_showing(bank):
+    from app.drill import STILL_SHOWING
+    parent, _, _ = _dice_interview(bank)
+
+    def policy(session, events):
+        last = [e for e in events if e["type"] == "interviewer_line"][-1]
+        if last["kind"] == "challenge":
+            return "Can I get a hint"
+        if last["text"] == say.HELP_ASK:
+            return "I don't know where to start."
+        return "My answer is 1/11, because there are 11 totals."
+
+    session, events = _drill(bank, parent, policy)
+    used = {q.puzzle.instance for q in parent.questions}
+    drills = [q for q in session.questions]
+    assert [q.kind for q in drills] == ["drill"] * 3 and session.check.kind == "check"
+    instances = [q.puzzle.instance for q in drills] + [session.check.puzzle.instance]
+    assert len(set(instances)) == 4 and not used & set(instances)
+    assert all(q.puzzle.diagnostic.misconception == EQUAL_TOTALS and q.puzzle.part2 is None for q in drills)
+    assert all(q.scored == "named_wrong" and q.challenges == 1 and q.hints for q in drills)
+    assert session.check.scored == "named_wrong" and session.result == STILL_SHOWING
+    # Socratic only: every challenge, nudge and hint is a question or an invitation to talk it through.
+    lines = [e for e in events if e["type"] == "interviewer_line"]
+    helps = [e["text"] for e in lines if e["kind"] in {"challenge", "nudge", "hint"}]
+    assert helps and all(t.endswith("?") or t == say.FORGE_NUDGE for t in helps)
+    assert not any(e["type"] in {"part2"} for e in events)
+    assert all(e["meter"] is None and e["why"] for e in events if e["type"] == "scored")
+    # The check gets no help.
+    check_at = next(i for i, e in enumerate(events) if e["type"] == "question" and e["kind"] == "check")
+    assert not any(e["type"] == "interviewer_line" and e["kind"] in {"challenge", "nudge", "hint"} for e in events[check_at:])
+    assert events[-1] == {"type": "session_end", "drill": True, "result": STILL_SHOWING, "timed_out": False}
+
+    report = interview_report.build_drill(session)
+    assert report["drill"]["result"] == STILL_SHOWING and report["drill"]["misconception"] == EQUAL_TOTALS
+    assert report["label"] is None and report["tip"] is None and report["estimate"] == []
+    assert [t["tab"] for t in report["report"]["breakdown"]] == ["Drill 1", "Drill 2", "Drill 3", "Check"]
+    assert all(i["receipt"] for t in report["report"]["breakdown"] for i in t["items"])
+    assert [t["items"][0]["seen_names"] for t in report["report"]["breakdown"]] == [["Drill 1"], ["Drill 2"], ["Drill 3"], ["Check"]]
+
+
+def test_drill_right_first_time_moves_to_the_check_and_clears(bank):
+    from app.drill import CLEARED
+    parent, _, _ = _dice_interview(bank)
+
+    def policy(session, events):
+        q = session.check or session.questions[-1]
+        return f"My answer is {frac(q.puzzle.answer)}, because there are 36 equally likely outcomes."
+
+    session, events = _drill(bank, parent, policy)
+    assert len(session.questions) == 1 and session.questions[0].scored == "correct"
+    assert session.check.scored == "correct" and session.result == CLEARED
+    assert interview_report.build_drill(session)["drill"]["result"] == CLEARED
+
+
+def test_drill_over_the_socket_is_chosen_by_the_server(monkeypatch, bank):
+    parent, _, _ = _dice_interview(bank)
+    monkeypatch.setattr(interview_routes, "_BANK", bank)
+    from collections import OrderedDict
+    monkeypatch.setattr(interview_routes, "SESSIONS", OrderedDict(**{"parent-id": parent}))
+    monkeypatch.setattr(voice_routes, "provider", lambda: ScriptedProvider())
+    client = TestClient(app)
+    with client.websocket_connect("/api/interview/ws") as socket:
+        socket.send_json({"type": "begin", "consent": True, "drill": {"session": "parent-id", "index": 0}})
+        session_event = socket.receive_json()
+        assert session_event["type"] == "session" and session_event["drill"] == EQUAL_TOTALS
+        while (event := socket.receive_json())["type"] != "question":
+            pass
+        assert event["kind"] == "drill" and event["template"] == "fx_dice_total"
+        socket.send_json({"type": "end"})
+    for bad in ({"session": "parent-id", "index": 5}, {"session": "missing", "index": 0}, "parent-id",
+                {"session": "parent-id", "index": True}):
+        with client.websocket_connect("/api/interview/ws") as socket:
+            socket.send_json({"type": "begin", "consent": True, "drill": bad})
+            assert socket.receive_json() == {"type": "error", "message": "That drill is no longer available."}
+    drill_id = next(k for k, v in interview_routes.SESSIONS.items() if type(v).__name__ == "DrillSession")
+    data = client.get(f"/api/interview/{drill_id}/report").json()
+    assert data["drill"]["misconception"] == EQUAL_TOTALS and data["label"] is None

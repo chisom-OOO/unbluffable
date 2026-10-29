@@ -4,7 +4,7 @@
 // while the server's check runs, Speaking from SpeechSynthesis start/end events.
 // Done is a fallback; Type instead completes a whole interview without the microphone.
 document.addEventListener("DOMContentLoaded", () => {
-  const { highlight, escapeHtml, reducedMotion } = window.UB;
+  const { highlight, escapeHtml, reducedMotion, receiptHtml } = window.UB;
   const voice = window.UBVoice;
   const $ = (id) => document.getElementById(id);
 
@@ -135,12 +135,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- Transcript log ----------
   // Adds a line and speaks it. Muted, reduced motion or no speech voice: the line shows at once.
-  function addInterviewer(text, kind) {
+  function addInterviewer(text, kind, receipt) {
     const el = document.createElement("div");
     const tag = KIND_TAG[kind];
     el.className = "utterance interviewer" + (tag ? ` is-${kind}` : "");
     el.innerHTML = `<div class="speaker"><span>Interviewer</span>${tag ? `<span class="tag tag-${kind}">${tag}</span>` : ""}</div>` +
-      `<p class="says"><span class="visually-hidden">${escapeHtml(text)}</span><span class="typed" aria-hidden="true"></span></p>`;
+      `<p class="says"><span class="visually-hidden">${escapeHtml(text)}</span><span class="typed" aria-hidden="true"></span></p>` +
+      receiptHtml(receipt);
     log.appendChild(el);
     scrollTo(el);
     const reveal = revealer(el.querySelector(".typed"), text);
@@ -213,13 +214,22 @@ document.addEventListener("DOMContentLoaded", () => {
       case "question":
         question = event;
         $("puzzle").textContent = event.text;
-        $("puzzle-eyebrow").textContent = `Question ${event.number} of up to 4 · guide ${fmt(event.guide_seconds)}`;
-        $("puzzle-kind").textContent = (event.kind === "twin" ? "Same puzzle, new numbers" : "New puzzle")
+        $("puzzle-eyebrow").textContent = (event.kind === "check" ? "Drill check"
+          : event.kind === "drill" ? `Drill question ${event.number} of up to 3` : `Question ${event.number} of up to 4`)
+          + ` · guide ${fmt(event.guide_seconds)}`;
+        $("puzzle-kind").textContent = ({ twin: "Same puzzle, new numbers", drill: "Aimed at one mistake",
+                                          check: "New numbers, no help" }[event.kind] || "New puzzle")
           + (event.difficulty ? ` · ${event.difficulty}` : "");
         finishReveals();
         questionStart = Date.now(); answeredThisQuestion = false; offered = false; heard = false;
+        $("why").hidden = true; $("why").open = false;
         counts({ challenges: 0, nudges: 0, hints: 0 });
         updateTimer();
+        break;
+      case "scored":
+        $("why").hidden = !event.why;
+        $("why-text").textContent = event.why || "";
+        if (event.meter) showMeter(event.meter);
         break;
       case "part2":
         $("puzzle").textContent = event.text;
@@ -227,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
         finishReveals();
         break;
       case "interviewer_line":
-        addInterviewer(event.text, event.kind);
+        addInterviewer(event.text, event.kind, event.receipt);
         if (event.counts) counts(event.counts);
         break;
       case "state":
@@ -295,6 +305,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // ---------- Evidence meter (decision log 16): model estimates after each scored answer ----------
+  function showMeter(m) {
+    const panel = $("meter");
+    if (panel.hidden) {
+      panel.hidden = false;
+      panel.open = !window.matchMedia("(max-width: 600px)").matches;  // collapsed on phones
+    }
+    $("meter-rows").innerHTML = m.estimate.map((r) => {
+      const pct = Math.round(r.p * 100);
+      return `<div class="meter-row"><dt>${escapeHtml(r.label)}</dt>` +
+        `<dd><span class="meter-bar" aria-hidden="true"><span style="width:${pct}%"></span></span>` +
+        `<span class="mono meter-pct">${pct}%</span></dd></div>`;
+    }).join("");
+    $("meter-line").textContent = m.line;
+    $("meter-latest").textContent = m.estimate.map((r) => `${r.label} ${Math.round(r.p * 100)}%`).join(" · ");
+  }
+
   function finish(event) {
     finishReveals();
     phase = "finished";
@@ -327,8 +354,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     socket = new WebSocket(`${location.protocol === "https:" ? "wss:" : "ws:"}//${location.host}/api/interview/ws`);
     const level = document.querySelector('input[name="level"]:checked')?.value || "Easy";
-    socket.onopen = () => socket.send(JSON.stringify({ type: "begin", consent: true, headphones: headphones.checked,
-                                                       topic: topicSelect.value || null, level }));
+    socket.onopen = () => socket.send(JSON.stringify(drill
+      ? { type: "begin", consent: true, headphones: headphones.checked, drill }
+      : { type: "begin", consent: true, headphones: headphones.checked, topic: topicSelect.value || null, level }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
       if (phase !== "finished") { phase = "finished"; voice.close(); setStatus("The connection closed. Reload to start again."); render(); }
@@ -458,6 +486,15 @@ document.addEventListener("DOMContentLoaded", () => {
     $("connection-note").className = "device-note bad";
     setStatus("Voice configuration is unavailable. You can still type your answers.");
   });
+
+  // ---------- Drill mode (decision log 16): /ui/interview?drill=<report session>&m=<n> ----------
+  const query = new URLSearchParams(location.search);
+  const drill = query.get("drill") ? { session: query.get("drill"), index: Number(query.get("m")) } : null;
+  if (drill) {
+    $("setup").querySelector(".picker").hidden = true;
+    $("puzzle").textContent = "The interviewer reads the first drill question when you start.";
+    $("puzzle-eyebrow").textContent = "Drill · up to 3 questions, then a check";
+  }
 
   // ---------- Topic picker: accepted forge templates per topic, Mixed, and the fraud alert ----------
   const topicSelect = $("topic");

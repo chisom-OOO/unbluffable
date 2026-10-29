@@ -16,6 +16,7 @@ from contextlib import suppress
 from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 
 from app import interview_report, voice_routes
+from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
 from engine.bank import MIXED, START_LEVELS, Bank, BankSource, load_bank
 from engine.interview import Interview
@@ -88,7 +89,23 @@ def report(session_id: str):
     session = SESSIONS.get(session_id)
     if session is None:
         raise HTTPException(404, "This report is no longer available.")
-    return interview_report.build(session)
+    if isinstance(session, DrillSession):
+        return interview_report.build_drill(session)
+    return interview_report.build(session, bank().templates)
+
+
+def drill_for(request, send, listen, analyzer, deadline: float) -> DrillSession:
+    """Drill mode (decision log 16): {"session": parent id, "index": n} picks one of the
+    parent report's "Drill this mistake" targets; the server decides what is drilled."""
+    if not isinstance(request, dict):
+        raise VoiceError("That drill is no longer available.")
+    parent = SESSIONS.get(request.get("session")) if isinstance(request.get("session"), str) else None
+    index = request.get("index")
+    targets = drill_targets(parent, bank().templates) if parent is not None and not isinstance(parent, DrillSession) else []
+    if not isinstance(index, int) or isinstance(index, bool) or not 0 <= index < len(targets):
+        raise VoiceError("That drill is no longer available.")
+    target = targets[index]
+    return DrillSession(send, listen, analyzer, bank().templates[target.template_id], target, deadline=deadline)
 
 
 @router.websocket("/ws")
@@ -137,12 +154,16 @@ async def interview_socket(socket: WebSocket):
                     return text
                 # interviewer_speaking and other controls outside a capture: nothing to do
 
-        interview = interview_for(begin.get("topic"), begin.get("level", START_LEVELS[0]))
-        session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview,
-                              deadline=time.monotonic() + SESSION_SECONDS)
+        deadline = time.monotonic() + SESSION_SECONDS
+        if begin.get("drill") is not None:
+            session = drill_for(begin["drill"], socket.send_json, listen, VoiceAnalyzer(provider), deadline)
+        else:
+            interview = interview_for(begin.get("topic"), begin.get("level", START_LEVELS[0]))
+            session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
         session_id = keep(session)
         await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,
-                                "session_seconds": SESSION_SECONDS})
+                                "session_seconds": SESSION_SECONDS,
+                                "drill": session.target.misconception if isinstance(session, DrillSession) else None})
         await session.run()
     except (WebSocketDisconnect, SessionClosed):
         return

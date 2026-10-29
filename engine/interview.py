@@ -43,7 +43,9 @@ class Interview:
 
         `source` (e.g. engine.bank.BankSource) replaces T1-T3 with its own templates:
         `candidates()` lists the template ids a new question may use, `new(id)` and
-        `twin(puzzle)` build puzzles. Selection, posterior and labels are unchanged."""
+        `twin(puzzle, suspect)` build puzzles; `suspect` is the suspected misconception
+        the twin is aimed at, or None (decision log 16). Selection, posterior and
+        labels are unchanged."""
         self.rng = rng if rng is not None else random.Random()
         self.likelihoods = likelihoods if likelihoods is not None else load_likelihoods()
         self.demo = demo
@@ -55,6 +57,8 @@ class Interview:
         self._pending: Question | None = None
         self._current: Puzzle | None = None
         self._twin_after: Outcome | None = None  # first outcome, while the twin is unasked
+        self._named: list[str] = []  # misconceptions shown so far, including ones later recovered
+        self._suspect: str | None = None  # named on the question the twin follows
         self.source = source
         self._unused = list(TEMPLATE_ORDER) if source is None else []
 
@@ -74,6 +78,30 @@ class Interview:
     def can_escalate(self) -> bool:
         """Escalate only on "Evidence supports understanding" with H <= 1 on each scored answer (02 §7)."""
         return self.label is Label.SUPPORTS and all(h <= MAX_HELP_FOR_ESCALATION for h in self.help_loads)
+
+    @property
+    def suspected(self) -> str | None:
+        """The misconception a twin is aimed at (decision log 16): the one named on the
+        question it follows, else, while Misconception leads the posterior, the most
+        recent one named in the session."""
+        if self._suspect is not None:
+            return self._suspect
+        if self._named and max(self.posterior, key=self.posterior.get) == "M":
+            return self._named[-1]
+        return None
+
+    def what_if(self, outcome: Outcome) -> tuple[dict[str, Fraction], Label]:
+        """Posterior and label if the waiting question were answered with `outcome` at
+        full weight (decision log 16, evidence meter). Changes nothing."""
+        question = self._pending
+        if question is None:
+            raise RuntimeError("no question is waiting for an answer")
+        if question.kind == "twin":
+            row = self.likelihoods.twin(self._twin_after, outcome)
+        else:
+            row = self.likelihoods.first(outcome)
+        posterior = update(self.posterior, row)
+        return posterior, label_for(posterior, self.answers + 1)
 
     def next_question(self) -> Question | None:
         if self.finished:
@@ -103,12 +131,15 @@ class Interview:
         observation: Observation,
         weight: Fraction = Fraction(1),
         help_load: int = 0,
+        misconception: str | None = None,
     ) -> None:
         """Score a question once, from its final outcome (decision log 3b).
 
         Correct after help: weight = 2/(2+H); recovered after a challenge:
         2/(2+H+1) (engine.help.weight_for). Not recovered: pass the first
         wrong/vague outcome with weight 1. The weight discounts Correct only.
+        `misconception`: one named on this question before it was recovered; it aims
+        the twin and is not scored.
         """
         question = self._pending
         if question is None:
@@ -128,6 +159,10 @@ class Interview:
             row = self.likelihoods.first(observation.outcome)
             self._current = question.puzzle
             self._twin_after = observation.outcome
+            self._suspect = observation.misconception or misconception
+        named = observation.misconception or misconception
+        if named:
+            self._named.append(named)
         if observation.outcome is Outcome.CORRECT:
             row = discount(row, Fraction(weight))
         self.posterior = update(self.posterior, row)
@@ -152,7 +187,7 @@ class Interview:
 
     def _twin_of(self, puzzle: Puzzle) -> Puzzle:
         if self.source is not None:
-            return self.source.twin(puzzle)
+            return self.source.twin(puzzle, self.suspected)
         if self.demo and puzzle == flagship():
             return flagship_twin()
         return make_twin(puzzle, self.rng)
