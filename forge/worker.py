@@ -93,8 +93,8 @@ def inspect_code(code, mode):
 
 
 def exact(value):
-    if isinstance(value, bool) or not isinstance(value, (int, Fraction, str)):
-        raise PolicyError("solver_not_exact")
+    if isinstance(value, bool) or not isinstance(value, (int, Fraction)):
+        raise TypeError("solver_not_exact")
     value = Fraction(value)
     if len(str(value)) > 4096:
         raise PolicyError("numeric_output_too_large")

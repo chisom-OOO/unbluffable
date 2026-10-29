@@ -10,6 +10,7 @@ from forge.data import PRIORITY, load_csv
 from forge.models import DEFAULT_PRICES, Models, State
 from forge.pipeline import Pipeline
 from forge.sandbox import Sandbox
+from forge.selection import parse_quotas
 from llm.backends import get_backend
 from llm.client import MissingKey, _key
 
@@ -45,6 +46,7 @@ def main(argv=None):
     parser.add_argument("--csv", required=True, type=Path)
     parser.add_argument("--limit", type=int, default=100)
     parser.add_argument("--topics", default=",".join(PRIORITY), help="Comma-separated priority order, not a filter")
+    parser.add_argument("--per-topic", default="", help="Exact topic=count quotas, summing to --limit")
     parser.add_argument("--budget-usd", type=float, default=40)
     parser.add_argument("--mode", choices=("live", "replay"), default="replay")
     parser.add_argument("--work-dir", type=Path, default=ROOT / "data" / "forge")
@@ -67,6 +69,12 @@ def main(argv=None):
         parser.error("--csv must name a CSV file")
     if args.limit <= 0:
         parser.error("--limit must be positive")
+    try:
+        quotas = parse_quotas(args.per_topic)
+        if quotas and sum(quotas.values()) != args.limit:
+            raise ValueError()
+    except ValueError:
+        parser.error("--per-topic requires unique positive topic=count quotas summing to --limit")
     prices = dict(DEFAULT_PRICES)
     try:
         for flag in args.price:
@@ -91,7 +99,7 @@ def main(argv=None):
             models = Models(state, mode=args.mode, budget_usd=args.budget_usd, prices=prices, author=author)
             pipeline = Pipeline(models, output=ROOT / "content" / "forge", funnel=ROOT / "forge" / "funnel.json",
                 trials=args.trials, max_similarity=args.max_similarity,
-                priority=[topic.strip().casefold() for topic in args.topics.split(",") if topic.strip()],
+                priority=[topic.strip().casefold() for topic in args.topics.split(",") if topic.strip()], per_topic=quotas,
                 sandbox=Sandbox(args.timeout_s, args.memory_mb))
             report = pipeline.run(questions, counts, args.limit)
     except (OSError, ValueError, ArithmeticError, MissingKey) as error:

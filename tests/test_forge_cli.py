@@ -38,9 +38,12 @@ def configure(tmp_path, monkeypatch):
     csv_path.parent.mkdir(parents=True)
     q = question()
     with csv_path.open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=["question_id", "title", "difficulty", "topics", "statement", "solution"])
+        writer = csv.DictWriter(stream, fieldnames=["question_id", "title", "difficulty", "topics", "statement", "solution", "locked"])
         writer.writeheader()
-        writer.writerow({key: getattr(q, key) if key != "topics" else "probability" for key in writer.fieldnames})
+        row = {key: getattr(q, key) if key not in {"topics", "locked"} else "probability" if key == "topics" else "" for key in writer.fieldnames}
+        writer.writerow(row)
+        for i in range(4):
+            writer.writerow({**row, "question_id": "locked-" + str(i), "locked": "true"})
     work = tmp_path / "data" / "forge"
     args = ["--csv", str(csv_path), "--work-dir", str(work), "--mode", "live", "--limit", "100", "--trials", "1000"]
     return args, author, checker
@@ -53,6 +56,10 @@ def test_cli_fake_pilot_resume_and_no_bank_text_in_public_output(tmp_path, monke
     assert question().statement not in public and question().question_id not in public
     report = json.loads((tmp_path / "forge" / "funnel.json").read_text(encoding="utf-8"))
     assert report["accepted_templates"] == 1 and report["acceptance_rate"] == 1
+    artifact = json.loads(next((tmp_path / "content" / "forge").glob("*.json")).read_text(encoding="utf-8"))
+    assert len(artifact["instances"]) >= 20
+    assert all("separation" in row and len(row["wrong"]) == 2 for row in artifact["instances"])
+    assert report["configuration"]["minimum_instances"] == 20
     assert report["billing_per_topic"]["probability"]["calls"] == 5
     assert report["billing_per_stage"]["author"]["calls"] == 1
     paid = len(author.calls) + len(checker.calls)
@@ -91,3 +98,32 @@ def test_live_cli_missing_key_stops_before_bank_or_model_access(tmp_path, monkey
     monkeypatch.setattr(run, "load_csv", lambda path: pytest.fail("Missing-key preflight opened a bank"))
     assert run.main(["--csv", str(tmp_path / "private.csv"), "--mode", "live", "--work-dir", str(tmp_path / "data" / "forge")]) == 1
     assert "MissingKey" in capsys.readouterr().out
+
+
+def test_cli_hundred_question_stratified_split_and_clean_vocabulary(tmp_path, monkeypatch, capsys):
+    from forge_fakes import FakeSandbox
+    args, author, checker = configure(tmp_path, monkeypatch)
+    monkeypatch.setattr(run, "Sandbox", lambda *a, **k: FakeSandbox())
+    split = {"probability": 30, "expected value": 30, "combinations and permutations": 25, "statistics": 15}
+    csv_path = tmp_path / "data" / "bank" / "invented.csv"
+    with csv_path.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=["question_id", "statement", "solution", "topics"])
+        writer.writeheader()
+        for topic, count in split.items():
+            for i in range(count):
+                writer.writerow({"question_id": topic + str(i), "statement": "Invented source " + topic + str(i),
+                                 "solution": question().solution, "topics": str([topic, "x", "contributor notes"])})
+    assert run.main([*args, "--per-topic", ",".join(topic + "=" + str(n) for topic, n in split.items())]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["sampling"]["selected"] == report["topic_vocabulary"] == split
+    assert not any(report["sampling"]["shortfalls"].values())
+    assert report["completed_questions"] == 100
+    assert report["stages"]["render"]["passed"] == report["accepted_templates"]
+
+
+@pytest.mark.parametrize("quotas", ["probability=99", "probability=-1,statistics=101", "probability=50,probability=50"])
+def test_cli_invalid_quotas_fail_before_bank_access(tmp_path, monkeypatch, quotas):
+    monkeypatch.setattr(run, "ROOT", tmp_path)
+    monkeypatch.setattr(run, "load_csv", lambda path: pytest.fail("Invalid quotas opened a CSV"))
+    with pytest.raises(SystemExit):
+        run.main(["--csv", str(tmp_path / "invented.csv"), "--per-topic", quotas])
