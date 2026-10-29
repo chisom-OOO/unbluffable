@@ -56,7 +56,7 @@ def draft(part2=False):
                                       {"misconception": "uses_three_cases", "code": PART_WRONG_TWO}],
             step_names=["half_total"])
     return {"text": "A beacon flashes with probability 1/2. A flash earns {n} credits. What is the expected reward?",
-            "parameters": [{"name": "n", "minimum": "1", "maximum": "12", "step": "1", "original": "4"}],
+            "parameters": [{"name": "n", "minimum": "1", "maximum": "101", "step": "1", "original": "4"}],
             "solver": SOLVER, "wrong": [{"misconception": "ignores_probability", "code": WRONG_ONE},
                                        {"misconception": "uses_three_cases", "code": WRONG_TWO}],
             "step_names": ["half"], "part2": extra}

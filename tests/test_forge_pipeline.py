@@ -30,9 +30,11 @@ def test_all_gates_export_only_instances_and_finished_items_never_respend(tmp_pa
     before = files[0].read_bytes()
     artifact = json.loads(before)
     assert artifact["review_status"] == "pending_builder_review"
-    assert len(artifact["instances"]) >= 8
-    assert artifact["verification"]["monte_carlo"]["point_count"] >= 5
-    assert {"1", "4", "12"} <= {point["params"]["n"] for point in artifact["verification"]["monte_carlo"]["points"]}
+    assert len(artifact["instances"]) >= 20
+    assert artifact["verification"]["monte_carlo"]["point_count"] >= 20
+    assert artifact["verification"]["instances"]["minimum"] == 20
+    assert all("separation" in row for row in artifact["instances"])
+    assert {"1", "4", "101"} <= {point["params"]["n"] for point in artifact["verification"]["monte_carlo"]["points"]}
     assert artifact["verification"]["steps"]["named_values"] == 1
     assert all(value["passed"] for key, value in artifact["verification"].items() if key != "part2")
     public = before.decode() + (tmp_path / "funnel.json").read_text(encoding="utf-8")
@@ -118,7 +120,9 @@ def test_part_two_is_accepted_only_after_its_own_checks(tmp_path, failure):
     assert artifact["verification"]["part2"]["passed"] is not failure
     assert all(("part2" in row) is not failure for row in artifact["instances"])
     if not failure:
+        assert len(artifact["instances"]) >= 20
         assert all(row["part2"]["params"]["n"] == row["params"]["n"] for row in artifact["instances"])
+        assert all("separation" in row["part2"] for row in artifact["instances"])
 
 
 def test_real_subprocess_pipeline_with_invented_models(tmp_path):
@@ -159,3 +163,33 @@ def test_duplicate_generated_templates_do_not_inflate_the_funnel(tmp_path):
     assert report["completed_questions"] == 2 and report["accepted_templates"] == 1
     assert report["failures"]["novelty:duplicate_generated_template"] == 1
     assert len(list((tmp_path / "public").glob("*.json"))) == 1
+
+def test_legacy_eight_instance_checkpoint_is_not_silently_reused(tmp_path):
+    models, _, _ = setup(tmp_path)
+    models.state.data["verification_settings"] = {"trials": 2000, "max_similarity": .70}
+    models.state.save()
+    with pytest.raises(ValueError, match="original verification settings"):
+        Pipeline(models, output=tmp_path / "public", funnel=tmp_path / "funnel.json",
+                 sandbox=FakeSandbox(), trials=2000)
+    assert not models.calls
+
+
+def test_part_two_collisions_cannot_export_fewer_than_twenty(tmp_path):
+    from forge_fakes import PART_SOLVER
+    models, _, pipeline = setup(tmp_path, part2=True)
+    models.blueprint["part2"]["wrong"][0]["code"] = PART_SOLVER
+    assert execute(pipeline)["accepted_templates"] == 1
+    artifact = json.loads(next((tmp_path / "public").glob("*.json")).read_text(encoding="utf-8"))
+    assert len(artifact["instances"]) >= 20
+    assert artifact["verification"]["part2"]["passed"] is False
+    assert all("part2" not in row for row in artifact["instances"])
+
+
+def test_part_two_extra_parameter_spans_its_whole_range(tmp_path):
+    models, _, pipeline = setup(tmp_path, part2=True)
+    models.blueprint["part2"]["parameter"]["maximum"] = "101"
+    assert execute(pipeline)["accepted_templates"] == 1
+    artifact = json.loads(next((tmp_path / "public").glob("*.json")).read_text(encoding="utf-8"))
+    values = sorted(int(row["part2"]["params"]["k"]) for row in artifact["instances"])
+    assert len(values) >= 20 and values[0] == 1 and values[-1] == 101
+    assert max(b - a for a, b in zip(values, values[1:])) <= 6

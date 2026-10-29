@@ -29,35 +29,58 @@ def parameter_grid(parameters):
     return grids, original
 
 
-def points_for(parameters, count=8):
+def points_for(parameters, count=20, reserve=60):
+    """Order a bounded candidate pool by coverage, retaining spare collision replacements."""
     grids, original = parameter_grid(parameters)
-    points = [original]
+    capacity = math.prod(len(values) for values in grids.values())
+    if count < 20 or capacity < count:
+        raise Reject("parameters", "fewer_than_twenty_instances")
+    mandatory = [original]
     for name, values in grids.items():
-        points.extend([{**original, name: values[0]}, {**original, name: values[-1]}])
-    points.extend([{name: values[0] for name, values in grids.items()},
-                   {name: values[-1] for name, values in grids.items()}])
-    seen, result = set(), []
+        mandatory.extend([{**original, name: values[0]}, {**original, name: values[-1]}])
+    mandatory.extend([{name: values[0] for name, values in grids.items()},
+                      {name: values[-1] for name, values in grids.items()}])
+    pool = {}
     def add(point):
-        key = tuple(sorted(point.items()))
-        if key not in seen:
-            seen.add(key)
-            result.append(point)
-    for point in points:
+        pool.setdefault(tuple(sorted(point.items())), point)
+    for point in mandatory:
         add(point)
     rng = random.Random(173)
-    for _ in range(1000):
-        if len(result) >= count:
-            break
-        add({name: rng.choice(values) for name, values in grids.items()})
-    if len(result) < count:
-        # Deterministic exhaustion for small grids that random sampling missed.
-        for values in itertools.islice(itertools.product(*grids.values()), 10000):
+    if capacity <= 2048:
+        for values in itertools.product(*grids.values()):
             add(dict(zip(grids, values)))
-            if len(result) >= count:
-                break
-    if len(result) < count:
-        raise Reject("parameters", "fewer_than_eight_instances")
-    return result, original
+    else:
+        # Stratify each dimension, shuffle independently, and add a random reserve.
+        strata = {}
+        for name, values in grids.items():
+            strata[name] = [values[i * (len(values) - 1) // 511] for i in range(512)]
+            rng.shuffle(strata[name])
+        for i in range(512):
+            add({name: values[i] for name, values in strata.items()})
+            add({name: rng.choice(values) for name, values in grids.items()})
+    points = list(pool.values())
+    scales = {name: {value: i / max(1, len(values) - 1) for i, value in enumerate(values)}
+              for name, values in grids.items()}
+    vectors = [tuple(scales[name][point[name]] for name in grids) for point in points]
+    distances = [math.inf] * len(points)
+    selected, used = [], set()
+    def choose(index):
+        selected.append(points[index])
+        used.add(index)
+        for i, vector in enumerate(vectors):
+            distance = sum((a - b) ** 2 for a, b in zip(vector, vectors[index]))
+            distances[i] = min(distances[i], distance)
+        distances[index] = -1
+    # Pool insertion preserves the original, individual edges and joint edges.
+    mandatory_count = len({tuple(sorted(point.items())) for point in mandatory})
+    target = min(len(points), max(count, mandatory_count) + reserve)
+    for index in range(mandatory_count):
+        choose(index)
+    while len(selected) < target:
+        choose(max((i for i in range(len(points)) if i not in used), key=lambda i: distances[i]))
+    if len(selected) < count:
+        raise Reject("parameters", "fewer_than_twenty_instances")
+    return selected, original
 
 
 def render(text, params):
@@ -116,20 +139,33 @@ def ambiguity(alternatives, answer):
     return {"passed": True, "count": len(numbers), "answers": numbers}
 
 
-def instances(variant, points, simulator, sandbox, tolerance, trials):
-    result, mc = [], []
+def instances(variant, points, simulator, sandbox, tolerance, trials, *, limit=20):
+    result, mc, seen, dropped = [], [], set(), 0
     for index, params in enumerate(points):
+        key = tuple(sorted(params.items()))
+        if key in seen:
+            continue
+        seen.add(key)
         solved = sandbox.run(variant["solver"], "solve", params)
         answer = number(solved["answer"])
         steps = solved["steps"]
         if {row["name"] for row in steps} != set(variant["step_names"]):
             raise Reject("steps", "names_do_not_match")
-        wrong = []
+        wrong, values, gaps = [], [], []
+        collision = False
         for method in variant["wrong"]:
             value = number(sandbox.run(method["code"], "solve", params)["answer"])
-            if abs(value - answer) <= tolerance:
-                raise Reject("wrong_methods", "collision", {"point": index, "value": str(value)})
+            gap = abs(value - answer)
+            if gap <= tolerance:
+                collision = True
             wrong.append({"value": str(value), "misconception": method["misconception"]})
+            values.append(value)
+            gaps.append({"misconception": method["misconception"], "absolute_gap": str(gap),
+                         "relative_gap": str(gap / abs(answer)) if answer else None})
+        if collision:
+            dropped += 1
+            continue
+        pair_gap = min(abs(a - b) for a, b in itertools.combinations(values, 2))
         sampled = sandbox.run(simulator, "sample", params, trials=trials, seed=941 + index)
         mean, se = number(sampled["mean"]), sampled["se"]
         if (sampled["trials"] < trials or sampled["draws"] < trials or not math.isfinite(se) or se < 0
@@ -140,7 +176,14 @@ def instances(variant, points, simulator, sandbox, tolerance, trials):
                    "error": float(abs(mean - answer)), "limit": 4 * se,
                    "trials": sampled["trials"], "draws": sampled["draws"]})
         result.append({"text": render(variant["text"], params), "params": params, "answer": str(answer),
-                       "tolerance": str(tolerance), "wrong": wrong, "steps": steps})
+                       "tolerance": str(tolerance), "wrong": wrong, "steps": steps,
+                       "separation": {"by_misconception": gaps, "min_wrong_pair_gap": str(pair_gap)}})
+        if limit is not None and len(result) >= limit:
+            break
+    if len(result) < 20:
+        raise Reject("wrong_methods", "fewer_than_twenty_instances",
+                     {"survivors": len(result), "dropped_collisions": dropped})
     if not any(row["se"] > 0 for row in mc):
         raise Reject("monte_carlo", "no_stochastic_outcomes")
-    return result, {"passed": True, "points": mc, "point_count": len(points), "standard_errors": 4}
+    return result, {"passed": True, "points": mc, "point_count": len(result),
+                    "dropped_collisions": dropped, "candidates_checked": len(seen), "standard_errors": 4}

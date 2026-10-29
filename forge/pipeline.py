@@ -15,7 +15,7 @@ from forge.verify import ambiguity, instances, near_verbatim, parameter_grid, po
 
 STAGES = ("answer_pass", "numeric_answer", "author", "parameters", "original_answer", "novelty",
           "simulator", "simulator_independence", "wrong_methods", "steps", "monte_carlo",
-          "reading_model", "readings", "blind_model", "blind_checker", "part2", "part2_blind_model", "accepted")
+          "instances", "reading_model", "readings", "blind_model", "blind_checker", "part2", "part2_blind_model", "accepted")
 
 ANSWER_PROMPT = """Extract the final answer from the worked solution, not a count or an intermediate value.
 Classify as numeric_single, symbolic, multiple_choice, multi_part, proof_or_explanation, or code.
@@ -28,12 +28,12 @@ Do not copy names, story wording or sentences. Do not reveal the answer or a wor
 The answer is supplied only to anchor original parameters.
 Use plain {parameter_name} fields, no conversions or format specifications. All parameters must appear in text.
 Ranges are discrete exact rationals: minimum, maximum, positive step, original (all strings).
-Ensure at least 8 valid distinct points, including all edges. Use independent valid parameter ranges.
+Ensure at least 20 well-spread valid distinct points, including valid edge-ish values. Use independent valid parameter ranges.
 solver is Python defining solve(params), returning {"answer": Fraction/int, "steps": {named_value: Fraction/int}}.
 Use fractions.Fraction and exact arithmetic, never float for solvers. step_names must match the returned steps.
 Supply 2-4 distinct named wrong-method solvers, each defining solve(params) returning its exact wrong value.
 Misconception and step names use lowercase letters, digits, underscores. Wrong values must never match correct
-values throughout ranges. Imports limited to math, fractions, random, itertools, functools.
+values at the original parameters and at least 20 well-spread valid points; colliding instances are dropped. Imports limited to math, fractions, random, itertools, functools.
 No files, network, introspection, classes, decorators, dynamic imports or runtime generated code.
 Optional part2 uses exactly the same setup/base parameters plus ONE extra named parameter with its own range,
 solver, steps, and 2-4 wrong solvers. If absent: enabled false, empty strings/lists, dummy parameter strings."""
@@ -63,7 +63,7 @@ class Pipeline:
         self.output, self.funnel = Path(output), Path(funnel)
         self.sandbox = sandbox or Sandbox()
         self.trials, self.max_similarity, self.priority = trials, max_similarity, tuple(priority)
-        settings = {"trials": trials, "max_similarity": max_similarity}
+        settings = {"trials": trials, "max_similarity": max_similarity, "minimum_instances": 20, "instance_format": 2}
         if self.state.data.setdefault("verification_settings", settings) != settings:
             raise ValueError("Resume with the original verification settings or a new private work directory")
 
@@ -105,7 +105,7 @@ class Pipeline:
         self.attempt(item, "parameters")
         points, original = points_for(draft["parameters"])
         validate_variant(draft, original)
-        self.passed(item, "parameters", {"instance_count": len(points), "original": original, "edges_included": True})
+        self.passed(item, "parameters", {"candidate_count": len(points), "original": original, "edge_candidates_included": True})
         self.attempt(item, "original_answer")
         baseline = self.sandbox.run(draft["solver"], "solve", original)
         baseline_answer = number(baseline["answer"])
@@ -126,18 +126,22 @@ class Pipeline:
         simulator = self.call(item, "simulator", {
             "question": draft["text"], "part2_question": draft["part2"]["text"] if draft["part2"]["enabled"] else ""},
             schemas.SIMULATOR, SIM_PROMPT, author=True)
+        self.attempt(item, "instances")
         self.attempt(item, "wrong_methods")
         self.attempt(item, "monte_carlo")
         computed, mc = instances(draft, points, simulator["code"], self.sandbox, answer.tolerance, self.trials)
-        self.passed(item, "wrong_methods", {"method_count": len(draft["wrong"]), "points": len(points)})
+        self.passed(item, "instances", {"minimum": 20, "count": len(computed), "well_spread_candidates": True,
+                    "dropped_collisions": mc["dropped_collisions"], "separation": True})
+        self.passed(item, "wrong_methods", {"method_count": len(draft["wrong"]), "points": len(computed),
+                    "dropped_collisions": mc["dropped_collisions"]})
         self.passed(item, "monte_carlo", mc)
-        self.passed(item, "steps", {"named_values": len(draft["step_names"]), "points": len(points)})
+        self.passed(item, "steps", {"named_values": len(draft["step_names"]), "points": len(computed)})
         self.passed(item, "simulator_independence", {"question_only_call": True,
                     "allowed_imports_only": True, "random_draws_verified": True})
         readings = self.call(item, "reading_model", {"question": question.statement}, schemas.READINGS, READINGS_PROMPT)
         self.attempt(item, "readings")
         self.passed(item, "readings", ambiguity(readings["alternatives"], answer))
-        # Index 0 is the stored/original point. Choose a genuinely new point.
+        # The original point may have been dropped for a wrong-method collision. Choose a new twin.
         twin = next(value for value in computed if value["params"] != original)
         blind = self.call(item, "blind_model", {"question": twin["text"]}, schemas.BLIND, BLIND_PROMPT)
         self.attempt(item, "blind_checker")
@@ -148,7 +152,7 @@ class Pipeline:
         if draft["part2"]["enabled"]:
             self.attempt(item, "part2")
             try:
-                part2_check, part2_instances = self.part2(draft, points, original, simulator["part2_code"], statements, item)
+                part2_check, part2_instances = self.part2(draft, [row["params"] for row in computed], original, simulator["part2_code"], statements, item)
                 for instance, extra in zip(computed, part2_instances):
                     instance["part2"] = extra
                 self.passed(item, "part2", part2_check)
@@ -157,7 +161,7 @@ class Pipeline:
                 item["gates"]["part2"] = part2_check
                 self.state.save()
         verification = {key: value for key, value in item["gates"].items() if key in {
-            "parameters", "original_answer", "novelty", "monte_carlo", "wrong_methods", "steps", "simulator_independence",
+            "parameters", "original_answer", "novelty", "monte_carlo", "wrong_methods", "steps", "simulator_independence", "instances",
             "readings", "blind_checker"}}
         verification["part2"] = part2_check
         topic = min(question.topics, key=lambda t: self.priority.index(t) if t in self.priority else len(self.priority))
@@ -177,20 +181,22 @@ class Pipeline:
         if similarity >= self.max_similarity:
             raise Reject("part2", "near_verbatim", {"similarity": similarity})
         values = grids[extra["name"]]
-        selected = [{**point, extra["name"]: values[i % len(values)]} for i, point in enumerate(base_points)]
+        selected = [{**point, extra["name"]: values[i * (len(values) - 1) // (len(base_points) - 1)]} for i, point in enumerate(base_points)]
         # Also verify all base and extra-parameter edges, even if not exported.
         edges, _ = points_for([*draft["parameters"], extra])
         points = list({tuple(sorted(p.items())): p for p in [*selected, *edges]}.values())
-        computed, mc = instances(variant, points, simulator, self.sandbox, Fraction(0), self.trials)
+        computed, mc = instances(variant, points, simulator, self.sandbox, Fraction(0), self.trials, limit=None)
         lookup = {tuple(sorted(row["params"].items())): row for row in computed}
-        exported = [lookup[tuple(sorted(point.items()))] for point in selected]
+        exported = [lookup[tuple(sorted(point.items()))] for point in selected if tuple(sorted(point.items())) in lookup]
+        if len(exported) < 20:
+            raise Reject("part2", "fewer_than_twenty_instances", {"survivors": len(exported)})
         twin = next(row for row in exported if row["params"] != part_original)
         blind = self.call(item, "part2_blind_model", {"question": twin["text"]}, schemas.BLIND, BLIND_PROMPT)
         if number(blind["answer"]) != number(twin["answer"]):
             raise Reject("part2", "blind_mismatch")
         return {"passed": True, "monte_carlo": mc, "blind_solver": twin["answer"],
                 "blind_checker": str(number(blind["answer"])), "similarity": similarity,
-                "wrong_methods_verified": True}, exported
+                "wrong_methods_verified": True, "instance_count": len(exported), "separation": True}, exported
 
     def report(self, counts, questions, status):
         empty_stages = lambda: {name: {"attempted": 0, "passed": 0} for name in STAGES}
@@ -251,7 +257,8 @@ class Pipeline:
                   "billing": billing, "billing_per_stage": stage_billing, "billing_per_topic": topic_billing, "cost_usd": str(self.models.spent()),
                   "budget_usd": str(self.models.budget), "prices_per_million": self.state.data.get("prices", {}),
                   "latency_s": sum(row["latency_s"] for row in self.state.data["calls"].values()),
-                  "configuration": {"trials": self.trials, "max_similarity": self.max_similarity},
+                  "configuration": {"trials": self.trials, "max_similarity": self.max_similarity,
+                                    "minimum_instances": 20, "instance_format": 2},
                   "latency_basis": "recorded_model_calls_once",
                   "live_pilot_verified": False, "builder_audit_complete": False}
         atomic_json(self.funnel, report)

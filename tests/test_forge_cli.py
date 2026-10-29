@@ -53,6 +53,10 @@ def test_cli_fake_pilot_resume_and_no_bank_text_in_public_output(tmp_path, monke
     assert question().statement not in public and question().question_id not in public
     report = json.loads((tmp_path / "forge" / "funnel.json").read_text(encoding="utf-8"))
     assert report["accepted_templates"] == 1 and report["acceptance_rate"] == 1
+    artifact = json.loads(next((tmp_path / "content" / "forge").glob("*.json")).read_text(encoding="utf-8"))
+    assert len(artifact["instances"]) >= 20
+    assert all("separation" in row and len(row["wrong"]) == 2 for row in artifact["instances"])
+    assert report["configuration"]["minimum_instances"] == 20
     assert report["billing_per_topic"]["probability"]["calls"] == 5
     assert report["billing_per_stage"]["author"]["calls"] == 1
     paid = len(author.calls) + len(checker.calls)
