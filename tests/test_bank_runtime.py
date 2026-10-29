@@ -16,8 +16,8 @@ from app import interview_report, interview_routes, voice_routes
 from app.interview_session import ExamSession, VoiceAnalyzer, context_for
 from app.main import app
 from engine.answers import StatedNumber
-from engine.bank import (MIN_INSTANCES, BankSource, ForgeError, instance_puzzle, load_bank,
-                         parse_template, twin_index)
+from engine.bank import (MIN_INSTANCES, PREVIOUS_ANSWER, BankSource, Diagnostic, ForgeError,
+                         instance_puzzle, load_bank, parse_template, twin_choice)
 from engine.checker import accepts, parse_exact, parse_value, values_in
 from engine.coding import Outcome, code_answer
 from engine.help import position
@@ -144,8 +144,132 @@ def test_twin_is_another_instance_with_a_different_answer(bank):
     t = bank.templates["fx_dice_total"]
     for seed in range(20):
         for original in range(len(t.instances)):
-            i = twin_index(t, original, random.Random(seed))
-            assert i != original and t.instances[i].answer != t.instances[original].answer
+            for suspect in (None, EQUAL_TOTALS, BY_SIX):
+                i, _ = twin_choice(t, original, random.Random(seed), suspect)
+                assert i != original and t.instances[i].answer != t.instances[original].answer
+
+
+EQUAL_TOTALS = "treats the eleven possible totals as equally likely"
+BY_SIX = "divides by six instead of thirty-six outcomes"
+
+
+def test_diagnostic_twin_separates_the_suspected_misconception(bank):
+    """Decision log 16. Original: total 6, 5/36 (total 8 shares the answer, so it is never the twin)."""
+    t = bank.templates["fx_dice_total"]
+    # 1/11 everywhere: total 12 (1/36) is furthest from it.
+    assert twin_choice(t, 3, random.Random(0), EQUAL_TOTALS) == (8, Diagnostic(EQUAL_TOTALS, Fraction(1, 36), Fraction(1, 11), True))
+    # ways/6: totals 5 and 9 (1/9 against 2/3) tie on that gap and on the tie-break; either is drawn.
+    seen = {twin_choice(t, 3, random.Random(seed), BY_SIX) for seed in range(30)}
+    assert seen == {(i, Diagnostic(BY_SIX, Fraction(1, 9), Fraction(2, 3), True)) for i in (2, 5)}
+
+
+def test_diagnostic_twin_tie_break_is_the_gap_to_other_wrong_methods(bank):
+    """Mean template, suspected "divides the new total by the old count": totals over 4 vs 5.
+    Gaps tie between instances; the tie-break keeps the other methods furthest away."""
+    t = bank.templates["fx_mean_added"]
+    old_count = "divides the new total by the old count"
+    gaps = {i: abs(inst.answer - inst.wrong[1].value) for i, inst in enumerate(t.instances) if i != 0}
+    best = max(gaps.values())
+    tied = [i for i, g in gaps.items() if g == best]
+    i, why = twin_choice(t, 0, random.Random(1), old_count)
+    assert i in tied and why.suspected and why.wrong == t.instances[i].wrong[1].value
+    def rest(j):
+        inst = t.instances[j]
+        return min(abs(inst.answer - inst.wrong[0].value), abs(inst.answer - t.instances[0].answer))
+    assert rest(i) == max(rest(j) for j in tied)
+
+
+def test_without_a_suspect_the_twin_maximises_the_smallest_gap(bank):
+    t = bank.templates["fx_dice_total"]
+    i, why = twin_choice(t, 3, random.Random(0))
+    # total 12: 1/36 is 0.063 from 1/11, its closest wrong method (5/36 and 1/6 are further).
+    assert i == 8 and why == Diagnostic(EQUAL_TOTALS, Fraction(1, 36), Fraction(1, 11), False)
+    # A misconception the template does not name is not a suspect here.
+    assert twin_choice(t, 3, random.Random(0), "some other error") == (i, why)
+    # Repeating the previous answer counts as a wrong method.
+    i, why = twin_choice(t, 8, random.Random(0))
+    assert why.misconception in {EQUAL_TOTALS, PREVIOUS_ANSWER, BY_SIX}
+    others = [j for j in range(9) if j != 8 and t.instances[j].answer != t.instances[8].answer]
+    nearest = lambda j: min([abs(t.instances[j].answer - w.value) for w in t.instances[j].wrong]
+                            + [abs(t.instances[j].answer - t.instances[8].answer)])
+    assert nearest(i) == max(nearest(j) for j in others) == abs(why.correct - why.wrong)
+
+
+class _Source:
+    """Records the suspect each twin is aimed at."""
+
+    def __init__(self):
+        self.suspects, self.n = [], 0
+
+    def candidates(self):
+        return ["a", "b", "c"][self.n:]
+
+    def new(self, template_id):
+        self.n += 1
+        return template_id
+
+    def twin(self, puzzle, suspect=None):
+        self.suspects.append(suspect)
+        return puzzle + "'"
+
+
+def test_interview_aims_the_twin_at_the_suspected_misconception():
+    from engine.coding import Observation
+    # A named wrong first answer is the suspect.
+    iv = Interview(source=_Source())
+    iv.next_question()
+    iv.record(Observation(Outcome.NAMED_WRONG, misconception="m1"))
+    assert iv.next_question().kind == "twin" and iv.source.suspects == ["m1"]
+    # Recovered after a challenge: scored Correct, but the error it showed still aims the twin.
+    iv = Interview(source=_Source())
+    iv.next_question()
+    iv.record(Observation(Outcome.CORRECT), weight=Fraction(2, 3), misconception="m2")
+    iv.next_question()
+    assert iv.source.suspects == ["m2"]
+    # Right first time: no suspect from that question; an earlier one counts only while M leads.
+    iv = Interview(source=_Source())
+    iv.next_question()
+    iv.record(Observation(Outcome.CORRECT))
+    assert iv.suspected is None
+    iv._named = ["m0"]
+    iv.posterior = {"S": Fraction(2, 10), "M": Fraction(5, 10), "G": Fraction(3, 10)}
+    assert iv.suspected == "m0"
+    iv.posterior = {"S": Fraction(5, 10), "M": Fraction(3, 10), "G": Fraction(2, 10)}
+    assert iv.suspected is None
+
+
+def test_session_twin_is_aimed_and_explained_after_it_is_answered(bank):
+    """Q1 named wrong and not recovered: the twin is the instance furthest from that error,
+    and "Why these numbers?" arrives only once the twin is scored."""
+    averages = "averages the old mean with the new number"
+
+    def policy(session, events):
+        q = session.questions[-1]
+        m, x = q.puzzle.params["mean"], q.puzzle.params["added"]
+        if q.kind == "new":
+            return f"My answer is {frac(Fraction(m + x, 2))}, because I averaged them."
+        return f"My answer is {frac(q.puzzle.answer)}, because the new total is {4 * m + x} over 5 numbers."
+
+    session, events, _ = run(BankSource(bank, "Statistics", "Medium", rng=random.Random(4)), policy)
+    q1, q2 = session.questions
+    assert q1.scored == "named_wrong" and q2.kind == "twin"
+    t = bank.templates["fx_mean_added"]
+    gap = lambda j: abs(t.instances[j].answer - t.instances[j].wrong[0].value)
+    assert gap(q2.puzzle.instance) == max(gap(j) for j in range(9) if j != q1.puzzle.instance
+                                          and t.instances[j].answer != q1.puzzle.answer)
+    assert q2.puzzle.diagnostic.suspected and q2.puzzle.diagnostic.misconception == averages
+    scored = [e for e in events if e["type"] == "scored"]
+    assert [e["why"] is None for e in scored] == [True, False]
+    assert f"Suspected error ({averages})" in scored[1]["why"]
+    twin_question = next(i for i, e in enumerate(events) if e["type"] == "question" and e["kind"] == "twin")
+    assert events.index(scored[1]) > twin_question
+    assert not any("Suspected error" in str(e) for e in events[:events.index(scored[1])])
+
+    report = interview_report.build(session)
+    why = report["report"]["breakdown"][1]["items"][-1]
+    assert why["title"] == "Why these numbers?" and why["why"]["suspected"] is True
+    assert why["why"]["correct"] == say.value(q2.puzzle.answer)
+    assert all(item["title"] != "Why these numbers?" for item in report["report"]["breakdown"][0]["items"])
 
 
 def test_ladder_starts_easy_or_medium_and_steps_on_first_answers(bank):
@@ -291,7 +415,9 @@ def test_statistics_session_part2_challenge_help_and_report(bank):
     assert q1_items[-1]["question"] == q1.puzzle.part2.text
     assert q2_items[0]["misconception"] == "averages the old mean with the new number"
     assert q2_items[0]["quote"] in script
-    assert q2_items[-1]["title"] == "Part 2: right"
+    assert q2_items[-2]["title"] == "Part 2: right"
+    # Q1 was right first time: no suspect, so the twin keeps every wrong method far away.
+    assert q2_items[-1]["title"] == "Why these numbers?" and q2_items[-1]["why"]["suspected"] is False
     assert "Statistics, Medium" in report["report"]["breakdown"][0]["sub"]
     assert report["outcomes"][1]["help_load"] == 1
     assert report["tip"] == interview_report.FORGE_TIP

@@ -286,6 +286,7 @@ class ExamSession:
         self.timed_out = False
         self.finished = False
         self._acks = 0
+        self._scored: list[QuestionLog] = []
 
     # --- events ---
     async def line(self, kind: str, text: str, target: int | None = None) -> None:
@@ -310,6 +311,8 @@ class ExamSession:
                     break
                 await self.ask(question)
                 await self.question_loop(self.questions[-1])
+                if self.questions[-1].scored is not None:
+                    await self.scored_event()
                 if self.deadline is not None and self.clock() >= self.deadline and not self.interview.finished:
                     self.timed_out = True
                     break
@@ -503,9 +506,18 @@ class ExamSession:
         return text
 
     def _score(self, q: QuestionLog, obs: Observation, weight: Fraction, recovered: bool) -> None:
-        self.interview.record(obs, weight=weight, help_load=q.help_load)
+        named = q.first_wrong[0].misconception if q.first_wrong else None
+        self.interview.record(obs, weight=weight, help_load=q.help_load, misconception=named)
         ladder = getattr(self.interview.source, "step", None)
         if ladder is not None:  # difficulty ladder: moves on the question's first answer
             ladder(q.first_wrong[0].outcome if q.first_wrong else obs.outcome)
         q.scored, q.weight, q.recovered = obs.outcome.value, weight, recovered
         q.seconds = self.clock() - q.started
+        self._scored.append(q)
+
+    async def scored_event(self) -> None:
+        """After each scored answer: the twin's "Why these numbers?" note (decision log 16)."""
+        q = self._scored[-1]
+        diagnostic = getattr(q.puzzle, "diagnostic", None)
+        await self.send({"type": "scored", "number": q.number, "outcome": q.scored,
+                         "why": say.why_numbers(diagnostic) if diagnostic is not None else None})

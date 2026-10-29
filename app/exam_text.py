@@ -110,6 +110,23 @@ GENERIC_NUDGE = "Talk me through the counts you'd need to get there."
 FORGE_NUDGE = "Talk me through the steps you'd need to get there."
 
 
+def value(x: Fraction) -> str:
+    """An exact value for display: whole numbers as they are, others as n/d ≈ decimal."""
+    x = Fraction(x)
+    return str(x.numerator) if x.denominator == 1 else f"{x.numerator}/{x.denominator} ≈ {float(x):.4g}"
+
+
+def why_numbers(diagnostic) -> str:
+    """The "Why these numbers?" note for a diagnostic twin (decision log 16). Shown only
+    after the twin is answered: before, the right value would give the answer away."""
+    right = f"Right method: {value(diagnostic.correct)}."
+    if diagnostic.suspected:
+        return (f"{right} Suspected error ({diagnostic.misconception}): {value(diagnostic.wrong)}. "
+                "These numbers were picked to keep the two far apart.")
+    return (f"{right} Closest wrong method ({diagnostic.misconception}): {value(diagnostic.wrong)}. "
+            "These numbers were picked to keep every known wrong method far from the right answer.")
+
+
 def forge_step_prompt(name: str) -> str:
     """A forge solution-map step, asked by its name only (no new numbers)."""
     return f"What do you get for the {name.replace('_', ' ').strip().rstrip('.?')}?"

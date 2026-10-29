@@ -155,7 +155,7 @@ class _ItemSource:
         self.asked = True
         return self.original
 
-    def twin(self, puzzle):
+    def twin(self, puzzle, suspect=None):
         return self.twin_puzzle
 
 

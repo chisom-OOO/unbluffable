@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from fractions import Fraction
 
+from app import exam_text as say
 from app.interview_session import ExamSession, QuestionLog
 from engine.bank import ForgePuzzle
 from engine.labels import Label
@@ -148,6 +149,16 @@ def question_items(q: QuestionLog) -> list[dict]:
     return items + ([part2] if part2 else [])
 
 
+def why_item(q: QuestionLog) -> dict | None:
+    """"Why these numbers?" for a diagnostic twin (decision log 16)."""
+    diagnostic = getattr(q.puzzle, "diagnostic", None)
+    if diagnostic is None:
+        return None
+    return {"title": "Why these numbers?", "text": say.why_numbers(diagnostic), "seen": [q.number],
+            "why": {"misconception": diagnostic.misconception, "suspected": diagnostic.suspected,
+                    "correct": say.value(diagnostic.correct), "wrong": say.value(diagnostic.wrong)}}
+
+
 def build(session: ExamSession) -> dict:
     iv = session.interview
     qs = [q for q in session.questions if q.scored is not None]
@@ -223,6 +234,6 @@ def build(session: ExamSession) -> dict:
                            + (f"{q.puzzle.topic}, {q.puzzle.difficulty} · " if isinstance(q.puzzle, ForgePuzzle) else "")
                            + f"{round(q.seconds or 0) // 60}:{round(q.seconds or 0) % 60:02d} against a "
                            f"{q.guide_seconds // 60}:{q.guide_seconds % 60:02d} guide · {help_phrase(q)}",
-                           "items": question_items(q)} for q in qs],
+                           "items": question_items(q) + [w for w in [why_item(q)] if w]} for q in qs],
         },
     }

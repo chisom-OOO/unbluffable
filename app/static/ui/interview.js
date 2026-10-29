@@ -218,8 +218,13 @@ document.addEventListener("DOMContentLoaded", () => {
           + (event.difficulty ? ` · ${event.difficulty}` : "");
         finishReveals();
         questionStart = Date.now(); answeredThisQuestion = false; offered = false; heard = false;
+        $("why").hidden = true; $("why").open = false;
         counts({ challenges: 0, nudges: 0, hints: 0 });
         updateTimer();
+        break;
+      case "scored":
+        $("why").hidden = !event.why;
+        $("why-text").textContent = event.why || "";
         break;
       case "part2":
         $("puzzle").textContent = event.text;

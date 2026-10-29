@@ -76,10 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const item = (it) =>
       `<article class="report-item"><h3>${escapeHtml(it.title)}</h3>` +
       `<p>${escapeHtml(it.text)}</p>` +
-      `<p class="report-quote">“${escapeHtml(it.quote)}”</p>` +
+      (it.quote ? `<p class="report-quote">“${escapeHtml(it.quote)}”</p>` : "") +
       (it.number
         ? `<p class="check-line">You said <span class="mono">${escapeHtml(it.number.said)}</span>; exact maths: <span class="mono">${escapeHtml(it.number.exact)}</span>.</p>`
-        : `<p class="check-line">${escapeHtml(it.verdict)}</p>`) +
+        : it.verdict ? `<p class="check-line">${escapeHtml(it.verdict)}</p>` : "") +
       `<p class="chips">${it.seen.map((n) => `<span class="chip">Seen in: Question ${n}</span>`).join("")}</p></article>`;
     $("overall").textContent = r.overall;
     $("well").innerHTML = r.well.map(item).join("");
