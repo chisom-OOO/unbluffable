@@ -5,6 +5,7 @@ import hashlib
 import io
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -16,6 +17,8 @@ import logging
 
 import httpx
 
+from llm import backends
+from llm.client import MissingKey, _key
 from llm.http_diagnostics import request_id
 
 from voice.recording import RecordStore, VoiceError, redact
@@ -46,9 +49,11 @@ def metadata(data, mode, job):
     usage = response.get("usage") or {}
     inputs, outputs = usage.get("prompt_tokens"), usage.get("completion_tokens")
     cost = None
-    if data["kind"] in {"endpoint", "minimal", "extraction"} and type(inputs) is int and type(outputs) is int:
+    spark = data["kind"] in {"endpoint", "minimal", "extraction"}
+    model = data["request"].get("model", SPARK) if spark else ASR
+    if spark and model == SPARK and type(inputs) is int and type(outputs) is int:
         cost = (inputs * 1.25 + outputs * 4.25) / 1_000_000  # spec/03 assumed rates.
-    return {"model": SPARK if data["kind"] in {"endpoint", "minimal", "extraction"} else ASR,
+    return {"model": model,
             "job": job, "effort": data["request"].get("reasoning_effort"),
             "latency_s": data.get("latency_s"), "estimated_cost_usd": cost,
             "mode": mode, "run_id": data["run_id"], "recorded_at": data["recorded_at"]}
@@ -91,17 +96,27 @@ async def convert_to_wav(audio):
     return wav
 
 
+class IncompleteOutput(VoiceError):
+    """A truncated/refused response must never get a schema repair."""
+
+
 class MetaVoice:
     def __init__(self, mode="live", record_dir="recordings/voice", transport=None):
         if mode not in {"live", "replay"}:
             raise VoiceError("VOICE_MODE must be live or replay.")
         self.mode, self.store, self.transport = mode, RecordStore(record_dir), transport
+        try:
+            self.spark_backend = backends.get_backend()
+        except ValueError:
+            raise VoiceError("LLM_BACKEND must be meta_api or open_weights.") from None
 
     @classmethod
     def configured(cls):
         return cls(os.environ.get("VOICE_MODE", "live"), os.environ.get("VOICE_RECORD_DIR", "recordings/voice"))
 
     async def post(self, kind, request, endpoint, files=None):
+        if endpoint == "/chat/completions":
+            return await self.spark_post(kind, request)
         if self.mode == "replay":
             return self.store.find(kind, request)
         key = api_key()
@@ -137,23 +152,107 @@ class MetaVoice:
             raise VoiceError("The model request failed. Your transcript is available to edit or retry.") from None
         return record.data
 
-    async def structured(self, text, kind, effort, schema, prompt):
-        if not text.strip() or len(text) > 20_000:
-            raise VoiceError("Enter a nonempty answer of at most 20,000 characters.")
-        request = {"model": SPARK, "reasoning_effort": effort, "max_tokens": 4000,
-                   "messages": [{"role": "system", "content": prompt}, {"role": "user", "content": text}],
-                   "response_format": {"type": "json_schema", "json_schema": {"name": kind, "strict": True, "schema": schema}}}
-        record = await self.post(kind, request, "/chat/completions")
-        body = record["response"]
+    async def spark_post(self, kind, request):
+        if self.mode == "replay":
+            return self.store.find(kind, request)
+        try:
+            key = api_key() if self.spark_backend.name == "meta_api" else _key(self.spark_backend.key_variable)
+        except MissingKey:
+            raise VoiceError("Live mode needs BASETEN_API_KEY in the server environment. Recorded replay needs no key.") from None
+        record = self.store.create(kind, request, key)
+        start = time.perf_counter()
+        body = None
+        try:
+            body = redact(await self.spark_backend.acomplete(request, transport=self.transport), key)
+            record.finish(body, latency_s=time.perf_counter() - start)
+        except BaseException as error:
+            response = getattr(error, "response", None)
+            if response is not None:
+                try:
+                    body = redact(response.json(), key)
+                except (ValueError, TypeError):
+                    pass
+            record.finish(body, error="Model request failed or was cancelled.", latency_s=time.perf_counter() - start)
+            if isinstance(error, asyncio.CancelledError):
+                raise
+            LOG.warning("model call /chat/completions failed: %s", type(error).__name__)
+            raise VoiceError("The model request failed. Your transcript is available to edit or retry.") from None
+        return record.data
+
+    @staticmethod
+    def structured_request(backend, text, kind, effort, schema, prompt):
+        if not backend.enforces_schema:
+            prompt += (" Reply with only one JSON object, with no other text or code fences, matching "
+                       "this JSON Schema exactly: " + json.dumps(schema, separators=(",", ":")))
+            effort = "low"  # Muse Spark Open always reasons; matches the measured probe arm.
+        return {"model": backend.model, "reasoning_effort": effort, "max_tokens": 4000,
+                "messages": [{"role": "system", "content": prompt}, {"role": "user", "content": text}],
+                "response_format": {"type": "json_schema", "json_schema": {"name": kind, "strict": True, "schema": schema}}}
+
+    @staticmethod
+    def parse_structured(body, schema, open_weights=False):
         try:
             choice = body["choices"][0]
             if choice.get("finish_reason") != "stop" or choice["message"].get("refusal"):
-                raise VoiceError("Incomplete or refused model output was rejected.")
-            parsed = json.loads(choice["message"]["content"])
+                raise IncompleteOutput("Incomplete or refused model output was rejected.")
+            content = choice["message"]["content"]
+            if open_weights and isinstance(content, str):
+                content = re.sub(r"^\s*<think>.*?</think>\s*", "", content, flags=re.DOTALL)
+            parsed = json.loads(content)
             validate(parsed, schema)
+            return parsed
         except (KeyError, IndexError, TypeError, ValueError):
             raise VoiceError("The model returned an invalid extraction.") from None
-        return parsed, metadata(record, self.mode, kind)
+
+    async def structured(self, text, kind, effort, schema, prompt):
+        if not text.strip() or len(text) > 20_000:
+            raise VoiceError("Enter a nonempty answer of at most 20,000 characters.")
+        backend = self.spark_backend
+        request = self.structured_request(backend, text, kind, effort, schema, prompt)
+        record = None
+        if self.mode == "replay":
+            # Prefer an exact legacy Meta request when present, independent of the
+            # live switch. Existing flagship records and emitted metadata stay intact.
+            candidates = [backends.get_backend("meta_api"), backend, backends.get_backend("open_weights")]
+            for candidate in {item.name: item for item in candidates}.values():
+                candidate_request = self.structured_request(candidate, text, kind, effort, schema, prompt)
+                try:
+                    record = self.store.find(kind, candidate_request)
+                except VoiceError:
+                    continue
+                backend, request = candidate, candidate_request
+                break
+            if record is None:
+                raise VoiceError("No recorded result matches this answer. Use an existing replay or live mode.")
+        if record is None:
+            record = await self.post(kind, request, "/chat/completions")
+        repaired = False
+        first_latency = 0
+        try:
+            parsed = self.parse_structured(record["response"], schema, not backend.enforces_schema)
+        except IncompleteOutput:
+            raise
+        except VoiceError:
+            if backend.enforces_schema:
+                raise
+            # Open weights does not enforce the schema. One repair only; both
+            # HTTP calls have their own exact request/response record for replay.
+            repaired = True
+            first_latency = record.get("latency_s") or 0
+            try:
+                previous = record["response"]["choices"][0]["message"].get("content")
+            except (KeyError, IndexError, TypeError):
+                previous = None
+            repair = {**request, "messages": [*request["messages"],
+                {"role": "assistant", "content": previous if isinstance(previous, str) else ""},
+                {"role": "user", "content": "Your previous reply was invalid JSON for the requested schema. Reply again with only one JSON object matching the JSON Schema in the system message."}]}
+            record = await self.post(kind, repair, "/chat/completions")
+            parsed = self.parse_structured(record["response"], schema, True)
+        model = metadata(record, self.mode, kind)
+        if not backend.enforces_schema:
+            model["repaired"] = repaired
+            model["latency_s"] = first_latency + (model["latency_s"] or 0)
+        return parsed, model
 
     async def endpoint(self, text):
         return await self.structured(text, "endpoint", "minimal", ENDPOINT, ENDPOINT_PROMPT)
