@@ -19,3 +19,5 @@ AUTHOR = obj({"text": S, "parameters": arr(PARAM), "solver": S, "wrong": arr(WRO
 SIMULATOR = obj({"code": S, "part2_code": S})
 READINGS = obj({"alternatives": arr(obj({"reading": S, "answer": S, "tolerance": S}))})
 BLIND = obj({"answer": S})
+
+READING_TWINS = obj({"answers": arr(S)})

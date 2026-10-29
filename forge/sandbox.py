@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
 
 from forge.errors import Reject
 
@@ -24,6 +25,7 @@ class Sandbox:
             raise Reject("sandbox", "request_too_large")
         env = {k: os.environ[k] for k in ("SystemRoot", "WINDIR", "TEMP", "TMP") if k in os.environ}
         worker = Path(__file__).with_name("worker.py").resolve()
+        started = time.perf_counter()
         with tempfile.TemporaryDirectory(prefix="unbluffable-forge-") as temporary:
             process = subprocess.Popen([sys.executable, "-I", "-S", "-B", str(worker)],
                 stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -35,6 +37,8 @@ class Sandbox:
                 process.kill()
                 process.communicate()
                 raise Reject("sandbox", "timeout") from None
+        if process.returncode and time.perf_counter() - started >= self.timeout_s:
+            raise Reject("sandbox", "timeout")
         if process.returncode or len(output) > 1000000:
             raise Reject("sandbox", "process_limit_or_failure")
         try:

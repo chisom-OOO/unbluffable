@@ -65,10 +65,12 @@ def draft(part2=False):
 def response_for(stage, payload, blueprint=None):
     if stage == "answer_pass":
         return {"class": "numeric_single", "answer": "2", "quote": SOLUTION, "tolerance": "0", "tolerance_quote": "none"}
-    if stage == "author":
+    if stage in {"author", "author_repair"}:
         return copy.deepcopy(blueprint or draft())
-    if stage == "simulator":
+    if stage in {"simulator", "simulator_repair"}:
         return {"code": SIM, "part2_code": PART_SIM}
+    if stage == "reading_twins":
+        return {"answers": ["999", "999", "999"]}
     if stage == "reading_model":
         return {"alternatives": []}
     if stage in {"blind_model", "part2_blind_model"}:
@@ -92,7 +94,7 @@ class FakeModels:
 
     def call(self, stage, payload, *args, **kwargs):
         self.calls.append((stage, copy.deepcopy(payload)))
-        return copy.deepcopy(self.overrides.get(stage, response_for(stage, payload, self.blueprint)))
+        return copy.deepcopy(self.overrides[stage] if stage in self.overrides else response_for(stage, payload, self.blueprint))
 
 
 class FakeSandbox:
