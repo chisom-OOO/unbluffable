@@ -12,6 +12,8 @@ from fractions import Fraction
 from math import lcm
 from typing import Callable
 
+from engine.answers import StatedNumber, matches
+
 HALF = Fraction(1, 2)
 
 # Round population sizes for natural frequencies ("out of 2,000 transactions").
@@ -48,6 +50,10 @@ class Puzzle:
     @property
     def is_twin(self) -> bool:
         return self.recited is not None
+
+    def accepts(self, stated: StatedNumber, target: Fraction) -> bool:
+        """The tolerance rule of spec/02 §1; forge puzzles use their instance's tolerance."""
+        return matches(stated, target)
 
 
 @dataclass(frozen=True)

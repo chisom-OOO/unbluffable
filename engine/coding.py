@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
-from engine.answers import StatedNumber, matches
+from engine.answers import StatedNumber
 from engine.templates import Puzzle
 
 
@@ -51,13 +51,13 @@ def code_answer(
         raise ValueError(f"unknown reasoning code {reasoning_code!r}")
     if stated is None:
         return Observation(Outcome.VAGUE)
-    if matches(stated, puzzle.answer):
+    if puzzle.accepts(stated, puzzle.answer):
         # Correct number with unsupported or vague reasoning is Vague.
         outcome = Outcome.CORRECT if reasoning_code == "valid" else Outcome.VAGUE
         return Observation(outcome, stated)
-    if puzzle.recited is not None and matches(stated, puzzle.recited):
+    if puzzle.recited is not None and puzzle.accepts(stated, puzzle.recited):
         return Observation(Outcome.RECITED, stated)
-    hits = [nv for nv in puzzle.named_values if matches(stated, nv.value)]
+    hits = [nv for nv in puzzle.named_values if puzzle.accepts(stated, nv.value)]
     if hits:
         # Near-identical named values (e.g. f and P(+)) are reported together.
         return Observation(
