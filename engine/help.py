@@ -2,6 +2,7 @@
 
 Each hint or nudge targets a step of the template's fixed solution map. Its
 strength is the number of steps it gives away past the candidate's position;
+a forge template's solution map is its instance's steps (engine.bank);
 the help load H is the sum for a question. A Correct answer after help is
 discounted by mixing its likelihood row with an uninformative ¼.
 """
@@ -53,9 +54,15 @@ def position(
     """Furthest map step whose value the candidate has stated correctly (0 = none).
 
     Counts (steps 2-5) are checked against the population the candidate picked;
-    without one only the answer (step 6, a ratio) can be checked.
+    without one only the answer (step 6, a ratio) can be checked. A forge puzzle's
+    steps are checked by value, within the instance's tolerance.
     """
     said = {Fraction(x) for x in stated}
+    steps = getattr(puzzle, "steps", ())
+    if steps:
+        reached = [k for k, step in enumerate(steps, 1)
+                   if any(abs(step.value - x) <= puzzle.tolerance for x in said)]
+        return max(reached, default=0)
     if population is None:
         return 6 if puzzle.answer in said else 0
     values = step_values(puzzle, population)

@@ -25,6 +25,9 @@ SESSION_CLOSE = "That's the end of the interview. Your report is ready."
 TIME_CLOSE = "We're out of time, so let's stop there. Your report is ready."
 UNCHECKED = "Sorry, I couldn't check that. Could you say your answer again?"
 ASK_FOR_ANSWER = "What probability do you commit to?"
+ASK_FOR_VALUE = "What answer do you commit to?"  # forge templates: the answer need not be a probability
+PART2_INTRO = "Good. Here's a follow-up."
+PART2_CLOSE = "Thanks. Let's move on."
 ASK_WHY = "How did you get that?"
 HELP_ASK = "Sure, what are you stuck on?"
 OFFER_HELP = "Is there anything you're stuck on?"
@@ -36,6 +39,8 @@ def pct(x: Fraction) -> str:
 
 
 def puzzle_text(puzzle: Puzzle) -> str:
+    if getattr(puzzle, "text", ""):
+        return puzzle.text  # forge template instance: its own reworded text
     v = puzzle.params
     if puzzle.template_id == "T1":
         return (
@@ -102,3 +107,9 @@ def step_prompt(puzzle: Puzzle, target: int, population: int) -> str:
 
 
 GENERIC_NUDGE = "Talk me through the counts you'd need to get there."
+FORGE_NUDGE = "Talk me through the steps you'd need to get there."
+
+
+def forge_step_prompt(name: str) -> str:
+    """A forge solution-map step, asked by its name only (no new numbers)."""
+    return f"What do you get for the {name.replace('_', ' ').strip().rstrip('.?')}?"

@@ -220,7 +220,7 @@ def test_socket_runs_flagship_and_twin_with_typed_answers(monkeypatch):
     monkeypatch.setattr(voice_routes, "provider", lambda: provider)
     client = TestClient(app)
     with client.websocket_connect("/api/interview/ws") as socket:
-        socket.send_json({"type": "begin", "consent": True})
+        socket.send_json({"type": "begin", "consent": True, "topic": "fraud"})
         seen = drain(socket, {"state"})
         assert seen[0]["type"] == "session" and seen[0]["id"] and seen[0]["session_seconds"] == 600
         assert [e["type"] for e in seen[1:]] == ["question", "interviewer_line", "state"]
@@ -262,7 +262,7 @@ def test_socket_voice_capture_uses_the_realtime_relay(monkeypatch):
     monkeypatch.setattr(interview_routes, "realtime_answer", capture)
     client = TestClient(app)
     with client.websocket_connect("/api/interview/ws") as socket:
-        socket.send_json({"type": "begin", "consent": True})
+        socket.send_json({"type": "begin", "consent": True, "topic": "fraud"})
         drain(socket, {"state"})
         socket.send_json({"type": "capture", "sample_rate": 16000, "headphones": False, "interviewer_speaking": True})
         drain(socket, {"state"}); drain(socket, {"state"})
@@ -288,7 +288,7 @@ def test_socket_capture_error_returns_to_listening(monkeypatch):
     monkeypatch.setattr(interview_routes, "realtime_answer", capture)
     client = TestClient(app)
     with client.websocket_connect("/api/interview/ws") as socket:
-        socket.send_json({"type": "begin", "consent": True})
+        socket.send_json({"type": "begin", "consent": True, "topic": "fraud"})
         drain(socket, {"state"})
         socket.send_json({"type": "capture"})
         seen = drain(socket, {"state"})
@@ -421,7 +421,7 @@ def test_report_endpoint(monkeypatch):
     monkeypatch.setattr(voice_routes, "provider", lambda: provider)
     client = TestClient(app)
     with client.websocket_connect("/api/interview/ws") as socket:
-        socket.send_json({"type": "begin", "consent": True})
+        socket.send_json({"type": "begin", "consent": True, "topic": "fraud"})
         session_id = drain(socket, {"state"})[0]["id"]
         for answer in (Q1_RIGHT, Q2_RIGHT):
             socket.send_json({"type": "typed", "transcript": answer})
@@ -482,7 +482,7 @@ def test_socket_passes_a_puzzle_aware_silence_check_to_the_relay(monkeypatch):
     monkeypatch.setattr(interview_routes, "realtime_answer", capture)
     client = TestClient(app)
     with client.websocket_connect("/api/interview/ws") as socket:
-        socket.send_json({"type": "begin", "consent": True})
+        socket.send_json({"type": "begin", "consent": True, "topic": "fraud"})
         drain(socket, {"state"})
         socket.send_json({"type": "capture"})
         drain(socket, {"state"}); drain(socket, {"state"})

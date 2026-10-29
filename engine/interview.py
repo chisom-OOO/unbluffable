@@ -37,8 +37,13 @@ class Interview:
         rng: random.Random | None = None,
         likelihoods: Likelihoods | None = None,
         demo: bool = False,
+        source=None,
     ):
-        """`demo=True` uses the fixed flagship puzzle and twin for T1."""
+        """`demo=True` uses the fixed flagship puzzle and twin for T1.
+
+        `source` (e.g. engine.bank.BankSource) replaces T1-T3 with its own templates:
+        `candidates()` lists the template ids a new question may use, `new(id)` and
+        `twin(puzzle)` build puzzles. Selection, posterior and labels are unchanged."""
         self.rng = rng if rng is not None else random.Random()
         self.likelihoods = likelihoods if likelihoods is not None else load_likelihoods()
         self.demo = demo
@@ -50,7 +55,8 @@ class Interview:
         self._pending: Question | None = None
         self._current: Puzzle | None = None
         self._twin_after: Outcome | None = None  # first outcome, while the twin is unasked
-        self._unused = list(TEMPLATE_ORDER)
+        self.source = source
+        self._unused = list(TEMPLATE_ORDER) if source is None else []
 
     @property
     def answers(self) -> int:
@@ -78,7 +84,7 @@ class Interview:
             self.posterior,
             self.likelihoods,
             twin_after=self._twin_after,
-            unused_templates=self._unused,
+            unused_templates=self._candidates(),
         )
         if choice is None:
             self.finished = True
@@ -87,7 +93,8 @@ class Interview:
             puzzle = self._twin_of(self._current)
         else:
             puzzle = self._new_puzzle(choice.template_id)
-            self._unused.remove(choice.template_id)
+            if self.source is None:
+                self._unused.remove(choice.template_id)
         self._pending = Question(self.answers + 1, choice.kind, puzzle, choice.bits_per_minute)
         return self._pending
 
@@ -130,15 +137,22 @@ class Interview:
         self.label = label_for(self.posterior, self.answers)
         if should_stop(self.label, self.answers):
             self.finished = True
-        elif self._twin_after is None and not self._unused:
+        elif self._twin_after is None and not self._candidates():
             self.finished = True  # no candidates left
 
+    def _candidates(self) -> list[str]:
+        return self._unused if self.source is None else self.source.candidates()
+
     def _new_puzzle(self, template_id: str) -> Puzzle:
+        if self.source is not None:
+            return self.source.new(template_id)
         if self.demo and template_id == "T1":
             return flagship()
         return generate(template_id, self.rng)
 
     def _twin_of(self, puzzle: Puzzle) -> Puzzle:
+        if self.source is not None:
+            return self.source.twin(puzzle)
         if self.demo and puzzle == flagship():
             return flagship_twin()
         return make_twin(puzzle, self.rng)
