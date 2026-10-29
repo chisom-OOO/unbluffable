@@ -2,7 +2,8 @@
 
 Candidates: the current puzzle's twin (if not yet asked) or a new puzzle from an
 unused template. New puzzle = 2 minutes, twin = 1 minute. Entropy in bits.
-Ties go to the fixed order twin, T1, T2, T3.
+Ties go to the fixed order twin, T1, T2, T3, then any other template (a forge
+template from engine.bank) in the order given.
 """
 
 from __future__ import annotations
@@ -66,9 +67,10 @@ def choose_next(
     unused = set(unused_templates)
     if unused:
         rate = information_gain_per_minute(posterior, new_puzzle_table(likelihoods), NEW_PUZZLE_MINUTES)
-        for tid in TEMPLATE_ORDER:
-            if tid in unused:
-                candidates.append(("new", tid, rate))
+        ordered = [t for t in TEMPLATE_ORDER if t in unused]
+        ordered += [t for t in dict.fromkeys(unused_templates) if t not in TEMPLATE_ORDER]
+        for tid in ordered:
+            candidates.append(("new", tid, rate))
     if not candidates:
         return None
     best = candidates[0]
