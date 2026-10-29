@@ -12,7 +12,7 @@ it does not copy the CSV or print question/solution text.
 ```powershell
 $env:LLM_BACKEND = "open_weights"
 $csvPath = Read-Host "Full path to the bank CSV"
-.\.venv\Scripts\python.exe -m forge.run --mode live --csv $csvPath --limit 100 --topics "probability,expected value,combinatorics,conditional probability,statistics,markov chains" --budget-usd 40
+.\.venv\Scripts\python.exe -m forge.run --mode live --csv $csvPath --limit 100 --per-topic "probability=30,expected value=30,combinations and permutations=25,statistics=15" --topics "probability,expected value,combinations and permutations,statistics" --budget-usd 40 --work-dir data/forge/pilot20b
 ```
 
 Re-run the same command to resume. Completed accepted, rejected and nonnumeric
@@ -65,8 +65,8 @@ Blind-check requests have only one rendered question.
 
 1. The stored final answer must be quoted verbatim from the worked solution.
    Integer/fraction/percent/scientific numeric strings become Fraction values;
-   unsupported symbolic or compound expressions fail. Decimal answers require
-   an explicitly stated positive tolerance and a verbatim tolerance quote.
+   unsupported symbolic or compound expressions fail. Decimal answers use a stated
+   tolerance with a verbatim quote, or half the last decimal unit when unstated.
 2. The solver at original parameters must match the stored value (within its
    stated decimal tolerance). Named steps must match the returned intermediate values.
 3. The acceptance gate requires at least **20 distinct precomputed instances**.
@@ -89,8 +89,9 @@ Blind-check requests have only one rendered question.
    At least one checked point must have nonzero sample variance; dummy random
    calls followed by a deterministic exact-answer formula are rejected.
 6. Up to three alternative readings are independently answered. If any answer's
-   interval overlaps the stored answer interval, the stored key cannot rule it
-   out and the template is rejected. Non-numeric alternatives also fail closed.
+   interval overlaps the stored answer interval, reject unless it matches the
+   stored answer and all three twin answers match the main solver exactly.
+   Equivalent readings are recorded; non-numeric alternatives fail closed.
 7. Spark 1.3 must solve one new rendered twin exactly, blind to reference code/key.
 8. Novelty is the maximum of token-sequence similarity and word-trigram
    containment against every loaded eligible statement, considering both the
@@ -148,8 +149,8 @@ million for each backend, not a statement of current Baseten billing.
 Set actual agreed rates before the first call; the cap and reported costs are
 evaluated at configured rates. Prices and verification settings, including the
 20-instance gate and format,
-are frozen for resumption. Old eight-instance checkpoints are refused; start a
-separate job with --work-dir data/forge/pilot20 if one already exists. Limit, topic
+are frozen for resumption. Older verification revisions are refused; start a
+separate job with --work-dir data/forge/pilot20b if one already exists. Limit, topic
 order and budget up to $40 can change.
 
 Every cached exact response is reused, including repairs and failures. A job
@@ -173,3 +174,56 @@ wall time of a replay invocation.
 All fixtures are invented. Gate, budget, privacy, resume and CLI tests use fake
 models; sandbox tests also execute small invented programs under actual process
 limits. No live API calls or bank/capture reads are needed.
+
+## Pilot 20b changes
+
+Use a fresh private directory for this revision; older verification settings are
+refused. After exporting both keys and configuring agreed prices, run:
+
+```powershell
+$env:LLM_BACKEND = "open_weights"
+$csvPath = Read-Host "Full path to the bank CSV"
+.\.venv\Scripts\python.exe -m forge.run --mode live --csv $csvPath --limit 100 --per-topic "probability=30,expected value=30,combinations and permutations=25,statistics=15" --topics "probability,expected value,combinations and permutations,statistics" --budget-usd 40 --work-dir data/forge/pilot20b
+```
+
+Each question occupies one quota only. Matching reallocates multi-topic questions
+when necessary to fill scarce topics. Quotas must sum to --limit; --topics orders
+ties. No other topic silently fills a shortfall. The funnel reports requested,
+selected and missing counts. Selection and verification revision are frozen per job.
+
+Topic labels are parsed as whole JSON/Python list entries or delimited labels,
+case/whitespace cleaned, and common singular/plural aliases are combined. Single
+characters, malformed prose/notes and non-label values are excluded. The cleaned
+vocabulary contains only labels occurring in at least five CSV rows, before the
+locked/image/empty/duplicate row filters. Infrequent labels are dropped; questions
+can remain untagged. The funnel publishes this vocabulary with row counts.
+
+Numeric parsing accepts LaTeX frac/dfrac/tfrac, rational strings, approximation or
+equals prefixes, decimal percents, scientific notation and trailing units/words.
+It refuses multiple answers and arithmetic expressions. Unparsed answers are
+reported as counts, never echoed in logs. Decimal answers without a stated
+tolerance use half a unit in the last stated decimal place (percent precision is
+divided by 100); verification records tolerance_source=implied. Integer/fraction
+answers stay exact. An explicitly stated decimal tolerance still needs its quote.
+
+Solvers/steps return int or Fraction only. Float returns are TypeError failures;
+samplers accept bool/int/float/Fraction, with bool converted to int. Step labels
+are normalized to snake_case in declarations and returned values; collisions or
+unusable names still fail.
+
+One gate repair per item is allowed for TypeError, invalid template fields or
+step names, forbidden imports, or timeout. The author receives the draft, gate
+and safe error class. A simulator repair is a separate stateless call receiving
+only the question text and safe gate/error labels, never any solver, solution,
+answer, previous simulator code or earlier messages. Both calls use the existing
+budgeted record/replay. Pending repairs resume without duplicate spend. Schema
+format repair remains independently bounded to one correction per model call.
+No repair bypasses any acceptance gate. The funnel counts accepted_after_repair.
+
+An alternative reading matching the stored answer within its recorded tolerance gets
+three distinct twin questions, without reference answers or solver code. Only
+three exact matches to the main solver establish an "equivalent reading"; any
+mismatch rejects. Four SE, twenty instances, blind twins, novelty, random-event
+checks and sandbox/isolation restrictions remain unchanged. Render is counted
+passed only after successful rendering/validation. Accepted content still waits
+for builder audit and must not be committed before that review.
