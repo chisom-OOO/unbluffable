@@ -654,3 +654,124 @@ def test_receipt_check_uses_the_instance_tolerance(bank):
     assert receipts.check_text(q, parse_value("0.139"), q.answer) == (
         "A decimal may be within 0.005 of the exact value: it is 0.0001111 away, so it matches.")
     assert receipts.check_text(q, parse_value("5/37"), q.answer) == "Fractions must match exactly: 5/37 ≠ 5/36."
+
+
+# --- Drill mode (decision log 16) --------------------------------------------------------
+
+def test_drill_plan_aims_every_instance_at_the_misconception(bank):
+    from engine.bank import drill_plan
+    t = bank.templates["fx_dice_total"]
+    # Gaps to 1/11: total 12 (1/36) .063, total 8 (5/36) .048, totals 3 and 11 (1/18) .035, ...
+    drill, check = drill_plan(t, EQUAL_TOTALS, {3})
+    assert check == 8 and drill == [4, 0, 7]
+    assert drill_plan(t, EQUAL_TOTALS, set(range(8))) == ([], 8)
+    assert drill_plan(t, "not in this template", set()) == ([], None)
+
+
+def _dice_interview(bank):
+    """A Probability session: 1/11 (the named error) on every question."""
+    def policy(session, events):
+        return "My answer is 1/11, because there are 11 totals."
+    return run(BankSource(bank, "Probability", "Easy", rng=random.Random(1)), policy)
+
+
+def _drill(bank, parent, policy, index=0):
+    from app.drill import DrillSession, drill_targets
+    target = drill_targets(parent, bank.templates)[index]
+    events = []
+
+    async def send(event):
+        events.append(event)
+
+    async def listen():
+        return policy(session, events)
+
+    session = DrillSession(send, listen, VoiceAnalyzer(ScriptedProvider()), bank.templates[target.template_id], target)
+    asyncio.run(session.run())
+    return session, events
+
+
+def test_report_offers_a_drill_for_each_detected_misconception(bank):
+    parent, _, _ = _dice_interview(bank)
+    report = interview_report.build(parent, bank.templates)
+    assert report["drills"] == [{"index": 0, "misconception": EQUAL_TOTALS}]
+    assert interview_report.build(parent)["drills"] == []  # no templates: nothing to drill
+
+
+def test_drill_socratic_questions_then_a_check_still_showing(bank):
+    from app.drill import STILL_SHOWING
+    parent, _, _ = _dice_interview(bank)
+
+    def policy(session, events):
+        last = [e for e in events if e["type"] == "interviewer_line"][-1]
+        if last["kind"] == "challenge":
+            return "Can I get a hint"
+        if last["text"] == say.HELP_ASK:
+            return "I don't know where to start."
+        return "My answer is 1/11, because there are 11 totals."
+
+    session, events = _drill(bank, parent, policy)
+    used = {q.puzzle.instance for q in parent.questions}
+    drills = [q for q in session.questions]
+    assert [q.kind for q in drills] == ["drill"] * 3 and session.check.kind == "check"
+    instances = [q.puzzle.instance for q in drills] + [session.check.puzzle.instance]
+    assert len(set(instances)) == 4 and not used & set(instances)
+    assert all(q.puzzle.diagnostic.misconception == EQUAL_TOTALS and q.puzzle.part2 is None for q in drills)
+    assert all(q.scored == "named_wrong" and q.challenges == 1 and q.hints for q in drills)
+    assert session.check.scored == "named_wrong" and session.result == STILL_SHOWING
+    # Socratic only: every challenge, nudge and hint is a question or an invitation to talk it through.
+    lines = [e for e in events if e["type"] == "interviewer_line"]
+    helps = [e["text"] for e in lines if e["kind"] in {"challenge", "nudge", "hint"}]
+    assert helps and all(t.endswith("?") or t == say.FORGE_NUDGE for t in helps)
+    assert not any(e["type"] in {"part2"} for e in events)
+    assert all(e["meter"] is None and e["why"] for e in events if e["type"] == "scored")
+    # The check gets no help.
+    check_at = next(i for i, e in enumerate(events) if e["type"] == "question" and e["kind"] == "check")
+    assert not any(e["type"] == "interviewer_line" and e["kind"] in {"challenge", "nudge", "hint"} for e in events[check_at:])
+    assert events[-1] == {"type": "session_end", "drill": True, "result": STILL_SHOWING, "timed_out": False}
+
+    report = interview_report.build_drill(session)
+    assert report["drill"]["result"] == STILL_SHOWING and report["drill"]["misconception"] == EQUAL_TOTALS
+    assert report["label"] is None and report["tip"] is None and report["estimate"] == []
+    assert [t["tab"] for t in report["report"]["breakdown"]] == ["Drill 1", "Drill 2", "Drill 3", "Check"]
+    assert all(i["receipt"] for t in report["report"]["breakdown"] for i in t["items"])
+    assert [t["items"][0]["seen_names"] for t in report["report"]["breakdown"]] == [["Drill 1"], ["Drill 2"], ["Drill 3"], ["Check"]]
+
+
+def test_drill_right_first_time_moves_to_the_check_and_clears(bank):
+    from app.drill import CLEARED
+    parent, _, _ = _dice_interview(bank)
+
+    def policy(session, events):
+        q = session.check or session.questions[-1]
+        return f"My answer is {frac(q.puzzle.answer)}, because there are 36 equally likely outcomes."
+
+    session, events = _drill(bank, parent, policy)
+    assert len(session.questions) == 1 and session.questions[0].scored == "correct"
+    assert session.check.scored == "correct" and session.result == CLEARED
+    assert interview_report.build_drill(session)["drill"]["result"] == CLEARED
+
+
+def test_drill_over_the_socket_is_chosen_by_the_server(monkeypatch, bank):
+    parent, _, _ = _dice_interview(bank)
+    monkeypatch.setattr(interview_routes, "_BANK", bank)
+    from collections import OrderedDict
+    monkeypatch.setattr(interview_routes, "SESSIONS", OrderedDict(**{"parent-id": parent}))
+    monkeypatch.setattr(voice_routes, "provider", lambda: ScriptedProvider())
+    client = TestClient(app)
+    with client.websocket_connect("/api/interview/ws") as socket:
+        socket.send_json({"type": "begin", "consent": True, "drill": {"session": "parent-id", "index": 0}})
+        session_event = socket.receive_json()
+        assert session_event["type"] == "session" and session_event["drill"] == EQUAL_TOTALS
+        while (event := socket.receive_json())["type"] != "question":
+            pass
+        assert event["kind"] == "drill" and event["template"] == "fx_dice_total"
+        socket.send_json({"type": "end"})
+    for bad in ({"session": "parent-id", "index": 5}, {"session": "missing", "index": 0}, "parent-id",
+                {"session": "parent-id", "index": True}):
+        with client.websocket_connect("/api/interview/ws") as socket:
+            socket.send_json({"type": "begin", "consent": True, "drill": bad})
+            assert socket.receive_json() == {"type": "error", "message": "That drill is no longer available."}
+    drill_id = next(k for k, v in interview_routes.SESSIONS.items() if type(v).__name__ == "DrillSession")
+    data = client.get(f"/api/interview/{drill_id}/report").json()
+    assert data["drill"]["misconception"] == EQUAL_TOTALS and data["label"] is None

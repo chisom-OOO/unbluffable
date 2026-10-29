@@ -12,6 +12,7 @@ from fractions import Fraction
 
 from app import exam_text as say
 from app import receipts
+from app.drill import DrillSession, drill_targets
 from app.interview_session import ExamSession, QuestionLog
 from engine.bank import ForgePuzzle
 from engine.labels import Label
@@ -85,6 +86,10 @@ def help_phrase(q: QuestionLog) -> str:
 
 
 def name(q: QuestionLog) -> str:
+    if q.kind == "check":
+        return "Check"
+    if q.kind == "drill":
+        return f"Drill {q.number}"
     return f"Question {q.number}" + (" (twin)" if q.kind == "twin" else "")
 
 
@@ -175,15 +180,9 @@ def why_item(q: QuestionLog, questions: list[QuestionLog]) -> dict | None:
     return item
 
 
-def build(session: ExamSession) -> dict:
-    iv = session.interview
-    qs = [q for q in session.questions if q.scored is not None]
-    label = iv.label
-    misconception = iv.misconception if label is Label.MISCONCEPTION else None
-    first_errors = [q.first_wrong[0].misconception for q in qs if q.first_wrong and q.first_wrong[0].misconception]
-    tip_key = misconception or (first_errors[0] if first_errors else None)
-    forge = any(isinstance(q.puzzle, ForgePuzzle) for q in session.questions)
-
+def sections(qs: list[QuestionLog], forge: bool) -> dict:
+    """Report lines for scored questions: quotes, checks, times, outcomes, what went well,
+    what to improve and the per-question breakdown. Each line carries its receipt."""
     evidence, checks, hints, times, outcomes = [], [], [], [], []
     for q in qs:
         checked = [a for a in q.answers if a.outcome is not None]
@@ -222,6 +221,27 @@ def build(session: ExamSession) -> dict:
                             "seen": [q.number], "verdict": f"{q.hints} hint{'s' if q.hints != 1 else ''} used",
                             "receipt": score_receipt(q, q.said[0] if q.said else items[0]["quote"])})
 
+    kinds = {"twin": "Twin, new numbers", "drill": "Aimed at the mistake", "check": "New numbers, no help"}
+    breakdown = [{"tab": name(q), "sub": f"{kinds.get(q.kind, 'New puzzle')} · "
+                  + (f"{q.puzzle.topic}, {q.puzzle.difficulty} · " if isinstance(q.puzzle, ForgePuzzle) else "")
+                  + f"{round(q.seconds or 0) // 60}:{round(q.seconds or 0) % 60:02d} against a "
+                  f"{q.guide_seconds // 60}:{q.guide_seconds % 60:02d} guide · {help_phrase(q)}",
+                  "items": question_items(q) + [w for w in [why_item(q, qs)] if w]} for q in qs]
+    return {"evidence": evidence, "checks": checks, "hints": hints, "times": times, "outcomes": outcomes,
+            "well": well[:3], "improve": improve[:3], "breakdown": breakdown}
+
+
+def build(session: ExamSession, templates: dict | None = None) -> dict:
+    iv = session.interview
+    qs = [q for q in session.questions if q.scored is not None]
+    label = iv.label
+    misconception = iv.misconception if label is Label.MISCONCEPTION else None
+    first_errors = [q.first_wrong[0].misconception for q in qs if q.first_wrong and q.first_wrong[0].misconception]
+    tip_key = misconception or (first_errors[0] if first_errors else None)
+    forge = any(isinstance(q.puzzle, ForgePuzzle) for q in session.questions)
+
+    part = sections(qs, forge)
+
     n = len(qs)
     overall = f"{n} question{'s' if n != 1 else ''}, scored on where you ended up, discounted by the help it took. " + " ".join(
         f"{name(q)}: {outcome_text(q).lower()}." for q in qs)
@@ -235,26 +255,56 @@ def build(session: ExamSession) -> dict:
         "misconception": misconception_name(misconception),
         "misconception_note": MISCONCEPTIONS[misconception][1] if misconception in MISCONCEPTIONS else None,
         "questions": n,
-        "evidence": evidence,
-        "checks": checks,
-        "hints": hints,
+        "evidence": part["evidence"],
+        "checks": part["checks"],
+        "hints": part["hints"],
         "challenges": sum(q.challenges for q in qs),
         "nudges": sum(q.nudges for q in qs),
-        "outcomes": outcomes,
-        "times": times,
+        "outcomes": part["outcomes"],
+        "times": part["times"],
         # Escalation levels 2-3 are not built yet, so every session ends at level 1.
         "level": 1,
         "levels": LEVELS,
         "tip": TIPS[tip_key] if tip_key in TIPS else FORGE_TIP if forge else TIPS[None],
         "estimate": [{"label": text, "p": f"{float(iv.posterior[key]):.3f}"} for key, text in estimate_names],
-        "report": {
-            "overall": overall,
-            "well": well[:3],
-            "improve": improve[:3],
-            "breakdown": [{"tab": name(q), "sub": f"{'Twin, new numbers' if q.kind == 'twin' else 'New puzzle'} · "
-                           + (f"{q.puzzle.topic}, {q.puzzle.difficulty} · " if isinstance(q.puzzle, ForgePuzzle) else "")
-                           + f"{round(q.seconds or 0) // 60}:{round(q.seconds or 0) % 60:02d} against a "
-                           f"{q.guide_seconds // 60}:{q.guide_seconds % 60:02d} guide · {help_phrase(q)}",
-                           "items": question_items(q) + [w for w in [why_item(q, qs)] if w]} for q in qs],
-        },
+        "report": {"overall": overall, "well": part["well"], "improve": part["improve"], "breakdown": part["breakdown"]},
+        # Drill mode (decision log 16): one "Drill this mistake" per detected misconception.
+        "drills": [{"index": i, "misconception": t.misconception}
+                   for i, t in enumerate(drill_targets(session, templates or {}))],
+    }
+
+
+def build_drill(session: DrillSession) -> dict:
+    """The drill's report: "Cleared" or "Still showing" from the new-numbers check, then
+    the same lines and receipts as an interview report. Not an interview label."""
+    qs = [q for q in session.questions if q.scored is not None]
+    if session.check is not None and session.check.scored is not None:
+        qs.append(session.check)
+    part = sections(qs, True)
+    names = {q.number: name(q) for q in qs}
+    for item in part["well"] + part["improve"] + [i for tab in part["breakdown"] for i in tab["items"]]:
+        item["seen_names"] = [names[n] for n in item["seen"] if n in names]
+    n = len(qs)
+    overall = (f"{n} question{'s' if n != 1 else ''} aimed at one mistake. " + " ".join(
+        f"{name(q)}: {outcome_text(q).lower()}." for q in qs))
+    return {
+        "sample": False,
+        "drill": {"misconception": session.target.misconception, "result": session.result,
+                  "note": "From the final check, new numbers and no help: right with reasoning is Cleared."},
+        "label": None,
+        "misconception": None,
+        "questions": n,
+        "evidence": part["evidence"],
+        "checks": part["checks"],
+        "hints": part["hints"],
+        "challenges": sum(q.challenges for q in qs),
+        "nudges": sum(q.nudges for q in qs),
+        "outcomes": part["outcomes"],
+        "times": part["times"],
+        "level": None,
+        "levels": None,
+        "tip": None,
+        "estimate": [],
+        "report": {"overall": overall, "well": part["well"], "improve": part["improve"], "breakdown": part["breakdown"]},
+        "drills": [],
     }

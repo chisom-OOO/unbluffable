@@ -127,6 +127,14 @@ def why_numbers(diagnostic) -> str:
             "These numbers were picked to keep every known wrong method far from the right answer.")
 
 
+# Drill mode (decision log 16): questions only, no explanations.
+DRILL_OPENING = ("This drill has up to three questions aimed at one mistake, then one check with new numbers "
+                 "and no help. Talk me through each one out loud.")
+DRILL_CHECK_INTRO = "Last one: the check. New numbers, and no help this time."
+DRILL_NO_HELP = "This one is without help. Talk me through your best answer."
+DRILL_CHECK_THANKS = "Thanks."
+DRILL_CLOSE = "That's the end of the drill. Your result is ready."
+
 METER_CLASSES = (("S", "Sound"), ("M", "Misconception"), ("G", "Gap"))
 METER_FINAL = "No more questions, so this is the final estimate."
 

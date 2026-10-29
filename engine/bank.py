@@ -19,7 +19,7 @@ from __future__ import annotations
 import json
 import logging
 import random
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from fractions import Fraction
 from pathlib import Path
 
@@ -264,6 +264,40 @@ def twin_choice(template: ForgeTemplate, original: int, rng: random.Random,
     best = max(rank for rank, _ in scored.values())
     index = rng.choice([i for i, (rank, _) in scored.items() if rank == best])
     return index, scored[index][1]
+
+
+DRILL_ROUNDS = 3
+
+
+def drill_plan(template: ForgeTemplate, suspect: str, used: set[int],
+               rounds: int = DRILL_ROUNDS) -> tuple[list[int], int | None]:
+    """Drill mode (decision log 16): instances aimed at one misconception, none already
+    used. The check is the most diagnostic (largest gap between the right answer and
+    the misconception's value; ties: largest gap to the nearest other wrong method,
+    then the lower index); the drill questions are the next `rounds`. Only instances
+    that name the misconception and whose right answer differs from it qualify."""
+    def key(i: int):
+        inst = template.instances[i]
+        gap = min(abs(inst.answer - nv.value) for nv in inst.wrong if nv.misconception == suspect)
+        rest = [abs(inst.answer - nv.value) for nv in inst.wrong if nv.misconception != suspect]
+        return (-gap, -min(rest) if rest else float("-inf"), i)
+
+    aimed = [i for i, inst in enumerate(template.instances) if i not in used
+             and any(nv.misconception == suspect and nv.value != inst.answer for nv in inst.wrong)]
+    ranked = sorted(aimed, key=key)
+    if not ranked:
+        return [], None
+    return ranked[1:1 + rounds], ranked[0]
+
+
+def aimed_puzzle(template: ForgeTemplate, index: int, suspect: str, original: Puzzle | None = None) -> ForgePuzzle:
+    """An instance as a drill question, with its "Why these numbers?" diagnostic and no
+    part 2 (a drill asks only about the one mistake)."""
+    inst = template.instances[index]
+    wrong = min((nv.value for nv in inst.wrong if nv.misconception == suspect), key=lambda v: abs(inst.answer - v))
+    puzzle = instance_puzzle(template, inst, index, original=original,
+                             diagnostic=Diagnostic(suspect, inst.answer, wrong, True))
+    return replace(puzzle, part2=None)
 
 
 class BankSource:

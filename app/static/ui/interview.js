@@ -214,8 +214,11 @@ document.addEventListener("DOMContentLoaded", () => {
       case "question":
         question = event;
         $("puzzle").textContent = event.text;
-        $("puzzle-eyebrow").textContent = `Question ${event.number} of up to 4 · guide ${fmt(event.guide_seconds)}`;
-        $("puzzle-kind").textContent = (event.kind === "twin" ? "Same puzzle, new numbers" : "New puzzle")
+        $("puzzle-eyebrow").textContent = (event.kind === "check" ? "Drill check"
+          : event.kind === "drill" ? `Drill question ${event.number} of up to 3` : `Question ${event.number} of up to 4`)
+          + ` · guide ${fmt(event.guide_seconds)}`;
+        $("puzzle-kind").textContent = ({ twin: "Same puzzle, new numbers", drill: "Aimed at one mistake",
+                                          check: "New numbers, no help" }[event.kind] || "New puzzle")
           + (event.difficulty ? ` · ${event.difficulty}` : "");
         finishReveals();
         questionStart = Date.now(); answeredThisQuestion = false; offered = false; heard = false;
@@ -351,8 +354,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     socket = new WebSocket(`${location.protocol === "https:" ? "wss:" : "ws:"}//${location.host}/api/interview/ws`);
     const level = document.querySelector('input[name="level"]:checked')?.value || "Easy";
-    socket.onopen = () => socket.send(JSON.stringify({ type: "begin", consent: true, headphones: headphones.checked,
-                                                       topic: topicSelect.value || null, level }));
+    socket.onopen = () => socket.send(JSON.stringify(drill
+      ? { type: "begin", consent: true, headphones: headphones.checked, drill }
+      : { type: "begin", consent: true, headphones: headphones.checked, topic: topicSelect.value || null, level }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
       if (phase !== "finished") { phase = "finished"; voice.close(); setStatus("The connection closed. Reload to start again."); render(); }
@@ -482,6 +486,15 @@ document.addEventListener("DOMContentLoaded", () => {
     $("connection-note").className = "device-note bad";
     setStatus("Voice configuration is unavailable. You can still type your answers.");
   });
+
+  // ---------- Drill mode (decision log 16): /ui/interview?drill=<report session>&m=<n> ----------
+  const query = new URLSearchParams(location.search);
+  const drill = query.get("drill") ? { session: query.get("drill"), index: Number(query.get("m")) } : null;
+  if (drill) {
+    $("setup").querySelector(".picker").hidden = true;
+    $("puzzle").textContent = "The interviewer reads the first drill question when you start.";
+    $("puzzle-eyebrow").textContent = "Drill · up to 3 questions, then a check";
+  }
 
   // ---------- Topic picker: accepted forge templates per topic, Mixed, and the fraud alert ----------
   const topicSelect = $("topic");

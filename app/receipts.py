@@ -97,7 +97,7 @@ def weight_receipt(words: str, help_load: int, recovered: bool, weight: Fraction
         rows.append({"key": "weight", "label": "Weight on Correct",
                      "text": f"{formula} = {value(weight)}" + (" (+1 because it was recovered after the challenge)" if recovered else "")})
     else:
-        rows.append({"key": "weight", "label": "Scored", "text": "The first wrong or vague answer, at full weight."})
+        rows.append({"key": "weight", "label": "Scored", "text": "The opening wrong or vague answer, at full weight."})
     return {"words": words, "span": None, "rows": rows}
 
 

@@ -36,7 +36,7 @@ MAX_ROUNDS = 4
 # Session countdown (decision log 10). ASSUMPTION for the builder to confirm: at 0:00 the
 # interviewer finishes the current question, then closes and shows the report.
 SESSION_SECONDS = 600
-GUIDE_SECONDS = {"new": 120, "twin": 60}
+GUIDE_SECONDS = {"new": 120, "twin": 60, "drill": 60}  # drill: app.drill (decision log 16)
 _DECLINE = re.compile(r"^\s*(?:no|nope|not really|no thanks|no thank you|i'?m (?:fine|ok|okay|good))\W*$", re.I)
 
 
@@ -339,7 +339,7 @@ class ExamSession:
                              "guide_seconds": GUIDE_SECONDS[question.kind]})
         if repeat:
             spoken = f"{say.REPEAT_INTRO} {text}"
-        elif question.kind == "twin":
+        elif question.kind in {"twin", "drill"}:
             spoken = f"{say.TWIN_INTRO} {text}"
         elif question.number > 1:
             spoken = f"{say.NEW_PUZZLE_INTRO} {text}"
