@@ -69,10 +69,19 @@ Blind-check requests have only one rendered question.
    an explicitly stated positive tolerance and a verbatim tolerance quote.
 2. The solver at original parameters must match the stored value (within its
    stated decimal tolerance). Named steps must match the returned intermediate values.
-3. There must be at least eight distinct valid parameter points. Original values,
-   each parameter's low/high edge, and joint edges are included.
-4. At every exported point, 2-4 named wrong-method values must fall outside the
-   correct answer's tolerance interval.
+3. The acceptance gate requires at least **20 distinct precomputed instances**.
+   Candidate selection starts with original values, each parameter's low/high
+   edge and joint edges, then uses distance across normalized parameter ranges
+   to spread the remaining values. A bounded reserve supplies replacements.
+4. Every exported instance lists all 2-4 named wrong-method values. Candidates
+   with a wrong value equal to the correct answer, or within its stated tolerance,
+   are dropped; fewer than 20 survivors rejects the template. Valid edge-ish
+   values are prioritised. Each instance also includes exact Fraction strings:
+   `separation.by_misconception` lists `misconception`, `absolute_gap` and
+   `relative_gap` (absolute gap divided by absolute correct answer; `null` for
+   a zero correct answer). `separation.min_wrong_pair_gap` is the smallest
+   absolute gap among every pair of wrong values; zero is allowed. The runtime
+   can select the most informative instances without executing generated code.
 5. The child runs at least --trials random samples per point (default 20,000).
    It computes the exact sample mean and variance itself, then SE; the solver
    must be within four SE. The simulator cannot supply its own SE/trial count.
@@ -93,7 +102,9 @@ Blind-check requests have only one rendered question.
 Part 2 adds exactly one parameter to the same setup. Its own solver, random
 simulator, named wrong methods, edges, novelty and blind answer must pass.
 A failed part 2 is omitted while a verified base template may still be accepted.
-Only precomputed data is exported; generated code never runs at app runtime.
+Accepted part 2 is attached to at least 20 base instances and carries the same
+wrong-value and separation fields. Its extra parameter is spread across its full
+range. Only precomputed data is exported; generated code never runs at app runtime.
 
 ## Subprocess boundary
 
@@ -135,8 +146,11 @@ Prices are configurable USD per million tokens:
 Defaults are explicit budgeting assumptions of $1.25 input / $4.25 output per
 million for each backend, not a statement of current Baseten billing.
 Set actual agreed rates before the first call; the cap and reported costs are
-evaluated at configured rates. Prices and verification settings are frozen for
-resumption. Limit, topic order and budget up to $40 can change.
+evaluated at configured rates. Prices and verification settings, including the
+20-instance gate and format,
+are frozen for resumption. Old eight-instance checkpoints are refused; start a
+separate job with --work-dir data/forge/pilot20 if one already exists. Limit, topic
+order and budget up to $40 can change.
 
 Every cached exact response is reused, including repairs and failures. A job
 lock prevents concurrent ledger writers. If a crash leaves a charged/reserved
@@ -153,7 +167,7 @@ wall time of a replay invocation.
 ## Offline verification
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests/test_forge_data.py tests/test_forge_sandbox.py tests/test_forge_models.py tests/test_forge_pipeline.py tests/test_forge_cli.py --tb=short
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests/test_forge_data.py tests/test_forge_sandbox.py tests/test_forge_models.py tests/test_forge_pipeline.py tests/test_forge_instances.py tests/test_forge_cli.py --tb=short
 ```
 
 All fixtures are invented. Gate, budget, privacy, resume and CLI tests use fake
