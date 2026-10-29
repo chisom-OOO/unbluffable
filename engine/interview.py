@@ -90,6 +90,19 @@ class Interview:
             return self._named[-1]
         return None
 
+    def what_if(self, outcome: Outcome) -> tuple[dict[str, Fraction], Label]:
+        """Posterior and label if the waiting question were answered with `outcome` at
+        full weight (decision log 16, evidence meter). Changes nothing."""
+        question = self._pending
+        if question is None:
+            raise RuntimeError("no question is waiting for an answer")
+        if question.kind == "twin":
+            row = self.likelihoods.twin(self._twin_after, outcome)
+        else:
+            row = self.likelihoods.first(outcome)
+        posterior = update(self.posterior, row)
+        return posterior, label_for(posterior, self.answers + 1)
+
     def next_question(self) -> Question | None:
         if self.finished:
             return None

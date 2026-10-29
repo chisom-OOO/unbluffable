@@ -127,6 +127,26 @@ def why_numbers(diagnostic) -> str:
             "These numbers were picked to keep every known wrong method far from the right answer.")
 
 
+METER_CLASSES = (("S", "Sound"), ("M", "Misconception"), ("G", "Gap"))
+METER_FINAL = "No more questions, so this is the final estimate."
+
+
+def whole_pct(x: Fraction) -> str:
+    return f"{round(float(x) * 100)}%"
+
+
+def meter_line(kind: str, right: tuple, named: tuple) -> str:
+    """What would change the evidence meter: the next answer, right or a named error.
+    `right` and `named` are (posterior, label) from engine Interview.what_if."""
+    def effect(result, key, name):
+        posterior, label = result
+        text = f"move {name} to {whole_pct(posterior[key])}"
+        return text + (f" (“{label.value}”)" if label.value != "More evidence needed" else "")
+    which = "the twin" if kind == "twin" else "the next question"
+    return (f"On {which}, a right answer with reasoning would {effect(right, 'S', 'Sound')}; "
+            f"a named error would {effect(named, 'M', 'Misconception')}.")
+
+
 def forge_step_prompt(name: str) -> str:
     """A forge solution-map step, asked by its name only (no new numbers)."""
     return f"What do you get for the {name.replace('_', ' ').strip().rstrip('.?')}?"

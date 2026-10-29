@@ -503,3 +503,77 @@ def test_socket_without_topic_starts_mixed_not_fraud(monkeypatch, bank):
             pass
         assert event["template"] == "fx_dice_total" and event["difficulty"] == "Easy"
         socket.send_json({"type": "end"})
+
+
+# --- Evidence meter (decision log 16) -----------------------------------------------
+
+def test_what_if_previews_the_waiting_question_without_changing_anything():
+    from engine.coding import Observation
+    from engine.likelihoods import load_likelihoods
+    from engine.posterior import update
+    lk = load_likelihoods()
+    iv = Interview(source=_Source())
+    with pytest.raises(RuntimeError):
+        iv.what_if(Outcome.CORRECT)
+    iv.next_question()
+    before = dict(iv.posterior)
+    posterior, label = iv.what_if(Outcome.CORRECT)
+    assert posterior == update(before, lk.first(Outcome.CORRECT)) and label is Label.MORE_EVIDENCE
+    assert iv.posterior == before and iv.answers == 0
+    iv.record(Observation(Outcome.NAMED_WRONG, misconception="m1"))
+    assert iv.next_question().kind == "twin"
+    posterior, label = iv.what_if(Outcome.NAMED_WRONG)
+    assert posterior == update(iv.posterior, lk.twin(Outcome.NAMED_WRONG, Outcome.NAMED_WRONG))
+    assert label is Label.MISCONCEPTION
+
+
+def test_meter_after_each_scored_answer_with_what_would_change_it(bank):
+    def policy(session, events):
+        q = session.questions[-1]
+        if q.part2 is not None:
+            return f"My answer is {frac(q.puzzle.part2.answer)}, because it follows."
+        return f"My answer is {frac(q.puzzle.answer)}, because I worked it out."
+
+    seen = []
+
+    class Watch(Interview):
+        def record(self, *args, **kwargs):
+            super().record(*args, **kwargs)
+            seen.append({k: float(v) for k, v in self.posterior.items()})
+
+    source = BankSource(bank, start="Easy", rng=random.Random(9))
+    events = []
+
+    async def send(event):
+        events.append(event)
+
+    session = ExamSession(send, lambda: _async(policy(session, events)), VoiceAnalyzer(ScriptedProvider()),
+                          Watch(rng=random.Random(5), source=source))
+    asyncio.run(session.run())
+    scored = [e for e in events if e["type"] == "scored"]
+    assert len(scored) == len([q for q in session.questions if q.scored]) == len(seen) >= 2
+    for event, posterior in zip(scored, seen):
+        rows = event["meter"]["estimate"]
+        assert [r["label"] for r in rows] == ["Sound", "Misconception", "Gap"]
+        assert [r["p"] for r in rows] == [posterior["S"], posterior["M"], posterior["G"]]
+    first = scored[0]["meter"]["line"]
+    assert first.startswith("On the twin, a right answer with reasoning would move Sound to ")
+    assert "a named error would move Misconception to " in first
+    assert scored[-1]["meter"]["line"] == say.METER_FINAL
+    # The meter arrives before the next question is asked, and peeking asks nothing extra.
+    questions = [i for i, e in enumerate(events) if e["type"] == "question"]
+    assert all(events.index(s) < q for s, q in zip(scored, questions[1:]))
+    assert len(questions) == len(session.questions)
+    assert not any(word in str(scored).lower() for word in ("calibrated", "proves understanding", "can't be fooled"))
+
+
+def test_meter_line_names_a_label_the_next_answer_would_reach():
+    right = ({"S": Fraction(85, 100), "M": Fraction(1, 10), "G": Fraction(5, 100)}, Label.SUPPORTS)
+    named = ({"S": Fraction(1, 10), "M": Fraction(6, 10), "G": Fraction(3, 10)}, Label.MORE_EVIDENCE)
+    assert say.meter_line("new", right, named) == (
+        "On the next question, a right answer with reasoning would move Sound to 85% "
+        "(“Evidence supports understanding”); a named error would move Misconception to 60%.")
+
+
+async def _async(value):
+    return value

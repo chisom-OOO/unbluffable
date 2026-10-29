@@ -225,6 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
       case "scored":
         $("why").hidden = !event.why;
         $("why-text").textContent = event.why || "";
+        if (event.meter) showMeter(event.meter);
         break;
       case "part2":
         $("puzzle").textContent = event.text;
@@ -298,6 +299,23 @@ document.addEventListener("DOMContentLoaded", () => {
       const said = event.text.match(/^You said (.+?)\. /);
       if (said) lastCandidate.querySelector(".says").innerHTML = highlight(lastCandidate.querySelector(".says").textContent, said[1]);
     }
+  }
+
+  // ---------- Evidence meter (decision log 16): model estimates after each scored answer ----------
+  function showMeter(m) {
+    const panel = $("meter");
+    if (panel.hidden) {
+      panel.hidden = false;
+      panel.open = !window.matchMedia("(max-width: 600px)").matches;  // collapsed on phones
+    }
+    $("meter-rows").innerHTML = m.estimate.map((r) => {
+      const pct = Math.round(r.p * 100);
+      return `<div class="meter-row"><dt>${escapeHtml(r.label)}</dt>` +
+        `<dd><span class="meter-bar" aria-hidden="true"><span style="width:${pct}%"></span></span>` +
+        `<span class="mono meter-pct">${pct}%</span></dd></div>`;
+    }).join("");
+    $("meter-line").textContent = m.line;
+    $("meter-latest").textContent = m.estimate.map((r) => `${r.label} ${Math.round(r.p * 100)}%`).join(" · ");
   }
 
   function finish(event) {

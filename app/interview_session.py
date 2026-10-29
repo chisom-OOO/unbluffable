@@ -516,8 +516,18 @@ class ExamSession:
         self._scored.append(q)
 
     async def scored_event(self) -> None:
-        """After each scored answer: the twin's "Why these numbers?" note (decision log 16)."""
+        """After each scored answer (decision log 16): the evidence meter, model estimates
+        (assumed likelihoods) with what the next answer would do to them, and the twin's
+        "Why these numbers?" note. Peeking at the next question does not ask it."""
         q = self._scored[-1]
         diagnostic = getattr(q.puzzle, "diagnostic", None)
-        await self.send({"type": "scored", "number": q.number, "outcome": q.scored,
+        iv = self.interview
+        upcoming = iv.next_question()
+        if upcoming is None:
+            line = say.METER_FINAL
+        else:
+            line = say.meter_line(upcoming.kind, iv.what_if(Outcome.CORRECT), iv.what_if(Outcome.NAMED_WRONG))
+        meter = {"estimate": [{"key": key, "label": name, "p": float(iv.posterior[key])}
+                              for key, name in say.METER_CLASSES], "line": line}
+        await self.send({"type": "scored", "number": q.number, "outcome": q.scored, "meter": meter,
                          "why": say.why_numbers(diagnostic) if diagnostic is not None else None})
