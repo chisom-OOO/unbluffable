@@ -48,7 +48,8 @@
   const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Receipt (decision log 16): the candidate's exact words beside the exact computation.
-  function receiptHtml(r) {
+  // `words: false` leaves the words out where they are already quoted just above.
+  function receiptHtml(r, { words: withWords = true } = {}) {
     if (!r) return "";
     let words = `<p class="receipt-none">No words of yours are behind this line.</p>`;
     if (r.words) {
@@ -58,18 +59,15 @@
       words = `<blockquote class="receipt-words">“${marked}”</blockquote>`;
     }
     const rows = r.rows.map((row) => `<div><dt>${escapeHtml(row.label)}</dt><dd>${escapeHtml(row.text)}</dd></div>`).join("");
-    return `<details class="receipt"><summary>Receipt</summary><div class="receipt-body">` +
-      `<div><p class="receipt-head">Your words</p>${words}</div>` +
+    return `<details class="receipt"><summary>Receipt</summary><div class="receipt-body${withWords ? "" : " solo"}">` +
+      (withWords ? `<div><p class="receipt-head">Your words</p>${words}</div>` : "") +
       `<div><p class="receipt-head">Computation</p><dl>${rows}</dl>` +
       (r.note ? `<p class="receipt-note">${escapeHtml(r.note)}</p>` : "") + `</div></div></details>`;
   }
 
-  // Track cards from /api/interview/topics (template "pack"; missing means Quant). A track
-  // with no templates shows "Being added" and can't be picked.
-  function trackNote(t) {
-    if (!t.available) return "Being added";
-    return t.count ? `${t.count} template${t.count === 1 ? "" : "s"}` : "Fraud alert (classic)";
-  }
+  // Track cards from /api/interview/topics (template "pack"; missing means Quant): "Live",
+  // or "Being added" for a track with no templates, which can't be picked.
+  const trackNote = (t) => (t.available ? "Live" : "Being added");
   function trackCard(t, { href, selected } = {}) {
     const inner = `<strong>${escapeHtml(t.name)}</strong><small>${trackNote(t)}</small>`;
     if (!t.available) return `<div class="track" role="${href ? "listitem" : "radio"}" aria-disabled="true" aria-checked="false" data-track="${escapeHtml(t.id)}">${inner}</div>`;

@@ -2,7 +2,7 @@
 // without a session there is nothing to show. The four labels below are the only verdict
 // vocabulary (spec/01).
 document.addEventListener("DOMContentLoaded", () => {
-  const { highlight, escapeHtml, receiptHtml } = window.UB;
+  const { escapeHtml, receiptHtml } = window.UB;
   const $ = (id) => document.getElementById(id);
   const sessionId = new URLSearchParams(location.search).get("session");
 
@@ -66,16 +66,33 @@ document.addEventListener("DOMContentLoaded", () => {
     $("tip-section").hidden = !e.tip;
     $("estimate-section").hidden = !(e.estimate && e.estimate.length);
 
-    $("evidence").innerHTML = e.evidence.map((q) =>
-      `<blockquote class="evidence"><p>“${q.challenge ? highlight(q.quote, q.challenge) : escapeHtml(q.quote)}”</p><footer>${escapeHtml(q.note)}</footer>${receiptHtml(q.receipt)}</blockquote>`).join("");
-
-    $("check").innerHTML = e.checks.map((c) =>
-      `<div class="check-row">${escapeHtml(c.q)}, exact check: you said <span class="mono">${escapeHtml(c.said)}</span>; the answer is <span class="mono">${escapeHtml(c.exact)}</span>.${receiptHtml(c.receipt)}</div>`).join("") +
-      (e.follow_ups || []).map((f) =>
-      `<div class="check-row">${escapeHtml(f.q)}, follow-up: ${escapeHtml(f.verdict)}.${receiptHtml(f.receipt)}</div>`).join("");
+    // Evidence you can check: one card per question. Each answer is quoted here and only here,
+    // beside the exact value and the receipt (its words are not repeated inside the receipt).
+    // The receipt's span (the number you committed to) is marked where it was said.
+    const mark = (text, span) => {
+      const safe = escapeHtml(text), needle = span ? escapeHtml(span) : "";
+      const at = needle ? safe.lastIndexOf(needle) : -1;
+      return at < 0 ? safe : `${safe.slice(0, at)}<mark>${needle}</mark>${safe.slice(at + needle.length)}`;
+    };
+    const quote = (text, receipt) =>
+      `<blockquote class="evidence"><p>“${receipt && receipt.words === text ? mark(text, receipt.span) : escapeHtml(text)}”</p></blockquote>`;
+    const numberLine = (said, exact) => said
+      ? `<p class="check-line">You said <span class="mono">${escapeHtml(said)}</span>; the exact value is <span class="mono">${escapeHtml(exact)}</span>.</p>`
+      : `<p class="check-line">No committed number; the exact value is <span class="mono">${escapeHtml(exact)}</span>.</p>`;
+    $("evidence").innerHTML = (e.cards || []).map((c) =>
+      `<article class="qcard" id="${escapeHtml(c.anchor)}" tabindex="-1"><header><h3>${escapeHtml(c.q)}</h3><span class="tag">${escapeHtml(c.outcome)}</span></header>` +
+      c.words.map((w) => `<p class="qcard-when">${escapeHtml(w.when)}</p>${quote(w.text, c.receipt)}`).join("") +
+      numberLine(c.said, c.exact) + receiptHtml(c.receipt, { words: false }) +
+      (c.part2 ? `<div class="qcard-extra"><p class="qcard-when">Part 2 · not scored</p><p class="fine">${escapeHtml(c.part2.question)}</p>` +
+        quote(c.part2.words, c.part2.receipt) + (c.part2.said ? numberLine(c.part2.said, c.part2.exact) : "") +
+        receiptHtml(c.part2.receipt, { words: false }) + `</div>` : "") +
+      (c.follow_up ? `<div class="qcard-extra"><p class="qcard-when">Follow-up · model-matched, not scored</p><p class="fine">${escapeHtml(c.follow_up.question)}</p>` +
+        quote(c.follow_up.words, c.follow_up.receipt) + `<p class="check-line">${escapeHtml(c.follow_up.verdict)}</p>` +
+        receiptHtml(c.follow_up.receipt, { words: false }) + `</div>` : "") +
+      `</article>`).join("");
 
     const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-    const levelBars = Array.from({ length: e.levels }, (_, i) => `<span class="${i < e.level ? "on" : ""}"></span>`).join("");
+    // Numbers only: each question's outcome and words are on its evidence card.
     $("stats").innerHTML = [
       `<div class="stat"><dt>Questions</dt><dd>${e.questions}</dd></div>`,
       `<div class="stat"><dt>Challenges</dt><dd>${e.challenges}</dd></div>`,
@@ -85,11 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const over = t.seconds > t.guide;
         return `<div class="stat"><dt>${escapeHtml(t.q)} vs guide</dt><dd class="${over ? "over" : ""}">${fmt(t.seconds)}<small>guide ${fmt(t.guide)}${over ? " · over" : ""}</small></dd></div>`;
       }),
-      // The challenge is its own help step (decision log 3b), so it is not counted as a nudge here.
-      ...(e.outcomes
-        ? e.outcomes.map((o) => `<div class="stat wide"><dt>${escapeHtml(o.q)}</dt><dd>${escapeHtml(o.text)}${receiptHtml(o.receipt)}</dd></div>`)
-        : [`<div class="stat wide"><dt>After the challenge</dt><dd>${e.recovered ? `Recovered after ${e.nudges} nudge${e.nudges === 1 ? "" : "s"}` : "Not recovered"}</dd></div>`]),
-      ...(e.level == null ? [] : [`<div class="stat wide"><dt>Level reached</dt><dd>${e.level} of ${e.levels}<small>Shown separately from the label.</small><div class="level-track" aria-hidden="true">${levelBars}</div></dd></div>`]),
+      ...(e.level == null ? [] : [`<div class="stat"><dt>Level reached</dt><dd>${e.level} of ${e.levels}<small>Shown apart from the label</small></dd></div>`]),
     ].join("");
 
     $("hints").innerHTML = e.hints.length
@@ -99,19 +112,22 @@ document.addEventListener("DOMContentLoaded", () => {
     $("tip").textContent = e.tip || "";
 
     // ---- Report (decision log 8): summary, doing well / improve, one tab per question ----
+    // Breakdown items keep timings, help and the follow-up, without quoting your words again.
     const r = e.report;
     const item = (it) =>
       `<article class="report-item"><h3>${escapeHtml(it.title)}</h3>` +
       `<p>${escapeHtml(it.text)}</p>` +
-      (it.quote ? `<p class="report-quote">“${escapeHtml(it.quote)}”</p>` : "") +
+      (it.question ? `<p class="fine">${escapeHtml(it.question)}</p>` : "") +
       (it.number
         ? `<p class="check-line">You said <span class="mono">${escapeHtml(it.number.said)}</span>; exact maths: <span class="mono">${escapeHtml(it.number.exact)}</span>.</p>`
         : it.verdict ? `<p class="check-line">${escapeHtml(it.verdict)}</p>` : "") +
-      `<p class="chips">${(it.seen_names || it.seen.map((n) => `Question ${n}`)).map((s) => `<span class="chip">Seen in: ${escapeHtml(s)}</span>`).join("")}</p>` +
-      receiptHtml(it.receipt) + `</article>`;
+      receiptHtml(it.receipt, { words: false }) + `</article>`;
+    // Doing well / to improve: one line each, pointing at the question's evidence card.
+    const pointer = (it) => `<li><span>${escapeHtml(it.title)}</span>` +
+      (it.anchor ? ` <a href="#${escapeHtml(it.anchor)}">See ${escapeHtml(it.see)}</a>` : "") + `</li>`;
     $("overall").textContent = r.overall;
-    $("well").innerHTML = r.well.map(item).join("");
-    $("improve").innerHTML = r.improve.map(item).join("");
+    $("well").innerHTML = r.well.length ? r.well.map(pointer).join("") : "<li>Nothing to single out yet.</li>";
+    $("improve").innerHTML = r.improve.length ? r.improve.map(pointer).join("") : "<li>Nothing to single out yet.</li>";
 
     $("breakdown-tabs").innerHTML = r.breakdown.map((b, i) =>
       `<button type="button" role="tab" class="tab" id="tab-${i}" aria-controls="panel-${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${escapeHtml(b.tab)}</button>`).join("");
