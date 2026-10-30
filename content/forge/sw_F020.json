@@ -1,12 +1,12 @@
 {
   "template_id": "sw_F020",
   "pack": "software",
-  "topic": "Dynamic programming",
+  "topic": "Heaps",
   "topics": [
-    "Dynamic programming"
+    "Heaps"
   ],
-  "source_topic": "Valid digit-block groupings",
-  "difficulty": "Hard",
+  "source_topic": "Largest-entry sum",
+  "difficulty": "Easy",
   "models": {
     "author": "meta-models/muse-spark-open-1026",
     "checker": null
@@ -25,1958 +25,3404 @@
       "variants_checked": 50,
       "max_absolute_error": "0"
     },
-    "misconceptions_verified": false,
-    "method_count": 0,
-    "repair_attempted": true,
-    "reason": {
-      "gate": "wrong_methods",
-      "error_class": "correct_answer_collision",
-      "variant_index": 0
-    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
     "pending_reason": null,
     "all_variants_retained": true,
     "rechecked_parameter_revision": null,
-    "variant_followups": false
+    "variant_followups": true
   },
   "follow_up": {
-    "question": "What time and space do the prefix-count and rolling-count versions need?",
-    "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+    "question": "What if entries tie at the cutoff?",
+    "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
   },
   "review_status": "pending_builder_review",
   "instances": [
     {
       "variant": "1",
-      "text": "You parse a compact numeric code. The digits, in order, are 2, 1, 1, 1, 1, 1, 1, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A sales report lists values 20, 17, 17, 15, 16, 23. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          2,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1
+        "count": 4,
+        "values": [
+          20,
+          17,
+          17,
+          15,
+          16,
+          23
         ]
       },
-      "answer": "34",
+      "answer": "77",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You parse a compact numeric code. The digits, in order, are two, one, one, one, one, one, one, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A sales report lists values twenty, seventeen, seventeen, fifteen, sixteen, twenty-three. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "69",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "68",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "34"
+          "name": "sum_of_top_k",
+          "value": "77"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "17"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "8",
+            "relative_gap": "8/77"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "9",
+            "relative_gap": "9/77"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
       }
     },
     {
       "variant": "2",
-      "text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are 6, 1, 6, 6, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A score report lists values 28, 13, 19, 2, 16, 1. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          6,
-          1,
-          6,
-          6,
-          2
+        "count": 2,
+        "values": [
+          28,
+          13,
+          19,
+          2,
+          16,
+          1
         ]
       },
-      "answer": "2",
+      "answer": "47",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are six, one, six, six, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A score report lists values twenty-eight, thirteen, nineteen, two, sixteen, one. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "41",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "38",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "2"
+          "name": "sum_of_top_k",
+          "value": "47"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "19"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "6",
+            "relative_gap": "6/47"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "9",
+            "relative_gap": "9/47"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
       }
     },
     {
       "variant": "3",
-      "text": "You inspect a digit-tokenisation trace. The digits, in order, are 4, 7, 5. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A bid report lists values 24, 2, 21, 21, 19, 4. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          4,
-          7,
-          5
+        "count": 2,
+        "values": [
+          24,
+          2,
+          21,
+          21,
+          19,
+          4
         ]
       },
-      "answer": "1",
+      "answer": "45",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You inspect a digit-tokenisation trace. The digits, in order, are four, seven, five. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A bid report lists values twenty-four, two, twenty-one, twenty-one, nineteen, four. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "26",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "42",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "1"
+          "name": "sum_of_top_k",
+          "value": "45"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "21"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "19",
+            "relative_gap": "19/45"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "3",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "16",
+        "min_distinct_wrong_pair_gap": "16"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
       }
     },
     {
       "variant": "4",
-      "text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are 0, 3, 9, 7. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A demand report lists values 16, 16, 26, 21, 3, 24. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          0,
+        "count": 4,
+        "values": [
+          16,
+          16,
+          26,
+          21,
           3,
-          9,
-          7
+          24
         ]
       },
-      "answer": "0",
+      "answer": "87",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are zero, three, nine, seven. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A demand report lists values sixteen, sixteen, twenty-six, twenty-one, three, twenty-four. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "79",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "64",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "0"
+          "name": "sum_of_top_k",
+          "value": "87"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "16"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "8",
+            "relative_gap": "8/87"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "23",
+            "relative_gap": "23/87"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
       }
     },
     {
       "variant": "5",
-      "text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are 1, 2, 1, 2, 0, 3, 1, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A reward report lists values 5, 26, 25, 11, 29, 26. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
-          2,
-          1,
-          2,
-          0,
-          3,
-          1,
-          2
+        "count": 4,
+        "values": [
+          5,
+          26,
+          25,
+          11,
+          29,
+          26
         ]
       },
-      "answer": "6",
+      "answer": "106",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are one, two, one, two, zero, three, one, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A reward report lists values five, twenty-six, twenty-five, eleven, twenty-nine, twenty-six. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "67",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "100",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "6"
+          "name": "sum_of_top_k",
+          "value": "106"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "25"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "39",
+            "relative_gap": "39/106"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "6",
+            "relative_gap": "3/53"
+          }
+        ],
+        "min_wrong_pair_gap": "33",
+        "min_distinct_wrong_pair_gap": "33"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
       }
     },
     {
       "variant": "6",
-      "text": "You parse a compact numeric code. The digits, in order, are 2, 6, 3, 1, 1, 1, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A sales report lists values 24, 20, 18, 26, 26, 18. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          2,
-          6,
-          3,
-          1,
-          1,
-          1,
-          1
+        "count": 4,
+        "values": [
+          24,
+          20,
+          18,
+          26,
+          26,
+          18
         ]
       },
-      "answer": "10",
+      "answer": "96",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You parse a compact numeric code. The digits, in order, are two, six, three, one, one, one, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A sales report lists values twenty-four, twenty, eighteen, twenty-six, twenty-six, eighteen. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "88",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "80",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "10"
+          "name": "sum_of_top_k",
+          "value": "96"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "20"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "8",
+            "relative_gap": "1/12"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "16",
+            "relative_gap": "1/6"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
       }
     },
     {
       "variant": "7",
-      "text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are 1, 7, 6, 1, 3, 3. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A score report lists values 9, 2, 7, 13, 15, 12. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
+        "count": 2,
+        "values": [
+          9,
+          2,
           7,
-          6,
-          1,
-          3,
-          3
+          13,
+          15,
+          12
         ]
       },
-      "answer": "4",
+      "answer": "28",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are one, seven, six, one, three, three. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A score report lists values nine, two, seven, thirteen, fifteen, twelve. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "26",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "4"
+          "name": "sum_of_top_k",
+          "value": "28"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "13"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "17",
+            "relative_gap": "17/28"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "2",
+            "relative_gap": "1/14"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
       }
     },
     {
       "variant": "8",
-      "text": "You inspect a digit-tokenisation trace. The digits, in order, are 1, 2, 1, 1, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A bid report lists values 5, 7, 20, 30, 1, 18. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
+        "count": 2,
+        "values": [
+          5,
+          7,
+          20,
+          30,
           1,
-          2,
-          1,
-          1,
-          2
+          18
         ]
       },
-      "answer": "8",
+      "answer": "50",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You inspect a digit-tokenisation trace. The digits, in order, are one, two, one, one, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A bid report lists values five, seven, twenty, thirty, one, eighteen. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "12",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "40",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "8"
+          "name": "sum_of_top_k",
+          "value": "50"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "20"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "38",
+            "relative_gap": "19/25"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "10",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "28",
+        "min_distinct_wrong_pair_gap": "28"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
       }
     },
     {
       "variant": "9",
-      "text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are 3, 2, 2, 2, 2, 2, 6, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A demand report lists values 25, 11, 23, 1, 30, 27. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          3,
-          2,
-          2,
-          2,
-          2,
-          2,
-          6,
-          1
+        "count": 2,
+        "values": [
+          25,
+          11,
+          23,
+          1,
+          30,
+          27
         ]
       },
-      "answer": "13",
+      "answer": "57",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are three, two, two, two, two, two, six, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A demand report lists values twenty-five, eleven, twenty-three, one, thirty, twenty-seven. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "36",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "54",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "13"
+          "name": "sum_of_top_k",
+          "value": "57"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "27"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "21",
+            "relative_gap": "7/19"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "3",
+            "relative_gap": "1/19"
+          }
+        ],
+        "min_wrong_pair_gap": "18",
+        "min_distinct_wrong_pair_gap": "18"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
       }
     },
     {
       "variant": "10",
-      "text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are 1, 0, 3, 2, 1, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A reward report lists values 20, 29, 27, 5, 3, 13. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
-          0,
+        "count": 4,
+        "values": [
+          20,
+          29,
+          27,
+          5,
           3,
-          2,
-          1,
-          2
+          13
         ]
       },
-      "answer": "3",
+      "answer": "89",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are one, zero, three, two, one, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A reward report lists values twenty, twenty-nine, twenty-seven, five, three, thirteen. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "81",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "52",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "3"
+          "name": "sum_of_top_k",
+          "value": "89"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "13"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "8",
+            "relative_gap": "8/89"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "37",
+            "relative_gap": "37/89"
+          }
+        ],
+        "min_wrong_pair_gap": "29",
+        "min_distinct_wrong_pair_gap": "29"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
       }
     },
     {
       "variant": "11",
-      "text": "You parse a compact numeric code. The digits, in order, are 1, 0, 0, 1, 2, 1, 2, 3. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A sales report lists values 8, 9, 22, 23, 19, 16. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
-          0,
-          0,
-          1,
-          2,
-          1,
-          2,
-          3
+        "count": 4,
+        "values": [
+          8,
+          9,
+          22,
+          23,
+          19,
+          16
         ]
       },
-      "answer": "0",
+      "answer": "80",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You parse a compact numeric code. The digits, in order, are one, zero, zero, one, two, one, two, three. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A sales report lists values eight, nine, twenty-two, twenty-three, nineteen, sixteen. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "62",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "64",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "0"
+          "name": "sum_of_top_k",
+          "value": "80"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "16"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "18",
+            "relative_gap": "9/40"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "16",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
       }
     },
     {
       "variant": "12",
-      "text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are 2, 2, 1, 2, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A score report lists values 10, 4, 4, 22, 9, 18. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          2,
-          2,
-          1,
-          2,
-          1
+        "count": 4,
+        "values": [
+          10,
+          4,
+          4,
+          22,
+          9,
+          18
         ]
       },
-      "answer": "8",
+      "answer": "59",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are two, two, one, two, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A score report lists values ten, four, four, twenty-two, nine, eighteen. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "40",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "8"
+          "name": "sum_of_top_k",
+          "value": "59"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "9"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "19",
+            "relative_gap": "19/59"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "23",
+            "relative_gap": "23/59"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
       }
     },
     {
       "variant": "13",
-      "text": "You inspect a digit-tokenisation trace. The digits, in order, are 2, 3, 6, 2, 6, 3, 3, 6. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A bid report lists values 14, 3, 21, 26, 17, 27. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          2,
+        "count": 4,
+        "values": [
+          14,
           3,
-          6,
-          2,
-          6,
-          3,
-          3,
-          6
+          21,
+          26,
+          17,
+          27
         ]
       },
-      "answer": "4",
+      "answer": "91",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You inspect a digit-tokenisation trace. The digits, in order, are two, three, six, two, six, three, three, six. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A bid report lists values fourteen, three, twenty-one, twenty-six, seventeen, twenty-seven. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "64",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "68",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "4"
+          "name": "sum_of_top_k",
+          "value": "91"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "17"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "27",
+            "relative_gap": "27/91"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "23",
+            "relative_gap": "23/91"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
       }
     },
     {
       "variant": "14",
-      "text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are 3, 3, 2, 6, 1, 1, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A demand report lists values 21, 13, 29, 13, 27, 25. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          3,
-          3,
-          2,
-          6,
-          1,
-          1,
-          2
+        "count": 2,
+        "values": [
+          21,
+          13,
+          29,
+          13,
+          27,
+          25
         ]
       },
-      "answer": "6",
+      "answer": "56",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are three, three, two, six, one, one, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A demand report lists values twenty-one, thirteen, twenty-nine, thirteen, twenty-seven, twenty-five. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "54",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "6"
+          "name": "sum_of_top_k",
+          "value": "56"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "27"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "22",
+            "relative_gap": "11/28"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "2",
+            "relative_gap": "1/28"
+          }
+        ],
+        "min_wrong_pair_gap": "20",
+        "min_distinct_wrong_pair_gap": "20"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
       }
     },
     {
       "variant": "15",
-      "text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are 3, 1, 2, 1, 3, 2, 6. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A reward report lists values 1, 6, 15, 1, 1, 21. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          3,
+        "count": 3,
+        "values": [
           1,
-          2,
+          6,
+          15,
           1,
-          3,
-          2,
-          6
+          1,
+          21
         ]
       },
-      "answer": "10",
+      "answer": "42",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are three, one, two, one, three, two, six. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A reward report lists values one, six, fifteen, one, one, twenty-one. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "22",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "18",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "10"
+          "name": "sum_of_top_k",
+          "value": "42"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "6"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "20",
+            "relative_gap": "10/21"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "24",
+            "relative_gap": "4/7"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
       }
     },
     {
       "variant": "16",
-      "text": "You parse a compact numeric code. The digits, in order, are 6, 6, 6. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A sales report lists values 3, 15, 9, 6, 5, 4. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
+        "count": 3,
+        "values": [
+          3,
+          15,
+          9,
           6,
-          6,
-          6
+          5,
+          4
         ]
       },
-      "answer": "1",
+      "answer": "30",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You parse a compact numeric code. The digits, in order, are six, six, six. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A sales report lists values three, fifteen, nine, six, five, four. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "18",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "1"
+          "name": "sum_of_top_k",
+          "value": "30"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "6"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "3",
+            "relative_gap": "1/10"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "12",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
       }
     },
     {
       "variant": "17",
-      "text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are 1, 2, 1, 1, 1, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A score report lists values 6, 5, 11, 10, 7, 9. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
-          2,
-          1,
-          1,
-          1,
-          2
+        "count": 2,
+        "values": [
+          6,
+          5,
+          11,
+          10,
+          7,
+          9
         ]
       },
-      "answer": "13",
+      "answer": "21",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are one, two, one, one, one, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A score report lists values six, five, eleven, ten, seven, nine. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "20",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "13"
+          "name": "sum_of_top_k",
+          "value": "21"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "10"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "10",
+            "relative_gap": "10/21"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "1",
+            "relative_gap": "1/21"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
       }
     },
     {
       "variant": "18",
-      "text": "You inspect a digit-tokenisation trace. The digits, in order, are 1, 1, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A bid report lists values 23, 6, 28, 11, 12, 13. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
-          1,
-          2
+        "count": 3,
+        "values": [
+          23,
+          6,
+          28,
+          11,
+          12,
+          13
         ]
       },
-      "answer": "3",
+      "answer": "64",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You inspect a digit-tokenisation trace. The digits, in order, are one, one, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A bid report lists values twenty-three, six, twenty-eight, eleven, twelve, thirteen. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "57",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "39",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "3"
+          "name": "sum_of_top_k",
+          "value": "64"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "13"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "7",
+            "relative_gap": "7/64"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "25",
+            "relative_gap": "25/64"
+          }
+        ],
+        "min_wrong_pair_gap": "18",
+        "min_distinct_wrong_pair_gap": "18"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
       }
     },
     {
       "variant": "19",
-      "text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are 2, 1, 1, 2, 1, 2, 1, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A demand report lists values 10, 8, 21, 30, 4, 7. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          2,
-          1,
-          1,
-          2,
-          1,
-          2,
-          1,
-          1
+        "count": 3,
+        "values": [
+          10,
+          8,
+          21,
+          30,
+          4,
+          7
         ]
       },
-      "answer": "34",
+      "answer": "61",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are two, one, one, two, one, two, one, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A demand report lists values ten, eight, twenty-one, thirty, four, seven. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "39",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "34"
+          "name": "sum_of_top_k",
+          "value": "61"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "10"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "22",
+            "relative_gap": "22/61"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "31",
+            "relative_gap": "31/61"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
       }
     },
     {
       "variant": "20",
-      "text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are 6, 2, 6, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A reward report lists values 2, 6, 25, 21, 27, 19. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          6,
+        "count": 4,
+        "values": [
           2,
           6,
-          1
+          25,
+          21,
+          27,
+          19
         ]
       },
-      "answer": "2",
+      "answer": "92",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are six, two, six, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A reward report lists values two, six, twenty-five, twenty-one, twenty-seven, nineteen. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "54",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "76",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "2"
+          "name": "sum_of_top_k",
+          "value": "92"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "19"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "38",
+            "relative_gap": "19/46"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "16",
+            "relative_gap": "4/23"
+          }
+        ],
+        "min_wrong_pair_gap": "22",
+        "min_distinct_wrong_pair_gap": "22"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
       }
     },
     {
       "variant": "21",
-      "text": "You parse a compact numeric code. The digits, in order, are 2, 1, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A sales report lists values 18, 25, 6, 27, 14, 8. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          2,
-          1,
-          2
+        "count": 3,
+        "values": [
+          18,
+          25,
+          6,
+          27,
+          14,
+          8
         ]
       },
-      "answer": "3",
+      "answer": "70",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You parse a compact numeric code. The digits, in order, are two, one, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A sales report lists values eighteen, twenty-five, six, twenty-seven, fourteen, eight. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "49",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "54",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "3"
+          "name": "sum_of_top_k",
+          "value": "70"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "18"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "21",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "16",
+            "relative_gap": "8/35"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
       }
     },
     {
       "variant": "22",
-      "text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are 3, 6, 2, 3, 2, 6. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A score report lists values 22, 24, 19, 10, 22, 26. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          3,
-          6,
-          2,
-          3,
-          2,
-          6
+        "count": 4,
+        "values": [
+          22,
+          24,
+          19,
+          10,
+          22,
+          26
         ]
       },
-      "answer": "4",
+      "answer": "94",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are three, six, two, three, two, six. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A score report lists values twenty-two, twenty-four, nineteen, ten, twenty-two, twenty-six. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "75",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "88",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "4"
+          "name": "sum_of_top_k",
+          "value": "94"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "19",
+            "relative_gap": "19/94"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "6",
+            "relative_gap": "3/47"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
       }
     },
     {
       "variant": "23",
-      "text": "You inspect a digit-tokenisation trace. The digits, in order, are 2, 2, 2, 1, 2, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A bid report lists values 24, 11, 25, 7, 22, 16. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          2,
-          2,
-          2,
-          1,
-          2,
-          1
+        "count": 3,
+        "values": [
+          24,
+          11,
+          25,
+          7,
+          22,
+          16
         ]
       },
-      "answer": "13",
+      "answer": "71",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You inspect a digit-tokenisation trace. The digits, in order, are two, two, two, one, two, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A bid report lists values twenty-four, eleven, twenty-five, seven, twenty-two, sixteen. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "60",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "66",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "13"
+          "name": "sum_of_top_k",
+          "value": "71"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "11",
+            "relative_gap": "11/71"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "5",
+            "relative_gap": "5/71"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
       }
     },
     {
       "variant": "24",
-      "text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are 2, 2, 3, 2, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A demand report lists values 21, 20, 2, 29, 6, 29. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
+        "count": 4,
+        "values": [
+          21,
+          20,
           2,
-          2,
-          3,
-          2,
-          2
+          29,
+          6,
+          29
         ]
       },
-      "answer": "6",
+      "answer": "99",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are two, two, three, two, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A demand report lists values twenty-one, twenty, two, twenty-nine, six, twenty-nine. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "72",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "80",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "6"
+          "name": "sum_of_top_k",
+          "value": "99"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "20"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "27",
+            "relative_gap": "3/11"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "19",
+            "relative_gap": "19/99"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
       }
     },
     {
       "variant": "25",
-      "text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are 1, 4, 6, 3, 3, 0. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A reward report lists values 2, 21, 4, 5, 19, 9. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
+        "count": 3,
+        "values": [
+          2,
+          21,
           4,
-          6,
-          3,
-          3,
-          0
+          5,
+          19,
+          9
         ]
       },
-      "answer": "0",
+      "answer": "49",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are one, four, six, three, three, zero. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A reward report lists values two, twenty-one, four, five, nineteen, nine. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "takes_first_entries_without_ranking",
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "0"
+          "name": "sum_of_top_k",
+          "value": "49"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "9"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "22",
+            "relative_gap": "22/49"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "22",
+            "relative_gap": "22/49"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
       }
     },
     {
       "variant": "26",
-      "text": "You parse a compact numeric code. The digits, in order, are 4, 3, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A sales report lists values 26, 26, 12, 29, 30, 28. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          4,
-          3,
-          2
+        "count": 4,
+        "values": [
+          26,
+          26,
+          12,
+          29,
+          30,
+          28
         ]
       },
-      "answer": "1",
+      "answer": "113",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You parse a compact numeric code. The digits, in order, are four, three, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A sales report lists values twenty-six, twenty-six, twelve, twenty-nine, thirty, twenty-eight. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "93",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "104",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "1"
+          "name": "sum_of_top_k",
+          "value": "113"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "26"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "20",
+            "relative_gap": "20/113"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "9",
+            "relative_gap": "9/113"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
       }
     },
     {
       "variant": "27",
-      "text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are 6, 2, 3, 3, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A score report lists values 10, 9, 6, 23, 4, 6. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
+        "count": 2,
+        "values": [
+          10,
+          9,
           6,
-          2,
-          3,
-          3,
-          2
+          23,
+          4,
+          6
         ]
       },
-      "answer": "2",
+      "answer": "33",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are six, two, three, three, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A score report lists values ten, nine, six, twenty-three, four, six. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "20",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "2"
+          "name": "sum_of_top_k",
+          "value": "33"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "10"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "14",
+            "relative_gap": "14/33"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "13",
+            "relative_gap": "13/33"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
       }
     },
     {
       "variant": "28",
-      "text": "You inspect a digit-tokenisation trace. The digits, in order, are 1, 2, 2, 3, 3, 3, 2, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A bid report lists values 22, 2, 18, 26, 25, 30. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
+        "count": 4,
+        "values": [
+          22,
           2,
-          2,
-          3,
-          3,
-          3,
-          2,
-          2
+          18,
+          26,
+          25,
+          30
         ]
       },
-      "answer": "10",
+      "answer": "103",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You inspect a digit-tokenisation trace. The digits, in order, are one, two, two, three, three, three, two, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A bid report lists values twenty-two, two, eighteen, twenty-six, twenty-five, thirty. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "68",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "88",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "10"
+          "name": "sum_of_top_k",
+          "value": "103"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "35",
+            "relative_gap": "35/103"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "15",
+            "relative_gap": "15/103"
+          }
+        ],
+        "min_wrong_pair_gap": "20",
+        "min_distinct_wrong_pair_gap": "20"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
       }
     },
     {
       "variant": "29",
-      "text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are 2, 1, 1, 2, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A demand report lists values 18, 7, 2, 26, 10, 24. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
+        "count": 4,
+        "values": [
+          18,
+          7,
           2,
-          1,
-          1,
-          2,
-          1
+          26,
+          10,
+          24
         ]
       },
-      "answer": "8",
+      "answer": "78",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are two, one, one, two, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A demand report lists values eighteen, seven, two, twenty-six, ten, twenty-four. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "53",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "40",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "8"
+          "name": "sum_of_top_k",
+          "value": "78"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "10"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "25",
+            "relative_gap": "25/78"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "38",
+            "relative_gap": "19/39"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
       }
     },
     {
       "variant": "30",
-      "text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are 1, 1, 1, 1, 2, 1, 1, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A reward report lists values 10, 5, 5, 3, 11, 16. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
-          1,
-          1,
-          1,
-          2,
-          1,
-          1,
-          2
+        "count": 2,
+        "values": [
+          10,
+          5,
+          5,
+          3,
+          11,
+          16
         ]
       },
-      "answer": "34",
+      "answer": "27",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are one, one, one, one, two, one, one, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A reward report lists values ten, five, five, three, eleven, sixteen. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "22",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "34"
+          "name": "sum_of_top_k",
+          "value": "27"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "11"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "12",
+            "relative_gap": "4/9"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "5",
+            "relative_gap": "5/27"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
       }
     },
     {
       "variant": "31",
-      "text": "You parse a compact numeric code. The digits, in order, are 1, 5, 8, 9. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A sales report lists values 29, 7, 12, 21, 21, 23. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
-          5,
-          8,
-          9
+        "count": 2,
+        "values": [
+          29,
+          7,
+          12,
+          21,
+          21,
+          23
         ]
       },
-      "answer": "2",
+      "answer": "52",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You parse a compact numeric code. The digits, in order, are one, five, eight, nine. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A sales report lists values twenty-nine, seven, twelve, twenty-one, twenty-one, twenty-three. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "36",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "46",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "2"
+          "name": "sum_of_top_k",
+          "value": "52"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "23"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "16",
+            "relative_gap": "4/13"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "6",
+            "relative_gap": "3/26"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
       }
     },
     {
       "variant": "32",
-      "text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are 2, 1, 2, 2, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A score report lists values 14, 28, 12, 13, 17, 14. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          2,
-          1,
-          2,
-          2,
-          1
+        "count": 4,
+        "values": [
+          14,
+          28,
+          12,
+          13,
+          17,
+          14
         ]
       },
-      "answer": "8",
+      "answer": "73",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are two, one, two, two, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A score report lists values fourteen, twenty-eight, twelve, thirteen, seventeen, fourteen. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "67",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "56",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "8"
+          "name": "sum_of_top_k",
+          "value": "73"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "14"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "6",
+            "relative_gap": "6/73"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "17",
+            "relative_gap": "17/73"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
       }
     },
     {
       "variant": "33",
-      "text": "You inspect a digit-tokenisation trace. The digits, in order, are 2, 3, 2, 1, 2, 3, 6. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A bid report lists values 3, 5, 2, 12, 4, 5. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          2,
+        "count": 2,
+        "values": [
           3,
+          5,
           2,
-          1,
-          2,
-          3,
-          6
+          12,
+          4,
+          5
         ]
       },
-      "answer": "10",
+      "answer": "17",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You inspect a digit-tokenisation trace. The digits, in order, are two, three, two, one, two, three, six. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A bid report lists values three, five, two, twelve, four, five. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "10"
+          "name": "sum_of_top_k",
+          "value": "17"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "5"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "9",
+            "relative_gap": "9/17"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "7",
+            "relative_gap": "7/17"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
       }
     },
     {
       "variant": "34",
-      "text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are 1, 3, 2, 1, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A demand report lists values 12, 14, 13, 13, 9, 4. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
-          3,
-          2,
-          1,
-          2
+        "count": 3,
+        "values": [
+          12,
+          14,
+          13,
+          13,
+          9,
+          4
         ]
       },
-      "answer": "6",
+      "answer": "40",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are one, three, two, one, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A demand report lists values twelve, fourteen, thirteen, thirteen, nine, four. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "39",
+          "misconceptions": [
+            "takes_first_entries_without_ranking",
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "6"
+          "name": "sum_of_top_k",
+          "value": "40"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "13"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "1",
+            "relative_gap": "1/40"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "1",
+            "relative_gap": "1/40"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
       }
     },
     {
       "variant": "35",
-      "text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are 1, 1, 2, 1, 2, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A reward report lists values 11, 22, 11, 1, 5, 14. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
+        "count": 2,
+        "values": [
+          11,
+          22,
+          11,
           1,
-          1,
-          2,
-          1,
-          2,
-          1
+          5,
+          14
         ]
       },
-      "answer": "13",
+      "answer": "36",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are one, one, two, one, two, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A reward report lists values eleven, twenty-two, eleven, one, five, fourteen. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "33",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "28",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "13"
+          "name": "sum_of_top_k",
+          "value": "36"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "14"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "3",
+            "relative_gap": "1/12"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "8",
+            "relative_gap": "2/9"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
       }
     },
     {
       "variant": "36",
-      "text": "You parse a compact numeric code. The digits, in order, are 3, 1, 3, 3, 2, 6. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A sales report lists values 4, 27, 24, 13, 25, 22. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          3,
-          1,
-          3,
-          3,
-          2,
-          6
+        "count": 4,
+        "values": [
+          4,
+          27,
+          24,
+          13,
+          25,
+          22
         ]
       },
-      "answer": "4",
+      "answer": "98",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You parse a compact numeric code. The digits, in order, are three, one, three, three, two, six. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A sales report lists values four, twenty-seven, twenty-four, thirteen, twenty-five, twenty-two. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "68",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "88",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "4"
+          "name": "sum_of_top_k",
+          "value": "98"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "30",
+            "relative_gap": "15/49"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "10",
+            "relative_gap": "5/49"
+          }
+        ],
+        "min_wrong_pair_gap": "20",
+        "min_distinct_wrong_pair_gap": "20"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
       }
     },
     {
       "variant": "37",
-      "text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are 0, 3, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A score report lists values 23, 12, 23, 29, 5, 2. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          0,
-          3,
-          1
+        "count": 3,
+        "values": [
+          23,
+          12,
+          23,
+          29,
+          5,
+          2
         ]
       },
-      "answer": "0",
+      "answer": "75",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are zero, three, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A score report lists values twenty-three, twelve, twenty-three, twenty-nine, five, two. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "58",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "69",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "0"
+          "name": "sum_of_top_k",
+          "value": "75"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "23"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "17",
+            "relative_gap": "17/75"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "6",
+            "relative_gap": "2/25"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
       }
     },
     {
       "variant": "38",
-      "text": "You inspect a digit-tokenisation trace. The digits, in order, are 2, 2, 2, 1, 2, 2, 2, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A bid report lists values 25, 28, 24, 19, 30, 16. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          2,
-          2,
-          2,
-          1,
-          2,
-          2,
-          2,
-          2
+        "count": 4,
+        "values": [
+          25,
+          28,
+          24,
+          19,
+          30,
+          16
         ]
       },
-      "answer": "34",
+      "answer": "107",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You inspect a digit-tokenisation trace. The digits, in order, are two, two, two, one, two, two, two, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A bid report lists values twenty-five, twenty-eight, twenty-four, nineteen, thirty, sixteen. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "96",
+          "misconceptions": [
+            "takes_first_entries_without_ranking",
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "34"
+          "name": "sum_of_top_k",
+          "value": "107"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "24"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "11",
+            "relative_gap": "11/107"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "11",
+            "relative_gap": "11/107"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
       }
     },
     {
       "variant": "39",
-      "text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are 1, 0, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "text": "A demand report lists values 21, 12, 2, 16, 13, 18. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
       "params": {
-        "digits": [
-          1,
-          0,
-          2
+        "count": 4,
+        "values": [
+          21,
+          12,
+          2,
+          16,
+          13,
+          18
         ]
       },
-      "answer": "1",
+      "answer": "68",
       "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are one, zero, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A demand report lists values twenty-one, twelve, two, sixteen, thirteen, eighteen. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "valid_grouping_count",
-          "value": "1"
+          "value": "51",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "52",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
         }
       ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
-      }
-    },
-    {
-      "variant": "40",
-      "text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are 2, 2, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "params": {
-        "digits": [
-          2,
-          2,
-          2
-        ]
-      },
-      "answer": "3",
-      "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are two, two, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
       "steps": [
         {
-          "name": "valid_grouping_count",
-          "value": "3"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
-      }
-    },
-    {
-      "variant": "41",
-      "text": "You parse a compact numeric code. The digits, in order, are 3, 2, 6, 3, 6, 1, 3, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "params": {
-        "digits": [
-          3,
-          2,
-          6,
-          3,
-          6,
-          1,
-          3,
-          1
-        ]
-      },
-      "answer": "4",
-      "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You parse a compact numeric code. The digits, in order, are three, two, six, three, six, one, three, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+          "name": "sum_of_top_k",
+          "value": "68"
+        },
         {
-          "name": "valid_grouping_count",
-          "value": "4"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
-      }
-    },
-    {
-      "variant": "42",
-      "text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are 1, 9, 9, 7, 7, 7. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "params": {
-        "digits": [
-          1,
-          9,
-          9,
-          7,
-          7,
-          7
-        ]
-      },
-      "answer": "2",
-      "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are one, nine, nine, seven, seven, seven. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "valid_grouping_count",
-          "value": "2"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
-      }
-    },
-    {
-      "variant": "43",
-      "text": "You inspect a digit-tokenisation trace. The digits, in order, are 3, 1, 2, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "params": {
-        "digits": [
-          3,
-          1,
-          2,
-          2
-        ]
-      },
-      "answer": "3",
-      "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You inspect a digit-tokenisation trace. The digits, in order, are three, one, two, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "valid_grouping_count",
-          "value": "3"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
-      }
-    },
-    {
-      "variant": "44",
-      "text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are 8, 5, 2, 7. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "params": {
-        "digits": [
-          8,
-          5,
-          2,
-          7
-        ]
-      },
-      "answer": "1",
-      "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are eight, five, two, seven. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "valid_grouping_count",
-          "value": "1"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
-      }
-    },
-    {
-      "variant": "45",
-      "text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are 3, 2, 1, 2, 6, 3, 2, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "params": {
-        "digits": [
-          3,
-          2,
-          1,
-          2,
-          6,
-          3,
-          2,
-          1
-        ]
-      },
-      "answer": "10",
-      "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are three, two, one, two, six, three, two, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "valid_grouping_count",
-          "value": "10"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
-      }
-    },
-    {
-      "variant": "46",
-      "text": "You parse a compact numeric code. The digits, in order, are 3, 0, 0, 2, 3. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "params": {
-        "digits": [
-          3,
-          0,
-          0,
-          2,
-          3
-        ]
-      },
-      "answer": "0",
-      "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You parse a compact numeric code. The digits, in order, are three, zero, zero, two, three. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "valid_grouping_count",
-          "value": "0"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
-      }
-    },
-    {
-      "variant": "47",
-      "text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are 2, 1, 2, 1, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "params": {
-        "digits": [
-          2,
-          1,
-          2,
-          1,
-          1
-        ]
-      },
-      "answer": "8",
-      "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A decoder groups incoming digits into valid block numbers. The digits, in order, are two, one, two, one, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "valid_grouping_count",
-          "value": "8"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
-      }
-    },
-    {
-      "variant": "48",
-      "text": "You inspect a digit-tokenisation trace. The digits, in order, are 2, 2, 6, 2, 6, 3, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "params": {
-        "digits": [
-          2,
-          2,
-          6,
-          2,
-          6,
-          3,
-          2
-        ]
-      },
-      "answer": "6",
-      "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You inspect a digit-tokenisation trace. The digits, in order, are two, two, six, two, six, three, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "valid_grouping_count",
-          "value": "6"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
-      }
-    },
-    {
-      "variant": "49",
-      "text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are 2, 2, 1, 2, 1, 1, 1, 2. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "params": {
-        "digits": [
-          2,
-          2,
-          1,
-          2,
-          1,
-          1,
-          1,
-          2
-        ]
-      },
-      "answer": "34",
-      "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "A parser counts legal interpretations of a short digit sequence. The digits, in order, are two, two, one, two, one, one, one, two. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "valid_grouping_count",
-          "value": "34"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
-      }
-    },
-    {
-      "variant": "50",
-      "text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are 1, 2, 2, 2, 2, 1. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "params": {
-        "digits": [
-          1,
-          2,
-          2,
-          2,
-          2,
-          1
-        ]
-      },
-      "answer": "13",
-      "tolerance": "0",
-      "topic": "Dynamic programming",
-      "source_topic": "Valid digit-block groupings",
-      "difficulty": "Hard",
-      "spoken_text": "You trace a small one-or-two-digit decoding routine. The digits, in order, are one, two, two, two, two, one. Split the entire sequence into blocks of one or two adjacent digits. A block must represent an integer from one through twenty-six and may not start with zero. Different split positions are different groupings. What is the number of valid groupings, as a whole number?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "valid_grouping_count",
+          "name": "kth_largest_value",
           "value": "13"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "17",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "16",
+            "relative_gap": "4/17"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
       },
       "follow_up": {
-        "question": "What time and space do the prefix-count and rolling-count versions need?",
-        "reference": "The allowed block values start at one, so zero needs a valid preceding digit in a two-digit block. The prefix DP uses O(n) time and O(n) space for this trace; retaining only two previous counts reduces the calculation to O(1) extra space."
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "A reward report lists values 24, 21, 30, 28, 27, 22. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
+      "params": {
+        "count": 4,
+        "values": [
+          24,
+          21,
+          30,
+          28,
+          27,
+          22
+        ]
+      },
+      "answer": "109",
+      "tolerance": "0",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A reward report lists values twenty-four, twenty-one, thirty, twenty-eight, twenty-seven, twenty-two. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "103",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "96",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "sum_of_top_k",
+          "value": "109"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "6",
+            "relative_gap": "6/109"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "13",
+            "relative_gap": "13/109"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
+      },
+      "follow_up": {
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "A sales report lists values 11, 10, 4, 27, 15, 7. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
+      "params": {
+        "count": 4,
+        "values": [
+          11,
+          10,
+          4,
+          27,
+          15,
+          7
+        ]
+      },
+      "answer": "63",
+      "tolerance": "0",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A sales report lists values eleven, ten, four, twenty-seven, fifteen, seven. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "52",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "40",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "sum_of_top_k",
+          "value": "63"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "11",
+            "relative_gap": "11/63"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "23",
+            "relative_gap": "23/63"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "A score report lists values 25, 6, 10, 5, 29, 9. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
+      "params": {
+        "count": 2,
+        "values": [
+          25,
+          6,
+          10,
+          5,
+          29,
+          9
+        ]
+      },
+      "answer": "54",
+      "tolerance": "0",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A score report lists values twenty-five, six, ten, five, twenty-nine, nine. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "31",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "50",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "sum_of_top_k",
+          "value": "54"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "23",
+            "relative_gap": "23/54"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "4",
+            "relative_gap": "2/27"
+          }
+        ],
+        "min_wrong_pair_gap": "19",
+        "min_distinct_wrong_pair_gap": "19"
+      },
+      "follow_up": {
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "A bid report lists values 15, 18, 2, 10, 8, 25. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
+      "params": {
+        "count": 2,
+        "values": [
+          15,
+          18,
+          2,
+          10,
+          8,
+          25
+        ]
+      },
+      "answer": "43",
+      "tolerance": "0",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A bid report lists values fifteen, eighteen, two, ten, eight, twenty-five. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "33",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "sum_of_top_k",
+          "value": "43"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "18"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "10",
+            "relative_gap": "10/43"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "7",
+            "relative_gap": "7/43"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "A demand report lists values 3, 10, 2, 2, 8, 20. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
+      "params": {
+        "count": 3,
+        "values": [
+          3,
+          10,
+          2,
+          2,
+          8,
+          20
+        ]
+      },
+      "answer": "38",
+      "tolerance": "0",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A demand report lists values three, ten, two, two, eight, twenty. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "sum_of_top_k",
+          "value": "38"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "23",
+            "relative_gap": "23/38"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "14",
+            "relative_gap": "7/19"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
+      },
+      "follow_up": {
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "A reward report lists values 10, 29, 28, 2, 25, 5. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
+      "params": {
+        "count": 3,
+        "values": [
+          10,
+          29,
+          28,
+          2,
+          25,
+          5
+        ]
+      },
+      "answer": "82",
+      "tolerance": "0",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A reward report lists values ten, twenty-nine, twenty-eight, two, twenty-five, five. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "67",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "75",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "sum_of_top_k",
+          "value": "82"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "15",
+            "relative_gap": "15/82"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "7",
+            "relative_gap": "7/82"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "A sales report lists values 4, 15, 23, 5, 19, 24. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
+      "params": {
+        "count": 3,
+        "values": [
+          4,
+          15,
+          23,
+          5,
+          19,
+          24
+        ]
+      },
+      "answer": "66",
+      "tolerance": "0",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A sales report lists values four, fifteen, twenty-three, five, nineteen, twenty-four. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "42",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "57",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "sum_of_top_k",
+          "value": "66"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "19"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "24",
+            "relative_gap": "4/11"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "9",
+            "relative_gap": "3/22"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
+      },
+      "follow_up": {
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "A score report lists values 7, 18, 13, 3, 17, 12. Select the largest 2 entries, counting equal values separately. What is their total, as a whole number?",
+      "params": {
+        "count": 2,
+        "values": [
+          7,
+          18,
+          13,
+          3,
+          17,
+          12
+        ]
+      },
+      "answer": "35",
+      "tolerance": "0",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A score report lists values seven, eighteen, thirteen, three, seventeen, twelve. Select the largest two entries, counting equal values separately. What is their total, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "sum_of_top_k",
+          "value": "35"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "10",
+            "relative_gap": "2/7"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "1",
+            "relative_gap": "1/35"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
+      },
+      "follow_up": {
+        "question": "What if selected values must be distinct?",
+        "reference": "Equal occurrences must first be consolidated. This is a different rule from selecting distinct positions."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "A bid report lists values 24, 5, 11, 18, 25, 18. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
+      "params": {
+        "count": 4,
+        "values": [
+          24,
+          5,
+          11,
+          18,
+          25,
+          18
+        ]
+      },
+      "answer": "85",
+      "tolerance": "0",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A bid report lists values twenty-four, five, eleven, eighteen, twenty-five, eighteen. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "58",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "72",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "sum_of_top_k",
+          "value": "85"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "18"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "27",
+            "relative_gap": "27/85"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "13",
+            "relative_gap": "13/85"
+          }
+        ],
+        "min_wrong_pair_gap": "14",
+        "min_distinct_wrong_pair_gap": "14"
+      },
+      "follow_up": {
+        "question": "When is sorting preferable to a heap?",
+        "reference": "Sorting is convenient if the full ranking is needed. A small heap is useful for selecting only a short leading group."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "A demand report lists values 26, 29, 4, 29, 5, 3. Select the largest 3 entries, counting equal values separately. What is their total, as a whole number?",
+      "params": {
+        "count": 3,
+        "values": [
+          26,
+          29,
+          4,
+          29,
+          5,
+          3
+        ]
+      },
+      "answer": "84",
+      "tolerance": "0",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A demand report lists values twenty-six, twenty-nine, four, twenty-nine, five, three. Select the largest three entries, counting equal values separately. What is their total, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "59",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "78",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "sum_of_top_k",
+          "value": "84"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "26"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "25",
+            "relative_gap": "25/84"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "6",
+            "relative_gap": "1/14"
+          }
+        ],
+        "min_wrong_pair_gap": "19",
+        "min_distinct_wrong_pair_gap": "19"
+      },
+      "follow_up": {
+        "question": "What if entries tie at the cutoff?",
+        "reference": "Any required number of tied occurrences gives the same sum. Equal values remain separate entries."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "A reward report lists values 21, 29, 1, 30, 21, 10. Select the largest 4 entries, counting equal values separately. What is their total, as a whole number?",
+      "params": {
+        "count": 4,
+        "values": [
+          21,
+          29,
+          1,
+          30,
+          21,
+          10
+        ]
+      },
+      "answer": "101",
+      "tolerance": "0",
+      "topic": "Heaps",
+      "source_topic": "Largest-entry sum",
+      "difficulty": "Easy",
+      "spoken_text": "A reward report lists values twenty-one, twenty-nine, one, thirty, twenty-one, ten. Select the largest four entries, counting equal values separately. What is their total, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "81",
+          "misconceptions": [
+            "takes_first_entries_without_ranking"
+          ]
+        },
+        {
+          "value": "84",
+          "misconceptions": [
+            "multiplies_ranked_cutoff_by_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "sum_of_top_k",
+          "value": "101"
+        },
+        {
+          "name": "kth_largest_value",
+          "value": "21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "takes_first_entries_without_ranking",
+            "absolute_gap": "20",
+            "relative_gap": "20/101"
+          },
+          {
+            "misconception": "multiplies_ranked_cutoff_by_count",
+            "absolute_gap": "17",
+            "relative_gap": "17/101"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "Why replace a selected entry with a larger unselected one?",
+        "reference": "It increases the sum without changing the count. An optimum therefore contains the required largest entries."
       }
     }
   ]

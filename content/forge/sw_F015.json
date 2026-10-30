@@ -1,0 +1,3777 @@
+{
+  "template_id": "sw_F015",
+  "pack": "software",
+  "topic": "Dynamic programming",
+  "topics": [
+    "Dynamic programming"
+  ],
+  "source_topic": "Routes past broken steps",
+  "difficulty": "Hard",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 3,
+    "repair_attempted": true,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "Why add the two predecessor counts?",
+    "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "A stairway ends at step 12. Steps 4, 6, 9 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          4,
+          6,
+          9
+        ],
+        "steps": 12
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stairway ends at step twelve. Steps four, six, nine are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "3"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "227",
+            "relative_gap": "227/6"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "49",
+            "relative_gap": "49/6"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "6",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "A maintenance stairway ends at step 8. Step 5 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          5
+        ],
+        "steps": 8
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A maintenance stairway ends at step eight. Step five is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "5"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "24",
+            "relative_gap": "12/5"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "11",
+            "relative_gap": "11/10"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "10",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "A tower stairway ends at step 11. Steps 1, 4, 7 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          1,
+          4,
+          7
+        ],
+        "steps": 11
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A tower stairway ends at step eleven. Steps one, four, seven are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "2"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "141",
+            "relative_gap": "47"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "31",
+            "relative_gap": "31/3"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "3",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "34",
+        "min_distinct_wrong_pair_gap": "34"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "A station stairway ends at step 12. Steps 5, 7 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          5,
+          7
+        ],
+        "steps": 12
+      },
+      "answer": "25",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A station stairway ends at step twelve. Steps five, seven are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "15"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "208",
+            "relative_gap": "208/25"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "64",
+            "relative_gap": "64/25"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "25",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "A stage stairway ends at step 11. Steps 3, 8 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          3,
+          8
+        ],
+        "steps": 11
+      },
+      "answer": "12",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stage stairway ends at step eleven. Steps three, eight are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "6"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "132",
+            "relative_gap": "11"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "43",
+            "relative_gap": "43/12"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "12",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "A stairway ends at step 12. Step 4 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          4
+        ],
+        "steps": 12
+      },
+      "answer": "63",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stairway ends at step twelve. Step four is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "144",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "39"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "170",
+            "relative_gap": "170/63"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "81",
+            "relative_gap": "9/7"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "63",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "A maintenance stairway ends at step 12. Steps 4, 8 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          4,
+          8
+        ],
+        "steps": 12
+      },
+      "answer": "18",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A maintenance stairway ends at step twelve. Steps four, eight are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "12"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "215",
+            "relative_gap": "215/18"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "71",
+            "relative_gap": "71/18"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "18",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "A tower stairway ends at step 11. Step 7 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          7
+        ],
+        "steps": 11
+      },
+      "answer": "39",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A tower stairway ends at step eleven. Step seven is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "26"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "105",
+            "relative_gap": "35/13"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "50",
+            "relative_gap": "50/39"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "39",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "A station stairway ends at step 8. Steps 1, 3, 6 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          1,
+          3,
+          6
+        ],
+        "steps": 8
+      },
+      "answer": "1",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A station stairway ends at step eight. Steps one, three, six are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "1"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "33",
+            "relative_gap": "33"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "7",
+            "relative_gap": "7"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "A stage stairway ends at step 8. Step 4 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          4
+        ],
+        "steps": 8
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stage stairway ends at step eight. Step four is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "6"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "25",
+            "relative_gap": "25/9"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "12",
+            "relative_gap": "4/3"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "9",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "A stairway ends at step 11. Step 6 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          6
+        ],
+        "steps": 11
+      },
+      "answer": "40",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stairway ends at step eleven. Step six is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "24"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "104",
+            "relative_gap": "13/5"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "49",
+            "relative_gap": "49/40"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "40",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "A maintenance stairway ends at step 11. Steps 3, 7 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          3,
+          7
+        ],
+        "steps": 11
+      },
+      "answer": "12",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A maintenance stairway ends at step eleven. Steps three, seven are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "8"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "132",
+            "relative_gap": "11"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "43",
+            "relative_gap": "43/12"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "12",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "A tower stairway ends at step 12. Steps 6, 8 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          6,
+          8
+        ],
+        "steps": 12
+      },
+      "answer": "24",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A tower stairway ends at step twelve. Steps six, eight are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "16"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "209",
+            "relative_gap": "209/24"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "65",
+            "relative_gap": "65/24"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "24",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "A station stairway ends at step 12. Steps 6, 10 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          6,
+          10
+        ],
+        "steps": 12
+      },
+      "answer": "16",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A station stairway ends at step twelve. Steps six, ten are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "16"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "217",
+            "relative_gap": "217/16"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "73",
+            "relative_gap": "73/16"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "16",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "A stage stairway ends at step 12. Steps 5, 8 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          5,
+          8
+        ],
+        "steps": 12
+      },
+      "answer": "15",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stage stairway ends at step twelve. Steps five, eight are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "10"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "218",
+            "relative_gap": "218/15"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "74",
+            "relative_gap": "74/15"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "15",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "A stairway ends at step 10. Steps 2, 4 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          2,
+          4
+        ],
+        "steps": 10
+      },
+      "answer": "8",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stairway ends at step ten. Steps two, four are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "89",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "5"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "81",
+            "relative_gap": "81/8"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "26",
+            "relative_gap": "13/4"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "8",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "34",
+        "min_distinct_wrong_pair_gap": "34"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "A maintenance stairway ends at step 10. Step 5 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          5
+        ],
+        "steps": 10
+      },
+      "answer": "25",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A maintenance stairway ends at step ten. Step five is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "89",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "15"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "64",
+            "relative_gap": "64/25"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "30",
+            "relative_gap": "6/5"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "25",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "34",
+        "min_distinct_wrong_pair_gap": "34"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "A tower stairway ends at step 8. Steps 2, 5 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          2,
+          5
+        ],
+        "steps": 8
+      },
+      "answer": "2",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A tower stairway ends at step eight. Steps two, five are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "13",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "1"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "32",
+            "relative_gap": "16"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "11",
+            "relative_gap": "11/2"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "2",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "A station stairway ends at step 8. Steps 1, 3 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          1,
+          3
+        ],
+        "steps": 8
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A station stairway ends at step eight. Steps one, three are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "13",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "3"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "29",
+            "relative_gap": "29/5"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "8",
+            "relative_gap": "8/5"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "5",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "A stage stairway ends at step 12. Step 6 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          6
+        ],
+        "steps": 12
+      },
+      "answer": "64",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stage stairway ends at step twelve. Step six is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "144",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "40"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "169",
+            "relative_gap": "169/64"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "80",
+            "relative_gap": "5/4"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "64",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "A stairway ends at step 11. Step 8 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          8
+        ],
+        "steps": 11
+      },
+      "answer": "42",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stairway ends at step eleven. Step eight is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "21"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "102",
+            "relative_gap": "17/7"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "47",
+            "relative_gap": "47/42"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "42",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "A maintenance stairway ends at step 10. Step 3 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          3
+        ],
+        "steps": 10
+      },
+      "answer": "26",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A maintenance stairway ends at step ten. Step three is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "89",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "16"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "63",
+            "relative_gap": "63/26"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "29",
+            "relative_gap": "29/26"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "26",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "34",
+        "min_distinct_wrong_pair_gap": "34"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "A tower stairway ends at step 10. Step 1 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          1
+        ],
+        "steps": 10
+      },
+      "answer": "34",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A tower stairway ends at step ten. Step one is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "89",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "21"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "55",
+            "relative_gap": "55/34"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "21",
+            "relative_gap": "21/34"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "34",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "34",
+        "min_distinct_wrong_pair_gap": "34"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "A station stairway ends at step 10. Steps 2, 7, 9 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          2,
+          7,
+          9
+        ],
+        "steps": 10
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A station stairway ends at step ten. Steps two, seven, nine are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "89",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "0"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "86",
+            "relative_gap": "86/3"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "18",
+            "relative_gap": "6"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "3",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "21",
+        "min_distinct_wrong_pair_gap": "21"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "A stage stairway ends at step 8. Steps 2, 4, 6 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          2,
+          4,
+          6
+        ],
+        "steps": 8
+      },
+      "answer": "1",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stage stairway ends at step eight. Steps two, four, six are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "1"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "33",
+            "relative_gap": "33"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "7",
+            "relative_gap": "7"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "A stairway ends at step 12. Steps 4, 9 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          4,
+          9
+        ],
+        "steps": 12
+      },
+      "answer": "18",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stairway ends at step twelve. Steps four, nine are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "9"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "215",
+            "relative_gap": "215/18"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "71",
+            "relative_gap": "71/18"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "18",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "A maintenance stairway ends at step 12. Step 5 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          5
+        ],
+        "steps": 12
+      },
+      "answer": "65",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A maintenance stairway ends at step twelve. Step five is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "144",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "40"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "168",
+            "relative_gap": "168/65"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "79",
+            "relative_gap": "79/65"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "65",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "A tower stairway ends at step 11. Step 4 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          4
+        ],
+        "steps": 11
+      },
+      "answer": "39",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A tower stairway ends at step eleven. Step four is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "24"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "15"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "105",
+            "relative_gap": "35/13"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "50",
+            "relative_gap": "50/39"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "39",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "A station stairway ends at step 12. Steps 7, 9 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          7,
+          9
+        ],
+        "steps": 12
+      },
+      "answer": "26",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A station stairway ends at step twelve. Steps seven, nine are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "13"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "207",
+            "relative_gap": "207/26"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "63",
+            "relative_gap": "63/26"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "26",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "A stage stairway ends at step 10. Step 9 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          9
+        ],
+        "steps": 10
+      },
+      "answer": "34",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stage stairway ends at step ten. Step nine is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "89",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "0"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "34"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "55",
+            "relative_gap": "55/34"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "21",
+            "relative_gap": "21/34"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "34",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "34",
+        "min_distinct_wrong_pair_gap": "34"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "A stairway ends at step 11. Steps 1, 8 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          1,
+          8
+        ],
+        "steps": 11
+      },
+      "answer": "16",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stairway ends at step eleven. Steps one, eight are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "8"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "128",
+            "relative_gap": "8"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "39",
+            "relative_gap": "39/16"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "16",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "A maintenance stairway ends at step 12. Step 9 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          9
+        ],
+        "steps": 12
+      },
+      "answer": "68",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A maintenance stairway ends at step twelve. Step nine is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "144",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "34"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "34"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "165",
+            "relative_gap": "165/68"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "76",
+            "relative_gap": "19/17"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "68",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "A tower stairway ends at step 11. Steps 3, 6 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          3,
+          6
+        ],
+        "steps": 11
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A tower stairway ends at step eleven. Steps three, six are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "6"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "134",
+            "relative_gap": "67/5"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "45",
+            "relative_gap": "9/2"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "10",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "A station stairway ends at step 8. Step 7 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          7
+        ],
+        "steps": 8
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A station stairway ends at step eight. Step seven is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "0"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "21",
+            "relative_gap": "21/13"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "8",
+            "relative_gap": "8/13"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "13",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "A stage stairway ends at step 9. Step 8 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          8
+        ],
+        "steps": 9
+      },
+      "answer": "21",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stage stairway ends at step nine. Step eight is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "55",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "0"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "34",
+            "relative_gap": "34/21"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "13",
+            "relative_gap": "13/21"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "21",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "21",
+        "min_distinct_wrong_pair_gap": "21"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "A stairway ends at step 8. Step 2 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          2
+        ],
+        "steps": 8
+      },
+      "answer": "8",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stairway ends at step eight. Step two is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "5"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "26",
+            "relative_gap": "13/4"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "13",
+            "relative_gap": "13/8"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "8",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "A maintenance stairway ends at step 10. Step 6 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          6
+        ],
+        "steps": 10
+      },
+      "answer": "24",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A maintenance stairway ends at step ten. Step six is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "89",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "16"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "65",
+            "relative_gap": "65/24"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "31",
+            "relative_gap": "31/24"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "24",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "34",
+        "min_distinct_wrong_pair_gap": "34"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "A tower stairway ends at step 12. Steps 5, 9 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          5,
+          9
+        ],
+        "steps": 12
+      },
+      "answer": "20",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A tower stairway ends at step twelve. Steps five, nine are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "10"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "213",
+            "relative_gap": "213/20"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "69",
+            "relative_gap": "69/20"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "20",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "A station stairway ends at step 12. Step 1 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          1
+        ],
+        "steps": 12
+      },
+      "answer": "89",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A station stairway ends at step twelve. Step one is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "144",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "55"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "34"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "144",
+            "relative_gap": "144/89"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "55",
+            "relative_gap": "55/89"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "89",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "A stage stairway ends at step 8. Steps 3, 7 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          3,
+          7
+        ],
+        "steps": 8
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stage stairway ends at step eight. Steps three, seven are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "13",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "0"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "30",
+            "relative_gap": "15/2"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "9",
+            "relative_gap": "9/4"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "4",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "A stairway ends at step 9. Step 5 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          5
+        ],
+        "steps": 9
+      },
+      "answer": "15",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stairway ends at step nine. Step five is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "55",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "10"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "40",
+            "relative_gap": "8/3"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "19",
+            "relative_gap": "19/15"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "15",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "21",
+        "min_distinct_wrong_pair_gap": "21"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "A maintenance stairway ends at step 11. Steps 4, 9 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          4,
+          9
+        ],
+        "steps": 11
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A maintenance stairway ends at step eleven. Steps four, nine are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "9"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "135",
+            "relative_gap": "15"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "46",
+            "relative_gap": "46/9"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "9",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "A tower stairway ends at step 9. Step 2 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          2
+        ],
+        "steps": 9
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A tower stairway ends at step nine. Step two is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "55",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "8"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "42",
+            "relative_gap": "42/13"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "21",
+            "relative_gap": "21/13"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "13",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "21",
+        "min_distinct_wrong_pair_gap": "21"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "A station stairway ends at step 10. Step 8 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          8
+        ],
+        "steps": 10
+      },
+      "answer": "21",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A station stairway ends at step ten. Step eight is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "89",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "21"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "68",
+            "relative_gap": "68/21"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "34",
+            "relative_gap": "34/21"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "21",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "34",
+        "min_distinct_wrong_pair_gap": "34"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "A stage stairway ends at step 12. Steps 3, 9 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          3,
+          9
+        ],
+        "steps": 12
+      },
+      "answer": "20",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stage stairway ends at step twelve. Steps three, nine are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "10"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "213",
+            "relative_gap": "213/20"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "69",
+            "relative_gap": "69/20"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "20",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "89",
+        "min_distinct_wrong_pair_gap": "89"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "A stairway ends at step 8. Steps 5, 7 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          5,
+          7
+        ],
+        "steps": 8
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stairway ends at step eight. Steps five, seven are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "13",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "0"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "29",
+            "relative_gap": "29/5"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "8",
+            "relative_gap": "8/5"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "5",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "A maintenance stairway ends at step 9. Steps 4, 8 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          4,
+          8
+        ],
+        "steps": 9
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A maintenance stairway ends at step nine. Steps four, eight are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "55",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "0"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "49",
+            "relative_gap": "49/6"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "15",
+            "relative_gap": "5/2"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "6",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "21",
+        "min_distinct_wrong_pair_gap": "21"
+      },
+      "follow_up": {
+        "question": "What if three-step jumps are allowed?",
+        "reference": "Add the third predecessor count. Broken destinations still contribute zero."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "A tower stairway ends at step 8. Steps 1, 3, 5 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          1,
+          3,
+          5
+        ],
+        "steps": 8
+      },
+      "answer": "2",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A tower stairway ends at step eight. Steps one, three, five are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "1"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "32",
+            "relative_gap": "16"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "6",
+            "relative_gap": "3"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "2",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "Could transfer matrices handle a long periodic stairway?",
+        "reference": "A state vector can carry the previous two counts. Exponentiate repeated periodic transitions instead of visiting every step."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "A station stairway ends at step 9. Steps 2, 6 are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          2,
+          6
+        ],
+        "steps": 9
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A station stairway ends at step nine. Steps two, six are broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "55",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "2"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "51",
+            "relative_gap": "51/4"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "17",
+            "relative_gap": "17/4"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "4",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "21",
+        "min_distinct_wrong_pair_gap": "21"
+      },
+      "follow_up": {
+        "question": "Why add the two predecessor counts?",
+        "reference": "The final move is either one step or two steps. These disjoint cases cover every legal route."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "A stage stairway ends at step 11. Step 1 is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "params": {
+        "blocked": [
+          1
+        ],
+        "steps": 11
+      },
+      "answer": "55",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Routes past broken steps",
+      "difficulty": "Hard",
+      "spoken_text": "A stage stairway ends at step eleven. Step one is broken. Start at step zero and move up one or two steps, never landing on a broken step. How many routes reach the finish exactly, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144",
+          "misconceptions": [
+            "allows_landing_on_broken_steps"
+          ]
+        },
+        {
+          "value": "89",
+          "misconceptions": [
+            "compresses_away_broken_steps"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "forbids_jumping_over_broken_steps"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "routes_to_penultimate_step",
+          "value": "34"
+        },
+        {
+          "name": "routes_to_antepenultimate_step",
+          "value": "21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_landing_on_broken_steps",
+            "absolute_gap": "89",
+            "relative_gap": "89/55"
+          },
+          {
+            "misconception": "compresses_away_broken_steps",
+            "absolute_gap": "34",
+            "relative_gap": "34/55"
+          },
+          {
+            "misconception": "forbids_jumping_over_broken_steps",
+            "absolute_gap": "55",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "What if two consecutive interior steps are broken?",
+        "reference": "Neither can be a landing. Jumps of at most two steps cannot cross both, so later steps are unreachable."
+      }
+    }
+  ]
+}

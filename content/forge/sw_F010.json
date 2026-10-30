@@ -1,11 +1,11 @@
 {
   "template_id": "sw_F010",
   "pack": "software",
-  "topic": "Heaps",
+  "topic": "Two pointers",
   "topics": [
-    "Heaps"
+    "Two pointers"
   ],
-  "source_topic": "Least-cost piece joining",
+  "source_topic": "Trapped water volume",
   "difficulty": "Medium",
   "models": {
     "author": "meta-models/muse-spark-open-1026",
@@ -25,2139 +25,3369 @@
       "variants_checked": 50,
       "max_absolute_error": "0"
     },
-    "misconceptions_verified": false,
-    "method_count": 0,
-    "repair_attempted": true,
-    "reason": {
-      "gate": "wrong_methods",
-      "error_class": "correct_answer_collision",
-      "variant_index": 5
-    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
     "pending_reason": null,
     "all_variants_retained": true,
     "rechecked_parameter_revision": null,
-    "variant_followups": false
+    "variant_followups": true
   },
   "follow_up": {
-    "question": "What are the time and space costs of smallest-pair merging with a heap?",
-    "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+    "question": "Why does the lower wall determine the level?",
+    "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
   },
   "review_status": "pending_builder_review",
   "instances": [
     {
       "variant": "1",
-      "text": "You connect stored cable pieces. The piece lengths are 0, 17, 18, 19, 11. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A roof profile has heights 2, 23, 12, 8, 29, 18, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          0,
-          17,
-          18,
-          19,
-          11
+          2,
+          23,
+          12,
+          8,
+          29,
+          18
         ]
       },
-      "answer": "141",
+      "answer": "26",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You connect stored cable pieces. The piece lengths are zero, seventeen, eighteen, nineteen, eleven. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A roof profile has heights two, twenty-three, twelve, eight, twenty-nine, eighteen, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "141"
+          "value": "37",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "4"
+          "value": "4",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "26"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "15"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "11",
+            "relative_gap": "11/26"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "22",
+            "relative_gap": "11/13"
+          }
+        ],
+        "min_wrong_pair_gap": "33",
+        "min_distinct_wrong_pair_gap": "33"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
       }
     },
     {
       "variant": "2",
-      "text": "A routine combines small file segments. The piece lengths are 3, 10, 2. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A gutter profile has heights 25, 14, 20, 21, 10, 4, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          3,
+          25,
+          14,
+          20,
+          21,
           10,
-          2
+          4
         ]
       },
-      "answer": "20",
+      "answer": "8",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A routine combines small file segments. The piece lengths are three, ten, two. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A gutter profile has heights twenty-five, fourteen, twenty, twenty-one, ten, four, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "20"
+          "value": "56",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "2"
+          "value": "6",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "8"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "7"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "48",
+            "relative_gap": "6"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "2",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "50",
+        "min_distinct_wrong_pair_gap": "50"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
       }
     },
     {
       "variant": "3",
-      "text": "You trace a batch-merging cost calculation. The piece lengths are 19, 2, 15, 7, 8, 19, 7, 9. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A tray profile has heights 27, 21, 10, 25, 13, 17, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          19,
-          2,
-          15,
-          7,
-          8,
-          19,
-          7,
-          9
+          27,
+          21,
+          10,
+          25,
+          13,
+          17
         ]
       },
-      "answer": "244",
+      "answer": "23",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You trace a batch-merging cost calculation. The piece lengths are nineteen, two, fifteen, seven, eight, nineteen, seven, nine. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A tray profile has heights twenty-seven, twenty-one, ten, twenty-five, thirteen, seventeen, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "244"
+          "value": "49",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "7"
+          "value": "15",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "23"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "15"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "26",
+            "relative_gap": "26/23"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "8",
+            "relative_gap": "8/23"
+          }
+        ],
+        "min_wrong_pair_gap": "34",
+        "min_distinct_wrong_pair_gap": "34"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
       }
     },
     {
       "variant": "4",
-      "text": "A data system repeatedly joins weighted chunks. The piece lengths are 14, 12, 12. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A drain profile has heights 25, 17, 16, 16, 20, 21, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          14,
-          12,
-          12
+          25,
+          17,
+          16,
+          16,
+          20,
+          21
         ]
       },
-      "answer": "62",
+      "answer": "15",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A data system repeatedly joins weighted chunks. The piece lengths are fourteen, twelve, twelve. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A drain profile has heights twenty-five, seventeen, sixteen, sixteen, twenty, twenty-one, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "62"
+          "value": "35",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "2"
+          "value": "0",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "15"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "5"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "20",
+            "relative_gap": "4/3"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "15",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "35",
+        "min_distinct_wrong_pair_gap": "35"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
       }
     },
     {
       "variant": "5",
-      "text": "You inspect the total work of combining short segments. The piece lengths are 15, 20, 2, 18, 16, 12. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A channel profile has heights 3, 29, 18, 8, 18, 20, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          15,
-          20,
-          2,
+          3,
+          29,
           18,
-          16,
-          12
+          8,
+          18,
+          20
         ]
       },
-      "answer": "209",
+      "answer": "16",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You inspect the total work of combining short segments. The piece lengths are fifteen, twenty, two, eighteen, sixteen, twelve. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A channel profile has heights three, twenty-nine, eighteen, eight, eighteen, twenty, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "209"
+          "value": "52",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "5"
+          "value": "10",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "16"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "12"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "36",
+            "relative_gap": "9/4"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "6",
+            "relative_gap": "3/8"
+          }
+        ],
+        "min_wrong_pair_gap": "42",
+        "min_distinct_wrong_pair_gap": "42"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
       }
     },
     {
       "variant": "6",
-      "text": "You connect stored cable pieces. The piece lengths are 15, 12. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A roof profile has heights 29, 14, 4, 13, 20, 28, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          15,
-          12
+          29,
+          14,
+          4,
+          13,
+          20,
+          28
         ]
       },
-      "answer": "27",
+      "answer": "61",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You connect stored cable pieces. The piece lengths are fifteen, twelve. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A roof profile has heights twenty-nine, fourteen, four, thirteen, twenty, twenty-eight, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "27"
+          "value": "66",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "1"
+          "value": "9",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "61"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "24"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "5",
+            "relative_gap": "5/61"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "52",
+            "relative_gap": "52/61"
+          }
+        ],
+        "min_wrong_pair_gap": "57",
+        "min_distinct_wrong_pair_gap": "57"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
       }
     },
     {
       "variant": "7",
-      "text": "A routine combines small file segments. The piece lengths are 14, 14, 17. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A gutter profile has heights 17, 2, 12, 0, 24, 11, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          14,
-          14,
-          17
+          17,
+          2,
+          12,
+          0,
+          24,
+          11
         ]
       },
-      "answer": "73",
+      "answer": "37",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A routine combines small file segments. The piece lengths are fourteen, fourteen, seventeen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A gutter profile has heights seventeen, two, twelve, zero, twenty-four, eleven, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "73"
+          "value": "50",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "2"
+          "value": "22",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "37"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "17"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "13",
+            "relative_gap": "13/37"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "15",
+            "relative_gap": "15/37"
+          }
+        ],
+        "min_wrong_pair_gap": "28",
+        "min_distinct_wrong_pair_gap": "28"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
       }
     },
     {
       "variant": "8",
-      "text": "You trace a batch-merging cost calculation. The piece lengths are 15, 6, 3. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A tray profile has heights 14, 27, 16, 11, 20, 24, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          15,
-          6,
-          3
+          14,
+          27,
+          16,
+          11,
+          20,
+          24
         ]
       },
-      "answer": "33",
+      "answer": "25",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You trace a batch-merging cost calculation. The piece lengths are fifteen, six, three. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A tray profile has heights fourteen, twenty-seven, sixteen, eleven, twenty, twenty-four, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "33"
+          "value": "37",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "2"
+          "value": "5",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "25"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "13"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "12",
+            "relative_gap": "12/25"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "20",
+            "relative_gap": "4/5"
+          }
+        ],
+        "min_wrong_pair_gap": "32",
+        "min_distinct_wrong_pair_gap": "32"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
       }
     },
     {
       "variant": "9",
-      "text": "A data system repeatedly joins weighted chunks. The piece lengths are 14, 11, 15, 14, 8, 19, 19. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A drain profile has heights 30, 2, 0, 2, 16, 27, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          14,
-          11,
-          15,
-          14,
-          8,
-          19,
-          19
+          30,
+          2,
+          0,
+          2,
+          16,
+          27
         ]
       },
-      "answer": "281",
+      "answer": "88",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A data system repeatedly joins weighted chunks. The piece lengths are fourteen, eleven, fifteen, fourteen, eight, nineteen, nineteen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A drain profile has heights thirty, two, zero, two, sixteen, twenty-seven, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "281"
+          "value": "103",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "6"
+          "value": "2",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "88"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "27"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "15",
+            "relative_gap": "15/88"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "86",
+            "relative_gap": "43/44"
+          }
+        ],
+        "min_wrong_pair_gap": "101",
+        "min_distinct_wrong_pair_gap": "101"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
       }
     },
     {
       "variant": "10",
-      "text": "You inspect the total work of combining short segments. The piece lengths are 13, 1, 18, 7, 7, 15, 20, 20. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A channel profile has heights 23, 19, 1, 10, 28, 5, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          13,
+          23,
+          19,
           1,
-          18,
-          7,
-          7,
-          15,
-          20,
-          20
+          10,
+          28,
+          5
         ]
       },
-      "answer": "286",
+      "answer": "39",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You inspect the total work of combining short segments. The piece lengths are thirteen, one, eighteen, seven, seven, fifteen, twenty, twenty. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A channel profile has heights twenty-three, nineteen, one, ten, twenty-eight, five, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "286"
+          "value": "62",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "7"
+          "value": "9",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "39"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "23",
+            "relative_gap": "23/39"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "30",
+            "relative_gap": "10/13"
+          }
+        ],
+        "min_wrong_pair_gap": "53",
+        "min_distinct_wrong_pair_gap": "53"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
       }
     },
     {
       "variant": "11",
-      "text": "You connect stored cable pieces. The piece lengths are 17, 9, 4, 6, 3, 0, 12. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A roof profile has heights 29, 24, 5, 7, 2, 25, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          17,
-          9,
-          4,
-          6,
-          3,
-          0,
-          12
+          29,
+          24,
+          5,
+          7,
+          2,
+          25
         ]
       },
-      "answer": "125",
+      "answer": "62",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You connect stored cable pieces. The piece lengths are seventeen, nine, four, six, three, zero, twelve. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A roof profile has heights twenty-nine, twenty-four, five, seven, two, twenty-five, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "125"
+          "value": "82",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "6"
+          "value": "7",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "62"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "23"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "20",
+            "relative_gap": "10/31"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "55",
+            "relative_gap": "55/62"
+          }
+        ],
+        "min_wrong_pair_gap": "75",
+        "min_distinct_wrong_pair_gap": "75"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
       }
     },
     {
       "variant": "12",
-      "text": "A routine combines small file segments. The piece lengths are 7, 9, 1, 15, 8, 6. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A gutter profile has heights 10, 7, 9, 21, 9, 2, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
+          10,
           7,
           9,
-          1,
-          15,
-          8,
-          6
+          21,
+          9,
+          2
         ]
       },
-      "answer": "113",
+      "answer": "4",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A routine combines small file segments. The piece lengths are seven, nine, one, fifteen, eight, six. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A gutter profile has heights ten, seven, nine, twenty-one, nine, two, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "113"
+          "value": "35",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "5"
+          "value": "2",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "4"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "3"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "31",
+            "relative_gap": "31/4"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "2",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "33",
+        "min_distinct_wrong_pair_gap": "33"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
       }
     },
     {
       "variant": "13",
-      "text": "You trace a batch-merging cost calculation. The piece lengths are 16, 9, 9. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A tray profile has heights 22, 1, 21, 28, 25, 22, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          16,
-          9,
-          9
+          22,
+          1,
+          21,
+          28,
+          25,
+          22
         ]
       },
-      "answer": "52",
+      "answer": "22",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You trace a batch-merging cost calculation. The piece lengths are sixteen, nine, nine. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A tray profile has heights twenty-two, one, twenty-one, twenty-eight, twenty-five, twenty-two, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "52"
+          "value": "31",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "2"
+          "value": "20",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "22"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "21"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "9",
+            "relative_gap": "9/22"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "2",
+            "relative_gap": "1/11"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
       }
     },
     {
       "variant": "14",
-      "text": "A data system repeatedly joins weighted chunks. The piece lengths are 16, 7, 17, 7. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A drain profile has heights 10, 18, 3, 4, 0, 8, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          16,
-          7,
-          17,
-          7
-        ]
-      },
-      "answer": "91",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "A data system repeatedly joins weighted chunks. The piece lengths are sixteen, seven, seventeen, seven. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "91"
-        },
-        {
-          "name": "merge_count",
-          "value": "3"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "15",
-      "text": "You inspect the total work of combining short segments. The piece lengths are 2, 12, 10, 4, 18. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          2,
-          12,
           10,
+          18,
+          3,
           4,
-          18
-        ]
-      },
-      "answer": "96",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect the total work of combining short segments. The piece lengths are two, twelve, ten, four, eighteen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "96"
-        },
-        {
-          "name": "merge_count",
-          "value": "4"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "16",
-      "text": "You connect stored cable pieces. The piece lengths are 8, 10, 12, 14, 7. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          8,
-          10,
-          12,
-          14,
-          7
-        ]
-      },
-      "answer": "117",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You connect stored cable pieces. The piece lengths are eight, ten, twelve, fourteen, seven. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "117"
-        },
-        {
-          "name": "merge_count",
-          "value": "4"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "17",
-      "text": "A routine combines small file segments. The piece lengths are 11, 6. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          11,
-          6
+          0,
+          8
         ]
       },
       "answer": "17",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A routine combines small file segments. The piece lengths are eleven, six. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A drain profile has heights ten, eighteen, three, four, zero, eight, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "57",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_cost",
+          "name": "total_trapped_water",
           "value": "17"
         },
         {
-          "name": "merge_count",
-          "value": "1"
+          "name": "maximum_water_depth",
+          "value": "8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "40",
+            "relative_gap": "40/17"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "12",
+            "relative_gap": "12/17"
+          }
+        ],
+        "min_wrong_pair_gap": "52",
+        "min_distinct_wrong_pair_gap": "52"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "A channel profile has heights 27, 4, 6, 24, 4, 11, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          27,
+          4,
+          6,
+          24,
+          4,
+          11
+        ]
+      },
+      "answer": "45",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A channel profile has heights twenty-seven, four, six, twenty-four, four, eleven, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "86",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "9",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "45"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "41",
+            "relative_gap": "41/45"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "36",
+            "relative_gap": "4/5"
+          }
+        ],
+        "min_wrong_pair_gap": "77",
+        "min_distinct_wrong_pair_gap": "77"
+      },
+      "follow_up": {
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "A roof profile has heights 20, 8, 25, 3, 0, 9, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          20,
+          8,
+          25,
+          3,
+          0,
+          9
+        ]
+      },
+      "answer": "27",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A roof profile has heights twenty, eight, twenty-five, three, zero, nine, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "75",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "15",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "27"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "12"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "48",
+            "relative_gap": "16/9"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "12",
+            "relative_gap": "4/9"
+          }
+        ],
+        "min_wrong_pair_gap": "60",
+        "min_distinct_wrong_pair_gap": "60"
+      },
+      "follow_up": {
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "A gutter profile has heights 29, 5, 16, 22, 8, 16, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          29,
+          5,
+          16,
+          22,
+          8,
+          16
+        ]
+      },
+      "answer": "31",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A gutter profile has heights twenty-nine, five, sixteen, twenty-two, eight, sixteen, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "78",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "19",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "31"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "47",
+            "relative_gap": "47/31"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "12",
+            "relative_gap": "12/31"
+          }
+        ],
+        "min_wrong_pair_gap": "59",
+        "min_distinct_wrong_pair_gap": "59"
+      },
+      "follow_up": {
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
       }
     },
     {
       "variant": "18",
-      "text": "You trace a batch-merging cost calculation. The piece lengths are 14, 13, 2, 13, 8, 4. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A tray profile has heights 9, 13, 13, 4, 5, 6, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          14,
+          9,
           13,
-          2,
           13,
-          8,
-          4
+          4,
+          5,
+          6
         ]
       },
-      "answer": "128",
+      "answer": "3",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You trace a batch-merging cost calculation. The piece lengths are fourteen, thirteen, two, thirteen, eight, four. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A tray profile has heights nine, thirteen, thirteen, four, five, six, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "128"
+          "value": "24",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "5"
+          "value": "1",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "3"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "21",
+            "relative_gap": "7"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "2",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "23",
+        "min_distinct_wrong_pair_gap": "23"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
       }
     },
     {
       "variant": "19",
-      "text": "A data system repeatedly joins weighted chunks. The piece lengths are 13, 1, 11, 3, 1, 20. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A drain profile has heights 21, 0, 1, 18, 22, 21, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          13,
+          21,
+          0,
           1,
-          11,
-          3,
-          1,
-          20
-        ]
-      },
-      "answer": "101",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "A data system repeatedly joins weighted chunks. The piece lengths are thirteen, one, eleven, three, one, twenty. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "101"
-        },
-        {
-          "name": "merge_count",
-          "value": "5"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "20",
-      "text": "You inspect the total work of combining short segments. The piece lengths are 14, 7, 7, 5, 10, 5, 16. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          14,
-          7,
-          7,
-          5,
-          10,
-          5,
-          16
-        ]
-      },
-      "answer": "172",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect the total work of combining short segments. The piece lengths are fourteen, seven, seven, five, ten, five, sixteen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "172"
-        },
-        {
-          "name": "merge_count",
-          "value": "6"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "21",
-      "text": "You connect stored cable pieces. The piece lengths are 4, 20, 20, 5, 15, 17, 12, 13. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          4,
-          20,
-          20,
-          5,
-          15,
-          17,
-          12,
-          13
-        ]
-      },
-      "answer": "307",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You connect stored cable pieces. The piece lengths are four, twenty, twenty, five, fifteen, seventeen, twelve, thirteen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "307"
-        },
-        {
-          "name": "merge_count",
-          "value": "7"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "22",
-      "text": "A routine combines small file segments. The piece lengths are 20, 3, 9. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          20,
-          3,
-          9
+          18,
+          22,
+          21
         ]
       },
       "answer": "44",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A routine combines small file segments. The piece lengths are twenty, three, nine. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A drain profile has heights twenty-one, zero, one, eighteen, twenty-two, twenty-one, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "45",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "1",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_cost",
+          "name": "total_trapped_water",
           "value": "44"
         },
         {
-          "name": "merge_count",
-          "value": "2"
+          "name": "maximum_water_depth",
+          "value": "21"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "1",
+            "relative_gap": "1/44"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "43",
+            "relative_gap": "43/44"
+          }
+        ],
+        "min_wrong_pair_gap": "44",
+        "min_distinct_wrong_pair_gap": "44"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "A channel profile has heights 26, 1, 10, 9, 26, 2, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          26,
+          1,
+          10,
+          9,
+          26,
+          2
+        ]
+      },
+      "answer": "58",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A channel profile has heights twenty-six, one, ten, nine, twenty-six, two, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "82",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "58"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "24",
+            "relative_gap": "12/29"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "48",
+            "relative_gap": "24/29"
+          }
+        ],
+        "min_wrong_pair_gap": "72",
+        "min_distinct_wrong_pair_gap": "72"
+      },
+      "follow_up": {
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "A roof profile has heights 26, 1, 8, 28, 1, 17, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          26,
+          1,
+          8,
+          28,
+          1,
+          17
+        ]
+      },
+      "answer": "59",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A roof profile has heights twenty-six, one, eight, twenty-eight, one, seventeen, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "81",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "23",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "59"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "22",
+            "relative_gap": "22/59"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "36",
+            "relative_gap": "36/59"
+          }
+        ],
+        "min_wrong_pair_gap": "58",
+        "min_distinct_wrong_pair_gap": "58"
+      },
+      "follow_up": {
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "A gutter profile has heights 8, 18, 30, 7, 1, 29, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          8,
+          18,
+          30,
+          7,
+          1,
+          29
+        ]
+      },
+      "answer": "50",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A gutter profile has heights eight, eighteen, thirty, seven, one, twenty-nine, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "53",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "50"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "28"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "3",
+            "relative_gap": "3/50"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "44",
+            "relative_gap": "22/25"
+          }
+        ],
+        "min_wrong_pair_gap": "47",
+        "min_distinct_wrong_pair_gap": "47"
+      },
+      "follow_up": {
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
       }
     },
     {
       "variant": "23",
-      "text": "You trace a batch-merging cost calculation. The piece lengths are 4, 1. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A tray profile has heights 22, 22, 0, 15, 28, 26, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          4,
-          1
+          22,
+          22,
+          0,
+          15,
+          28,
+          26
         ]
       },
-      "answer": "5",
+      "answer": "29",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You trace a batch-merging cost calculation. The piece lengths are four, one. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A tray profile has heights twenty-two, twenty-two, zero, fifteen, twenty-eight, twenty-six, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "5"
+          "value": "31",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "1"
+          "value": "15",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "29"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "2",
+            "relative_gap": "2/29"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "14",
+            "relative_gap": "14/29"
+          }
+        ],
+        "min_wrong_pair_gap": "16",
+        "min_distinct_wrong_pair_gap": "16"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
       }
     },
     {
       "variant": "24",
-      "text": "A data system repeatedly joins weighted chunks. The piece lengths are 7, 6. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A drain profile has heights 20, 12, 11, 9, 22, 10, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          7,
-          6
+          20,
+          12,
+          11,
+          9,
+          22,
+          10
         ]
       },
-      "answer": "13",
+      "answer": "28",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A data system repeatedly joins weighted chunks. The piece lengths are seven, six. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A drain profile has heights twenty, twelve, eleven, nine, twenty-two, ten, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "13"
+          "value": "40",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "1"
+          "value": "2",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "28"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "11"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "12",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "26",
+            "relative_gap": "13/14"
+          }
+        ],
+        "min_wrong_pair_gap": "38",
+        "min_distinct_wrong_pair_gap": "38"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
       }
     },
     {
       "variant": "25",
-      "text": "You inspect the total work of combining short segments. The piece lengths are 11, 18, 14, 19, 4. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A channel profile has heights 14, 30, 1, 7, 27, 20, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          11,
-          18,
           14,
-          19,
-          4
+          30,
+          1,
+          7,
+          27,
+          20
         ]
       },
-      "answer": "147",
+      "answer": "46",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You inspect the total work of combining short segments. The piece lengths are eleven, eighteen, fourteen, nineteen, four. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A channel profile has heights fourteen, thirty, one, seven, twenty-seven, twenty, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "147"
+          "value": "65",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "4"
+          "value": "6",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "46"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "26"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "19",
+            "relative_gap": "19/46"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "40",
+            "relative_gap": "20/23"
+          }
+        ],
+        "min_wrong_pair_gap": "59",
+        "min_distinct_wrong_pair_gap": "59"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
       }
     },
     {
       "variant": "26",
-      "text": "You connect stored cable pieces. The piece lengths are 7, 11, 16, 1, 8, 3, 7, 12. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A roof profile has heights 28, 29, 15, 20, 13, 28, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          7,
-          11,
-          16,
-          1,
-          8,
-          3,
-          7,
-          12
-        ]
-      },
-      "answer": "182",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You connect stored cable pieces. The piece lengths are seven, eleven, sixteen, one, eight, three, seven, twelve. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "182"
-        },
-        {
-          "name": "merge_count",
-          "value": "7"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "27",
-      "text": "A routine combines small file segments. The piece lengths are 3, 4, 4, 17, 10, 9, 12, 9. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          3,
-          4,
-          4,
-          17,
-          10,
-          9,
-          12,
-          9
-        ]
-      },
-      "answer": "193",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "A routine combines small file segments. The piece lengths are three, four, four, seventeen, ten, nine, twelve, nine. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "193"
-        },
-        {
-          "name": "merge_count",
-          "value": "7"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "28",
-      "text": "You trace a batch-merging cost calculation. The piece lengths are 16, 13, 3, 19, 9, 17, 11. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          16,
-          13,
-          3,
-          19,
-          9,
-          17,
-          11
-        ]
-      },
-      "answer": "240",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a batch-merging cost calculation. The piece lengths are sixteen, thirteen, three, nineteen, nine, seventeen, eleven. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "240"
-        },
-        {
-          "name": "merge_count",
-          "value": "6"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "29",
-      "text": "A data system repeatedly joins weighted chunks. The piece lengths are 7, 10, 3, 8, 8. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          7,
-          10,
-          3,
-          8,
-          8
-        ]
-      },
-      "answer": "82",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "A data system repeatedly joins weighted chunks. The piece lengths are seven, ten, three, eight, eight. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "82"
-        },
-        {
-          "name": "merge_count",
-          "value": "4"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "30",
-      "text": "You inspect the total work of combining short segments. The piece lengths are 17, 19, 2, 1, 12, 7, 2, 4. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          17,
-          19,
-          2,
-          1,
-          12,
-          7,
-          2,
-          4
-        ]
-      },
-      "answer": "161",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect the total work of combining short segments. The piece lengths are seventeen, nineteen, two, one, twelve, seven, two, four. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "161"
-        },
-        {
-          "name": "merge_count",
-          "value": "7"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "31",
-      "text": "You connect stored cable pieces. The piece lengths are 20, 13, 10, 9, 5, 6, 10. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
+          28,
+          29,
+          15,
           20,
           13,
-          10,
-          9,
-          5,
-          6,
-          10
-        ]
-      },
-      "answer": "197",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You connect stored cable pieces. The piece lengths are twenty, thirteen, ten, nine, five, six, ten. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "197"
-        },
-        {
-          "name": "merge_count",
-          "value": "6"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "32",
-      "text": "A routine combines small file segments. The piece lengths are 10, 11, 11, 20, 4, 20, 10. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          10,
-          11,
-          11,
-          20,
-          4,
-          20,
-          10
-        ]
-      },
-      "answer": "232",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "A routine combines small file segments. The piece lengths are ten, eleven, eleven, twenty, four, twenty, ten. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "232"
-        },
-        {
-          "name": "merge_count",
-          "value": "6"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "33",
-      "text": "You trace a batch-merging cost calculation. The piece lengths are 12, 18, 17. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          12,
-          18,
-          17
-        ]
-      },
-      "answer": "76",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a batch-merging cost calculation. The piece lengths are twelve, eighteen, seventeen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "76"
-        },
-        {
-          "name": "merge_count",
-          "value": "2"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "34",
-      "text": "A data system repeatedly joins weighted chunks. The piece lengths are 7, 1, 9, 17, 7, 20, 18. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          7,
-          1,
-          9,
-          17,
-          7,
-          20,
-          18
-        ]
-      },
-      "answer": "205",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "A data system repeatedly joins weighted chunks. The piece lengths are seven, one, nine, seventeen, seven, twenty, eighteen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "205"
-        },
-        {
-          "name": "merge_count",
-          "value": "6"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "35",
-      "text": "You inspect the total work of combining short segments. The piece lengths are 5, 11, 15. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          5,
-          11,
-          15
-        ]
-      },
-      "answer": "47",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect the total work of combining short segments. The piece lengths are five, eleven, fifteen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "47"
-        },
-        {
-          "name": "merge_count",
-          "value": "2"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "36",
-      "text": "You connect stored cable pieces. The piece lengths are 1, 1, 0, 20, 15. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          1,
-          1,
-          0,
-          20,
-          15
-        ]
-      },
-      "answer": "57",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You connect stored cable pieces. The piece lengths are one, one, zero, twenty, fifteen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "total_cost",
-          "value": "57"
-        },
-        {
-          "name": "merge_count",
-          "value": "4"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "37",
-      "text": "A routine combines small file segments. The piece lengths are 16, 20. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          16,
-          20
+          28
         ]
       },
       "answer": "36",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A routine combines small file segments. The piece lengths are sixteen, twenty. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A roof profile has heights twenty-eight, twenty-nine, fifteen, twenty, thirteen, twenty-eight, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "40",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_cost",
+          "name": "total_trapped_water",
           "value": "36"
         },
         {
-          "name": "merge_count",
-          "value": "1"
+          "name": "maximum_water_depth",
+          "value": "15"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "4",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "24",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "28",
+        "min_distinct_wrong_pair_gap": "28"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "A gutter profile has heights 28, 13, 10, 1, 26, 1, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          28,
+          13,
+          10,
+          1,
+          26,
+          1
+        ]
+      },
+      "answer": "54",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A gutter profile has heights twenty-eight, thirteen, ten, one, twenty-six, one, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "89",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "9",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "54"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "35",
+            "relative_gap": "35/54"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "45",
+            "relative_gap": "5/6"
+          }
+        ],
+        "min_wrong_pair_gap": "80",
+        "min_distinct_wrong_pair_gap": "80"
+      },
+      "follow_up": {
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "A tray profile has heights 21, 7, 8, 2, 10, 15, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          21,
+          7,
+          8,
+          2,
+          10,
+          15
+        ]
+      },
+      "answer": "33",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A tray profile has heights twenty-one, seven, eight, two, ten, fifteen, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "63",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "33"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "30",
+            "relative_gap": "10/11"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "26",
+            "relative_gap": "26/33"
+          }
+        ],
+        "min_wrong_pair_gap": "56",
+        "min_distinct_wrong_pair_gap": "56"
+      },
+      "follow_up": {
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "A drain profile has heights 12, 26, 15, 22, 24, 23, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          12,
+          26,
+          15,
+          22,
+          24,
+          23
+        ]
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A drain profile has heights twelve, twenty-six, fifteen, twenty-two, twenty-four, twenty-three, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "11"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "9",
+            "relative_gap": "9/11"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "4",
+            "relative_gap": "4/11"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "A channel profile has heights 1, 30, 19, 7, 29, 2, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          1,
+          30,
+          19,
+          7,
+          29,
+          2
+        ]
+      },
+      "answer": "32",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A channel profile has heights one, thirty, nineteen, seven, twenty-nine, two, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "63",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "32"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "22"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "31",
+            "relative_gap": "31/32"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "20",
+            "relative_gap": "5/8"
+          }
+        ],
+        "min_wrong_pair_gap": "51",
+        "min_distinct_wrong_pair_gap": "51"
+      },
+      "follow_up": {
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "A roof profile has heights 7, 27, 13, 5, 26, 24, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          7,
+          27,
+          13,
+          5,
+          26,
+          24
+        ]
+      },
+      "answer": "34",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A roof profile has heights seven, twenty-seven, thirteen, five, twenty-six, twenty-four, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "40",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "34"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "6",
+            "relative_gap": "3/17"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "26",
+            "relative_gap": "13/17"
+          }
+        ],
+        "min_wrong_pair_gap": "32",
+        "min_distinct_wrong_pair_gap": "32"
+      },
+      "follow_up": {
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "A gutter profile has heights 17, 29, 10, 8, 9, 26, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          17,
+          29,
+          10,
+          8,
+          9,
+          26
+        ]
+      },
+      "answer": "51",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A gutter profile has heights seventeen, twenty-nine, ten, eight, nine, twenty-six, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "63",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "1",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "51"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "18"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "12",
+            "relative_gap": "4/17"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "50",
+            "relative_gap": "50/51"
+          }
+        ],
+        "min_wrong_pair_gap": "62",
+        "min_distinct_wrong_pair_gap": "62"
+      },
+      "follow_up": {
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "A tray profile has heights 30, 8, 7, 14, 0, 24, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          30,
+          8,
+          7,
+          14,
+          0,
+          24
+        ]
+      },
+      "answer": "67",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A tray profile has heights thirty, eight, seven, fourteen, zero, twenty-four, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "97",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "15",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "67"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "30",
+            "relative_gap": "30/67"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "52",
+            "relative_gap": "52/67"
+          }
+        ],
+        "min_wrong_pair_gap": "82",
+        "min_distinct_wrong_pair_gap": "82"
+      },
+      "follow_up": {
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "A drain profile has heights 28, 0, 15, 23, 27, 6, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          28,
+          0,
+          15,
+          23,
+          27,
+          6
+        ]
+      },
+      "answer": "43",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A drain profile has heights twenty-eight, zero, fifteen, twenty-three, twenty-seven, six, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "69",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "15",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "43"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "26",
+            "relative_gap": "26/43"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "28",
+            "relative_gap": "28/43"
+          }
+        ],
+        "min_wrong_pair_gap": "54",
+        "min_distinct_wrong_pair_gap": "54"
+      },
+      "follow_up": {
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "A channel profile has heights 25, 21, 15, 25, 22, 12, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          25,
+          21,
+          15,
+          25,
+          22,
+          12
+        ]
+      },
+      "answer": "14",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A channel profile has heights twenty-five, twenty-one, fifteen, twenty-five, twenty-two, twelve, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "14"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "16",
+            "relative_gap": "8/7"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "8",
+            "relative_gap": "4/7"
+          }
+        ],
+        "min_wrong_pair_gap": "24",
+        "min_distinct_wrong_pair_gap": "24"
+      },
+      "follow_up": {
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "A roof profile has heights 29, 10, 10, 12, 14, 21, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          29,
+          10,
+          10,
+          12,
+          14,
+          21
+        ]
+      },
+      "answer": "38",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A roof profile has heights twenty-nine, ten, ten, twelve, fourteen, twenty-one, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "78",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "38"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "40",
+            "relative_gap": "20/19"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "38",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "78",
+        "min_distinct_wrong_pair_gap": "78"
+      },
+      "follow_up": {
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "A gutter profile has heights 15, 13, 10, 20, 21, 8, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          15,
+          13,
+          10,
+          20,
+          21,
+          8
+        ]
+      },
+      "answer": "7",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A gutter profile has heights fifteen, thirteen, ten, twenty, twenty-one, eight, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "7"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "13",
+            "relative_gap": "13/7"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "4",
+            "relative_gap": "4/7"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
       }
     },
     {
       "variant": "38",
-      "text": "You trace a batch-merging cost calculation. The piece lengths are 20, 12, 13, 2, 16, 15, 7. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A tray profile has heights 27, 11, 27, 18, 0, 22, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          20,
-          12,
-          13,
-          2,
-          16,
-          15,
-          7
+          27,
+          11,
+          27,
+          18,
+          0,
+          22
         ]
       },
-      "answer": "228",
+      "answer": "42",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You trace a batch-merging cost calculation. The piece lengths are twenty, twelve, thirteen, two, sixteen, fifteen, seven. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A tray profile has heights twenty-seven, eleven, twenty-seven, eighteen, zero, twenty-two, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "228"
+          "value": "57",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "6"
+          "value": "34",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "42"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "15",
+            "relative_gap": "5/14"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "8",
+            "relative_gap": "4/21"
+          }
+        ],
+        "min_wrong_pair_gap": "23",
+        "min_distinct_wrong_pair_gap": "23"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
       }
     },
     {
       "variant": "39",
-      "text": "A data system repeatedly joins weighted chunks. The piece lengths are 15, 11, 11, 4, 16, 15, 13, 6. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A drain profile has heights 3, 29, 18, 1, 4, 25, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          15,
-          11,
-          11,
+          3,
+          29,
+          18,
+          1,
           4,
-          16,
-          15,
-          13,
-          6
+          25
         ]
       },
-      "answer": "267",
+      "answer": "52",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A data system repeatedly joins weighted chunks. The piece lengths are fifteen, eleven, eleven, four, sixteen, fifteen, thirteen, six. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A drain profile has heights three, twenty-nine, eighteen, one, four, twenty-five, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "267"
+          "value": "68",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "7"
+          "value": "3",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "52"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "24"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "16",
+            "relative_gap": "4/13"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "49",
+            "relative_gap": "49/52"
+          }
+        ],
+        "min_wrong_pair_gap": "65",
+        "min_distinct_wrong_pair_gap": "65"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
       }
     },
     {
       "variant": "40",
-      "text": "You inspect the total work of combining short segments. The piece lengths are 17, 1, 16, 17, 15, 20. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A channel profile has heights 25, 17, 8, 12, 15, 15, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
+          25,
           17,
-          1,
-          16,
-          17,
+          8,
+          12,
           15,
-          20
+          15
         ]
       },
-      "answer": "220",
+      "answer": "10",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You inspect the total work of combining short segments. The piece lengths are seventeen, one, sixteen, seventeen, fifteen, twenty. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A channel profile has heights twenty-five, seventeen, eight, twelve, fifteen, fifteen, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "220"
+          "value": "58",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "5"
+          "value": "4",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
         }
       ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
-      }
-    },
-    {
-      "variant": "41",
-      "text": "You connect stored cable pieces. The piece lengths are 4, 18, 14, 0, 9, 2, 0, 17. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "params": {
-        "values": [
-          4,
-          18,
-          14,
-          0,
-          9,
-          2,
-          0,
-          17
-        ]
-      },
-      "answer": "151",
-      "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
-      "difficulty": "Medium",
-      "spoken_text": "You connect stored cable pieces. The piece lengths are four, eighteen, fourteen, zero, nine, two, zero, seventeen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
       "steps": [
         {
-          "name": "total_cost",
-          "value": "151"
+          "name": "total_trapped_water",
+          "value": "10"
         },
         {
-          "name": "merge_count",
+          "name": "maximum_water_depth",
           "value": "7"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "48",
+            "relative_gap": "24/5"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "6",
+            "relative_gap": "3/5"
+          }
+        ],
+        "min_wrong_pair_gap": "54",
+        "min_distinct_wrong_pair_gap": "54"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "A roof profile has heights 17, 2, 11, 21, 18, 14, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "params": {
+        "values": [
+          17,
+          2,
+          11,
+          21,
+          18,
+          14
+        ]
+      },
+      "answer": "21",
+      "tolerance": "0",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
+      "difficulty": "Medium",
+      "spoken_text": "A roof profile has heights seventeen, two, eleven, twenty-one, eighteen, fourteen, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "31",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
+        },
+        {
+          "value": "9",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "21"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "15"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "10",
+            "relative_gap": "10/21"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "12",
+            "relative_gap": "4/7"
+          }
+        ],
+        "min_wrong_pair_gap": "22",
+        "min_distinct_wrong_pair_gap": "22"
+      },
+      "follow_up": {
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
       }
     },
     {
       "variant": "42",
-      "text": "A routine combines small file segments. The piece lengths are 12, 5, 14, 0, 9, 0, 18. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A gutter profile has heights 29, 22, 2, 3, 28, 4, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          12,
-          5,
-          14,
-          0,
-          9,
-          0,
-          18
+          29,
+          22,
+          2,
+          3,
+          28,
+          4
         ]
       },
-      "answer": "135",
+      "answer": "57",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A routine combines small file segments. The piece lengths are twelve, five, fourteen, zero, nine, zero, eighteen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A gutter profile has heights twenty-nine, twenty-two, two, three, twenty-eight, four, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "135"
+          "value": "86",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "6"
+          "value": "1",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "57"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "26"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "29",
+            "relative_gap": "29/57"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "56",
+            "relative_gap": "56/57"
+          }
+        ],
+        "min_wrong_pair_gap": "85",
+        "min_distinct_wrong_pair_gap": "85"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
       }
     },
     {
       "variant": "43",
-      "text": "You trace a batch-merging cost calculation. The piece lengths are 13, 11. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A tray profile has heights 19, 7, 18, 20, 21, 0, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          13,
-          11
+          19,
+          7,
+          18,
+          20,
+          21,
+          0
         ]
       },
-      "answer": "24",
+      "answer": "13",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You trace a batch-merging cost calculation. The piece lengths are thirteen, eleven. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A tray profile has heights nineteen, seven, eighteen, twenty, twenty-one, zero, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "24"
+          "value": "34",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "1"
+          "value": "11",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "13"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "12"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "21",
+            "relative_gap": "21/13"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "2",
+            "relative_gap": "2/13"
+          }
+        ],
+        "min_wrong_pair_gap": "23",
+        "min_distinct_wrong_pair_gap": "23"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
       }
     },
     {
       "variant": "44",
-      "text": "A data system repeatedly joins weighted chunks. The piece lengths are 8, 0, 7, 18, 18, 19, 12. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A drain profile has heights 21, 17, 5, 24, 18, 14, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          8,
-          0,
-          7,
+          21,
+          17,
+          5,
+          24,
           18,
-          18,
-          19,
-          12
+          14
         ]
       },
-      "answer": "213",
+      "answer": "20",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A data system repeatedly joins weighted chunks. The piece lengths are eight, zero, seven, eighteen, eighteen, nineteen, twelve. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A drain profile has heights twenty-one, seventeen, five, twenty-four, eighteen, fourteen, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "213"
+          "value": "36",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "6"
+          "value": "12",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "20"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "16"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "16",
+            "relative_gap": "4/5"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "8",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "24",
+        "min_distinct_wrong_pair_gap": "24"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
       }
     },
     {
       "variant": "45",
-      "text": "You inspect the total work of combining short segments. The piece lengths are 6, 8, 5, 8, 0, 19, 20. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A channel profile has heights 2, 21, 19, 7, 4, 10, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          6,
-          8,
-          5,
-          8,
-          0,
+          2,
+          21,
           19,
-          20
+          7,
+          4,
+          10
         ]
       },
-      "answer": "164",
+      "answer": "9",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You inspect the total work of combining short segments. The piece lengths are six, eight, five, eight, zero, nineteen, twenty. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A channel profile has heights two, twenty-one, nineteen, seven, four, ten, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "164"
+          "value": "44",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
+          "value": "3",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "9"
+        },
+        {
+          "name": "maximum_water_depth",
           "value": "6"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "35",
+            "relative_gap": "35/9"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "6",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "41",
+        "min_distinct_wrong_pair_gap": "41"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
       }
     },
     {
       "variant": "46",
-      "text": "You connect stored cable pieces. The piece lengths are 5, 11, 20, 8, 10. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A roof profile has heights 9, 30, 0, 20, 9, 23, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          5,
-          11,
+          9,
+          30,
+          0,
           20,
-          8,
-          10
+          9,
+          23
         ]
       },
-      "answer": "121",
+      "answer": "40",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You connect stored cable pieces. The piece lengths are five, eleven, twenty, eight, ten. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A roof profile has heights nine, thirty, zero, twenty, nine, twenty-three, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "121"
+          "value": "68",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "4"
+          "value": "31",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "40"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "23"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "28",
+            "relative_gap": "7/10"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "9",
+            "relative_gap": "9/40"
+          }
+        ],
+        "min_wrong_pair_gap": "37",
+        "min_distinct_wrong_pair_gap": "37"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
       }
     },
     {
       "variant": "47",
-      "text": "A routine combines small file segments. The piece lengths are 3, 17, 15, 4. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A gutter profile has heights 23, 1, 19, 1, 27, 12, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          3,
-          17,
-          15,
-          4
+          23,
+          1,
+          19,
+          1,
+          27,
+          12
         ]
       },
-      "answer": "68",
+      "answer": "48",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A routine combines small file segments. The piece lengths are three, seventeen, fifteen, four. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A gutter profile has heights twenty-three, one, nineteen, one, twenty-seven, twelve, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "68"
+          "value": "63",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "3"
+          "value": "36",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "48"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "15",
+            "relative_gap": "5/16"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "12",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "27",
+        "min_distinct_wrong_pair_gap": "27"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What if both ends are sealed by extra walls?",
+        "reference": "Include those walls as external boundaries. Open-end calculations can otherwise miss water near the ends."
       }
     },
     {
       "variant": "48",
-      "text": "You trace a batch-merging cost calculation. The piece lengths are 0, 6, 6, 20, 16, 3. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A tray profile has heights 29, 9, 13, 11, 10, 27, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          0,
-          6,
-          6,
-          20,
-          16,
-          3
+          29,
+          9,
+          13,
+          11,
+          10,
+          27
         ]
       },
-      "answer": "109",
+      "answer": "65",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You trace a batch-merging cost calculation. The piece lengths are zero, six, six, twenty, sixteen, three. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A tray profile has heights twenty-nine, nine, thirteen, eleven, ten, twenty-seven, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "109"
+          "value": "75",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "5"
+          "value": "5",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "65"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "18"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "10",
+            "relative_gap": "2/13"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "60",
+            "relative_gap": "12/13"
+          }
+        ],
+        "min_wrong_pair_gap": "70",
+        "min_distinct_wrong_pair_gap": "70"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "How can two pointers avoid both boundary arrays?",
+        "reference": "Process the side with the lower known boundary. That side already has enough information to determine its next water depth."
       }
     },
     {
       "variant": "49",
-      "text": "A data system repeatedly joins weighted chunks. The piece lengths are 18, 11, 5, 20. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A drain profile has heights 18, 19, 10, 2, 1, 4, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
           18,
-          11,
-          5,
-          20
+          19,
+          10,
+          2,
+          1,
+          4
         ]
       },
-      "answer": "104",
+      "answer": "5",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "A data system repeatedly joins weighted chunks. The piece lengths are eighteen, eleven, five, twenty. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A drain profile has heights eighteen, nineteen, ten, two, one, four, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "104"
+          "value": "59",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
+          "value": "1",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "5"
+        },
+        {
+          "name": "maximum_water_depth",
           "value": "3"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "54",
+            "relative_gap": "54/5"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "4",
+            "relative_gap": "4/5"
+          }
+        ],
+        "min_wrong_pair_gap": "58",
+        "min_distinct_wrong_pair_gap": "58"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "Why does the lower wall determine the level?",
+        "reference": "Water above either wall can escape. Both boundaries are needed, so the lower one limits the level."
       }
     },
     {
       "variant": "50",
-      "text": "You inspect the total work of combining short segments. The piece lengths are 5, 15, 9, 15, 8, 19. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "text": "A channel profile has heights 11, 0, 10, 25, 2, 9, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "params": {
         "values": [
-          5,
-          15,
-          9,
-          15,
-          8,
-          19
+          11,
+          0,
+          10,
+          25,
+          2,
+          9
         ]
       },
-      "answer": "177",
+      "answer": "19",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Least-cost piece joining",
+      "topic": "Two pointers",
+      "source_topic": "Trapped water volume",
       "difficulty": "Medium",
-      "spoken_text": "You inspect the total work of combining short segments. The piece lengths are five, fifteen, nine, fifteen, eight, nineteen. One operation joins any two pieces, costs the sum of their lengths, and replaces them with one piece of that combined length. Continue until one piece remains, with no other costs or restrictions. What is the minimum total joining cost, as a whole number of length units?",
+      "spoken_text": "A channel profile has heights eleven, zero, ten, twenty-five, two, nine, in order. Columns have unit width, and water escapes at either open end. How much water is trapped, as a whole number of square units in this cross-section?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_cost",
-          "value": "177"
+          "value": "51",
+          "misconceptions": [
+            "uses_only_left_wall"
+          ]
         },
         {
-          "name": "merge_count",
-          "value": "5"
+          "value": "17",
+          "misconceptions": [
+            "uses_only_immediate_neighbors"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_trapped_water",
+          "value": "19"
+        },
+        {
+          "name": "maximum_water_depth",
+          "value": "11"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_left_wall",
+            "absolute_gap": "32",
+            "relative_gap": "32/19"
+          },
+          {
+            "misconception": "uses_only_immediate_neighbors",
+            "absolute_gap": "2",
+            "relative_gap": "2/19"
+          }
+        ],
+        "min_wrong_pair_gap": "34",
+        "min_distinct_wrong_pair_gap": "34"
       },
       "follow_up": {
-        "question": "What are the time and space costs of smallest-pair merging with a heap?",
-        "reference": "An optimal merge tree can place the two smallest lengths as deepest siblings, so exchanging them there does not increase cost. Repeating that choice gives O(n log n) heap time and O(n) heap space."
+        "question": "What happens with a strictly increasing profile?",
+        "reference": "There is no enclosing taller wall on the left of an interior low point. No water is trapped."
       }
     }
   ]

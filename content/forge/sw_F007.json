@@ -1,11 +1,11 @@
 {
   "template_id": "sw_F007",
   "pack": "software",
-  "topic": "Monotonic stack",
+  "topic": "Binary search on the answer",
   "topics": [
-    "Monotonic stack"
+    "Binary search on the answer"
   ],
-  "source_topic": "First-larger distance total",
+  "source_topic": "Minimum rounded processing rate",
   "difficulty": "Medium",
   "models": {
     "author": "meta-models/muse-spark-open-1026",
@@ -25,1955 +25,3419 @@
       "variants_checked": 50,
       "max_absolute_error": "0"
     },
-    "misconceptions_verified": false,
-    "method_count": 0,
-    "repair_attempted": true,
-    "reason": {
-      "gate": "wrong_methods",
-      "error_class": "correct_answer_collision",
-      "variant_index": 1
-    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
     "pending_reason": null,
     "all_variants_retained": true,
     "rechecked_parameter_revision": null,
-    "variant_followups": false
+    "variant_followups": true
   },
   "follow_up": {
-    "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-    "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+    "question": "Why is rate feasibility monotone?",
+    "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
   },
   "review_status": "pending_builder_review",
   "instances": [
     {
       "variant": "1",
-      "text": "You trace rising sensor readings. The values are 0, 8, 8, 2, 4, 5. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A scan station has file sizes 4, 19, 8, 3, 13, 46. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 12 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 12,
         "values": [
-          0,
-          8,
-          8,
-          2,
           4,
-          5
+          19,
+          8,
+          3,
+          13,
+          46
         ]
       },
-      "answer": "3",
+      "answer": "10",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You trace rising sensor readings. The values are zero, eight, eight, two, four, five. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A scan station has file sizes four, nineteen, eight, three, thirteen, forty-six. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within twelve slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "3"
+          "name": "total_size",
+          "value": "93"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "2",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "3",
+            "relative_gap": "3/10"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
       }
     },
     {
       "variant": "2",
-      "text": "A monitor waits for a later higher load. The values are 4, 5, 2, 3, 6, 9, 10, 2. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A backup station has file sizes 15, 6, 44, 8, 4, 16. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 12 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 12,
         "values": [
-          4,
-          5,
-          2,
-          3,
+          15,
           6,
-          9,
-          10,
-          2
+          44,
+          8,
+          4,
+          16
         ]
       },
-      "answer": "8",
+      "answer": "9",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A monitor waits for a later higher load. The values are four, five, two, three, six, nine, ten, two. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A backup station has file sizes fifteen, six, forty-four, eight, four, sixteen. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within twelve slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
+          "name": "total_size",
+          "value": "93"
+        },
+        {
+          "name": "average_rate_lower_bound",
           "value": "8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "1",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "2",
+            "relative_gap": "2/9"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
       }
     },
     {
       "variant": "3",
-      "text": "You inspect a short sequence of queue measurements. The values are 9, 3, 6, 6, 0, 7. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A copy station has file sizes 18, 7, 21, 43, 14, 29. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 11 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 11,
         "values": [
-          9,
-          3,
-          6,
-          6,
-          0,
-          7
+          18,
+          7,
+          21,
+          43,
+          14,
+          29
         ]
       },
-      "answer": "7",
+      "answer": "15",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a short sequence of queue measurements. The values are nine, three, six, six, zero, seven. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A copy station has file sizes eighteen, seven, twenty-one, forty-three, fourteen, twenty-nine. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eleven slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "7"
+          "name": "total_size",
+          "value": "132"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "12"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "3",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "5",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
       }
     },
     {
       "variant": "4",
-      "text": "A stream routine resolves later-higher-value alerts. The values are 9, 10, 10, 4, 1. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A transfer station has file sizes 7, 12, 40, 13, 17, 18. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 11 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 11,
         "values": [
-          9,
-          10,
-          10,
-          4,
-          1
+          7,
+          12,
+          40,
+          13,
+          17,
+          18
         ]
       },
-      "answer": "1",
+      "answer": "13",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A stream routine resolves later-higher-value alerts. The values are nine, ten, ten, four, one. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A transfer station has file sizes seven, twelve, forty, thirteen, seventeen, eighteen. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eleven slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "10",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "1"
+          "name": "total_size",
+          "value": "107"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "10"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "3",
+            "relative_gap": "3/13"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "5",
+            "relative_gap": "5/13"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
       }
     },
     {
       "variant": "5",
-      "text": "You review first-larger positions in a numeric feed. The values are 10, 10, 2. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A processing station has file sizes 18, 30, 32, 22, 24, 9. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 12 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 12,
         "values": [
-          10,
-          10,
-          2
+          18,
+          30,
+          32,
+          22,
+          24,
+          9
         ]
       },
-      "answer": "0",
+      "answer": "15",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You review first-larger positions in a numeric feed. The values are ten, ten, two. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A processing station has file sizes eighteen, thirty, thirty-two, twenty-two, twenty-four, nine. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within twelve slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "0"
+          "name": "total_size",
+          "value": "135"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "12"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "3",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "5",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
       }
     },
     {
       "variant": "6",
-      "text": "You trace rising sensor readings. The values are 3, 5, 1, 4. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A scan station has file sizes 23, 18, 2, 23, 14, 7. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 8 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 8,
         "values": [
-          3,
-          5,
-          1,
-          4
+          23,
+          18,
+          2,
+          23,
+          14,
+          7
         ]
       },
-      "answer": "2",
+      "answer": "18",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You trace rising sensor readings. The values are three, five, one, four. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A scan station has file sizes twenty-three, eighteen, two, twenty-three, fourteen, seven. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eight slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "2"
+          "name": "total_size",
+          "value": "87"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "11"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "7",
+            "relative_gap": "7/18"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "10",
+            "relative_gap": "5/9"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
       }
     },
     {
       "variant": "7",
-      "text": "A monitor waits for a later higher load. The values are 3, 3, 0, 2, 1, 5, 3. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A backup station has file sizes 46, 5, 39, 1, 15, 39. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 12 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 12,
         "values": [
-          3,
-          3,
-          0,
-          2,
-          1,
+          46,
           5,
-          3
+          39,
+          1,
+          15,
+          39
         ]
       },
-      "answer": "13",
+      "answer": "16",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A monitor waits for a later higher load. The values are three, three, zero, two, one, five, three. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A backup station has file sizes forty-six, five, thirty-nine, one, fifteen, thirty-nine. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within twelve slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
+          "name": "total_size",
+          "value": "145"
+        },
+        {
+          "name": "average_rate_lower_bound",
           "value": "13"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "3",
+            "relative_gap": "3/16"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "6",
+            "relative_gap": "3/8"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
       }
     },
     {
       "variant": "8",
-      "text": "You inspect a short sequence of queue measurements. The values are 9, 1, 0, 3, 9, 5. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A copy station has file sizes 22, 10, 42, 32, 30, 8. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 6 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 6,
         "values": [
-          9,
-          1,
-          0,
-          3,
-          9,
-          5
+          22,
+          10,
+          42,
+          32,
+          30,
+          8
         ]
       },
-      "answer": "4",
+      "answer": "42",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a short sequence of queue measurements. The values are nine, one, zero, three, nine, five. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A copy station has file sizes twenty-two, ten, forty-two, thirty-two, thirty, eight. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within six slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "16",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "4"
+          "name": "total_size",
+          "value": "144"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "24"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "18",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "26",
+            "relative_gap": "13/21"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
       }
     },
     {
       "variant": "9",
-      "text": "A stream routine resolves later-higher-value alerts. The values are 1, 8, 7, 8, 5, 10, 7. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A transfer station has file sizes 4, 35, 40, 22, 23, 6. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 6 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 6,
         "values": [
-          1,
-          8,
-          7,
-          8,
-          5,
-          10,
-          7
+          4,
+          35,
+          40,
+          22,
+          23,
+          6
         ]
       },
-      "answer": "9",
+      "answer": "40",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A stream routine resolves later-higher-value alerts. The values are one, eight, seven, eight, five, ten, seven. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A transfer station has file sizes four, thirty-five, forty, twenty-two, twenty-three, six. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within six slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "22",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "14",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "9"
+          "name": "total_size",
+          "value": "130"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "18",
+            "relative_gap": "9/20"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "26",
+            "relative_gap": "13/20"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
       }
     },
     {
       "variant": "10",
-      "text": "You review first-larger positions in a numeric feed. The values are 9, 1, 0, 0, 6. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A processing station has file sizes 19, 15, 20, 13, 20, 26. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 12 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 12,
         "values": [
-          9,
-          1,
-          0,
-          0,
-          6
+          19,
+          15,
+          20,
+          13,
+          20,
+          26
         ]
       },
-      "answer": "6",
+      "answer": "13",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You review first-larger positions in a numeric feed. The values are nine, one, zero, zero, six. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A processing station has file sizes nineteen, fifteen, twenty, thirteen, twenty, twenty-six. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within twelve slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "10",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "6"
+          "name": "total_size",
+          "value": "113"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "10"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "3",
+            "relative_gap": "3/13"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "6",
+            "relative_gap": "6/13"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
       }
     },
     {
       "variant": "11",
-      "text": "You trace rising sensor readings. The values are 4, 0, 5, 4, 3, 0, 7, 2. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A scan station has file sizes 6, 21, 34, 35, 27, 16. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 7 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 7,
         "values": [
-          4,
-          0,
-          5,
-          4,
-          3,
-          0,
-          7,
-          2
+          6,
+          21,
+          34,
+          35,
+          27,
+          16
         ]
       },
-      "answer": "13",
+      "answer": "34",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You trace rising sensor readings. The values are four, zero, five, four, three, zero, seven, two. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A scan station has file sizes six, twenty-one, thirty-four, thirty-five, twenty-seven, sixteen. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within seven slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "14",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "13"
+          "name": "total_size",
+          "value": "139"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "20"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "14",
+            "relative_gap": "7/17"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "20",
+            "relative_gap": "10/17"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
       }
     },
     {
       "variant": "12",
-      "text": "A monitor waits for a later higher load. The values are 7, 4, 4, 9. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A backup station has file sizes 24, 2, 29, 48, 29, 47. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 9 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 9,
         "values": [
-          7,
-          4,
-          4,
-          9
+          24,
+          2,
+          29,
+          48,
+          29,
+          47
         ]
       },
-      "answer": "6",
+      "answer": "29",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A monitor waits for a later higher load. The values are seven, four, four, nine. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A backup station has file sizes twenty-four, two, twenty-nine, forty-eight, twenty-nine, forty-seven. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within nine slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "15",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "6"
+          "name": "total_size",
+          "value": "179"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "20"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "9",
+            "relative_gap": "9/29"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "14",
+            "relative_gap": "14/29"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
       }
     },
     {
       "variant": "13",
-      "text": "You inspect a short sequence of queue measurements. The values are 10, 7, 2. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A copy station has file sizes 50, 26, 18, 25, 39, 26. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 9 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 9,
         "values": [
-          10,
-          7,
-          2
+          50,
+          26,
+          18,
+          25,
+          39,
+          26
         ]
       },
-      "answer": "0",
+      "answer": "26",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a short sequence of queue measurements. The values are ten, seven, two. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A copy station has file sizes fifty, twenty-six, eighteen, twenty-five, thirty-nine, twenty-six. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within nine slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "14",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "0"
+          "name": "total_size",
+          "value": "184"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "21"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "5",
+            "relative_gap": "5/26"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "12",
+            "relative_gap": "6/13"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
       }
     },
     {
       "variant": "14",
-      "text": "A stream routine resolves later-higher-value alerts. The values are 4, 2, 6, 0, 4, 9, 5, 0. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A transfer station has file sizes 21, 12, 16, 23, 6, 5. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 10 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 10,
         "values": [
-          4,
-          2,
+          21,
+          12,
+          16,
+          23,
           6,
-          0,
-          4,
-          9,
-          5,
-          0
+          5
         ]
       },
-      "answer": "8",
+      "answer": "12",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A stream routine resolves later-higher-value alerts. The values are four, two, six, zero, four, nine, five, zero. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A transfer station has file sizes twenty-one, twelve, sixteen, twenty-three, six, five. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within ten slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "8"
+          "name": "total_size",
+          "value": "83"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "9"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "3",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "5",
+            "relative_gap": "5/12"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
       }
     },
     {
       "variant": "15",
-      "text": "You review first-larger positions in a numeric feed. The values are 4, 4, 6, 4, 4, 3. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A processing station has file sizes 49, 31, 37, 12, 16, 9. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 11 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 11,
         "values": [
-          4,
-          4,
-          6,
-          4,
-          4,
-          3
+          49,
+          31,
+          37,
+          12,
+          16,
+          9
         ]
       },
-      "answer": "3",
+      "answer": "17",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You review first-larger positions in a numeric feed. The values are four, four, six, four, four, three. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A processing station has file sizes forty-nine, thirty-one, thirty-seven, twelve, sixteen, nine. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eleven slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "14",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "11",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "3"
+          "name": "total_size",
+          "value": "154"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "14"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "3",
+            "relative_gap": "3/17"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "6",
+            "relative_gap": "6/17"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
       }
     },
     {
       "variant": "16",
-      "text": "You trace rising sensor readings. The values are 2, 1, 9, 7, 2, 6, 1. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A scan station has file sizes 2, 37, 38, 38, 49, 41. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 6 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 6,
         "values": [
           2,
-          1,
-          9,
-          7,
-          2,
-          6,
-          1
+          37,
+          38,
+          38,
+          49,
+          41
         ]
       },
-      "answer": "4",
+      "answer": "49",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You trace rising sensor readings. The values are two, one, nine, seven, two, six, one. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A scan station has file sizes two, thirty-seven, thirty-eight, thirty-eight, forty-nine, forty-one. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within six slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "35",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "4"
+          "name": "total_size",
+          "value": "205"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "35"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "14",
+            "relative_gap": "2/7"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "28",
+            "relative_gap": "4/7"
+          }
+        ],
+        "min_wrong_pair_gap": "14",
+        "min_distinct_wrong_pair_gap": "14"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
       }
     },
     {
       "variant": "17",
-      "text": "A monitor waits for a later higher load. The values are 4, 1, 8, 4, 10, 0, 6. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A backup station has file sizes 13, 33, 12, 16, 31, 13. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 7 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 7,
         "values": [
-          4,
-          1,
-          8,
-          4,
-          10,
-          0,
-          6
+          13,
+          33,
+          12,
+          16,
+          31,
+          13
         ]
       },
-      "answer": "7",
+      "answer": "31",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A monitor waits for a later higher load. The values are four, one, eight, four, ten, zero, six. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A backup station has file sizes thirteen, thirty-three, twelve, sixteen, thirty-one, thirteen. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within seven slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "13",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "7"
+          "name": "total_size",
+          "value": "118"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "17"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "14",
+            "relative_gap": "14/31"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "18",
+            "relative_gap": "18/31"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
       }
     },
     {
       "variant": "18",
-      "text": "You inspect a short sequence of queue measurements. The values are 2, 6, 6, 8, 0, 3, 9, 0. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A copy station has file sizes 8, 6, 47, 44, 11, 2. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 12 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 12,
         "values": [
-          2,
-          6,
-          6,
           8,
-          0,
-          3,
-          9,
-          0
+          6,
+          47,
+          44,
+          11,
+          2
         ]
       },
-      "answer": "9",
+      "answer": "12",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a short sequence of queue measurements. The values are two, six, six, eight, zero, three, nine, zero. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A copy station has file sizes eight, six, forty-seven, forty-four, eleven, two. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within twelve slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "10",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "9"
+          "name": "total_size",
+          "value": "118"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "10"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "2",
+            "relative_gap": "1/6"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "4",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
       }
     },
     {
       "variant": "19",
-      "text": "A stream routine resolves later-higher-value alerts. The values are 10, 0, 8, 3, 8. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A transfer station has file sizes 23, 48, 45, 3, 48, 29. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 8 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 8,
         "values": [
-          10,
-          0,
-          8,
+          23,
+          48,
+          45,
           3,
-          8
+          48,
+          29
         ]
       },
-      "answer": "2",
+      "answer": "45",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A stream routine resolves later-higher-value alerts. The values are ten, zero, eight, three, eight. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A transfer station has file sizes twenty-three, forty-eight, forty-five, three, forty-eight, twenty-nine. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eight slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "17",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "2"
+          "name": "total_size",
+          "value": "196"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "25"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "20",
+            "relative_gap": "4/9"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "28",
+            "relative_gap": "28/45"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
       }
     },
     {
       "variant": "20",
-      "text": "You review first-larger positions in a numeric feed. The values are 3, 8. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A processing station has file sizes 2, 1, 40, 40, 5, 3. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 11 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 11,
         "values": [
-          3,
-          8
+          2,
+          1,
+          40,
+          40,
+          5,
+          3
         ]
       },
-      "answer": "1",
+      "answer": "14",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You review first-larger positions in a numeric feed. The values are three, eight. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A processing station has file sizes two, one, forty, forty, five, three. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eleven slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "1"
+          "name": "total_size",
+          "value": "91"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "9"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "5",
+            "relative_gap": "5/14"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "7",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
       }
     },
     {
       "variant": "21",
-      "text": "You trace rising sensor readings. The values are 9, 0. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A scan station has file sizes 41, 13, 33, 15, 14, 41. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 6 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 6,
         "values": [
-          9,
-          0
+          41,
+          13,
+          33,
+          15,
+          14,
+          41
         ]
       },
-      "answer": "0",
+      "answer": "41",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You trace rising sensor readings. The values are nine, zero. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A scan station has file sizes forty-one, thirteen, thirty-three, fifteen, fourteen, forty-one. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within six slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "16",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "0"
+          "name": "total_size",
+          "value": "157"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "27"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "14",
+            "relative_gap": "14/41"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "25",
+            "relative_gap": "25/41"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
       }
     },
     {
       "variant": "22",
-      "text": "A monitor waits for a later higher load. The values are 3, 10, 1, 1, 10, 9. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A backup station has file sizes 30, 14, 27, 32, 11, 17. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 7 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 7,
         "values": [
-          3,
-          10,
-          1,
-          1,
-          10,
-          9
+          30,
+          14,
+          27,
+          32,
+          11,
+          17
         ]
       },
-      "answer": "4",
+      "answer": "30",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A monitor waits for a later higher load. The values are three, ten, one, one, ten, nine. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A backup station has file sizes thirty, fourteen, twenty-seven, thirty-two, eleven, seventeen. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within seven slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "14",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "4"
+          "name": "total_size",
+          "value": "131"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "19"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "11",
+            "relative_gap": "11/30"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "16",
+            "relative_gap": "8/15"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
       }
     },
     {
       "variant": "23",
-      "text": "You inspect a short sequence of queue measurements. The values are 2, 1, 7, 6, 0, 8. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A copy station has file sizes 43, 36, 37, 18, 32, 39. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 10 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 10,
         "values": [
-          2,
-          1,
-          7,
-          6,
-          0,
-          8
+          43,
+          36,
+          37,
+          18,
+          32,
+          39
         ]
       },
-      "answer": "9",
+      "answer": "32",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a short sequence of queue measurements. The values are two, one, seven, six, zero, eight. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A copy station has file sizes forty-three, thirty-six, thirty-seven, eighteen, thirty-two, thirty-nine. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within ten slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "17",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "9"
+          "name": "total_size",
+          "value": "205"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "21"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "11",
+            "relative_gap": "11/32"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "15",
+            "relative_gap": "15/32"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
       }
     },
     {
       "variant": "24",
-      "text": "A stream routine resolves later-higher-value alerts. The values are 4, 7, 1. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A transfer station has file sizes 21, 26, 40, 17, 14, 33. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 7 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 7,
         "values": [
-          4,
-          7,
-          1
+          21,
+          26,
+          40,
+          17,
+          14,
+          33
         ]
       },
-      "answer": "1",
+      "answer": "33",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A stream routine resolves later-higher-value alerts. The values are four, seven, one. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A transfer station has file sizes twenty-one, twenty-six, forty, seventeen, fourteen, thirty-three. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within seven slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "22",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "15",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "1"
+          "name": "total_size",
+          "value": "151"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "11",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "18",
+            "relative_gap": "6/11"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
       }
     },
     {
       "variant": "25",
-      "text": "You review first-larger positions in a numeric feed. The values are 0, 5, 6, 2, 2, 6, 1, 9. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A processing station has file sizes 25, 7, 1, 5, 24, 4. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 12 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 12,
         "values": [
-          0,
-          5,
-          6,
-          2,
-          2,
-          6,
+          25,
+          7,
           1,
-          9
+          5,
+          24,
+          4
         ]
       },
-      "answer": "13",
+      "answer": "7",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You review first-larger positions in a numeric feed. The values are zero, five, six, two, two, six, one, nine. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A processing station has file sizes twenty-five, seven, one, five, twenty-four, four. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within twelve slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "6",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "13"
+          "name": "total_size",
+          "value": "66"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "6"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "1",
+            "relative_gap": "1/7"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "2",
+            "relative_gap": "2/7"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
       }
     },
     {
       "variant": "26",
-      "text": "You trace rising sensor readings. The values are 5, 4, 2, 7, 8, 10, 7, 2. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A scan station has file sizes 19, 28, 45, 38, 9, 20. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 9 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 9,
         "values": [
-          5,
-          4,
-          2,
-          7,
-          8,
-          10,
-          7,
-          2
+          19,
+          28,
+          45,
+          38,
+          9,
+          20
         ]
       },
-      "answer": "8",
+      "answer": "23",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You trace rising sensor readings. The values are five, four, two, seven, eight, ten, seven, two. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A scan station has file sizes nineteen, twenty-eight, forty-five, thirty-eight, nine, twenty. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within nine slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "18",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "13",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "8"
+          "name": "total_size",
+          "value": "159"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "18"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "5",
+            "relative_gap": "5/23"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "10",
+            "relative_gap": "10/23"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
       }
     },
     {
       "variant": "27",
-      "text": "A monitor waits for a later higher load. The values are 5, 2, 6. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A backup station has file sizes 11, 7, 22, 1, 22, 22. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 12 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 12,
         "values": [
-          5,
-          2,
-          6
+          11,
+          7,
+          22,
+          1,
+          22,
+          22
         ]
       },
-      "answer": "3",
+      "answer": "11",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A monitor waits for a later higher load. The values are five, two, six. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A backup station has file sizes eleven, seven, twenty-two, one, twenty-two, twenty-two. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within twelve slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "3"
+          "name": "total_size",
+          "value": "85"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "3",
+            "relative_gap": "3/11"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "5",
+            "relative_gap": "5/11"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
       }
     },
     {
       "variant": "28",
-      "text": "You inspect a short sequence of queue measurements. The values are 8, 9, 4, 8, 6, 6. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A copy station has file sizes 9, 14, 19, 29, 21, 43. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 8 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 8,
         "values": [
-          8,
           9,
-          4,
-          8,
-          6,
-          6
+          14,
+          19,
+          29,
+          21,
+          43
         ]
       },
-      "answer": "2",
+      "answer": "22",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a short sequence of queue measurements. The values are eight, nine, four, eight, six, six. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A copy station has file sizes nine, fourteen, nineteen, twenty-nine, twenty-one, forty-three. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eight slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "11",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "2"
+          "name": "total_size",
+          "value": "135"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "17"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "5",
+            "relative_gap": "5/22"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "11",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
       }
     },
     {
       "variant": "29",
-      "text": "A stream routine resolves later-higher-value alerts. The values are 3, 2, 6, 6, 4, 5, 0, 6. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A transfer station has file sizes 46, 11, 50, 4, 45, 38. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 6 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 6,
         "values": [
-          3,
-          2,
-          6,
-          6,
+          46,
+          11,
+          50,
           4,
-          5,
-          0,
-          6
+          45,
+          38
         ]
       },
-      "answer": "7",
+      "answer": "50",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A stream routine resolves later-higher-value alerts. The values are three, two, six, six, four, five, zero, six. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A transfer station has file sizes forty-six, eleven, fifty, four, forty-five, thirty-eight. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within six slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "33",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "23",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "7"
+          "name": "total_size",
+          "value": "194"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "33"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "17",
+            "relative_gap": "17/50"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "27",
+            "relative_gap": "27/50"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
       }
     },
     {
       "variant": "30",
-      "text": "You review first-larger positions in a numeric feed. The values are 4, 4, 7, 5, 3, 6, 1. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A processing station has file sizes 42, 19, 41, 9, 42, 17. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 10 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 10,
         "values": [
-          4,
-          4,
-          7,
-          5,
-          3,
-          6,
-          1
+          42,
+          19,
+          41,
+          9,
+          42,
+          17
         ]
       },
-      "answer": "6",
+      "answer": "21",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You review first-larger positions in a numeric feed. The values are four, four, seven, five, three, six, one. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A processing station has file sizes forty-two, nineteen, forty-one, nine, forty-two, seventeen. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within ten slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "14",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "6"
+          "name": "total_size",
+          "value": "170"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "17"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "4",
+            "relative_gap": "4/21"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "7",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
       }
     },
     {
       "variant": "31",
-      "text": "You trace rising sensor readings. The values are 2, 2, 1, 10, 1, 2, 7. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A scan station has file sizes 22, 22, 11, 5, 19, 29. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 12 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 12,
         "values": [
-          2,
-          2,
-          1,
-          10,
-          1,
-          2,
-          7
+          22,
+          22,
+          11,
+          5,
+          19,
+          29
         ]
       },
-      "answer": "8",
+      "answer": "11",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You trace rising sensor readings. The values are two, two, one, ten, one, two, seven. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A scan station has file sizes twenty-two, twenty-two, eleven, five, nineteen, twenty-nine. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within twelve slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "8"
+          "name": "total_size",
+          "value": "108"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "9"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "2",
+            "relative_gap": "2/11"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "3",
+            "relative_gap": "3/11"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
       }
     },
     {
       "variant": "32",
-      "text": "A monitor waits for a later higher load. The values are 0, 0, 1. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A backup station has file sizes 8, 13, 29, 35, 37, 32. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 7 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 7,
         "values": [
-          0,
-          0,
-          1
+          8,
+          13,
+          29,
+          35,
+          37,
+          32
         ]
       },
-      "answer": "3",
+      "answer": "35",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A monitor waits for a later higher load. The values are zero, zero, one. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A backup station has file sizes eight, thirteen, twenty-nine, thirty-five, thirty-seven, thirty-two. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within seven slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "22",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "15",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "3"
+          "name": "total_size",
+          "value": "154"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "13",
+            "relative_gap": "13/35"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "20",
+            "relative_gap": "4/7"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
       }
     },
     {
       "variant": "33",
-      "text": "You inspect a short sequence of queue measurements. The values are 5, 2, 6, 10, 9, 9. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A copy station has file sizes 27, 18, 11, 14, 33, 31. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 8 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 8,
         "values": [
-          5,
-          2,
-          6,
-          10,
-          9,
-          9
+          27,
+          18,
+          11,
+          14,
+          33,
+          31
         ]
       },
-      "answer": "4",
+      "answer": "27",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a short sequence of queue measurements. The values are five, two, six, ten, nine, nine. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A copy station has file sizes twenty-seven, eighteen, eleven, fourteen, thirty-three, thirty-one. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eight slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "4"
+          "name": "total_size",
+          "value": "134"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "17"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "10",
+            "relative_gap": "10/27"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "15",
+            "relative_gap": "5/9"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
       }
     },
     {
       "variant": "34",
-      "text": "A stream routine resolves later-higher-value alerts. The values are 7, 6, 6, 4. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A transfer station has file sizes 44, 37, 15, 28, 12, 44. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 8 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 8,
         "values": [
-          7,
-          6,
-          6,
-          4
+          44,
+          37,
+          15,
+          28,
+          12,
+          44
         ]
       },
-      "answer": "0",
+      "answer": "37",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A stream routine resolves later-higher-value alerts. The values are seven, six, six, four. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A transfer station has file sizes forty-four, thirty-seven, fifteen, twenty-eight, twelve, forty-four. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eight slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "15",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "0"
+          "name": "total_size",
+          "value": "180"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "23"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "14",
+            "relative_gap": "14/37"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "22",
+            "relative_gap": "22/37"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
       }
     },
     {
       "variant": "35",
-      "text": "You review first-larger positions in a numeric feed. The values are 6, 0, 1, 5, 10, 8. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A processing station has file sizes 24, 9, 49, 37, 1, 48. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 9 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 9,
         "values": [
-          6,
-          0,
+          24,
+          9,
+          49,
+          37,
           1,
-          5,
-          10,
-          8
+          48
         ]
       },
-      "answer": "7",
+      "answer": "25",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You review first-larger positions in a numeric feed. The values are six, zero, one, five, ten, eight. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A processing station has file sizes twenty-four, nine, forty-nine, thirty-seven, one, forty-eight. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within nine slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "13",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "7"
+          "name": "total_size",
+          "value": "168"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "19"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "6",
+            "relative_gap": "6/25"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "12",
+            "relative_gap": "12/25"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
       }
     },
     {
       "variant": "36",
-      "text": "You trace rising sensor readings. The values are 3, 2, 0, 5, 6, 3, 3, 8. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A scan station has file sizes 24, 37, 8, 27, 3, 22. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 8 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 8,
         "values": [
+          24,
+          37,
+          8,
+          27,
           3,
-          2,
-          0,
-          5,
-          6,
-          3,
-          3,
-          8
+          22
         ]
       },
-      "answer": "13",
+      "answer": "24",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You trace rising sensor readings. The values are three, two, zero, five, six, three, three, eight. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A scan station has file sizes twenty-four, thirty-seven, eight, twenty-seven, three, twenty-two. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eight slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "16",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "13"
+          "name": "total_size",
+          "value": "121"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "16"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "8",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "12",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
       }
     },
     {
       "variant": "37",
-      "text": "A monitor waits for a later higher load. The values are 2, 6, 9. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A backup station has file sizes 44, 11, 22, 46, 45, 2. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 6 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 6,
         "values": [
-          2,
-          6,
-          9
+          44,
+          11,
+          22,
+          46,
+          45,
+          2
         ]
       },
-      "answer": "2",
+      "answer": "46",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A monitor waits for a later higher load. The values are two, six, nine. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A backup station has file sizes forty-four, eleven, twenty-two, forty-six, forty-five, two. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within six slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "23",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "2"
+          "name": "total_size",
+          "value": "170"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "29"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "17",
+            "relative_gap": "17/46"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "23",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
       }
     },
     {
       "variant": "38",
-      "text": "You inspect a short sequence of queue measurements. The values are 4, 3, 6, 6, 9, 5. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A copy station has file sizes 44, 24, 9, 49, 21, 29. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 7 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 7,
         "values": [
-          4,
-          3,
-          6,
-          6,
+          44,
+          24,
           9,
-          5
+          49,
+          21,
+          29
         ]
       },
-      "answer": "6",
+      "answer": "44",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a short sequence of queue measurements. The values are four, three, six, six, nine, five. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A copy station has file sizes forty-four, twenty-four, nine, forty-nine, twenty-one, twenty-nine. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within seven slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "26",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "17",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "6"
+          "name": "total_size",
+          "value": "176"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "26"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "18",
+            "relative_gap": "9/22"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "27",
+            "relative_gap": "27/44"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
       }
     },
     {
       "variant": "39",
-      "text": "A stream routine resolves later-higher-value alerts. The values are 8, 3, 10, 7, 1, 8, 8, 10. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A transfer station has file sizes 48, 39, 46, 39, 46, 4. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 6 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 6,
         "values": [
-          8,
-          3,
-          10,
-          7,
-          1,
-          8,
-          8,
-          10
+          48,
+          39,
+          46,
+          39,
+          46,
+          4
         ]
       },
-      "answer": "9",
+      "answer": "48",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "A stream routine resolves later-higher-value alerts. The values are eight, three, ten, seven, one, eight, eight, ten. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A transfer station has file sizes forty-eight, thirty-nine, forty-six, thirty-nine, forty-six, four. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within six slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "37",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "9"
+          "name": "total_size",
+          "value": "222"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "37"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "11",
+            "relative_gap": "11/48"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "24",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
       }
     },
     {
       "variant": "40",
-      "text": "You review first-larger positions in a numeric feed. The values are 0, 9. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "text": "A processing station has file sizes 24, 18, 19, 33, 7, 3. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 8 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 8,
         "values": [
-          0,
-          9
-        ]
-      },
-      "answer": "1",
-      "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
-      "difficulty": "Medium",
-      "spoken_text": "You review first-larger positions in a numeric feed. The values are zero, nine. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "sum_of_first_larger_distances",
-          "value": "1"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
-      }
-    },
-    {
-      "variant": "41",
-      "text": "You trace rising sensor readings. The values are 5, 9, 10, 10, 3. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "params": {
-        "values": [
-          5,
-          9,
-          10,
-          10,
+          24,
+          18,
+          19,
+          33,
+          7,
           3
         ]
       },
-      "answer": "2",
+      "answer": "19",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You trace rising sensor readings. The values are five, nine, ten, ten, three. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A processing station has file sizes twenty-four, eighteen, nineteen, thirty-three, seven, three. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eight slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "2"
+          "value": "13",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
         }
       ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
-      }
-    },
-    {
-      "variant": "42",
-      "text": "A monitor waits for a later higher load. The values are 8, 2, 1, 4, 5, 3, 9. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "params": {
-        "values": [
-          8,
-          2,
-          1,
-          4,
-          5,
-          3,
-          9
-        ]
-      },
-      "answer": "13",
-      "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor waits for a later higher load. The values are eight, two, one, four, five, three, nine. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
+          "name": "total_size",
+          "value": "104"
+        },
+        {
+          "name": "average_rate_lower_bound",
           "value": "13"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "6",
+            "relative_gap": "6/19"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "9",
+            "relative_gap": "9/19"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
       }
     },
     {
-      "variant": "43",
-      "text": "You inspect a short sequence of queue measurements. The values are 4, 1, 4, 3, 5, 4, 2, 1. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "variant": "41",
+      "text": "A scan station has file sizes 40, 1, 21, 27, 16, 22. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 10 slots, as a whole number of size units per slot?",
       "params": {
+        "slots": 10,
         "values": [
-          4,
+          40,
           1,
+          21,
+          27,
+          16,
+          22
+        ]
+      },
+      "answer": "20",
+      "tolerance": "0",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
+      "difficulty": "Medium",
+      "spoken_text": "A scan station has file sizes forty, one, twenty-one, twenty-seven, sixteen, twenty-two. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within ten slots, as a whole number of size units per slot?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "11",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_size",
+          "value": "127"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "7",
+            "relative_gap": "7/20"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "9",
+            "relative_gap": "9/20"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "A backup station has file sizes 31, 17, 4, 17, 5, 18. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 12 slots, as a whole number of size units per slot?",
+      "params": {
+        "slots": 12,
+        "values": [
+          31,
+          17,
           4,
-          3,
+          17,
           5,
-          4,
-          2,
-          1
-        ]
-      },
-      "answer": "8",
-      "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect a short sequence of queue measurements. The values are four, one, four, three, five, four, two, one. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "sum_of_first_larger_distances",
-          "value": "8"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
-      }
-    },
-    {
-      "variant": "44",
-      "text": "A stream routine resolves later-higher-value alerts. The values are 10, 7, 9, 5, 3, 10, 5, 0. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "params": {
-        "values": [
-          10,
-          7,
-          9,
-          5,
-          3,
-          10,
-          5,
-          0
-        ]
-      },
-      "answer": "7",
-      "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
-      "difficulty": "Medium",
-      "spoken_text": "A stream routine resolves later-higher-value alerts. The values are ten, seven, nine, five, three, ten, five, zero. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "sum_of_first_larger_distances",
-          "value": "7"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
-      }
-    },
-    {
-      "variant": "45",
-      "text": "You review first-larger positions in a numeric feed. The values are 8, 6, 0. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "params": {
-        "values": [
-          8,
-          6,
-          0
-        ]
-      },
-      "answer": "0",
-      "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
-      "difficulty": "Medium",
-      "spoken_text": "You review first-larger positions in a numeric feed. The values are eight, six, zero. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "sum_of_first_larger_distances",
-          "value": "0"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
-      }
-    },
-    {
-      "variant": "46",
-      "text": "You trace rising sensor readings. The values are 10, 9, 6, 0, 9, 6. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "params": {
-        "values": [
-          10,
-          9,
-          6,
-          0,
-          9,
-          6
-        ]
-      },
-      "answer": "3",
-      "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
-      "difficulty": "Medium",
-      "spoken_text": "You trace rising sensor readings. The values are ten, nine, six, zero, nine, six. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "sum_of_first_larger_distances",
-          "value": "3"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
-      }
-    },
-    {
-      "variant": "47",
-      "text": "A monitor waits for a later higher load. The values are 5, 7. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "params": {
-        "values": [
-          5,
-          7
-        ]
-      },
-      "answer": "1",
-      "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor waits for a later higher load. The values are five, seven. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "sum_of_first_larger_distances",
-          "value": "1"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
-      }
-    },
-    {
-      "variant": "48",
-      "text": "You inspect a short sequence of queue measurements. The values are 0, 10, 4, 1, 4, 9. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "params": {
-        "values": [
-          0,
-          10,
-          4,
-          1,
-          4,
-          9
-        ]
-      },
-      "answer": "6",
-      "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect a short sequence of queue measurements. The values are zero, ten, four, one, four, nine. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "sum_of_first_larger_distances",
-          "value": "6"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
-      }
-    },
-    {
-      "variant": "49",
-      "text": "A stream routine resolves later-higher-value alerts. The values are 7, 4, 8, 10. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "params": {
-        "values": [
-          7,
-          4,
-          8,
-          10
-        ]
-      },
-      "answer": "4",
-      "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
-      "difficulty": "Medium",
-      "spoken_text": "A stream routine resolves later-higher-value alerts. The values are seven, four, eight, ten. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "interview_friendly": true,
-      "interview_friendly_score": 3,
-      "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
-        {
-          "name": "sum_of_first_larger_distances",
-          "value": "4"
-        }
-      ],
-      "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
-      },
-      "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
-      }
-    },
-    {
-      "variant": "50",
-      "text": "You review first-larger positions in a numeric feed. The values are 8, 7, 6, 9, 8, 10, 10, 2. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
-      "params": {
-        "values": [
-          8,
-          7,
-          6,
-          9,
-          8,
-          10,
-          10,
-          2
+          18
         ]
       },
       "answer": "9",
       "tolerance": "0",
-      "topic": "Monotonic stack",
-      "source_topic": "First-larger distance total",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
       "difficulty": "Medium",
-      "spoken_text": "You review first-larger positions in a numeric feed. The values are eight, seven, six, nine, eight, ten, ten, two. For each position, find the first strictly larger value to its right and record how many positions forward it lies. Record zero if there is no later strictly larger value. What is the sum of those recorded distances, as a whole number of position steps?",
+      "spoken_text": "A backup station has file sizes thirty-one, seventeen, four, seventeen, five, eighteen. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within twelve slots, as a whole number of size units per slot?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "sum_of_first_larger_distances",
-          "value": "9"
+          "name": "total_size",
+          "value": "92"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "1",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "3",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "Why is the monotonic-stack scan linear, and how much auxiliary space does it use?",
-        "reference": "Equal values do not satisfy a strictly larger query, so they cannot resolve each other. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space."
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "A copy station has file sizes 30, 38, 1, 31, 29, 24. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 6 slots, as a whole number of size units per slot?",
+      "params": {
+        "slots": 6,
+        "values": [
+          30,
+          38,
+          1,
+          31,
+          29,
+          24
+        ]
+      },
+      "answer": "38",
+      "tolerance": "0",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
+      "difficulty": "Medium",
+      "spoken_text": "A copy station has file sizes thirty, thirty-eight, one, thirty-one, twenty-nine, twenty-four. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within six slots, as a whole number of size units per slot?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "26",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "16",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_size",
+          "value": "153"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "26"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "12",
+            "relative_gap": "6/19"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "22",
+            "relative_gap": "11/19"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "A transfer station has file sizes 47, 14, 34, 17, 15, 33. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 6 slots, as a whole number of size units per slot?",
+      "params": {
+        "slots": 6,
+        "values": [
+          47,
+          14,
+          34,
+          17,
+          15,
+          33
+        ]
+      },
+      "answer": "47",
+      "tolerance": "0",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
+      "difficulty": "Medium",
+      "spoken_text": "A transfer station has file sizes forty-seven, fourteen, thirty-four, seventeen, fifteen, thirty-three. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within six slots, as a whole number of size units per slot?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "17",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_size",
+          "value": "160"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "20",
+            "relative_gap": "20/47"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "30",
+            "relative_gap": "30/47"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "A processing station has file sizes 22, 39, 20, 36, 41, 13. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 7 slots, as a whole number of size units per slot?",
+      "params": {
+        "slots": 7,
+        "values": [
+          22,
+          39,
+          20,
+          36,
+          41,
+          13
+        ]
+      },
+      "answer": "39",
+      "tolerance": "0",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
+      "difficulty": "Medium",
+      "spoken_text": "A processing station has file sizes twenty-two, thirty-nine, twenty, thirty-six, forty-one, thirteen. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within seven slots, as a whole number of size units per slot?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "19",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_size",
+          "value": "171"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "14",
+            "relative_gap": "14/39"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "20",
+            "relative_gap": "20/39"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "A scan station has file sizes 1, 44, 43, 22, 31, 49. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 8 slots, as a whole number of size units per slot?",
+      "params": {
+        "slots": 8,
+        "values": [
+          1,
+          44,
+          43,
+          22,
+          31,
+          49
+        ]
+      },
+      "answer": "43",
+      "tolerance": "0",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
+      "difficulty": "Medium",
+      "spoken_text": "A scan station has file sizes one, forty-four, forty-three, twenty-two, thirty-one, forty-nine. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eight slots, as a whole number of size units per slot?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "17",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_size",
+          "value": "190"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "19",
+            "relative_gap": "19/43"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "26",
+            "relative_gap": "26/43"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
+      },
+      "follow_up": {
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "A backup station has file sizes 44, 1, 19, 1, 3, 15. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 12 slots, as a whole number of size units per slot?",
+      "params": {
+        "slots": 12,
+        "values": [
+          44,
+          1,
+          19,
+          1,
+          3,
+          15
+        ]
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
+      "difficulty": "Medium",
+      "spoken_text": "A backup station has file sizes forty-four, one, nineteen, one, three, fifteen. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within twelve slots, as a whole number of size units per slot?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "7",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_size",
+          "value": "83"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "3",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "4",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What changes if files may share unused slot capacity?",
+        "reference": "Per-file rounding no longer applies. With freely divisible work and shared slots, the rounded-up average rate can be sufficient."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "A copy station has file sizes 8, 3, 22, 24, 28, 37. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 7 slots, as a whole number of size units per slot?",
+      "params": {
+        "slots": 7,
+        "values": [
+          8,
+          3,
+          22,
+          24,
+          28,
+          37
+        ]
+      },
+      "answer": "28",
+      "tolerance": "0",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
+      "difficulty": "Medium",
+      "spoken_text": "A copy station has file sizes eight, three, twenty-two, twenty-four, twenty-eight, thirty-seven. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within seven slots, as a whole number of size units per slot?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "18",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "13",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_size",
+          "value": "122"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "18"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "10",
+            "relative_gap": "5/14"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "15",
+            "relative_gap": "15/28"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "How could you verify the boundary without binary search?",
+        "reference": "Try integer rates in ascending order and simulate whole slots. This is slower for large sizes but simple to inspect on a small example."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "A transfer station has file sizes 33, 30, 7, 31, 36, 36. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 6 slots, as a whole number of size units per slot?",
+      "params": {
+        "slots": 6,
+        "values": [
+          33,
+          30,
+          7,
+          31,
+          36,
+          36
+        ]
+      },
+      "answer": "36",
+      "tolerance": "0",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
+      "difficulty": "Medium",
+      "spoken_text": "A transfer station has file sizes thirty-three, thirty, seven, thirty-one, thirty-six, thirty-six. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within six slots, as a whole number of size units per slot?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "19",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_size",
+          "value": "173"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "29"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "7",
+            "relative_gap": "7/36"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "17",
+            "relative_gap": "17/36"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "Why is rate feasibility monotone?",
+        "reference": "Increasing the rate cannot increase any file completion time. Feasible rates therefore form one upper range."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "A processing station has file sizes 28, 8, 25, 11, 34, 17. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within 11 slots, as a whole number of size units per slot?",
+      "params": {
+        "slots": 11,
+        "values": [
+          28,
+          8,
+          25,
+          11,
+          34,
+          17
+        ]
+      },
+      "answer": "14",
+      "tolerance": "0",
+      "topic": "Binary search on the answer",
+      "source_topic": "Minimum rounded processing rate",
+      "difficulty": "Medium",
+      "spoken_text": "A processing station has file sizes twenty-eight, eight, twenty-five, eleven, thirty-four, seventeen. Each file takes its size divided by the integer processing rate, rounded up, in slots. Files cannot share a slot. What minimum rate finishes within eleven slots, as a whole number of size units per slot?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_average_work_rate_without_per_file_rounding"
+          ]
+        },
+        {
+          "value": "9",
+          "misconceptions": [
+            "rounds_each_file_time_down"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_size",
+          "value": "123"
+        },
+        {
+          "name": "average_rate_lower_bound",
+          "value": "12"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_average_work_rate_without_per_file_rounding",
+            "absolute_gap": "2",
+            "relative_gap": "1/7"
+          },
+          {
+            "misconception": "rounds_each_file_time_down",
+            "absolute_gap": "5",
+            "relative_gap": "5/14"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What if the slot budget is smaller than the number of nonempty files?",
+        "reference": "Each nonempty file requires at least one slot. No finite rate can meet that budget."
       }
     }
   ]

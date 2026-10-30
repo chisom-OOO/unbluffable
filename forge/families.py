@@ -21,6 +21,8 @@ from forge.verify import LABEL, snake_case
 
 MIN_VARIANTS = 20
 PARAMETER_REVISION = 3
+PROMPT_REVISION = 2  # 2: examples carry their verified answers; percentages are fractions of one
+PERCENT = re.compile(r"percent|%", re.I)
 DRAFT = schemas.obj({"solver": schemas.S, "step_names": schemas.arr(schemas.S),
                      "wrong": schemas.arr(schemas.WRONG)})
 PROMPT = """Write an exact parameterized solver and 2-4 named misconception solvers for this family.
@@ -32,6 +34,9 @@ step_names must exactly describe the returned named intermediate values. Use des
 Parameters keep their numeric meaning: native integers are ints, numeric strings are exact Fractions and nonnumeric labels remain strings,
 arrays are immutable tuples and objects are read-only mappings. Do not mutate parameters or depend on call order.
 Each variant gets fresh generated globals. No random solver. No float RETURN values; exact int/Fraction outputs only.
+Each example carries its verified answer: the solver must return exactly that value on the same scale.
+A percentage is returned as a fraction of one, never in percent points: 26% is Fraction(13, 50), not 26.
+The same scale applies to percentage steps and to every wrong-method value.
 Imports limited to math, fractions, random, itertools, functools. No files/network, introspection,
 classes, decorators, dynamic execution or outside code. Never execute code at application runtime."""
 
@@ -153,7 +158,8 @@ class FamilyForge:
         stage = "family_repair" if repair else "family_author"
         self.stage(item, stage)
         payload = {"family_id": family.family_id, "examples": [
-            {"question": row.text, "params": row.params, "solution": row.solution, "reasoning_focus": row.reasoning_focus}
+            {"question": row.text, "params": row.params, "solution": row.solution, "reasoning_focus": row.reasoning_focus,
+             "answer": str(row.answer)}
             for row in (family.variants[0], family.variants[-1])]}
         if self.pack != "quant":
             payload["pack"] = self.pack
@@ -195,7 +201,10 @@ class FamilyForge:
         for index, (row, result) in enumerate(zip(family.variants, solved)):
             error = abs(number(result["answer"]) - row.answer)
             if error > row.tolerance:
-                raise Reject("solver", "verified_value_mismatch", {"variant_index": index})
+                # Name the percent-points slip so the repair knows the fix; it is never accepted as correct.
+                scaled = PERCENT.search(row.text) and abs(number(result["answer"]) - 100 * row.answer) <= 100 * row.tolerance
+                raise Reject("solver", "percent_points_not_fraction" if scaled else "verified_value_mismatch",
+                             {"variant_index": index})
             returned = [{**step, "name": snake_case(step["name"])} for step in result["steps"]]
             if len({step["name"] for step in returned}) != len(returned) or {step["name"] for step in returned} != set(names):
                 raise Reject("steps", "invalid_step_names", {"variant_index": index})
@@ -364,13 +373,26 @@ class FamilyForge:
         atomic_json(self.funnel, report)
         return report
 
-    def run(self, families, *, recheck_families=()):
+    def retry(self, item):
+        """Discard a fallback's cached drafts so it is authored again under the current prompt."""
+        if item.get("retry_prompt_revision") == PROMPT_REVISION or item["status"] != "fallback":
+            return
+        kept = {key: item.pop(key) for key in ("draft", "repair", "corrected", "failure", "computed", "verified_steps",
+                                               "solver_verification", "method_count") if key in item}
+        item.setdefault("retry_history", []).append({"prompt_revision": PROMPT_REVISION, **kept})
+        item.update(status="pending", retry_prompt_revision=PROMPT_REVISION, attempted=[], passed=[])
+        self.state.save()
+
+    def run(self, families, *, recheck_families=(), retry_families=()):
         public_ids = [self.template_id(family) for family in families]
         if len(set(public_ids)) != len(public_ids):
             raise ValueError("Duplicate public family IDs")
         self.recheck_ids = tuple(dict.fromkeys(recheck_families))
-        if not set(self.recheck_ids) <= {family.family_id for family in families}:
+        retry_ids = tuple(dict.fromkeys(retry_families))
+        if not set(self.recheck_ids) | set(retry_ids) <= {family.family_id for family in families}:
             raise ValueError("Unknown family in recheck selection")
+        if self.recheck_ids and retry_ids:
+            raise ValueError("Recheck and retry are separate runs")
         self.recheck_call_count, self.recheck_start_cost = len(self.state.data["calls"]), self.models.spent()
         fingerprint = hashlib.sha256(json.dumps([asdict(family) for family in families], sort_keys=True,
                                                 default=str).encode()).hexdigest()
@@ -378,9 +400,11 @@ class FamilyForge:
             raise ValueError("Family source changed; use a new private work directory")
         halt = None
         for family in families:
-            if self.recheck_ids and family.family_id not in self.recheck_ids:
+            if (self.recheck_ids or retry_ids) and family.family_id not in self.recheck_ids + retry_ids:
                 continue
             item = self.state.data["items"].setdefault(self.template_id(family), {"status": "pending", "attempted": [], "passed": []})
+            if retry_ids:
+                self.retry(item)
             recheck = bool(self.recheck_ids) and item.get("rechecked_parameter_revision") != PARAMETER_REVISION
             if not recheck and item["status"] in {"verified", "fallback"}:
                 if not (self.output / (self.template_id(family) + ".json")).exists():

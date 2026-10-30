@@ -1,11 +1,11 @@
 {
   "template_id": "sw_F002",
   "pack": "software",
-  "topic": "Sliding window and two pointers",
+  "topic": "Dynamic programming",
   "topics": [
-    "Sliding window and two pointers"
+    "Dynamic programming"
   ],
-  "source_topic": "Smallest covering event window",
+  "source_topic": "Maximum consecutive product",
   "difficulty": "Medium",
   "models": {
     "author": "meta-models/muse-spark-open-1026",
@@ -25,2072 +25,2984 @@
       "variants_checked": 50,
       "max_absolute_error": "0"
     },
-    "misconceptions_verified": false,
-    "method_count": 0,
-    "repair_attempted": true,
-    "reason": {
-      "gate": "sandbox",
-      "error_class": "forbidden_import"
-    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
     "pending_reason": null,
     "all_variants_retained": true,
     "rechecked_parameter_revision": null,
-    "variant_followups": false
+    "variant_followups": true
   },
   "follow_up": {
-    "question": "What time and auxiliary space does a frequency-window solution need?",
-    "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+    "question": "Why retain the smallest product?",
+    "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
   },
   "review_status": "pending_builder_review",
   "instances": [
     {
       "variant": "1",
-      "text": "You trace a log-window search. The text has letters a, d, f, f, e, e, d, d, e, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A score stream has multipliers 0, minus 1, minus 1, minus 1. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "adffeeddeb"
+        "values": [
+          0,
+          -1,
+          -1,
+          -1
+        ]
       },
-      "answer": "10",
+      "answer": "1",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You trace a log-window search. The text has letters a, d, f, f, e, e, d, d, e, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A score stream has multipliers zero, minus one, minus one, minus one. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "0",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "1"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "2",
-      "text": "A parser needs the shortest span containing required tags. The text has letters a, c, f, d, d, c, d, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A multiplier stream has multipliers 4, minus 3, minus 1, 3, minus 1, 2. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "acfddcdb"
+        "values": [
+          4,
+          -3,
+          -1,
+          3,
+          -1,
+          2
+        ]
       },
-      "answer": "8",
+      "answer": "36",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A parser needs the shortest span containing required tags. The text has letters a, c, f, d, d, c, d, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A multiplier stream has multipliers four, minus three, minus one, three, minus one, two. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "8"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "36"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "27",
+            "relative_gap": "3/4"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "32",
+            "relative_gap": "8/9"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "3",
-      "text": "You inspect a compact message buffer. The text has letters a, and the required text has letters z. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A game replay has multipliers minus 1, 4, 5, minus 4, minus 4, minus 4. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "z",
-        "text": "a"
+        "values": [
+          -1,
+          4,
+          5,
+          -4,
+          -4,
+          -4
+        ]
       },
-      "answer": "0",
+      "answer": "1280",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a compact message buffer. The text has letters a, and the required text has letters z. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A game replay has multipliers minus one, four, five, minus four, minus four, minus four. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "1"
-        },
-        {
-          "name": "required_length",
-          "value": "1"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "1280"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "1260",
+            "relative_gap": "63/64"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "1260",
+            "relative_gap": "63/64"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "4",
-      "text": "A monitoring routine searches for a complete set of event occurrences. The text has letters d, e, f, d, a, d, b, f, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A simulation log has multipliers 5, 3, minus 1, minus 4. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "defdadbf"
+        "values": [
+          5,
+          3,
+          -1,
+          -4
+        ]
       },
-      "answer": "3",
+      "answer": "60",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A monitoring routine searches for a complete set of event occurrences. The text has letters d, e, f, d, a, d, b, f, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A simulation log has multipliers five, three, minus one, minus four. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "8"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "60"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "45",
+            "relative_gap": "3/4"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "45",
+            "relative_gap": "3/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "5",
-      "text": "You review a short character-window matching task. The text has letters a, b, e, c, f, f, c, d, f, f, and the required text has letters f. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A factor stream has multipliers 3, minus 3, 2, 2, minus 3, minus 2. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "f",
-        "text": "abecffcdff"
+        "values": [
+          3,
+          -3,
+          2,
+          2,
+          -3,
+          -2
+        ]
       },
-      "answer": "1",
+      "answer": "108",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You review a short character-window matching task. The text has letters a, b, e, c, f, f, c, d, f, f, and the required text has letters f. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A factor stream has multipliers three, minus three, two, two, minus three, minus two. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "6",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "1"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "108"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "102",
+            "relative_gap": "17/18"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "104",
+            "relative_gap": "26/27"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "6",
-      "text": "You trace a log-window search. The text has letters d, f, a, b, c, f, d, f, a, e, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A score stream has multipliers 5, minus 2, minus 1, 0, minus 2. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aba",
-        "text": "dfabcfdfae"
+        "values": [
+          5,
+          -2,
+          -1,
+          0,
+          -2
+        ]
       },
-      "answer": "7",
+      "answer": "10",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You trace a log-window search. The text has letters d, f, a, b, c, f, d, f, a, e, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A score stream has multipliers five, minus two, minus one, zero, minus two. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
+          "name": "maximum_consecutive_product",
           "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "3"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "5",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "5",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "7",
-      "text": "A parser needs the shortest span containing required tags. The text has letters d, a, e, c, e, a, d, f, e, d, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A multiplier stream has multipliers 2, minus 1, minus 1, minus 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "daeceadfed"
+        "values": [
+          2,
+          -1,
+          -1,
+          -3
+        ]
       },
-      "answer": "5",
+      "answer": "3",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A parser needs the shortest span containing required tags. The text has letters d, a, e, c, e, a, d, f, e, d, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A multiplier stream has multipliers two, minus one, minus one, minus three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "3"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "8",
-      "text": "You inspect a compact message buffer. The text has letters e, a, e, f, c, e, a, c, e, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A game replay has multipliers minus 1, 3, 4, minus 3, minus 5, 5. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "eaefceace"
+        "values": [
+          -1,
+          3,
+          4,
+          -3,
+          -5,
+          5
+        ]
       },
-      "answer": "6",
+      "answer": "900",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a compact message buffer. The text has letters e, a, e, f, c, e, a, c, e, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A game replay has multipliers minus one, three, four, minus three, minus five, five. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "75",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "9"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "900"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "825",
+            "relative_gap": "11/12"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "888",
+            "relative_gap": "74/75"
+          }
+        ],
+        "min_wrong_pair_gap": "63",
+        "min_distinct_wrong_pair_gap": "63"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "9",
-      "text": "A monitoring routine searches for a complete set of event occurrences. The text has letters e, d, a, f, e, a, c, d, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A simulation log has multipliers 3, minus 2, 4, minus 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "edafeacd"
+        "values": [
+          3,
+          -2,
+          4,
+          -3
+        ]
       },
-      "answer": "4",
+      "answer": "72",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A monitoring routine searches for a complete set of event occurrences. The text has letters e, d, a, f, e, a, c, d, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A simulation log has multipliers three, minus two, four, minus three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "8"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "72"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "68",
+            "relative_gap": "17/18"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "68",
+            "relative_gap": "17/18"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "10",
-      "text": "You review a short character-window matching task. The text has letters a, b, d, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A factor stream has multipliers minus 3, 4, minus 4, 3, 1, minus 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "abd"
+        "values": [
+          -3,
+          4,
+          -4,
+          3,
+          1,
+          -3
+        ]
       },
-      "answer": "2",
+      "answer": "144",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You review a short character-window matching task. The text has letters a, b, d, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A factor stream has multipliers minus three, four, minus four, three, one, minus three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "3"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "144"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "140",
+            "relative_gap": "35/36"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "140",
+            "relative_gap": "35/36"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "11",
-      "text": "You trace a log-window search. The text has letters a, e, f, d, e, a, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A score stream has multipliers minus 2, 5, minus 1, minus 5. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "aefdea"
+        "values": [
+          -2,
+          5,
+          -1,
+          -5
+        ]
       },
-      "answer": "6",
+      "answer": "25",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You trace a log-window search. The text has letters a, e, f, d, e, a, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A score stream has multipliers minus two, five, minus one, minus five. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "6"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "25"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "20",
+            "relative_gap": "4/5"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "20",
+            "relative_gap": "4/5"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "12",
-      "text": "A parser needs the shortest span containing required tags. The text has letters c, d, a, c, a, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A multiplier stream has multipliers 4, 5, minus 3, minus 1, 5, 1. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "cdaca"
+        "values": [
+          4,
+          5,
+          -3,
+          -1,
+          5,
+          1
+        ]
       },
-      "answer": "3",
+      "answer": "300",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A parser needs the shortest span containing required tags. The text has letters c, d, a, c, a, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A multiplier stream has multipliers four, five, minus three, minus one, five, one. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "5"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "300"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "280",
+            "relative_gap": "14/15"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "280",
+            "relative_gap": "14/15"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "13",
-      "text": "You inspect a compact message buffer. The text has letters e, d, c, f, d, f, e, d, a, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A game replay has multipliers 4, minus 4, minus 4, minus 4, minus 3, 1. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "edcfdfedab"
+        "values": [
+          4,
+          -4,
+          -4,
+          -4,
+          -3,
+          1
+        ]
       },
-      "answer": "2",
+      "answer": "768",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a compact message buffer. The text has letters e, d, c, f, d, f, e, d, a, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A game replay has multipliers four, minus four, minus four, minus four, minus three, one. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "16",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "768"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "752",
+            "relative_gap": "47/48"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "764",
+            "relative_gap": "191/192"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "14",
-      "text": "A monitoring routine searches for a complete set of event occurrences. The text has letters c, f, d, d, e, e, f, and the required text has letters d. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A simulation log has multipliers minus 2, 4, 1, 0, minus 2, minus 4. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "d",
-        "text": "cfddeef"
+        "values": [
+          -2,
+          4,
+          1,
+          0,
+          -2,
+          -4
+        ]
       },
-      "answer": "1",
+      "answer": "8",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A monitoring routine searches for a complete set of event occurrences. The text has letters c, f, d, d, e, e, f, and the required text has letters d. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A simulation log has multipliers minus two, four, one, zero, minus two, minus four. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "7"
-        },
-        {
-          "name": "required_length",
-          "value": "1"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "4",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "4",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "15",
-      "text": "You review a short character-window matching task. The text has letters a, f, e, f, c, e, c, e, c, a, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A factor stream has multipliers 3, minus 5, minus 5, minus 4, minus 2, 0. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "afefcececa"
+        "values": [
+          3,
+          -5,
+          -5,
+          -4,
+          -2,
+          0
+        ]
       },
-      "answer": "10",
+      "answer": "600",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You review a short character-window matching task. The text has letters a, f, e, f, c, e, c, e, c, a, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A factor stream has multipliers three, minus five, minus five, minus four, minus two, zero. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "600"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "575",
+            "relative_gap": "23/24"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "597",
+            "relative_gap": "199/200"
+          }
+        ],
+        "min_wrong_pair_gap": "22",
+        "min_distinct_wrong_pair_gap": "22"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "16",
-      "text": "You trace a log-window search. The text has letters f, d, e, c, a, e, c, a, e, c, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A score stream has multipliers 5, minus 1, 5, 2, 3, minus 5. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "fdecaecaec"
+        "values": [
+          5,
+          -1,
+          5,
+          2,
+          3,
+          -5
+        ]
       },
-      "answer": "4",
+      "answer": "750",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You trace a log-window search. The text has letters f, d, e, c, a, e, c, a, e, c, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A score stream has multipliers five, minus one, five, two, three, minus five. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "750"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "720",
+            "relative_gap": "24/25"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "720",
+            "relative_gap": "24/25"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "17",
-      "text": "A parser needs the shortest span containing required tags. The text has letters a, e, c, f, f, d, c, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A multiplier stream has multipliers minus 3, minus 4, minus 3, 3, 1, minus 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "aecffdcb"
+        "values": [
+          -3,
+          -4,
+          -3,
+          3,
+          1,
+          -3
+        ]
       },
-      "answer": "8",
+      "answer": "324",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A parser needs the shortest span containing required tags. The text has letters a, e, c, f, f, d, c, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A multiplier stream has multipliers minus three, minus four, minus three, three, one, minus three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "12",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "8"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "324"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "312",
+            "relative_gap": "26/27"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "321",
+            "relative_gap": "107/108"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "18",
-      "text": "You inspect a compact message buffer. The text has letters a, f, d, d, a, d, e, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A game replay has multipliers minus 3, 2, minus 3, 3, minus 5, 0. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "afddade"
+        "values": [
+          -3,
+          2,
+          -3,
+          3,
+          -5,
+          0
+        ]
       },
-      "answer": "5",
+      "answer": "90",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a compact message buffer. The text has letters a, f, d, d, a, d, e, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A game replay has multipliers minus three, two, minus three, three, minus five, zero. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "7"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "90"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "87",
+            "relative_gap": "29/30"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "87",
+            "relative_gap": "29/30"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "19",
-      "text": "A monitoring routine searches for a complete set of event occurrences. The text has letters a, d, f, d, b, f, a, c, f, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A simulation log has multipliers 5, minus 5, minus 5, minus 4, minus 1, minus 2. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aba",
-        "text": "adfdbfacf"
+        "values": [
+          5,
+          -5,
+          -5,
+          -4,
+          -1,
+          -2
+        ]
       },
-      "answer": "7",
+      "answer": "500",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A monitoring routine searches for a complete set of event occurrences. The text has letters a, d, f, d, b, f, a, c, f, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A simulation log has multipliers five, minus five, minus five, minus four, minus one, minus two. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "9"
-        },
-        {
-          "name": "required_length",
-          "value": "3"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "500"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "475",
+            "relative_gap": "19/20"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "495",
+            "relative_gap": "99/100"
+          }
+        ],
+        "min_wrong_pair_gap": "20",
+        "min_distinct_wrong_pair_gap": "20"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "20",
-      "text": "You review a short character-window matching task. The text has letters c, c, a, c, b, a, and the required text has letters z, z. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A factor stream has multipliers 1, 5, 3, minus 5, minus 2, 0. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "zz",
-        "text": "ccacba"
+        "values": [
+          1,
+          5,
+          3,
+          -5,
+          -2,
+          0
+        ]
       },
-      "answer": "0",
+      "answer": "150",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You review a short character-window matching task. The text has letters c, c, a, c, b, a, and the required text has letters z, z. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A factor stream has multipliers one, five, three, minus five, minus two, zero. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "6"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "150"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "135",
+            "relative_gap": "9/10"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "135",
+            "relative_gap": "9/10"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "21",
-      "text": "You trace a log-window search. The text has letters a, e, d, f, e, d, a, c, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A score stream has multipliers minus 5, minus 2, minus 5, 5, 5, 5. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "aedfedac"
+        "values": [
+          -5,
+          -2,
+          -5,
+          5,
+          5,
+          5
+        ]
       },
-      "answer": "7",
+      "answer": "1250",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You trace a log-window search. The text has letters a, e, d, f, e, d, a, c, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A score stream has multipliers minus five, minus two, minus five, five, five, five. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "125",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "8"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "1250"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "1125",
+            "relative_gap": "9/10"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "1125",
+            "relative_gap": "9/10"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "22",
-      "text": "A parser needs the shortest span containing required tags. The text has letters f, d, d, c, a, d, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A multiplier stream has multipliers 3, minus 5, 5, 5, 4, minus 1. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "fddcadb"
+        "values": [
+          3,
+          -5,
+          5,
+          5,
+          4,
+          -1
+        ]
       },
-      "answer": "3",
+      "answer": "1500",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A parser needs the shortest span containing required tags. The text has letters f, d, d, c, a, d, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A multiplier stream has multipliers three, minus five, five, five, four, minus one. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "100",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "7"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "1500"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "1400",
+            "relative_gap": "14/15"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "1400",
+            "relative_gap": "14/15"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "23",
-      "text": "You inspect a compact message buffer. The text has letters a, d, e, c, f, e, d, f, c, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A game replay has multipliers minus 5, 5, 5, minus 5, minus 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "adecfedfcb"
+        "values": [
+          -5,
+          5,
+          5,
+          -5,
+          -3
+        ]
       },
-      "answer": "10",
+      "answer": "625",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a compact message buffer. The text has letters a, d, e, c, f, e, d, f, c, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A game replay has multipliers minus five, five, five, minus five, minus three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "625"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "600",
+            "relative_gap": "24/25"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "600",
+            "relative_gap": "24/25"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "24",
-      "text": "A monitoring routine searches for a complete set of event occurrences. The text has letters a, d, f, f, d, d, e, a, d, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A simulation log has multipliers 0, 5, minus 5, minus 4, minus 4. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "adffddead"
+        "values": [
+          0,
+          5,
+          -5,
+          -4,
+          -4
+        ]
       },
-      "answer": "8",
+      "answer": "100",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A monitoring routine searches for a complete set of event occurrences. The text has letters a, d, f, f, d, d, e, a, d, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A simulation log has multipliers zero, five, minus five, minus four, minus four. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "9"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "100"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "80",
+            "relative_gap": "4/5"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "100",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "20",
+        "min_distinct_wrong_pair_gap": "20"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "25",
-      "text": "You review a short character-window matching task. The text has letters c, a, b, e, a, f, d, f, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A factor stream has multipliers minus 3, minus 2, minus 4, 4, 4, 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aba",
-        "text": "cabeafdf"
+        "values": [
+          -3,
+          -2,
+          -4,
+          4,
+          4,
+          3
+        ]
       },
-      "answer": "4",
+      "answer": "384",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You review a short character-window matching task. The text has letters c, a, b, e, a, f, d, f, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A factor stream has multipliers minus three, minus two, minus four, four, four, three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "48",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "8"
-        },
-        {
-          "name": "required_length",
-          "value": "3"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "384"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "336",
+            "relative_gap": "7/8"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "336",
+            "relative_gap": "7/8"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "26",
-      "text": "You trace a log-window search. The text has letters c, b, c, c, and the required text has letters z. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A score stream has multipliers minus 5, 4, minus 1, minus 4, 2. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "z",
-        "text": "cbcc"
+        "values": [
+          -5,
+          4,
+          -1,
+          -4,
+          2
+        ]
       },
-      "answer": "0",
+      "answer": "32",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You trace a log-window search. The text has letters c, b, c, c, and the required text has letters z. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A score stream has multipliers minus five, four, minus one, minus four, two. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "4"
-        },
-        {
-          "name": "required_length",
-          "value": "1"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "32"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "24",
+            "relative_gap": "3/4"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "28",
+            "relative_gap": "7/8"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "27",
-      "text": "A parser needs the shortest span containing required tags. The text has letters d, d, a, f, and the required text has letters f. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A multiplier stream has multipliers 4, minus 3, minus 3, minus 3, minus 4. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "f",
-        "text": "ddaf"
+        "values": [
+          4,
+          -3,
+          -3,
+          -3,
+          -4
+        ]
       },
-      "answer": "1",
+      "answer": "432",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A parser needs the shortest span containing required tags. The text has letters d, d, a, f, and the required text has letters f. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A multiplier stream has multipliers four, minus three, minus three, minus three, minus four. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "12",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "4"
-        },
-        {
-          "name": "required_length",
-          "value": "1"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "432"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "420",
+            "relative_gap": "35/36"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "428",
+            "relative_gap": "107/108"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "28",
-      "text": "You inspect a compact message buffer. The text has letters f, f, a, a, d, d, c, c, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A game replay has multipliers minus 1, 4, minus 4, minus 4, minus 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "ffaaddcc"
+        "values": [
+          -1,
+          4,
+          -4,
+          -4,
+          -3
+        ]
       },
-      "answer": "2",
+      "answer": "192",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a compact message buffer. The text has letters f, f, a, a, d, d, c, c, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A game replay has multipliers minus one, four, minus four, minus four, minus three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "16",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "8"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "192"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "176",
+            "relative_gap": "11/12"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "188",
+            "relative_gap": "47/48"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "29",
-      "text": "A monitoring routine searches for a complete set of event occurrences. The text has letters a, d, b, d, d, a, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A simulation log has multipliers 2, 3, minus 3, 4, 4, minus 4. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aba",
-        "text": "adbdda"
+        "values": [
+          2,
+          3,
+          -3,
+          4,
+          4,
+          -4
+        ]
       },
-      "answer": "6",
+      "answer": "1152",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A monitoring routine searches for a complete set of event occurrences. The text has letters a, d, b, d, d, a, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A simulation log has multipliers two, three, minus three, four, four, minus four. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "16",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "6"
-        },
-        {
-          "name": "required_length",
-          "value": "3"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "1152"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "1136",
+            "relative_gap": "71/72"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "1136",
+            "relative_gap": "71/72"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "30",
-      "text": "You review a short character-window matching task. The text has letters c, a, c, d, e, b, e, c, f, d, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A factor stream has multipliers 2, minus 2, 3, minus 1, minus 3, 5. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "cacdebecfd"
+        "values": [
+          2,
+          -2,
+          3,
+          -1,
+          -3,
+          5
+        ]
       },
-      "answer": "5",
+      "answer": "45",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You review a short character-window matching task. The text has letters c, a, c, d, e, b, e, c, f, d, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A factor stream has multipliers two, minus two, three, minus one, minus three, five. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "45"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "30",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "40",
+            "relative_gap": "8/9"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "31",
-      "text": "You trace a log-window search. The text has letters b, a, b, e, b, d, b, b, f, b, and the required text has letters d. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A score stream has multipliers minus 4, minus 2, minus 2, 2, minus 4, 4. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "d",
-        "text": "babebdbbfb"
+        "values": [
+          -4,
+          -2,
+          -2,
+          2,
+          -4,
+          4
+        ]
       },
-      "answer": "1",
+      "answer": "512",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You trace a log-window search. The text has letters b, a, b, e, b, d, b, b, f, b, and the required text has letters d. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A score stream has multipliers minus four, minus two, minus two, two, minus four, four. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "1"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "512"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "504",
+            "relative_gap": "63/64"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "508",
+            "relative_gap": "127/128"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "32",
-      "text": "A parser needs the shortest span containing required tags. The text has letters a, c, c, b, b, a, b, and the required text has letters z. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A multiplier stream has multipliers 5, minus 1, 4, minus 1, 4. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "z",
-        "text": "accbbab"
+        "values": [
+          5,
+          -1,
+          4,
+          -1,
+          4
+        ]
       },
-      "answer": "0",
+      "answer": "80",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A parser needs the shortest span containing required tags. The text has letters a, c, c, b, b, a, b, and the required text has letters z. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A multiplier stream has multipliers five, minus one, four, minus one, four. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "7"
-        },
-        {
-          "name": "required_length",
-          "value": "1"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "80"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "75",
+            "relative_gap": "15/16"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "75",
+            "relative_gap": "15/16"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "33",
-      "text": "You inspect a compact message buffer. The text has letters a, b, a, d, c, c, d, c, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A game replay has multipliers 2, minus 1, minus 1, 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aba",
-        "text": "abadccdc"
+        "values": [
+          2,
+          -1,
+          -1,
+          3
+        ]
       },
-      "answer": "3",
+      "answer": "6",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a compact message buffer. The text has letters a, b, a, d, c, c, d, c, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A game replay has multipliers two, minus one, minus one, three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "8"
-        },
-        {
-          "name": "required_length",
-          "value": "3"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "6"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "3",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "3",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "34",
-      "text": "A monitoring routine searches for a complete set of event occurrences. The text has letters a, e, e, d, a, c, d, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A simulation log has multipliers minus 3, minus 5, 5, minus 5. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "aeedacd"
+        "values": [
+          -3,
+          -5,
+          5,
+          -5
+        ]
       },
-      "answer": "5",
+      "answer": "125",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A monitoring routine searches for a complete set of event occurrences. The text has letters a, e, e, d, a, c, d, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A simulation log has multipliers minus three, minus five, five, minus five. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "75",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "7"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "125"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "50",
+            "relative_gap": "2/5"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "120",
+            "relative_gap": "24/25"
+          }
+        ],
+        "min_wrong_pair_gap": "70",
+        "min_distinct_wrong_pair_gap": "70"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "35",
-      "text": "You review a short character-window matching task. The text has letters a, b, e, f, d, f, e, a, e, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A factor stream has multipliers minus 3, 2, 3, 5, minus 5. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aba",
-        "text": "abefdfeae"
+        "values": [
+          -3,
+          2,
+          3,
+          5,
+          -5
+        ]
       },
-      "answer": "8",
+      "answer": "450",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You review a short character-window matching task. The text has letters a, b, e, f, d, f, e, a, e, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A factor stream has multipliers minus three, two, three, five, minus five. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "9"
-        },
-        {
-          "name": "required_length",
-          "value": "3"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "450"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "420",
+            "relative_gap": "14/15"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "420",
+            "relative_gap": "14/15"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "36",
-      "text": "You trace a log-window search. The text has letters a, a, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A score stream has multipliers minus 5, minus 1, 2, minus 3, 2. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "aa"
+        "values": [
+          -5,
+          -1,
+          2,
+          -3,
+          2
+        ]
       },
-      "answer": "2",
+      "answer": "12",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You trace a log-window search. The text has letters a, a, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A score stream has multipliers minus five, minus one, two, minus three, two. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "10",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "2",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "2"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "12"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "2",
+            "relative_gap": "1/6"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "10",
+            "relative_gap": "5/6"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "37",
-      "text": "A parser needs the shortest span containing required tags. The text has letters f, c, f, a, e, d, c, d, b, e, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A multiplier stream has multipliers minus 5, 5, 5, minus 3, 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "fcfaedcdbe"
+        "values": [
+          -5,
+          5,
+          5,
+          -3,
+          3
+        ]
       },
-      "answer": "6",
+      "answer": "1125",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A parser needs the shortest span containing required tags. The text has letters f, c, f, a, e, d, c, d, b, e, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A multiplier stream has multipliers minus five, five, five, minus three, three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "1125"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "1100",
+            "relative_gap": "44/45"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "1100",
+            "relative_gap": "44/45"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "38",
-      "text": "You inspect a compact message buffer. The text has letters a, e, e, d, e, d, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A game replay has multipliers minus 3, minus 4, 4, minus 3, 5. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "aeededb"
+        "values": [
+          -3,
+          -4,
+          4,
+          -3,
+          5
+        ]
       },
-      "answer": "7",
+      "answer": "240",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a compact message buffer. The text has letters a, e, e, d, e, d, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A game replay has multipliers minus three, minus four, four, minus three, five. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "48",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "7"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "240"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "192",
+            "relative_gap": "4/5"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "235",
+            "relative_gap": "47/48"
+          }
+        ],
+        "min_wrong_pair_gap": "43",
+        "min_distinct_wrong_pair_gap": "43"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "39",
-      "text": "A monitoring routine searches for a complete set of event occurrences. The text has letters c, c, e, c, a, e, e, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A simulation log has multipliers 0, 2, minus 4, minus 2. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "ccecaeeb"
+        "values": [
+          0,
+          2,
+          -4,
+          -2
+        ]
       },
-      "answer": "4",
+      "answer": "16",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A monitoring routine searches for a complete set of event occurrences. The text has letters c, c, e, c, a, e, e, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A simulation log has multipliers zero, two, minus four, minus two. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "8"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "16"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "8",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "16",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "40",
-      "text": "You review a short character-window matching task. The text has letters a, f, e, f, e, e, c, c, e, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A factor stream has multipliers minus 4, minus 2, minus 1, minus 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "afefeecceb"
+        "values": [
+          -4,
+          -2,
+          -1,
+          -3
+        ]
       },
-      "answer": "10",
+      "answer": "24",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You review a short character-window matching task. The text has letters a, f, e, f, e, e, c, c, e, b, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A factor stream has multipliers minus four, minus two, minus one, minus three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "-1",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "24"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "16",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "25",
+            "relative_gap": "25/24"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "41",
-      "text": "You trace a log-window search. The text has letters a, a, d, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A score stream has multipliers 4, minus 5, 5, 5, minus 2. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aa",
-        "text": "aad"
+        "values": [
+          4,
+          -5,
+          5,
+          5,
+          -2
+        ]
       },
-      "answer": "2",
+      "answer": "1000",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You trace a log-window search. The text has letters a, a, d, and the required text has letters a, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A score stream has multipliers four, minus five, five, five, minus two. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "3"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "1000"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "975",
+            "relative_gap": "39/40"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "975",
+            "relative_gap": "39/40"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "42",
-      "text": "A parser needs the shortest span containing required tags. The text has letters a, c, b, d, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A multiplier stream has multipliers minus 1, 4, minus 4, 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "acbd"
+        "values": [
+          -1,
+          4,
+          -4,
+          3
+        ]
       },
-      "answer": "3",
+      "answer": "48",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A parser needs the shortest span containing required tags. The text has letters a, c, b, d, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A multiplier stream has multipliers minus one, four, minus four, three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "4"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "48"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "44",
+            "relative_gap": "11/12"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "44",
+            "relative_gap": "11/12"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "43",
-      "text": "You inspect a compact message buffer. The text has letters a, b, c, c, c, f, e, d, c, a, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A game replay has multipliers 3, minus 4, 3, minus 5, 0. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aba",
-        "text": "abcccfedca"
+        "values": [
+          3,
+          -4,
+          3,
+          -5,
+          0
+        ]
       },
-      "answer": "10",
+      "answer": "180",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a compact message buffer. The text has letters a, b, c, c, c, f, e, d, c, a, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A game replay has multipliers three, minus four, three, minus five, zero. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "3"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "180"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "177",
+            "relative_gap": "59/60"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "177",
+            "relative_gap": "59/60"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "44",
-      "text": "A monitoring routine searches for a complete set of event occurrences. The text has letters c, a, f, c, f, b, c, e, f, f, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A simulation log has multipliers 1, 3, minus 3, minus 2, minus 5. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "cafcfbceff"
+        "values": [
+          1,
+          3,
+          -3,
+          -2,
+          -5
+        ]
       },
-      "answer": "5",
+      "answer": "18",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A monitoring routine searches for a complete set of event occurrences. The text has letters c, a, f, c, f, b, c, e, f, f, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A simulation log has multipliers one, three, minus three, minus two, minus five. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "6",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "18"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "12",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "15",
+            "relative_gap": "5/6"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "45",
-      "text": "You review a short character-window matching task. The text has letters a, f, c, b, c, e, a, c, c, d, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A factor stream has multipliers minus 3, minus 5, 5, minus 1, minus 5. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aba",
-        "text": "afcbceaccd"
+        "values": [
+          -3,
+          -5,
+          5,
+          -1,
+          -5
+        ]
       },
-      "answer": "7",
+      "answer": "375",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You review a short character-window matching task. The text has letters a, f, c, b, c, e, a, c, c, d, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A factor stream has multipliers minus three, minus five, five, minus one, minus five. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "75",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "3"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "375"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "300",
+            "relative_gap": "4/5"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "370",
+            "relative_gap": "74/75"
+          }
+        ],
+        "min_wrong_pair_gap": "70",
+        "min_distinct_wrong_pair_gap": "70"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "46",
-      "text": "You trace a log-window search. The text has letters d, a, f, f, e, e, d, c, b, e, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A score stream has multipliers minus 3, minus 3, minus 3, minus 1, 2. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "daffeedcbe"
+        "values": [
+          -3,
+          -3,
+          -3,
+          -1,
+          2
+        ]
       },
-      "answer": "8",
+      "answer": "54",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You trace a log-window search. The text has letters d, a, f, f, e, e, d, c, b, e, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A score stream has multipliers minus three, minus three, minus three, minus one, two. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "tracks_only_maximum_product"
+          ]
+        },
+        {
+          "value": "2",
+          "misconceptions": [
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "10"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "54"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "45",
+            "relative_gap": "5/6"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "52",
+            "relative_gap": "26/27"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     },
     {
       "variant": "47",
-      "text": "A parser needs the shortest span containing required tags. The text has letters a, c, c, b, c, e, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A multiplier stream has multipliers 0, 2, minus 4, 4, minus 2, 2. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "ab",
-        "text": "accbce"
+        "values": [
+          0,
+          2,
+          -4,
+          4,
+          -2,
+          2
+        ]
       },
-      "answer": "4",
+      "answer": "128",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A parser needs the shortest span containing required tags. The text has letters a, c, c, b, c, e, and the required text has letters a, b. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A multiplier stream has multipliers zero, two, minus four, four, minus two, two. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "6"
-        },
-        {
-          "name": "required_length",
-          "value": "2"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "128"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "124",
+            "relative_gap": "31/32"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "124",
+            "relative_gap": "31/32"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "What if all multipliers are positive integers?",
+        "reference": "Sign reversal disappears. Extending cannot reduce a positive product, so the entire run attains the maximum."
       }
     },
     {
       "variant": "48",
-      "text": "You inspect a compact message buffer. The text has letters a, d, b, d, d, a, f, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A game replay has multipliers 0, minus 3, minus 2, 4, 3, 4. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "aba",
-        "text": "adbddaf"
+        "values": [
+          0,
+          -3,
+          -2,
+          4,
+          3,
+          4
+        ]
       },
-      "answer": "6",
+      "answer": "288",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You inspect a compact message buffer. The text has letters a, d, b, d, d, a, f, and the required text has letters a, b, a. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A game replay has multipliers zero, minus three, minus two, four, three, four. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "48",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "7"
-        },
-        {
-          "name": "required_length",
-          "value": "3"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "2"
+          "name": "maximum_consecutive_product",
+          "value": "288"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "240",
+            "relative_gap": "5/6"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "240",
+            "relative_gap": "5/6"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why check every consecutive run as a verifier?",
+        "reference": "It directly covers every legal choice. It needs quadratic work rather than a linear scan."
       }
     },
     {
       "variant": "49",
-      "text": "A monitoring routine searches for a complete set of event occurrences. The text has letters f, b, b, a, d, c, e, and the required text has letters f. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A simulation log has multipliers minus 5, 5, 3, minus 3. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "f",
-        "text": "fbbadce"
+        "values": [
+          -5,
+          5,
+          3,
+          -3
+        ]
       },
-      "answer": "1",
+      "answer": "225",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "A monitoring routine searches for a complete set of event occurrences. The text has letters f, b, b, a, d, c, e, and the required text has letters f. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A simulation log has multipliers minus five, five, three, minus three. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "7"
-        },
-        {
-          "name": "required_length",
-          "value": "1"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "225"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "210",
+            "relative_gap": "14/15"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "210",
+            "relative_gap": "14/15"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "Why retain the smallest product?",
+        "reference": "A negative multiplier can turn the most negative product into the largest positive one. Keeping only the maximum loses that option."
       }
     },
     {
       "variant": "50",
-      "text": "You review a short character-window matching task. The text has letters b, a, b, c, b, a, c, a, and the required text has letters z. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "text": "A factor stream has multipliers 1, minus 1, 1, minus 4. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "params": {
-        "required": "z",
-        "text": "babcbaca"
+        "values": [
+          1,
+          -1,
+          1,
+          -4
+        ]
       },
-      "answer": "0",
+      "answer": "4",
       "tolerance": "0",
-      "topic": "Sliding window and two pointers",
-      "source_topic": "Smallest covering event window",
+      "topic": "Dynamic programming",
+      "source_topic": "Maximum consecutive product",
       "difficulty": "Medium",
-      "spoken_text": "You review a short character-window matching task. The text has letters b, a, b, c, b, a, c, a, and the required text has letters z. A covering window is contiguous and contains each required character at least as many times as it occurs in the required text; order within the requirement does not matter. Return zero if no window covers it. What is the shortest covering-window length, as a whole number of characters?",
+      "spoken_text": "A factor stream has multipliers one, minus one, one, minus four. Choose one nonempty consecutive run and multiply its entries. What is the largest product, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "tracks_only_maximum_product",
+            "treats_negative_values_as_breaks"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "text_length",
-          "value": "8"
-        },
-        {
-          "name": "required_length",
-          "value": "1"
-        },
-        {
-          "name": "distinct_required_chars",
-          "value": "1"
+          "name": "maximum_consecutive_product",
+          "value": "4"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "tracks_only_maximum_product",
+            "absolute_gap": "3",
+            "relative_gap": "3/4"
+          },
+          {
+            "misconception": "treats_negative_values_as_breaks",
+            "absolute_gap": "3",
+            "relative_gap": "3/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "What time and auxiliary space does a frequency-window solution need?",
-        "reference": "A set is insufficient because the window must contain each required multiplicity. Frequency tracking gives O(n plus m) time and O(alphabet size) auxiliary space, where n is text length and m is required-text length."
+        "question": "How should zero affect the state?",
+        "reference": "Zero is a valid product and ends products crossing it. The next entry may start a new run."
       }
     }
   ]
