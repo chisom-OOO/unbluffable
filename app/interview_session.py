@@ -291,13 +291,24 @@ class ExamSession:
         self._scored: list[QuestionLog] = []
 
     # --- events ---
-    async def line(self, kind: str, text: str, target: int | None = None, receipt: dict | None = None) -> None:
+    async def line(self, kind: str, text: str, target: int | None = None, receipt: dict | None = None,
+                   speech: str | None = None) -> None:
         """`receipt`: the computation behind a judgement (decision log 16); redacted while
-        the question is open."""
+        the question is open. `speech`: what is said aloud when it differs from the text
+        shown (a forge instance's spoken_text, or its LaTeX read as words)."""
         if self.questions and kind in {"challenge", "nudge", "hint"}:
             self.questions[-1].help_lines.append((kind, text))
-        await self.send({"type": "interviewer_line", "kind": kind, "text": text, "target_step": target,
-                         "counts": self._counts(), "receipt": receipt})
+        event = {"type": "interviewer_line", "kind": kind, "text": text, "target_step": target,
+                 "counts": self._counts(), "receipt": receipt}
+        if speech and speech != text:
+            event["speech"] = speech
+        await self.send(event)
+
+    async def say_question(self, puzzle: Puzzle, before: str = "", after: str = "") -> None:
+        """A question line: the text shown, and its spoken form said aloud."""
+        shown = say.puzzle_text(puzzle)
+        join = lambda body: " ".join(part for part in (before, body, after) if part)
+        await self.line("question", join(shown), speech=join(getattr(puzzle, "speech", "") or shown))
 
     def _counts(self) -> dict:
         q = self.questions[-1] if self.questions else None
@@ -338,14 +349,13 @@ class ExamSession:
                              "difficulty": getattr(question.puzzle, "difficulty", None) or None,
                              "guide_seconds": GUIDE_SECONDS[question.kind]})
         if repeat:
-            spoken = f"{say.REPEAT_INTRO} {text}"
+            await self.say_question(question.puzzle, say.REPEAT_INTRO)
         elif question.kind in {"twin", "drill"}:
-            spoken = f"{say.TWIN_INTRO} {text}"
+            await self.say_question(question.puzzle, say.TWIN_INTRO)
         elif question.number > 1:
-            spoken = f"{say.NEW_PUZZLE_INTRO} {text}"
+            await self.say_question(question.puzzle, say.NEW_PUZZLE_INTRO)
         else:
-            spoken = f"{text} {say.OPENING}"
-        await self.line("question", spoken)
+            await self.say_question(question.puzzle, after=say.OPENING)
 
     async def question_loop(self, q: QuestionLog) -> None:
         question = self.interview.next_question()
@@ -406,12 +416,12 @@ class ExamSession:
         gets the plain step prompt. Not scored, so it costs nothing (decision log 15)."""
         q.part2 = Part2Log(puzzle, puzzle.text)
         await self.send({"type": "part2", "number": q.number, "text": puzzle.text})
-        await self.line("question", puzzle.text)
+        await self.say_question(puzzle)
         while True:
             text = await self.listen()
             cue = cues(text)
             if cue is not None and cue.kind == "question":
-                await self.line("question", f"{say.REPEAT_INTRO} {puzzle.text}")
+                await self.say_question(puzzle, say.REPEAT_INTRO)
                 continue
             if cue is not None and cue.kind == "help":
                 steps = puzzle.steps

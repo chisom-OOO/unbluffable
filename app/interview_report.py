@@ -14,7 +14,7 @@ from app import exam_text as say
 from app import receipts
 from app.drill import DrillSession, drill_targets
 from app.interview_session import ExamSession, QuestionLog
-from engine.bank import ForgePuzzle
+from engine.bank import ForgePuzzle, same_mistake
 from engine.labels import Label
 
 LABEL_KEYS = {
@@ -169,7 +169,7 @@ def why_item(q: QuestionLog, questions: list[QuestionLog]) -> dict | None:
     words = None
     if diagnostic.suspected:
         earlier = [a for p in questions if p.number < q.number for a in p.answers
-                   if a.misconception == diagnostic.misconception]
+                   if same_mistake(a.misconception, diagnostic.misconception)]
         words = earlier[-1].transcript if earlier else None
     item = {"title": "Why these numbers?", "text": say.why_numbers(diagnostic), "seen": [q.number],
             "why": {"misconception": diagnostic.misconception, "suspected": diagnostic.suspected,

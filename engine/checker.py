@@ -4,9 +4,12 @@ Reuses engine.answers for spoken forms ("eighteen out of sixty-seven", "two
 thirteenths", "nought point two five"). Unlike `engine.answers.parse_number`, a bare
 whole number or a decimal above 1 is a value here, and a sign is kept.
 
-Acceptance: a stated fraction or ratio must equal the exact answer; a percentage,
-decimal or whole number may differ from it by at most the instance's tolerance.
-Everything is a `fractions.Fraction`, so a wrong number can never be accepted.
+Acceptance: a stated fraction or ratio must equal the exact answer. A percentage,
+decimal or whole number is accepted when it is the exact value rounded at the
+precision the candidate stated, with at least 2 significant figures ("15%" for 2/13;
+not "1" for 0.975), or when it is within the instance's tolerance. Nobody is asked
+for more precision than they can say aloud. Everything is a `fractions.Fraction`, so
+a number that is not a correct rounding of the answer can never be accepted.
 """
 
 from __future__ import annotations
@@ -44,11 +47,14 @@ def _iter_values(text: str):
                 continue
             yield m, StatedNumber(sign * Fraction(_int(num), _int(den)), "fraction")
         elif m.group("pct"):
-            yield m, StatedNumber(sign * Fraction(m.group("pct").replace(",", "")) / 100, "percent")
+            figure = m.group("pct").replace(",", "")
+            yield m, StatedNumber(sign * Fraction(figure) / 100, "percent", figure)
         elif m.group("dec"):
-            yield m, StatedNumber(sign * Fraction(m.group("dec").replace(",", "")), "decimal")
+            figure = m.group("dec").replace(",", "")
+            yield m, StatedNumber(sign * Fraction(figure), "decimal", figure)
         else:
-            yield m, StatedNumber(sign * Fraction(_int(m.group("int"))), "integer")
+            figure = m.group("int").replace(",", "")
+            yield m, StatedNumber(sign * Fraction(_int(figure)), "integer", figure)
 
 
 def parse_value(text: str) -> StatedNumber | None:
@@ -95,7 +101,28 @@ def parse_exact(value) -> Fraction:
     return sign * (result / 100 if m.group(5) else result)
 
 
+MIN_FIGURES = 2
+
+
+def precision(stated: StatedNumber) -> tuple[Fraction, int] | None:
+    """(half a unit in the last stated place, as a share; significant figures) of a
+    spoken percent, decimal or whole number, when the figure as said is known."""
+    if stated.form == "fraction" or not stated.written:
+        return None
+    whole, _, places = stated.written.partition(".")
+    figures = len((whole + places).lstrip("0"))
+    half = Fraction(1, 2 * 10 ** len(places))
+    return (half / 100 if stated.form == "percent" else half), figures
+
+
+def rounds_to(stated: StatedNumber, target: Fraction) -> bool:
+    """The stated figure is `target` correctly rounded at the stated precision, with at
+    least MIN_FIGURES significant figures (an exact half either way counts)."""
+    p = precision(stated)
+    return p is not None and p[1] >= MIN_FIGURES and abs(stated.value - target) <= p[0]
+
+
 def accepts(stated: StatedNumber, target: Fraction, tolerance: Fraction) -> bool:
     if stated.form == "fraction":
         return stated.value == target
-    return abs(stated.value - target) <= tolerance
+    return stated.value == target or abs(stated.value - target) <= tolerance or rounds_to(stated, target)

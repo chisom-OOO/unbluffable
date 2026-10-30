@@ -67,7 +67,7 @@ def test_checker_tolerance_applies_to_decimals_not_fractions():
     assert accepts(parse_value("0.27"), answer, tol)
     assert accepts(parse_value("26.9%"), answer, tol)
     assert not accepts(parse_value("0.28"), answer, tol)
-    assert not accepts(parse_value("0.27"), answer, Fraction(0))
+    assert not accepts(parse_value("0.2"), answer, Fraction(0))  # one significant figure
     assert accepts(parse_value("twelve"), Fraction(12), Fraction(0))
 
 
@@ -615,7 +615,7 @@ def test_judgement_receipts_show_words_and_computation_but_not_the_answer_mid_qu
     assert text["exact"] == say.value(q1.puzzle.answer)
     # Q1 was recovered: its close is about the final, right answer.
     assert text["coded"].startswith("Correct") and "matches it" not in text["methods"]
-    assert "may be within" in text["check"] and text["check"].endswith("so it matches.")
+    assert "or within" in text["check"] and text["check"].endswith("so it matches.")
     # The opening answer's receipt, in the report, shows the matched wrong method.
     opening = interview_report.build(session)["report"]["breakdown"][0]["items"][0]["receipt"]
     rows = {row["key"]: row["text"] for row in opening["rows"]}
@@ -652,7 +652,11 @@ def test_receipt_check_uses_the_instance_tolerance(bank):
     t = bank.templates["fx_dice_total"]
     q = instance_puzzle(t, t.instances[3], 3)  # 5/36, tolerance 0.005
     assert receipts.check_text(q, parse_value("0.139"), q.answer) == (
-        "A decimal may be within 0.005 of the exact value: it is 0.0001111 away, so it matches.")
+        "A decimal counts when it is the exact value rounded to the nearest 0.001 (as you said it), "
+        "with at least 2 significant figures, or within 0.005: it is 0.0001111 away, so it matches.")
+    assert receipts.check_text(q, parse_value("15%"), q.answer).endswith(
+        "rounded to the nearest 1% (as you said it), with at least 2 significant figures, "
+        "or within 0.005: it is 0.01111 away, so it does not match.")
     assert receipts.check_text(q, parse_value("5/37"), q.answer) == "Fractions must match exactly: 5/37 ≠ 5/36."
 
 
@@ -775,3 +779,179 @@ def test_drill_over_the_socket_is_chosen_by_the_server(monkeypatch, bank):
     drill_id = next(k for k, v in interview_routes.SESSIONS.items() if type(v).__name__ == "DrillSession")
     data = client.get(f"/api/interview/{drill_id}/report").json()
     assert data["drill"]["misconception"] == EQUAL_TOTALS and data["label"] is None
+
+
+# --- Runtime fixes for forge content -------------------------------------------------
+
+OTHER_COLOUR = "picks the other colour"
+BY_BLUE = "divides red by blue"
+
+
+def _raw_bag(n=20, friendly=(), spoken=False, latex=False, names=None, **top):
+    """A forge-shaped template: r = i + 2 red and 11 blue balls; P(red) = r / (r + 11)."""
+    instances = []
+    for i in range(n):
+        r = i + 2
+        text = (f"A bag has {r} red and 11 blue balls, so $n = {r + 11}$. What is $P(\\text{{red}})$?" if latex
+                else f"A bag has {r} red and 11 blue balls. What is the probability a ball drawn is red?")
+        row = {"text": text, "params": {"red": r}, "answer": f"{r}/{r + 11}", "tolerance": "0",
+               "wrong": [{"value": f"11/{r + 11}", "misconception": OTHER_COLOUR if names is None else names},
+                         {"value": f"{r}/11", "misconception": BY_BLUE}],
+               "steps": [{"name": "balls", "value": str(r + 11)}, {"name": "probability", "value": f"{r}/{r + 11}"}]}
+        if i in friendly:
+            row["interview_friendly"] = True
+        if spoken:
+            row["spoken_text"] = f"A bag has {r} red balls and eleven blue. What is the chance of red?"
+        instances.append(row)
+    raw = {"template_id": "bag", "topic": "Probability", "topics": ["Probability"], "difficulty": "Easy",
+           "instances": instances, **top}
+    return {k: v for k, v in raw.items() if v is not None}
+
+
+def _bag(**kwargs):
+    return parse_template(_raw_bag(**kwargs))
+
+
+def _bag_bank(template):
+    from engine.bank import Bank
+    return Bank({template.template_id: template})
+
+
+@pytest.mark.parametrize("said,exact,ok", [
+    ("15%", Fraction(2, 13), True),                    # 15.38%: right at the precision said
+    ("fifteen percent", Fraction(2, 13), True),
+    ("15.4%", Fraction(2, 13), True),
+    ("15.3%", Fraction(2, 13), False),
+    ("16%", Fraction(2, 13), False),
+    ("0.15", Fraction(2, 13), True),
+    ("nought point one five", Fraction(2, 13), True),
+    ("0.2", Fraction(2, 13), False),                   # one significant figure
+    ("2/13", Fraction(2, 13), True),
+    ("3/20", Fraction(2, 13), False),                  # a fraction must be exact
+    ("1", Fraction(39, 40), False),                    # 0.975: "1" has one significant figure
+    ("0.98", Fraction(39, 40), True),
+    ("0.97", Fraction(39, 40), True),                  # an exact half rounds either way
+    ("97.5%", Fraction(39, 40), True),
+    ("98%", Fraction(39, 40), True),
+    ("96%", Fraction(39, 40), False),
+    ("123", Fraction(1234, 10), True),
+    ("120", Fraction(123), False),
+    ("-0.15", Fraction(-2, 13), True),
+    ("0", Fraction(0), True),                          # exact, whatever its figures
+])
+def test_spoken_answers_count_when_correctly_rounded_at_the_precision_said(said, exact, ok):
+    assert accepts(parse_value(said), exact, Fraction(0)) is ok
+
+
+def test_rounding_rule_also_matches_wrong_method_values():
+    t = _bag()
+    q = instance_puzzle(t, t.instances[0], 0)  # 2/13 = 15.4%; other colour 11/13 = 84.6%; by blue 2/11 = 18.2%
+    assert code_answer(q, parse_value("85%"), "valid").outcome is Outcome.NAMED_WRONG
+    assert code_answer(q, parse_value("85%"), "valid").misconception == OTHER_COLOUR
+    assert code_answer(q, parse_value("0.18"), "valid").misconception == BY_BLUE
+    assert code_answer(q, parse_value("0.2"), "valid").outcome is Outcome.OTHER_WRONG  # 1 s.f. matches nothing
+    assert code_answer(q, parse_value("15%"), "valid").outcome is Outcome.CORRECT
+    assert code_answer(q, parse_value("16%"), "valid").outcome is Outcome.OTHER_WRONG
+
+
+def test_session_codes_a_whole_percent_correct():
+    def policy(session, events):
+        return f"My answer is {float(session.questions[-1].puzzle.answer) * 100:.0f}%, because red over all balls."
+    session, events, _ = run(BankSource(_bag_bank(_bag()), "Probability", "Easy", rng=random.Random(2)), policy)
+    assert session.questions and all(q.scored == Outcome.CORRECT.value for q in session.questions)
+
+
+def test_interview_friendly_instances_are_preferred_and_separation_decides_among_them():
+    from engine.bank import drill_plan
+    t = _bag(friendly={2, 5, 9, 12, 15})
+    assert {BankSource(_bag_bank(t), rng=random.Random(s)).new("bag").instance for s in range(40)} <= {2, 5, 9, 12, 15}
+    # Other colour: gap |r - 11| / (r + 11). Instance 0 (r = 2) is furthest but not friendly;
+    # among the friendly ones 5 (r = 7, 4/18) beats 15 (r = 17, 6/28); 9 (r = 11) has no gap.
+    first = instance_puzzle(t, t.instances[2], 2)
+    assert BankSource(_bag_bank(t), rng=random.Random(0)).twin(first, OTHER_COLOUR).instance == 5
+    assert all(twin_choice(t, 2, random.Random(s))[0] in {5, 9, 12, 15} for s in range(20))
+    assert drill_plan(t, OTHER_COLOUR, {2}) == ([15, 12], 5)
+    # None flagged: every instance qualifies, as before.
+    plain = _bag()
+    assert twin_choice(plain, 2, random.Random(0), OTHER_COLOUR)[0] == 0
+    assert drill_plan(plain, OTHER_COLOUR, {2})[1] == 0
+    with pytest.raises(ForgeError):
+        parse_template({**_raw_bag(), "instances": [{**row, "interview_friendly": "yes"} for row in _raw_bag()["instances"]]})
+
+
+def test_spoken_text_is_said_and_text_is_shown():
+    t = _bag(spoken=True, latex=True)
+    q = instance_puzzle(t, t.instances[0], 0)
+    assert q.text == "A bag has 2 red and 11 blue balls, so n = 13. What is P(red)?"
+    assert q.speech == "A bag has 2 red balls and eleven blue. What is the chance of red?"
+    assert Fraction(13) in q.givens
+
+
+def test_latex_without_spoken_text_is_read_as_words_and_shown_as_unicode():
+    from engine import mathtext
+    t = _bag(latex=True)
+    q = instance_puzzle(t, t.instances[0], 0)
+    assert q.speech == "A bag has 2 red and 11 blue balls, so n equals 13. What is P(red)?"
+    cases = {
+        r"Find $\frac{2}{13}$ of $x^2 + y_1$.": ("Find 2/13 of x² + y₁.", "Find 2 over 13 of x squared plus y sub 1."),
+        r"$\binom{10}{3} \times \frac{1}{2^{10}}$": ("C(10, 3) × 1/2¹⁰", "10 choose 3 times 1 over 2 to the power 10"),
+        r"$\sqrt{n+1} \le \pi$ at 5\% a year": ("√(n+1) ≤ π at 5% a year",
+                                                "the square root of n plus 1 is at most pi at 5 percent a year"),
+        r"$P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}$": ("P(A | B) = P(A ∩ B)/P(B)",
+                                                       "P(A given B) equals P(A intersect B) over P(B)"),
+    }
+    for latex, (shown, said) in cases.items():
+        assert (mathtext.display(latex), mathtext.spoken(latex)) == (shown, said)
+    for plain in ("It costs $5 and $10 in total.", "A well-known 15% of 2/13 - no maths."):
+        assert mathtext.display(plain) == mathtext.spoken(plain) == plain
+
+
+def test_question_lines_carry_speech_only_when_it_differs(bank):
+    def policy(session, events):
+        return f"My answer is {frac(session.questions[-1].puzzle.answer)}, because red over all balls."
+    for template, said in ((_bag(spoken=True, latex=True), "eleven blue"), (_bag(latex=True), "n equals")):
+        session, events, _ = run(BankSource(_bag_bank(template), "Probability", "Easy", rng=random.Random(3)), policy)
+        asked = [e for e in events if e["type"] == "interviewer_line" and e["kind"] == "question"]
+        assert asked and all(said in e["speech"] and "n = " in e["text"] for e in asked)
+        assert asked[0]["text"].endswith(say.OPENING) and asked[0]["speech"].endswith(say.OPENING)
+        shown = [e for e in events if e["type"] == "question"]
+        assert all("$" not in e["text"] and "\\" not in e["text"] for e in shown)
+    _, plain, _ = _dice_interview(bank)
+    assert not any("speech" in e for e in plain if e["type"] == "interviewer_line")
+
+
+def test_several_misconception_names_for_one_value_are_one_mistake():
+    from types import SimpleNamespace
+    from app.drill import drill_targets
+    from engine.bank import aimed_puzzle, drill_plan, same_mistake
+    both = [OTHER_COLOUR, "counts blue as success"]
+    named = " / ".join(both)
+    as_list = _bag(names=both)
+    as_plural = parse_template({**_raw_bag(), "instances": [
+        {**row, "wrong": [{"value": row["wrong"][0]["value"], "misconceptions": both}, row["wrong"][1]]}
+        for row in _raw_bag()["instances"]]})
+    for t in (as_list, as_plural):
+        q = instance_puzzle(t, t.instances[0], 0)
+        assert [nv.misconception for nv in q.named_values] == [named, BY_BLUE]
+        assert code_answer(q, parse_value("11/13"), "valid").misconception == named
+        assert drill_plan(t, named, {0}) == drill_plan(t, OTHER_COLOUR, {0}) != ([], None)
+        assert f"({named})" in say.why_numbers(aimed_puzzle(t, 5, named).diagnostic)
+        # Named once as both and once by one name: one drill.
+        session = SimpleNamespace(questions=[
+            SimpleNamespace(puzzle=q, answers=[SimpleNamespace(misconception=named)]),
+            SimpleNamespace(puzzle=instance_puzzle(t, t.instances[1], 1),
+                            answers=[SimpleNamespace(misconception=OTHER_COLOUR)])])
+        assert [d.misconception for d in drill_targets(session, {"bag": t})] == [named]
+    assert same_mistake("a / b", "b") and not same_mistake("a / b", "c") and not same_mistake(None, "a")
+    for bad in ([], [""], 3):
+        with pytest.raises(ForgeError):
+            _bag(names=bad)
+
+
+def test_topic_falls_back_to_source_topic():
+    assert _bag(topic=None, source_topic="Counting").topic == "Counting"
+    assert _bag(topic="", source_topic="Counting").topic == "Counting"
+    assert _bag(topic="Probability", source_topic="Counting").topic == "Probability"
+    assert _bag_bank(_bag(topic=None, source_topic="Counting")).topics() == [("Counting", 1)]
+    with pytest.raises(ForgeError):
+        _bag(topic=None)

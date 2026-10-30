@@ -11,6 +11,7 @@ from __future__ import annotations
 from fractions import Fraction
 
 from app.exam_text import value
+from engine import checker
 from engine.answers import PERCENTAGE_POINT, StatedNumber
 from engine.bank import ForgePuzzle
 from engine.coding import Observation, Outcome
@@ -48,8 +49,16 @@ def check_text(puzzle: Puzzle, stated: StatedNumber, target: Fraction) -> str:
     gap = abs(stated.value - target)
     allowed = tolerance(puzzle)
     article = "An" if stated.form[0] in "aeiou" else "A"
-    return (f"{article} {stated.form} may be within {float(allowed):g} of the exact value: "
-            f"it is {float(gap):.4g} away, so it {'matches' if same else 'does not match'}.")
+    verdict = f"it is {float(gap):.4g} away, so it {'matches' if same else 'does not match'}."
+    figures = checker.precision(stated) if isinstance(puzzle, ForgePuzzle) else None
+    if figures is not None:
+        places = len(stated.written.partition(".")[2])
+        unit = f"{Fraction(1, 10 ** places):f}".rstrip("0").rstrip(".") if places else "1"
+        unit += "%" if stated.form == "percent" else ""
+        return (f"{article} {stated.form} counts when it is the exact value rounded to the nearest {unit} "
+                f"(as you said it), with at least {checker.MIN_FIGURES} significant figures, "
+                f"or within {float(allowed):g}: {verdict}")
+    return f"{article} {stated.form} may be within {float(allowed):g} of the exact value: {verdict}"
 
 
 def build(puzzle: Puzzle, transcript: str, span: str | None, stated: StatedNumber | None,
