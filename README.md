@@ -4,8 +4,9 @@
 
 ### Sounding right isn't the same as being right.
 
-A spoken mock interviewer for high-stakes technical interviews.<br/>
-You answer out loud. It checks the maths, not the confidence.
+A spoken mock interviewer that hears your answer, quotes your words back,<br/>
+checks your numbers exactly and pushes back like a real interviewer,<br/>
+so anyone can know what the room feels like before they're in it.
 
 ![Meta Global AI Developer Hackathon](https://img.shields.io/badge/Meta_Global_AI_Developer_Hackathon-Indie_track-0866FF)
 ![Theme](https://img.shields.io/badge/theme-Build_for_Your_World-0866FF)
@@ -20,13 +21,17 @@ You answer out loud. It checks the maths, not the confidence.
 ---
 
 > [!NOTE]
-> **Status, 29 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring and the end-of-interview report work end to end. In progress this week: a verified question forge across topics and a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
+> **Status, 30 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode and the end-of-interview report work end to end in tests. Quant runs on cross-checked question families. In progress: investment banking, consulting and software engineering packs, and a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
 
 ## Why
 
-A fluent answer and a correct answer sound the same. A chatbot can hand anyone the right number, and a practice tool that grades on fluency can't tell whether you understood it. Real interviewers check: they ask why, they push on a wrong step, and they change the numbers.
+I struggled in interviews. Not because I didn't know the material, but because I'd never been in the room: never had someone stop me mid-answer, question the number I'd just committed to, and ask it again with different numbers.
 
-Unbluffable does the same, out loud, for anyone without access to a coach. I built it for the theme **Build for Your World**: I'm preparing for quant interviews myself.
+Some candidates get that practice through coaches, paid prep or people who've been through it. Most don't. They walk into their first real interview to find out what one is like.
+
+I started building this for quant interviews, my own field. But the problem isn't quant. Banking, consulting and software interviews work the same way: you think out loud, commit to an answer, and get pushed on it. Quant is live; investment banking, consulting and software engineering are being added.
+
+**It's the interviewer you'd have if you had the connections.** Built for the theme **Build for Your World**.
 
 ## What it does
 
@@ -36,6 +41,10 @@ Unbluffable does the same, out loud, for anyone without access to a coach. I bui
 | **Exact checking** | The model extracts the answer you committed to and quotes your own words. Every number is checked with exact fractions in code, never by a model. |
 | **Socratic challenge** | A committed wrong answer gets a question that points at the step, not the solution. Nudges and hints are allowed, and the score counts the help it took. |
 | **Same puzzle, new numbers** | A second version with different numbers separates someone who worked it out from someone who remembered an answer. |
+| **Numbers chosen to expose your mistake** | When the interviewer suspects a specific mistake, it picks the new numbers where that mistake gives a clearly different answer from the right method, and says why these numbers. |
+| **Live evidence meter** | The Sound / Misconception / Gap estimate updates after every scored answer, with one line on what the next answer would change. |
+| **Receipts** | Every challenge and every report line opens to show your exact words beside the exact computation: the value read, the check, and the known wrong methods. |
+| **Drill this mistake** | From the report, a short drill aims new questions at a detected misconception, asks questions only, then checks with fresh numbers: *Cleared* or *Still showing*. |
 | **Evidence-based scoring** | A Bayesian engine weighs each final answer, discounted by the help used, and stops when the evidence is clear: *Evidence supports understanding*, *Misconception detected*, *Understanding not shown* or *More evidence needed*. |
 | **In-app report** | A headline label, one tab per question, your quoted words beside the exact value, the help taken and time against the guide. |
 | **Which model did what** | Every turn shows which model ran, for which job, with latency and cost. |
@@ -98,7 +107,7 @@ sequenceDiagram
 | --- | --- | --- |
 | **Muse Voice Transcribe** · `muse-voice-transcribe-1.0` | Meta Model API, realtime | Live speech-to-text for the hands-free interview |
 | **Muse Spark** · `muse-spark-1.3` | Meta Model API | Extracts the committed answer and verbatim quotes; judges whether an answer is finished |
-| **Muse Spark Open** · `muse-spark-open-1026` | Baseten (open weights) | The same reasoning jobs on the hosted app; author of the question forge (in progress) |
+| **Muse Spark Open** · `muse-spark-open-1026` | Baseten (open weights) | The same reasoning jobs on the hosted app; writes each question family's solver, wrong-method values and solution steps (in progress) |
 | **Exact maths** | Our code | Every number check and every score |
 
 ### Why open weights
@@ -117,6 +126,7 @@ From our cloud host, Meta's API showed no Muse Spark models for our key: `GET /v
 | **Interrupting mid-sentence** with realtime keyword rules | 2/10 wrong answers caught on the first gate. Rules widened from the failure types reached 8/10 on those clips but **1/10 on 30 new held-out clips**, with 0/20 false challenges in both runs. We dropped it for a challenge right after the answer ([decision log](spec/DECISION_LOG.md) rows 1–1b). |
 | **End-of-answer detection** on 60 recorded clips | **0 early cut-offs.** 32/60 completed exactly once; every miss was the app waiting too long, never interrupting. A silence check was added afterwards (rows 11–12). |
 | **Last word to spoken acknowledgement** | About 2 s in a timed run, most of it one Muse Spark call |
+| **Question families cross-checked** | **99** quant families: for each one, Muse Spark Open wrote an independent solver, and it reproduced the stored answer on all 75 variants. **0 disagreements.** 62 families also have wrong-method values verified in code, which the interviewer uses to name a misconception. |
 | **Automated tests** | 450+ (pytest), including pinned values for the engine maths |
 
 Every change from the original plan is in the [decision log](spec/DECISION_LOG.md), with the evidence that forced it, including what failed.
@@ -126,7 +136,7 @@ Every change from the original plan is in the [decision log](spec/DECISION_LOG.m
 > [!IMPORTANT]
 > In progress. None of this is claimed as a result yet.
 
-- **Question forge across topics.** Muse Spark Open turns questions from a pre-existing bank of 5,921 interview and online-assessment questions into reworded templates with an exact solver, a separately written simulation and named wrong-method values. A template is accepted only if the solver reproduces the stored answer, the simulation agrees, and Muse Spark solves a new-number version blind and matches. The bank itself is not in this repository.
+- **Investment banking, consulting and software engineering packs.** They go through the same cross-check before they are switched on.
 - **Careful-chatbot comparison.** A pre-registered test on frozen answers: plain Muse Spark, carefully prompted Muse Spark, carefully prompted Muse Spark given the answer key, and Unbluffable, all on the same model, three runs each.
 - **Real users** from a university quant society, with consent.
 
@@ -178,6 +188,7 @@ Open **http://localhost:8000/ui** and start an interview. Wear headphones if you
 ## Disclosures and limits
 
 - **Prior work.** The specification in `spec/` was written before kickoff as a plan. All code was written after kickoff on 26 Oct 2026, and the commit history shows it. Built with AI coding assistants (Claude Code, Codex, Muse Code).
+- **Question set.** The question set was generated by the builder with ChatGPT during the hackathon (30 Oct 2026). Their answers are re-checked in code as described above; ChatGPT is not used by the running app.
 - **Probabilities are model estimates.** The engine's likelihoods are stated assumptions (`content/likelihoods.yaml`), not calibrated measurements.
 - **Turn-taking can wait too long.** When it does, the silence prompt or the Done button moves things on.
 - **Interview practice, not a tutor or a hiring tool.** It's built for candidates to practise.
