@@ -85,6 +85,8 @@ kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); 
 .btn-small { min-height: 38px; padding: 7px 12px; font-size: 12px; }
 .btn.wide { width: 100%; }
 .btn:disabled, .btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
+/* Start before the checks pass: still a button (it opens the dialog), visibly not ready. */
+.btn.not-ready { background: var(--soft); color: var(--softink); box-shadow: inset 0 0 0 1px var(--line); }
 .tag { display: inline-flex; align-items: center; gap: 4px; background: var(--soft); border-radius: 6px; padding: 3px 8px; color: var(--softink); font-size: 11px; font-weight: 800; white-space: nowrap; }
 .tag.warn, .tag-challenge { background: var(--warnbg); color: var(--warn); }
 .tag.good, .tag-live { background: var(--goodbg); color: var(--good); }
@@ -153,6 +155,22 @@ a.track:hover, button.track:not([aria-disabled="true"]):hover { border-color: va
 .gate { margin-top: 16px; display: grid; gap: 8px; }
 .gate-note { font-size: 12px; color: var(--muted); }
 .typed-link { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 12px; }
+.mic-device { margin: 8px 0; }
+.mic-device select { min-height: 38px; padding: 6px 10px; font-size: 13px; }
+/* The Start dialog (native <dialog>): what is missing, in plain steps. */
+.gate-dialog { width: min(520px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); color: var(--ink); padding: 18px; box-shadow: var(--shadow); }
+.gate-dialog::backdrop { background: #0a142299; }
+.dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.dialog-head h2 { font-size: 18px; }
+.dialog-head h2:focus { outline: none; }
+.gate-dialog > .muted { font-size: 13px; margin-top: 4px; }
+.gate-steps { margin: 14px 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: gate; }
+.gate-step { background: var(--stage); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: grid; gap: 8px; justify-items: start; font-size: 13px; min-width: 0; }
+.gate-step > * { max-width: 100%; }
+.gate-step .field { margin: 0; width: 100%; }
+.gate-step .devicebar { width: 100%; }
+.substeps { padding-left: 20px; display: grid; gap: 2px; }
+.dialog-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
 .typed-link button { background: none; border: 0; padding: 4px 0; color: var(--accent); font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
 .status { font-size: 13px; padding: 10px 12px; border-radius: 9px; background: var(--warnbg); color: var(--warn); margin-top: 10px; }
 
@@ -209,6 +227,7 @@ mark, mark.challenged { background: var(--warnbg); color: var(--warn); padding: 
 .receipt-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .receipt-body > div { padding: 12px; min-width: 0; }
 .receipt-body > div + div { border-left: 1px solid var(--line); }
+.receipt-body.solo { grid-template-columns: minmax(0, 1fr); }
 .receipt-head { font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
 .receipt-words { font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
 .receipt-none, .receipt-note { font-size: 12px; color: var(--muted); }
@@ -253,13 +272,14 @@ mark, mark.challenged { background: var(--warnbg); color: var(--warn); padding: 
 .verdict-misconception .icon { color: var(--warn); }
 .verdict-not-shown .icon, .verdict-more-evidence .icon { color: var(--neutral); }
 .misconception-name { color: var(--muted); font-size: 13px; line-height: 1.7; margin-top: 6px; }
-.stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); background: var(--paper); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-.stat { padding: 12px; min-width: 0; box-shadow: 1px 0 0 var(--line), 0 1px 0 var(--line); }
+/* Every row fills: cells grow to share the width, so no empty cell is left at the end. */
+.stats { display: flex; flex-wrap: wrap; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.stat { flex: 1 1 130px; padding: 12px; min-width: 0; box-shadow: 1px 0 0 var(--line), 0 1px 0 var(--line); }
 .stat dt { font-size: 11px; color: var(--muted); }
 .stat dd { font: 600 19px var(--mono); margin-top: 2px; overflow-wrap: anywhere; }
 .stat dd small { display: block; font: 400 11px var(--sans); color: var(--muted); }
 .stat dd.over { color: var(--warn); }
-.stat.wide { grid-column: 1 / -1; }
+.stat.wide { flex-basis: 100%; }
 .stat.wide dd { font: 600 14px var(--sans); }
 .level-track { display: flex; gap: 6px; margin-top: 6px; max-width: 240px; }
 .level-track span { flex: 1; height: 6px; border-radius: 3px; background: var(--stage); border: 1px solid var(--line); }
@@ -284,7 +304,18 @@ mark, mark.challenged { background: var(--warnbg); color: var(--warn); padding: 
 blockquote.evidence { background: var(--stage); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 12px; margin-top: 10px; }
 blockquote.evidence > p { font-size: 13px; overflow-wrap: anywhere; }
 blockquote.evidence footer { font-size: 12px; color: var(--muted); margin-top: 4px; }
-#check { display: grid; gap: 8px; margin-top: 12px; }
+/* Evidence cards: one per question, each answer quoted once. */
+.qcards { display: grid; gap: 12px; margin-top: 12px; }
+.qcard { background: var(--stage); border: 1px solid var(--line); border-radius: 12px; padding: 12px; min-width: 0; display: grid; gap: 8px; scroll-margin-top: 16px; }
+.qcard > header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.qcard h3 { font-size: 14px; }
+.qcard blockquote.evidence { margin-top: 0; background: var(--paper); }
+.qcard-when { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.qcard-extra { display: grid; gap: 8px; border-top: 1px solid var(--line); padding-top: 10px; }
+.qcard:target, .qcard:focus { outline: 2px solid var(--ring); outline-offset: 2px; }
+.see-list { list-style: none; padding: 0; display: grid; gap: 8px; font-size: 13px; }
+.see-list li { background: var(--stage); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; overflow-wrap: anywhere; }
+.see-list a { color: var(--accent); font-weight: 800; white-space: nowrap; }
 .check-row { font-size: 12px; background: var(--soft); border-radius: 10px; padding: 10px 12px; overflow-wrap: anywhere; }
 .hint-list { list-style: none; padding: 0; display: grid; gap: 8px; font-size: 13px; }
 .hint-list li { display: flex; gap: 8px; align-items: flex-start; }
@@ -338,6 +369,6 @@ blockquote.evidence footer { font-size: 12px; color: var(--muted); margin-top: 4
   .selfview { width: 86px; }
   .reporthead { flex-direction: column; }
   .verdict { font-size: 21px; }
-  .stats { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .stat { flex-basis: 40%; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

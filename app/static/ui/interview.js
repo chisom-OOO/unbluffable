@@ -2,9 +2,10 @@
 // Hands-free after one Start tap (decision log 4). The indicator shows real state only
 // (decision log 5): Listening while a capture or typed turn is open, "Checking your working"
 // while the server's check runs, Speaking from SpeechSynthesis start/end events.
-// Decision log 20: Start stays locked until the camera shows a picture, the microphone picks
-// up sound and the server answers; "Can't use a camera or mic?" switches to typed practice,
-// labelled "Not exam conditions". Done is a fallback for noisy rooms.
+// Decision log 20: Start only begins once the camera shows a picture, the microphone picks
+// up sound and the server answers. Pressed earlier, it opens a dialog saying what is missing
+// and what to do. "Can't use a camera or mic?" switches to typed practice, labelled "Not exam
+// conditions"; so does a microphone that fails after Start. Done is a fallback for noisy rooms.
 document.addEventListener("DOMContentLoaded", () => {
   const { highlight, escapeHtml, reducedMotion, receiptHtml, trackCard } = window.UB;
   const voice = window.UBVoice;
@@ -28,8 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let question = null, questionStart = 0, answeredThisQuestion = false, offered = false;
   let heard = false;  // any candidate speech, live transcript or typing since this question began
   let lastCandidate = null;
-  // Device gate (decision log 20)
-  let connected = false, micHeard = false, cameraOk = false, typedPractice = false, replay = false;
+  // Device gate (decision log 20): see UBTurn.gateProblems for the states.
+  let connection = "checking", micStatus = "unchecked", camera = "off", typedPractice = false, replay = false;
+  let micFailurePending = false;  // told to the server between captures
 
   // ---------- Indicator: derived from real state only ----------
   function render() {
@@ -54,9 +56,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function scrollTo(el) { el.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" }); }
 
   // ---------- Speech: real SpeechSynthesis events drive "Speaking" ----------
+  let muting = 0;  // lines being spoken that mute the microphone (not the device-check test line)
   function speechChanged() {
     const talking = speaking > 0;
-    if (!headphones.checked) voice.mute(talking);  // no echo without headphones
+    voice.mute(!headphones.checked && muting > 0);  // no echo without headphones
     if (capturing && socket?.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({ type: "interviewer_speaking", value: talking, headphones: headphones.checked }));
     }
@@ -73,31 +76,43 @@ document.addEventListener("DOMContentLoaded", () => {
   const muted = () => mute.getAttribute("aria-pressed") === "true";
 
   // `reveal` (optional) types the line out as it is spoken; it never delays the mic.
-  function speak(text, reveal) {
+  // The microphone is unmuted on the end event, on error, on cancel, or at the line's
+  // estimated length plus 2 s, whichever comes first (UBTurn.guardUtterance).
+  // `mutes: false` (the device check's test line) never mutes the microphone.
+  const guards = new Set();
+  function speak(text, reveal, { mutes = true } = {}) {
     if (muted() || !window.speechSynthesis) { reveal?.finish(); return; }
     const u = new SpeechSynthesisUtterance(text);
     u.voice = pickVoice();
     const gen = speechGen;
-    let started = false, ended = false;
-    u.onstart = () => {
-      if (gen !== speechGen) return;
-      started = true; speaking++; speechChanged();
-      reveal?.start();
-    };
+    let counted = false;
+    const guard = window.UBTurn.guardUtterance(u, {
+      text, rate: u.rate,
+      onStart: () => {
+        if (gen !== speechGen) return;
+        counted = true; speaking++; if (mutes) muting++;
+        speechChanged();
+        reveal?.start();
+      },
+      onDone: () => {
+        guards.delete(guard);
+        reveal?.finish();
+        if (!counted || gen !== speechGen) return;
+        speaking = Math.max(0, speaking - 1);
+        if (mutes) muting = Math.max(0, muting - 1);
+        speechChanged();
+      },
+    });
+    guards.add(guard);
     u.onboundary = (e) => { if (gen === speechGen && e.name === "word") reveal?.boundary(e.charIndex); };
-    const finish = () => {
-      reveal?.finish();
-      if (ended || gen !== speechGen) return;
-      ended = true;
-      if (started) { speaking = Math.max(0, speaking - 1); speechChanged(); }
-    };
-    u.onend = finish; u.onerror = finish;
     speechSynthesis.speak(u);
-    reveal?.watch(() => started);
+    reveal?.watch(() => guard.started);
   }
 
   function cancelSpeech() {
-    speechGen++; speaking = 0;
+    const active = [...guards];
+    speechGen++; speaking = 0; muting = 0;
+    for (const g of active) g.cancel();
     window.speechSynthesis?.cancel();
     finishReveals();
     speechChanged();
@@ -200,12 +215,11 @@ document.addEventListener("DOMContentLoaded", () => {
     phase = "listening";
     live.hidden = true;
     render();
-    if (typing) { typeAnswer.focus({ preventScroll: true }); return; }
+    if (typing) { tellMicFailure(); typeAnswer.focus({ preventScroll: true }); return; }
     try {
       await voice.open();
     } catch {
-      setStatus("The microphone is unavailable, so you can type your answers instead.");
-      setTyping(true);
+      micFailed();
       return;
     }
     voice.attach(socket);
@@ -220,6 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!text || phase !== "listening") return;
     finishReveals();
     if (!consent.checked) { setStatus("Please agree that your answer text is kept before sending."); return; }
+    tellMicFailure();
     typeAnswer.value = "";
     phase = "checking";
     render();
@@ -360,15 +375,42 @@ document.addEventListener("DOMContentLoaded", () => {
     socket?.close();
   }
 
+  // ---------- A microphone that fails after Start (decision log 20) ----------
+  // In exam conditions the rest of the session becomes typed practice, and the report says so.
+  // The server hears it between captures (a capture only listens for "done").
+  function micFailed() {
+    if (capturing && socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ type: "done" }));
+    capturing = false; captureRequested = false;
+    voice.stopStreaming();
+    voice.close();
+    if (!typedPractice && !replay) {
+      typedPractice = true;
+      micFailurePending = true;
+      $("practice-tag").hidden = false;
+    }
+    setStatus("The microphone stopped working, so the rest is typed practice: not exam conditions.");
+    setTyping(true);
+  }
+  function tellMicFailure() {
+    if (!micFailurePending || socket?.readyState !== WebSocket.OPEN || capturing || captureRequested) return;
+    socket.send(JSON.stringify({ type: "mic_failed" }));
+    micFailurePending = false;
+  }
+  document.addEventListener("ub-mic-ended", () => {
+    if (!$("room").hidden) { if (!typing) micFailed(); return; }
+    micHeardReset();
+    setMic("none");
+  });
+
   // ---------- Start: the one tap (browsers need a gesture for mic and speech) ----------
   async function begin() {
-    if (!consent.checked) { setStatus("Please agree that your answer text is kept before starting."); consent.focus(); return; }
-    if (!gateOpen()) { updateGate(); return; }
+    if (!gateOpen()) { openGateDialog(); return; }
     setStatus("");
     consent.disabled = true;
     topicSelect.disabled = true;
     document.querySelectorAll('input[name="level"]').forEach((r) => { r.disabled = true; });
     stopMeter();
+    if (gateDialog.open) gateDialog.close();
     $("setup-view").hidden = true;
     $("room").hidden = false;
     $("practice-tag").hidden = !typedPractice;
@@ -377,7 +419,8 @@ document.addEventListener("DOMContentLoaded", () => {
     phase = "checking";
     render();
     if (!typing) {
-      try { await voice.open(); } catch { setTyping(true); setStatus("The microphone is unavailable, so you can type your answers instead."); }
+      // Before the socket opens: the begin message then says typed practice.
+      try { await voice.open(); } catch { micFailed(); micFailurePending = false; }
     }
     socket = new WebSocket(`${location.protocol === "https:" ? "wss:" : "ws:"}//${location.host}/api/interview/ws`);
     const level = document.querySelector('input[name="level"]:checked')?.value || "Easy";
@@ -426,30 +469,90 @@ document.addEventListener("DOMContentLoaded", () => {
   headphones.addEventListener("change", speechChanged);
   consent.addEventListener("change", () => { updateGate(); if (consent.checked) setStatus(""); });
 
-  // ---------- Device gate (decision log 20): Start unlocks once everything is checked ----------
-  const exempt = () => typedPractice || replay;
-  function missing() {
-    const need = [];
-    if (!exempt() && !cameraOk) need.push("the camera shows a picture");
-    if (!exempt() && !micHeard) need.push("the microphone picks up sound");
-    if (!connected) need.push("the server connects");
-    if (!consent.checked) need.push("you tick the agreement");
-    return need;
-  }
-  const gateOpen = () => missing().length === 0;
+  // ---------- Device gate (decision log 20): Start never goes dead ----------
+  // Start stays clickable, styled as not ready; pressed early it opens the dialog below.
+  const gateDialog = $("gate-dialog");
+  const problems = () => window.UBTurn.gateProblems({
+    exempt: typedPractice || replay, mic: micStatus, camera, connection, consent: consent.checked });
+  const gateOpen = () => problems().length === 0;
   function updateGate() {
-    const need = missing();
-    start.disabled = need.length > 0;
-    const list = need.length > 1 ? `${need.slice(0, -1).join(", ")} and ${need[need.length - 1]}` : need[0];
-    $("gate-note").textContent = need.length ? `Start unlocks once ${list}.`
+    const need = problems();
+    start.classList.toggle("not-ready", need.length > 0);
+    $("gate-note").textContent = need.length ? need.map((p) => p.action).join(" · ")
       : replay ? "Recorded replay mode: answers are typed." : typedPractice ? "Typed practice: not exam conditions." : "Ready when you are.";
+    if (gateDialog.open) renderGateDialog();
   }
-  document.addEventListener("ub-camera", (e) => { cameraOk = e.detail.ok; updateGate(); });
-  $("typed-practice").addEventListener("click", () => {
-    typedPractice = !typedPractice;
+  document.addEventListener("ub-camera", (e) => { camera = e.detail.reason || (e.detail.ok ? "ok" : "off"); updateGate(); });
+  function setTypedPractice(on) {
+    typedPractice = on;
     $("typed-practice").textContent = typedPractice ? "Use camera and mic instead" : "Can't use a camera or mic?";
     setTyping(typedPractice || replay);
     updateGate();
+  }
+  $("typed-practice").addEventListener("click", () => setTypedPractice(!typedPractice));
+
+  // ---------- The dialog: what is missing and what to do, in plain steps ----------
+  const ADDRESS_BAR = ["Click the camera or microphone icon in the address bar.", "Choose Allow.", "Reload this page."];
+  const NO_SOUND = { title: "No sound yet", text: ["Say something; the bar should move.", "If it stays flat, choose another input below."], devices: true };
+  const STEPS = {
+    mic: {
+      none: { title: "No microphone found", text: ["Connect a microphone (headphones with a mic work), then press Test microphone."], button: ["Test again", "mic"] },
+      blocked: { title: "Microphone blocked", text: ADDRESS_BAR, button: ["Try again", "mic"] },
+      busy: { title: "Microphone not responding", text: ["Close other apps that use the microphone, then press Test again."], button: ["Test again", "mic"] },
+      unchecked: { title: "Microphone not tested yet", text: ["Press Test microphone and allow it when the browser asks."], button: ["Test microphone", "mic"] },
+      listening: NO_SOUND, quiet: NO_SOUND,
+    },
+    camera: {
+      none: { title: "No camera found", text: ["Connect a camera (a built-in or USB webcam works), then press Turn on camera."], button: ["Turn on camera", "camera"] },
+      blocked: { title: "Camera blocked", text: ADDRESS_BAR, button: ["Try again", "camera"] },
+      busy: { title: "Camera not responding", text: ["Close other apps that use the camera, then press Try again."], button: ["Try again", "camera"] },
+      off: { title: "Camera off", text: ["Press Turn on camera and allow it when the browser asks."], button: ["Turn on camera", "camera"] },
+      waiting: { title: "Waiting for a picture", text: ["Check nothing covers the camera. If no picture appears, press Try again."], button: ["Try again", "camera"] },
+    },
+    connection: {
+      failed: { title: "Server not connected", text: ["Check your connection and reload."], button: ["Reload", "reload"] },
+      checking: { title: "Connecting to the server", text: ["This takes a moment. If it doesn't connect, check your connection and reload."] },
+    },
+    consent: { unticked: { title: "Agreement not ticked", text: ["Tick the box agreeing that your answer text is kept for this practice session."], button: ["Go to the agreement", "consent"] } },
+  };
+  function renderGateDialog() {
+    const need = problems();
+    if (!need.length) { gateDialog.close(); return; }
+    const focused = gateDialog.contains(document.activeElement) ? document.activeElement.dataset.action || document.activeElement.id : null;
+    $("gate-steps").innerHTML = need.map((p) => {
+      const s = STEPS[p.key][p.state] || Object.values(STEPS[p.key])[0];
+      const lines = s.text.length > 1 ? `<ol class="substeps">${s.text.map((t) => `<li>${escapeHtml(t)}</li>`).join("")}</ol>` : `<p>${escapeHtml(s.text[0])}</p>`;
+      const devices = s.devices ? `<div class="field"><label for="gate-mic-device">Input</label><select id="gate-mic-device">${$("mic-device").innerHTML}</select></div>` +
+        `<div class="devicebar" aria-hidden="true"><span id="gate-mic-meter"></span></div>` : "";
+      const button = s.button ? `<button class="btn secondary btn-small" type="button" data-action="${s.button[1]}">${s.button[0]}</button>` : "";
+      return `<li class="gate-step"><strong>${escapeHtml(s.title)}</strong>${lines}${devices}${button}</li>`;
+    }).join("");
+    const select = $("gate-mic-device");
+    if (select) { select.value = $("mic-device").value; select.addEventListener("change", () => chooseMic(select.value)); }
+    if (focused) (gateDialog.querySelector(`[data-action="${focused}"]`) || $(focused) || $("gate-dialog-title")).focus();
+  }
+  function openGateDialog() {
+    renderGateDialog();
+    if (!problems().length) return;
+    gateDialog.showModal();
+    $("gate-dialog-title").focus();
+  }
+  let focusAfterClose = null;
+  gateDialog.addEventListener("close", () => {
+    if ($("setup-view").hidden) return;
+    (focusAfterClose || start).focus();
+    focusAfterClose = null;
+  });
+  gateDialog.addEventListener("click", (e) => {
+    const action = e.target.closest("[data-action]")?.dataset.action;
+    if (action === "mic") testMic($("mic-device").value || undefined);
+    if (action === "camera") window.UBCamera?.start();
+    if (action === "reload") location.reload();
+    if (action === "consent") { focusAfterClose = consent; gateDialog.close(); }
+  });
+  $("dialog-typed").addEventListener("click", () => {
+    if (!typedPractice) setTypedPractice(true);
+    gateDialog.close();
   });
 
   // Space = Done while listening (unless typing into a field)
@@ -496,52 +599,109 @@ document.addEventListener("DOMContentLoaded", () => {
     tick();
   }
 
-  // ---------- Device check before the first question (decision log 10) ----------
-  // Mic level is read locally from an AnalyserNode; nothing is sent. The camera is not touched.
-  let meterFrame = null;
-  function stopMeter() { if (meterFrame) cancelAnimationFrame(meterFrame); meterFrame = null; }
-  $("mic-test").addEventListener("click", async () => {
-    const note = $("mic-note");
-    const check = $("mic-check");
+  // ---------- Device check before the first question (decision log 20) ----------
+  // The microphone level is read locally from an AnalyserNode; nothing is sent. The meter
+  // starts by itself once the page has microphone permission; Test microphone retries.
+  const SOUND = 0.04;       // level (RMS x 4) that counts as sound
+  const FLAT_MS = 6000;     // no sound for this long: suggest another microphone
+  let meterFrame = null, flatTimer = null, micInputs = [];
+  function stopMeter() { if (meterFrame) cancelAnimationFrame(meterFrame); meterFrame = null; clearTimeout(flatTimer); }
+  function inputName() {
+    const d = voice.device();
+    const chosen = micInputs.find((i) => i.deviceId && i.deviceId === (d?.id || $("mic-device").value));
+    return d?.label || chosen?.label || "this microphone";
+  }
+  const MIC_TEXT = {
+    unchecked: ["Not checked", "", () => "Stays on this device; nothing is sent."],
+    none: ["No microphone", "bad", () => "No microphone found. Connect one or use typed practice."],
+    blocked: ["Blocked", "bad", () => "The browser is blocking the microphone. Allow it from the icon in the address bar, then reload."],
+    busy: ["Not responding", "bad", () => "The microphone is in use by another app or not responding. Close other apps using it, then test again."],
+    listening: ["Listening for sound", "", (n) => `Say something: the bar should move. Using ${n}. Nothing is sent.`],
+    quiet: ["No sound yet", "bad", (n) => `No sound from ${n}. Try another microphone.`],
+    ok: ["Sound picked up", "ok", (n) => `Your microphone works (${n}). Nothing was sent.`],
+  };
+  function setMic(state) {
+    micStatus = state;
+    const [check, cls, note] = MIC_TEXT[state];
+    $("mic-check").textContent = check; $("mic-check").className = `check-state${cls ? ` ${cls}` : ""}`;
+    $("mic-note").textContent = note(inputName()); $("mic-note").className = `device-note${cls ? ` ${cls}` : ""}`;
+    updateGate();
+  }
+  function micHeardReset() { stopMeter(); $("mic-meter").style.width = "0%"; }
+
+  // Inputs from enumerateDevices (local only). Labels appear once the microphone is allowed.
+  async function listInputs() {
+    try { micInputs = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === "audioinput"); }
+    catch { micInputs = []; }
+    const current = voice.device()?.id || $("mic-device").value;
+    $("mic-device").innerHTML = micInputs.map((d, i) =>
+      `<option value="${escapeHtml(d.deviceId)}">${escapeHtml(d.label || `Microphone ${i + 1}`)}</option>`).join("");
+    if (micInputs.some((d) => d.deviceId === current)) $("mic-device").value = current;
+    $("mic-device-row").hidden = micInputs.length === 0;
+    return micInputs;
+  }
+
+  let testing = 0;
+  async function testMic(deviceId) {
+    const run = ++testing;
+    micHeardReset();
+    if (!navigator.mediaDevices?.getUserMedia || !(await listInputs()).length) { voice.close(); setMic("none"); return; }
     try {
-      await voice.open();
-    } catch {
-      note.textContent = "The microphone is blocked or missing.";
-      note.className = "device-note bad";
-      check.textContent = "Not working"; check.className = "check-state bad";
+      await voice.open(deviceId ? { deviceId } : {});
+    } catch (error) {
+      if (run === testing) setMic({ NotAllowedError: "blocked", SecurityError: "blocked", NotFoundError: "none", OverconstrainedError: "none" }[error?.name] || "busy");
       return;
     }
-    if (!micHeard) {
-      note.textContent = "Say something: the bar should move. Nothing is sent.";
-      note.className = "device-note";
-      check.textContent = "Listening for sound"; check.className = "check-state";
-    }
-    const bar = $("mic-meter");
+    if (run !== testing) return;
+    await listInputs();
+    setMic("listening");
+    flatTimer = setTimeout(() => { if (micStatus === "listening") setMic("quiet"); }, FLAT_MS);
     const draw = () => {
       const level = voice.level();
-      bar.style.width = `${Math.round(level * 100)}%`;
-      if (!micHeard && level > 0.08) {
-        micHeard = true;
-        check.textContent = "Sound picked up"; check.className = "check-state ok";
-        note.textContent = "Your microphone works. Nothing was sent."; note.className = "device-note ok";
-        updateGate();
-      }
+      const width = `${Math.round(level * 100)}%`;
+      $("mic-meter").style.width = width;
+      const mirror = $("gate-mic-meter");
+      if (mirror) mirror.style.width = width;
+      if (micStatus !== "ok" && level > SOUND) { clearTimeout(flatTimer); setMic("ok"); }
       meterFrame = requestAnimationFrame(draw);
     };
-    stopMeter(); draw();
+    draw();
+  }
+  function chooseMic(id) { $("mic-device").value = id; testMic(id); }
+  $("mic-test").addEventListener("click", () => testMic($("mic-device").value || undefined));
+  $("mic-device").addEventListener("change", () => chooseMic($("mic-device").value));
+
+  // Start the meter by itself once the microphone is allowed; follow permission and device changes.
+  function permissionSeen(state) {
+    if (!$("room").hidden) return;
+    if (state === "granted" && !["ok", "listening"].includes(micStatus)) testMic();
+    if (state === "denied") setMic("blocked");
+  }
+  if (navigator.permissions?.query) {
+    navigator.permissions.query({ name: "microphone" }).then((p) => {
+      permissionSeen(p.state);
+      p.onchange = () => permissionSeen(p.state);
+    }).catch(() => {});
+  }
+  navigator.mediaDevices?.addEventListener?.("devicechange", async () => {
+    if (!$("room").hidden) return;
+    const inputs = await listInputs();
+    if (!inputs.length) { voice.close(); micHeardReset(); setMic("none"); }
+    else if (micStatus === "none") testMic();
   });
+  if (navigator.mediaDevices) listInputs().then((inputs) => { if (!inputs.length) setMic("none"); });
   $("speaker-test").addEventListener("click", () => {
     const note = $("speaker-note");
     if (!window.speechSynthesis) { note.textContent = "This browser has no speech voice; lines will appear as text."; note.className = "device-note bad"; return; }
     if (mute.getAttribute("aria-pressed") === "true") { note.textContent = "The interviewer is muted; unmute to hear the test line."; return; }
-    speak("This is how the interviewer will sound.");
+    speak("This is how the interviewer will sound.", null, { mutes: false });  // never mutes the microphone check
     note.textContent = "Playing a test line.";
   });
 
   // ---------- Config: connection check, and replay mode has no live microphone path ----------
   fetch("/api/voice/config").then((r) => (r.ok ? r.json() : Promise.reject())).then((c) => {
     config = c;
-    connected = true;
+    connection = "ok";
     $("connection-state").textContent = "Connected"; $("connection-state").className = "check-state ok";
     $("connection-note").textContent = "Connected to the Unbluffable server.";
     if (c.mode === "replay") {
@@ -552,6 +712,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     updateGate();
   }).catch(() => {
+    connection = "failed";
+    updateGate();
     $("connection-state").textContent = "Not connected"; $("connection-state").className = "check-state bad";
     $("connection-note").textContent = "Can't reach the server. Check your connection and reload.";
     $("connection-note").className = "device-note bad";
@@ -579,7 +741,7 @@ document.addEventListener("DOMContentLoaded", () => {
     topicSelect.replaceChildren(...track.topics.map((o) => {
       const option = document.createElement("option");
       option.value = o.id;
-      option.textContent = o.count == null ? o.name : `${o.name} (${o.count} template${o.count === 1 ? "" : "s"})`;
+      option.textContent = o.name;
       option.selected = o.id === track.default;
       return option;
     }));

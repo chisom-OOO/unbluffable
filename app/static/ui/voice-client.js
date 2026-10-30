@@ -4,15 +4,23 @@
 // a capture is open. Audio is never stored; nothing is sent outside a capture.
 (() => {
   let stream = null, context = null, worklet = null, analyser = null;
-  let socket = null, capturing = false, pending = [];
+  let socket = null, capturing = false, pending = [], wanted = "";
 
-  async function open() {
+  // `deviceId` (optional) picks an input; a different one closes the open stream first.
+  // A track that ends (unplugged, revoked) fires "ub-mic-ended" on the document.
+  async function open({ deviceId } = {}) {
+    if (deviceId !== undefined && deviceId !== wanted) { close(); wanted = deviceId; }
     if (stream) return;
     context ||= new AudioContext();
     const resumed = context.resume();
     stream = await navigator.mediaDevices.getUserMedia({
-      audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true },
+      audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true,
+               ...(wanted ? { deviceId: { exact: wanted } } : {}) },
     });
+    const opened = stream;
+    stream.getAudioTracks().forEach((t) => t.addEventListener("ended", () => {
+      if (stream === opened) document.dispatchEvent(new CustomEvent("ub-mic-ended"));
+    }));
     await resumed;
     await context.audioWorklet.addModule("/voice-static/mic-worklet.js");
     worklet = new AudioWorkletNode(context, "mic-pcm");
@@ -56,14 +64,21 @@
 
   function flush() { worklet?.port.postMessage({ type: "flush" }); }
 
-  // Local input level 0..1 for the device check; nothing is sent.
+  // Local input level 0..1 for the device check (RMS x 4, read as floats so a quiet
+  // microphone still registers); nothing is sent.
   function level() {
     if (!analyser) return 0;
-    const data = new Uint8Array(analyser.fftSize);
-    analyser.getByteTimeDomainData(data);
+    const data = new Float32Array(analyser.fftSize);
+    analyser.getFloatTimeDomainData(data);
     let sum = 0;
-    for (const v of data) { const x = (v - 128) / 128; sum += x * x; }
+    for (const x of data) sum += x * x;
     return Math.min(1, Math.sqrt(sum / data.length) * 4);
+  }
+
+  // The input in use: { id, label } (the label is empty until the browser allows the microphone).
+  function device() {
+    const track = stream?.getAudioTracks()[0];
+    return track ? { id: track.getSettings?.().deviceId || wanted, label: track.label } : null;
   }
 
   function close() {
@@ -76,7 +91,7 @@
   }
 
   window.UBVoice = {
-    open, attach, startStreaming, stopStreaming, mute, flush, level, close,
+    open, attach, startStreaming, stopStreaming, mute, flush, level, device, close,
     get isOpen() { return !!stream; },
     get capturing() { return capturing; },
   };

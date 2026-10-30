@@ -73,7 +73,7 @@
             <span>I'm using headphones (lets me talk over the interviewer).</span>
           </label>
           <div class="gate">
-            <button class="btn wide" type="button" id="start" disabled aria-describedby="gate-note">Start interview →</button>
+            <button class="btn wide not-ready" type="button" id="start" aria-describedby="gate-note">Start interview →</button>
             <p class="gate-note" id="gate-note" aria-live="polite"></p>
             <p class="typed-link" id="typed-practice-row">
               <button type="button" id="typed-practice">Can't use a camera or mic?</button>
@@ -101,8 +101,12 @@
             <span class="check-state" id="mic-check">Not checked</span>
             <button class="btn secondary btn-small" type="button" id="mic-test">Test microphone</button>
           </div>
+          <div class="field mic-device" id="mic-device-row" hidden>
+            <label for="mic-device">Input</label>
+            <select id="mic-device"></select>
+          </div>
           <div class="devicebar" aria-hidden="true"><span id="mic-meter"></span></div>
-          <p class="device-note" id="mic-note">Stays on this device; nothing is sent.</p>
+          <p class="device-note" id="mic-note" aria-live="polite">Stays on this device; nothing is sent.</p>
 
           <div class="devrow">
             <strong>Speaker</strong>
@@ -138,7 +142,7 @@
           <div>
             <h2 id="conv-title">Interview transcript</h2>
             <p class="fine" id="help-count" aria-live="polite">Challenges 0 · Nudges 0 · Hints 0</p>
-            <span class="tag warn" id="practice-tag" hidden>Typed practice · Not exam conditions</span>
+            <span class="tag warn" id="practice-tag" hidden>Typed practice: not exam conditions</span>
           </div>
           <figure class="selfview" id="selfview" hidden>
             <video id="camera-self" autoplay muted playsinline aria-label="Your camera, shown only on this screen"></video>
@@ -190,6 +194,20 @@
       </aside>
     </div>
   </main>
+
+  <!-- Start pressed before the checks pass: what is missing and what to do. -->
+  <dialog class="gate-dialog" id="gate-dialog" aria-labelledby="gate-dialog-title">
+    <div class="dialog-head">
+      <h2 id="gate-dialog-title" tabindex="-1">Before you start</h2>
+      <form method="dialog"><button class="icon-btn" type="submit" id="gate-close" aria-label="Close">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button></form>
+    </div>
+    <p class="muted">Sort these out, then press Start again.</p>
+    <ol class="gate-steps" id="gate-steps"></ol>
+    <p class="typed-link"><button type="button" id="dialog-typed">Can't use a camera or mic? Continue in typed practice (not exam conditions).</button></p>
+    <form method="dialog" class="dialog-actions"><button class="btn secondary" type="submit">Close</button></form>
+  </dialog>
 
   <footer class="disclosure">
     <p>The interviewer's voice is your browser's speech synthesis.</p>
