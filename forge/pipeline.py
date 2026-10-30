@@ -13,10 +13,11 @@ from forge.models import atomic_json
 from forge.sandbox import Sandbox
 from forge.verify import ambiguity, instances, near_verbatim, parameter_grid, points_for, render, validate_variant, normalize_variant, run_code
 from forge.selection import select_questions
+from forge.content import validate_wording
 
 STAGES = ("answer_pass", "numeric_answer", "author", "parameters", "original_answer", "novelty",
           "simulator", "simulator_independence", "wrong_methods", "steps", "monte_carlo",
-          "instances", "render", "author_repair", "simulator_repair", "reading_twins", "reading_model", "readings", "blind_model", "blind_checker", "part2", "part2_blind_model", "accepted")
+          "interview_friendly", "wording", "topic_classification", "instances", "render", "author_repair", "simulator_repair", "reading_twins", "reading_model", "readings", "blind_model", "blind_checker", "part2", "part2_blind_model", "accepted")
 
 ANSWER_PROMPT = """Extract the final answer from the worked solution, not a count or an intermediate value.
 Classify as numeric_single, symbolic, multiple_choice, multi_part, proof_or_explanation, or code.
@@ -25,6 +26,12 @@ For rounded decimals provide the tolerance explicitly stated in the solution and
 Never invent tolerance. Use 0 and none for exact integer/fraction answers.
 For nonnumeric answers, quote the verbatim final expression or conclusion; answer may be none when no single final expression exists."""
 AUTHOR_PROMPT = """Write a substantially reworded parametric question for the same mathematical method.
+Write natural spoken interview English, not mathematical typesetting. No LaTeX, dollar signs or backslash commands.
+No redundant coefficients such as "1 *"; write quantities naturally, never phrases such as "5 squared observations".
+State EVERY assumption explicitly: for example a fair coin, a fair die, independent trials, and whether sampling
+is with or without replacement when relevant. Do not assume a probability distribution silently.
+Ensure at least 10 instances have a mentally manageable exact answer: integer, fraction with denominator <=100,
+or an exactly clean decimal/percent with at most two significant figures. Keep at least 20 valid instances overall.
 Do not copy names, story wording or sentences. Do not reveal the answer or a worked solution in question text.
 The answer is supplied only to anchor original parameters.
 Use plain {parameter_name} fields, no conversions or format specifications. All parameters must appear in text.
@@ -56,7 +63,7 @@ fraction or integer string (not a rounded decimal). No reference solver or answe
 
 
 REPAIRABLE = {"TypeError", "solver_not_exact", "invalid_template_fields", "invalid_step_names",
-              "invalid_name", "names_do_not_match", "missing_named_steps", "invalid_steps", "forbidden_import", "timeout"}
+              "invalid_name", "names_do_not_match", "missing_named_steps", "invalid_steps", "forbidden_import", "timeout", "not_spoken_english"}
 
 
 def repairable(failure):
@@ -74,7 +81,7 @@ class Pipeline:
         self.trials, self.max_similarity, self.priority = trials, max_similarity, tuple(priority)
         self.per_topic = dict(per_topic or {})
         settings = {"trials": trials, "max_similarity": max_similarity, "minimum_instances": 20,
-                    "instance_format": 2, "forge_revision": 3, "per_topic": self.per_topic}
+                    "instance_format": 3, "forge_revision": 4, "minimum_friendly_instances": 10, "per_topic": self.per_topic}
         if self.state.data.setdefault("verification_settings", settings) != settings:
             raise ValueError("Resume with the original verification settings or a new private work directory")
 
@@ -155,6 +162,11 @@ class Pipeline:
 
     def verify_draft(self, question, item, statements, answer, draft, simulator_override):
         draft = normalize_variant(draft)
+        self.attempt(item, "wording")
+        validate_wording(draft["text"])
+        if draft["part2"]["enabled"]:
+            validate_wording(draft["part2"]["text"])
+        self.passed(item, "wording")
         template_id = "forge_" + hashlib.sha256(json.dumps(draft, sort_keys=True).encode()).hexdigest()[:16]
         existing = self.state.data["mapping"].get(template_id)
         if existing and existing["question_id"] != question.question_id:
@@ -185,10 +197,12 @@ class Pipeline:
         simulator = simulator_override or self.call(item, "simulator", {
             "question": draft["text"], "part2_question": draft["part2"]["text"] if draft["part2"]["enabled"] else ""},
             schemas.SIMULATOR, SIM_PROMPT, author=True)
+        self.attempt(item, "interview_friendly")
         self.attempt(item, "instances")
         self.attempt(item, "wrong_methods")
         self.attempt(item, "monte_carlo")
         computed, mc = instances(draft, points, simulator["code"], self.sandbox, answer.tolerance, self.trials)
+        self.passed(item, "interview_friendly", {"minimum": 10, "count": mc["friendly_count"], "scoring": "exact_answer_form"})
         self.passed(item, "instances", {"minimum": 20, "count": len(computed), "well_spread_candidates": True,
                     "dropped_collisions": mc["dropped_collisions"], "separation": True})
         self.passed(item, "wrong_methods", {"method_count": len(draft["wrong"]), "points": len(computed),
@@ -213,21 +227,34 @@ class Pipeline:
             self.attempt(item, "part2")
             try:
                 part2_check, part2_instances = self.part2(draft, [row["params"] for row in computed], original, simulator["part2_code"], statements, item)
-                for instance, extra in zip(computed, part2_instances):
-                    instance["part2"] = extra
+                by_base = {tuple((name, row["params"][name]) for name in original): row for row in part2_instances}
+                for instance in computed:
+                    extra = by_base.get(tuple((name, instance["params"][name]) for name in original))
+                    if extra is not None:
+                        instance["part2"] = extra
                 self.passed(item, "part2", part2_check)
             except Reject as failure:
-                if repairable(failure) and not item.get("repair"):
+                if failure.stage == "wording" or (repairable(failure) and not item.get("repair")):
                     raise
                 part2_check = {"passed": False, "stage": failure.stage, "reason": failure.reason, **failure.details}
                 item["gates"]["part2"] = part2_check
                 self.state.save()
+        if not self.vocabulary:
+            raise Reject("topic_classification", "empty_clean_vocabulary")
+        classification = self.call(item, "topic_classification", {"text": computed[0]["text"], "vocabulary": list(self.vocabulary)},
+            schemas.obj({"topic": {"type": "string", "enum": list(self.vocabulary)}}),
+            "Classify this interview question from its own text. Choose exactly one topic from the supplied vocabulary. "
+            "Do not infer a source label; none is provided. Return only the selected topic.")
+        if classification["topic"] not in self.vocabulary:
+            raise Reject("topic_classification", "outside_clean_vocabulary")
+        self.passed(item, "topic_classification", {"topic": classification["topic"], "from_content": True})
+        item["topic"] = classification["topic"]
         verification = {key: value for key, value in item["gates"].items() if key in {
             "parameters", "original_answer", "novelty", "monte_carlo", "wrong_methods", "steps", "simulator_independence", "instances", "render",
-            "numeric_answer", "readings", "blind_checker"}}
+            "numeric_answer", "readings", "blind_checker", "interview_friendly", "wording", "topic_classification"}}
         verification["part2"] = part2_check
         topic = min(question.topics, key=lambda t: self.priority.index(t) if t in self.priority else len(self.priority)) if question.topics else "other"
-        return {"template_id": template_id, "topic": topic, "topics": list(question.topics),
+        return {"template_id": template_id, "topic": classification["topic"], "source_topic": topic, "topics": list(question.topics),
                 "difficulty": question.difficulty, "models": {"author": self.models.author.model,
                 "checker": self.models.checker.model}, "verification": verification,
                 "review_status": "pending_builder_review", "instances": computed}
@@ -262,6 +289,8 @@ class Pipeline:
         computed, mc = instances(variant, points, simulator, self.sandbox, Fraction(0), self.trials, limit=None)
         lookup = {tuple(sorted(row["params"].items())): row for row in computed}
         exported = [lookup[tuple(sorted(point.items()))] for point in selected if tuple(sorted(point.items())) in lookup]
+        if sum(row["interview_friendly"] for row in exported) < 10:
+            raise Reject("part2", "fewer_than_ten_friendly_instances")
         if len(exported) < 20:
             raise Reject("part2", "fewer_than_twenty_instances", {"survivors": len(exported)})
         twin = next(row for row in exported if row["params"] != part_original)
@@ -270,7 +299,7 @@ class Pipeline:
             raise Reject("part2", "blind_mismatch")
         return {"passed": True, "monte_carlo": mc, "blind_solver": twin["answer"],
                 "blind_checker": str(number(blind["answer"])), "similarity": similarity,
-                "wrong_methods_verified": True, "instance_count": len(exported), "separation": True}, exported
+                "wrong_methods_verified": True, "friendly_count": sum(row["interview_friendly"] for row in exported), "instance_count": len(exported), "separation": True}, exported
 
     def report(self, counts, questions, status):
         empty_stages = lambda: {name: {"attempted": 0, "passed": 0} for name in STAGES}
@@ -324,6 +353,8 @@ class Pipeline:
                   "loaded_per_topic": dict(Counter(t for q in questions for t in q.topics)),
                   "loader_per_topic": getattr(counts, "per_topic", {}),
                   "topic_vocabulary": getattr(counts, "topic_vocabulary", {}),
+                  "accepted_per_content_topic": dict(Counter(item["topic"] for item in self.state.data["items"].values()
+                       if item["status"] == "accepted" and "topic" in item)),
                   "sampling": getattr(self, "selection", {}),
                   "accepted_after_repair": sum(item["status"] == "accepted" and bool(item.get("repair"))
                                                for item in self.state.data["items"].values()),
@@ -346,6 +377,7 @@ class Pipeline:
     def run(self, questions, counts, limit=100):
         if limit <= 0:
             raise ValueError("Limit must be positive")
+        self.vocabulary = tuple(sorted(getattr(counts, "topic_vocabulary", {})))
         selected, assigned, shortfalls = select_questions(questions, limit, self.priority, self.per_topic)
         self.selection = {"requested": self.per_topic, "selected": dict(Counter(assigned.values())), "shortfalls": shortfalls}
         statements = [q.statement for q in questions]

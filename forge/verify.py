@@ -9,6 +9,7 @@ from fractions import Fraction
 
 from forge.data import number
 from forge.errors import Reject
+from forge.content import mental_arithmetic, spoken_text, validate_wording
 
 LABEL = re.compile(r"[a-z][a-z0-9_]{0,63}\Z")
 
@@ -124,6 +125,7 @@ def run_code(sandbox, code, mode, params, **kwargs):
 
 
 def validate_variant(variant, params):
+    validate_wording(variant["text"])
     render(variant["text"], params)
     if not 2 <= len(variant["wrong"]) <= 4 or len({w["misconception"] for w in variant["wrong"]}) != len(variant["wrong"]):
         raise Reject("wrong_methods", "need_two_to_four_named_methods")
@@ -197,7 +199,14 @@ def instances(variant, points, simulator, sandbox, tolerance, trials, *, limit=2
         if collision:
             dropped += 1
             continue
+        grouped = {}
+        for row in wrong:
+            grouped.setdefault(row["value"], []).append(row["misconception"])
+        wrong = [{"value": value, "misconceptions": names} for value, names in grouped.items()]
         pair_gap = min(abs(a - b) for a, b in itertools.combinations(values, 2))
+        distinct_gap = min((abs(Fraction(a) - Fraction(b)) for a, b in itertools.combinations(grouped, 2)), default=None)
+        text = render(variant["text"], params)
+        speech = spoken_text(text)
         sampled = run_code(sandbox, simulator, "sample", params, trials=trials, seed=941 + index)
         mean, se = number(sampled["mean"]), sampled["se"]
         if (sampled["trials"] < trials or sampled["draws"] < trials or not math.isfinite(se) or se < 0
@@ -207,15 +216,19 @@ def instances(variant, points, simulator, sandbox, tolerance, trials, *, limit=2
         mc.append({"params": params, "answer": str(answer), "mean": str(mean), "se": se,
                    "error": float(abs(mean - answer)), "limit": 4 * se,
                    "trials": sampled["trials"], "draws": sampled["draws"]})
-        result.append({"text": render(variant["text"], params), "params": params, "answer": str(answer),
+        result.append({"text": text, "spoken_text": speech, **mental_arithmetic(answer), "params": params, "answer": str(answer),
                        "tolerance": str(tolerance), "wrong": wrong, "steps": steps,
-                       "separation": {"by_misconception": gaps, "min_wrong_pair_gap": str(pair_gap)}})
-        if limit is not None and len(result) >= limit:
+                       "separation": {"by_misconception": gaps, "min_wrong_pair_gap": str(pair_gap),
+                                      "min_distinct_wrong_pair_gap": str(distinct_gap) if distinct_gap is not None else None}})
+        if limit is not None and len(result) >= limit and sum(row["interview_friendly"] for row in result) >= 10:
             break
     if len(result) < 20:
         raise Reject("wrong_methods", "fewer_than_twenty_instances",
                      {"survivors": len(result), "dropped_collisions": dropped})
+    friendly_count = sum(row["interview_friendly"] for row in result)
+    if friendly_count < 10:
+        raise Reject("interview_friendly", "fewer_than_ten_friendly_instances", {"count": friendly_count, "minimum": 10})
     if not any(row["se"] > 0 for row in mc):
         raise Reject("monte_carlo", "no_stochastic_outcomes")
     return result, {"passed": True, "points": mc, "point_count": len(result),
-                    "dropped_collisions": dropped, "candidates_checked": len(seen), "standard_errors": 4}
+                    "friendly_count": friendly_count, "dropped_collisions": dropped, "candidates_checked": len(seen), "standard_errors": 4}

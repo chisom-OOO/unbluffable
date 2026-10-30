@@ -48,7 +48,7 @@ def test_each_instance_reports_exact_misconception_and_pairwise_gaps():
     for row in rows:
         answer = Fraction(row["answer"])
         n = Fraction(row["params"]["n"])
-        assert {wrong["misconception"] for wrong in row["wrong"]} == {
+        assert {name for wrong in row["wrong"] for name in wrong["misconceptions"]} == {
             "ignores_probability", "uses_three_cases"}
         gaps = {gap["misconception"]: gap for gap in row["separation"]["by_misconception"]}
         assert gaps["ignores_probability"]["absolute_gap"] == str(n / 2)

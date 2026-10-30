@@ -1,3 +1,4 @@
+from forge_fakes import counts
 import json
 
 import pytest
@@ -16,7 +17,7 @@ def setup(tmp_path, part2=False):
 
 
 def execute(pipeline):
-    return pipeline.run([question()], {"rows": 1, "kept": 1}, 100)
+    return pipeline.run([question()], counts(), 100)
 
 
 def test_all_gates_export_only_instances_and_finished_items_never_respend(tmp_path):
@@ -159,7 +160,7 @@ def test_duplicate_generated_templates_do_not_inflate_the_funnel(tmp_path):
     from dataclasses import replace
     models, _, pipeline = setup(tmp_path)
     second = replace(question(), question_id="another-private-source", statement=question().statement + " Different invented framing.")
-    report = pipeline.run([question(), second], {"rows": 2, "kept": 2})
+    report = pipeline.run([question(), second], counts(2, 2))
     assert report["completed_questions"] == 2 and report["accepted_templates"] == 1
     assert report["failures"]["novelty:duplicate_generated_template"] == 1
     assert len(list((tmp_path / "public").glob("*.json"))) == 1
