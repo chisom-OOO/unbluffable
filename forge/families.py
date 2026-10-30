@@ -16,9 +16,10 @@ from forge.data import number
 from forge.errors import BudgetStop, Reject, ReplayMissing, ResumeBlocked
 from forge.models import atomic_json
 from forge.sandbox import Sandbox
+from forge.packs import PACK_PREFIXES, pack_name, pack_template_id
 from forge.verify import LABEL, snake_case
 
-VARIANTS = 75
+MIN_VARIANTS = 20
 PARAMETER_REVISION = 3
 DRAFT = schemas.obj({"solver": schemas.S, "step_names": schemas.arr(schemas.S),
                      "wrong": schemas.arr(schemas.WRONG)})
@@ -94,8 +95,8 @@ def load_families(path):
         raise ValueError("Invalid family source") from None
     families = []
     for family_id, variants in grouped.items():
-        if len(variants) != VARIANTS or len({row.variant for row in variants}) != VARIANTS:
-            raise ValueError("Each family must have 75 distinct variants")
+        if len(variants) < MIN_VARIANTS or len({row.variant for row in variants}) != len(variants):
+            raise ValueError("Each family must have at least 20 distinct variants")
         variants.sort(key=lambda row: (0, int(row.variant)) if row.variant.isdigit() else (1, row.variant))
         families.append(Family(family_id, tuple(variants)))
     if not families:
@@ -120,14 +121,25 @@ def separation(answer, wrong):
 
 
 class FamilyForge:
-    def __init__(self, models, *, output, funnel, sandbox=None):
+    def __init__(self, models, *, output, funnel, sandbox=None, pack="quant"):
         self.models, self.state = models, models.state
+        self.pack = pack_name(pack)
         self.output, self.funnel = Path(output), Path(funnel)
         self.sandbox = sandbox or Sandbox()
-        settings = {"version": 1, "variants_per_family": VARIANTS, "exact_source_tolerance": 0,
-                    "repairs_per_family": 1, "typed_parameters": True}
-        if "verification_settings" in self.state.data or self.state.data.setdefault("family_forge_settings", settings) != settings:
-            raise ValueError("Use a separate family-forge work directory")
+        settings = {"version": 2, "minimum_variants": MIN_VARIANTS, "exact_source_tolerance": 0,
+                    "repairs_per_family": 1, "typed_parameters": True, "pack": self.pack}
+        legacy = {"version": 1, "variants_per_family": 75, "exact_source_tolerance": 0,
+                  "repairs_per_family": 1, "typed_parameters": True}
+        previous = self.state.data.get("family_forge_settings")
+        if previous == legacy and self.pack == "quant":
+            self.state.data["family_forge_settings"] = settings
+        elif previous is None:
+            self.state.data["family_forge_settings"] = settings
+        if "verification_settings" in self.state.data or self.state.data["family_forge_settings"] != settings:
+            raise ValueError("Use a separate family-forge work directory for each pack")
+
+    def template_id(self, family):
+        return pack_template_id(self.pack, family.family_id)
 
     def stage(self, item, name, passed=False):
         if name not in item.setdefault("attempted", []):
@@ -143,6 +155,8 @@ class FamilyForge:
         payload = {"family_id": family.family_id, "examples": [
             {"question": row.text, "params": row.params, "solution": row.solution, "reasoning_focus": row.reasoning_focus}
             for row in (family.variants[0], family.variants[-1])]}
+        if self.pack != "quant":
+            payload["pack"] = self.pack
         if repair:
             payload.update(draft=item["draft"], error=item["repair"])
         result = self.models.call(stage, payload, DRAFT, PROMPT + (
@@ -151,13 +165,18 @@ class FamilyForge:
         return result
 
     def batch(self, code, params):
-        try:
-            result = self.sandbox.run_batch(code, params)
-        except TypeError:
-            raise Reject("sandbox", "TypeError") from None
-        if len(result) != VARIANTS:
-            raise Reject("sandbox", "invalid_batch_output")
-        return result
+        # Bound each child request without imposing a fixed family size.
+        results = []
+        for start in range(0, len(params), 75):
+            chunk = params[start:start + 75]
+            try:
+                result = self.sandbox.run_batch(code, chunk)
+            except TypeError:
+                raise Reject("sandbox", "TypeError") from None
+            if len(result) != len(chunk):
+                raise Reject("sandbox", "invalid_batch_output")
+            results.extend(result)
+        return results
 
     def verify(self, family, item, draft):
         names = [snake_case(name) for name in draft["step_names"]]
@@ -184,7 +203,7 @@ class FamilyForge:
             steps.append([{"name": step["name"], "value": str(number(step["value"]))} for step in returned])
             errors.append(error)
         item["verified_steps"] = steps
-        item["solver_verification"] = {"passed": True, "variants_checked": VARIANTS,
+        item["solver_verification"] = {"passed": True, "variants_checked": len(family.variants),
                                       "max_absolute_error": str(max(errors))}
         self.stage(item, "solver", True)
         self.stage(item, "wrong_methods")
@@ -277,11 +296,11 @@ class FamilyForge:
                          "spoken_text": spoken_text(source.text, check_wording=False),
                          **mental_arithmetic(source.answer), **computed, "follow_up": source.follow_up})
         first = family.variants[0]
-        artifact = {"template_id": family.template_id, "topic": first.topic,
+        artifact = {"template_id": self.template_id(family), "pack": self.pack, "topic": first.topic,
             "topics": list(dict.fromkeys(row.topic for row in family.variants)), "source_topic": first.source_topic,
             "difficulty": first.difficulty, "models": {"author": self.models.author.model, "checker": None},
             "verification": {"mode": "imported_verified_families",
-                "source": {"passed": True, "variants": VARIANTS,
+                "source": {"passed": True, "variants": len(family.variants),
                     "results": dict(Counter(row.verification_result for row in family.variants))},
                 "solver": item.get("solver_verification", {"passed": False, "variants_checked": 0}),
                 "misconceptions_verified": verified, "method_count": item.get("method_count", 0) if verified else 0,
@@ -290,9 +309,9 @@ class FamilyForge:
                 "rechecked_parameter_revision": item.get("rechecked_parameter_revision"),
                 "variant_followups": len({json.dumps(row.follow_up, sort_keys=True) for row in family.variants}) > 1},
             "follow_up": first.follow_up, "review_status": "pending_builder_review", "instances": rows}
-        atomic_json(self.output / (family.template_id + ".json"), artifact)
+        atomic_json(self.output / (self.template_id(family) + ".json"), artifact)
         item["exported"] = True
-        self.state.data["mapping"][family.template_id] = {"family_id": family.family_id,
+        self.state.data["mapping"][self.template_id(family)] = {"family_id": family.family_id,
             "source_ids": [row.source_id for row in family.variants]}
         atomic_json(self.state.root / "mapping.json", self.state.data["mapping"])
         self.stage(item, "export", True)
@@ -319,10 +338,11 @@ class FamilyForge:
             row["usage_unknown_calls"] += int(not call["usage_known"])
         for row in billing.values():
             row["cost_usd"] = str(row["cost_usd"])
-        report = {"format_version": 1, "mode": "family_forge", "status": status,
-            "families_loaded": len(families), "source_variants": len(families) * VARIANTS,
+        report = {"format_version": 1, "mode": "family_forge", "pack": self.pack, "status": status,
+            "families_loaded": len(families), "source_variants": sum(len(family.variants) for family in families),
             "families_exported": sum(bool(item.get("exported")) for item in items.values()),
             "misconceptions_verified": sum(item["status"] == "verified" for item in items.values()),
+            "solvers_verified": sum(bool(item.get("solver_verification", {}).get("passed")) for item in items.values()),
             "fallback_families": sum(item["status"] == "fallback" for item in items.values()),
             "pending_families": sum(item["status"] == "pending" for item in items.values()),
             "unverified_exports": sum(bool(item.get("exported")) and item["status"] != "verified" for item in items.values()),
@@ -331,10 +351,10 @@ class FamilyForge:
             "prices_per_million": self.state.data.get("prices", {}), "billing": billing,
             "latency_s": sum(row["latency_s"] for row in self.state.data["calls"].values()),
             "latency_basis": "recorded_model_calls_once",
-            "per_topic": {topic: totals([items[family.template_id] for family in families
-                          if family.template_id in items and family.variants[0].topic == topic]) for topic in sorted(topics)}}
+            "per_topic": {topic: totals([items[self.template_id(family)] for family in families
+                          if self.template_id(family) in items and family.variants[0].topic == topic]) for topic in sorted(topics)}}
         if getattr(self, "recheck_ids", ()):
-            selected = [items["family_" + family_id] for family_id in self.recheck_ids if "family_" + family_id in items]
+            selected = [items[pack_template_id(self.pack, family_id)] for family_id in self.recheck_ids if pack_template_id(self.pack, family_id) in items]
             report["recheck"] = {"requested": list(self.recheck_ids), "parameter_revision": PARAMETER_REVISION,
                 "completed": sum(item.get("rechecked_parameter_revision") == PARAMETER_REVISION for item in selected),
                 "verified": sum(item["status"] == "verified" for item in selected),
@@ -345,6 +365,9 @@ class FamilyForge:
         return report
 
     def run(self, families, *, recheck_families=()):
+        public_ids = [self.template_id(family) for family in families]
+        if len(set(public_ids)) != len(public_ids):
+            raise ValueError("Duplicate public family IDs")
         self.recheck_ids = tuple(dict.fromkeys(recheck_families))
         if not set(self.recheck_ids) <= {family.family_id for family in families}:
             raise ValueError("Unknown family in recheck selection")
@@ -357,10 +380,10 @@ class FamilyForge:
         for family in families:
             if self.recheck_ids and family.family_id not in self.recheck_ids:
                 continue
-            item = self.state.data["items"].setdefault(family.template_id, {"status": "pending", "attempted": [], "passed": []})
+            item = self.state.data["items"].setdefault(self.template_id(family), {"status": "pending", "attempted": [], "passed": []})
             recheck = bool(self.recheck_ids) and item.get("rechecked_parameter_revision") != PARAMETER_REVISION
             if not recheck and item["status"] in {"verified", "fallback"}:
-                if not (self.output / (family.template_id + ".json")).exists():
+                if not (self.output / (self.template_id(family) + ".json")).exists():
                     self.export(family, item)
                 continue
             self.models.current_topics = tuple(dict.fromkeys(row.topic for row in family.variants))

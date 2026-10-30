@@ -114,7 +114,7 @@ def test_loader_has_exact_values_and_explicit_numerical_tolerances(tmp_path):
 def test_bad_sources_stop_before_models(tmp_path, case):
     from forge.families import load_families
     path, rows = source(tmp_path, numerical=True)
-    if case == "count": rows.pop()
+    if case == "count": rows = rows[:19]
     elif case == "failed": rows[0]["verification_result"] = "FAIL"
     elif case == "tolerance": rows[0]["verification_tolerance"] = ""
     elif case == "params": rows[0]["parameters"] = "[1, 2]"
