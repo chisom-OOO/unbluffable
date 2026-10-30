@@ -82,8 +82,9 @@ def numeric_words(token):
     return result + (" percent" if percent else "")
 
 
-def spoken_text(text):
-    validate_wording(text)
+def spoken_text(text, *, check_wording=True):
+    if check_wording:
+        validate_wording(text)
     operators = {"<=": "less than or equal to", ">=": "greater than or equal to",
                  "!=": "not equal to", "\u2264": "less than or equal to", "\u2265": "greater than or equal to",
                  "\u2260": "not equal to", "\u00d7": "times", "\u00f7": "divided by",
