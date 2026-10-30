@@ -19,6 +19,7 @@ from forge.sandbox import Sandbox
 from forge.verify import LABEL, snake_case
 
 VARIANTS = 75
+PARAMETER_REVISION = 3
 DRAFT = schemas.obj({"solver": schemas.S, "step_names": schemas.arr(schemas.S),
                      "wrong": schemas.arr(schemas.WRONG)})
 PROMPT = """Write an exact parameterized solver and 2-4 named misconception solvers for this family.
@@ -27,7 +28,7 @@ Do not rewrite the question or invent parameter ranges. Code defines solve(param
 The main solver returns {"answer": int/Fraction, "steps": {step_name: int/Fraction}}.
 Wrong-method solvers return int/Fraction; each has a distinct misconception name.
 step_names must exactly describe the returned named intermediate values. Use descriptive snake_case names.
-Parameters keep their JSON meaning: integers are ints, strings remain strings (use Fraction for numeric strings),
+Parameters keep their numeric meaning: native integers are ints, numeric strings are exact Fractions and nonnumeric labels remain strings,
 arrays are immutable tuples and objects are read-only mappings. Do not mutate parameters or depend on call order.
 Each variant gets fresh generated globals. No random solver. No float RETURN values; exact int/Fraction outputs only.
 Imports limited to math, fractions, random, itertools, functools. No files/network, introspection,
@@ -229,6 +230,39 @@ class FamilyForge:
                 item["corrected"] = self.call(family, item, repair=True)
                 self.state.save()
 
+    def recheck(self, family, item):
+        """Re-evaluate only cached drafts under the corrected parameter runtime."""
+        history = item.setdefault("recheck_history", [])
+        if not history or history[-1]["revision"] != PARAMETER_REVISION or item["status"] != "pending":
+            history.append({"revision": PARAMETER_REVISION, "previous_status": item["status"],
+                            "previous_failure": item.get("failure"), "attempts": []})
+        item["status"] = "pending"
+        for key in ("computed", "verified_steps", "solver_verification", "method_count", "failure"):
+            item.pop(key, None)
+        item["passed"] = [name for name in item.get("passed", []) if name not in {"solver", "wrong_methods", "recheck"}]
+        self.stage(item, "recheck")
+        failure = {"gate": "cache", "error_class": "missing_cached_draft"}
+        for field in ("corrected", "draft"):
+            if field not in item:
+                continue
+            try:
+                self.verify(family, item, item[field])
+            except (Reject, TypeError) as error:
+                if isinstance(error, TypeError):
+                    error = Reject("sandbox", "TypeError")
+                failure = {"gate": error.stage, "error_class": error.reason}
+                if "variant_index" in error.details:
+                    failure["variant_index"] = error.details["variant_index"]
+                history[-1]["attempts"].append({"draft": field, "passed": False, **failure})
+            else:
+                history[-1]["attempts"].append({"draft": field, "passed": True})
+                item.update(status="verified", rechecked_draft=field, rechecked_parameter_revision=PARAMETER_REVISION)
+                item.pop("failure", None)
+                self.stage(item, "recheck", True)
+                return
+        item.update(status="fallback", failure=failure, rechecked_parameter_revision=PARAMETER_REVISION)
+        self.state.save()
+
     def export(self, family, item, pending_reason=None):
         verified = item["status"] == "verified"
         rows = []
@@ -253,6 +287,7 @@ class FamilyForge:
                 "misconceptions_verified": verified, "method_count": item.get("method_count", 0) if verified else 0,
                 "repair_attempted": "repair" in item, "reason": item.get("failure") if not verified else None,
                 "pending_reason": pending_reason, "all_variants_retained": True,
+                "rechecked_parameter_revision": item.get("rechecked_parameter_revision"),
                 "variant_followups": len({json.dumps(row.follow_up, sort_keys=True) for row in family.variants}) > 1},
             "follow_up": first.follow_up, "review_status": "pending_builder_review", "instances": rows}
         atomic_json(self.output / (family.template_id + ".json"), artifact)
@@ -272,7 +307,7 @@ class FamilyForge:
         topics = {family.variants[0].topic for family in families}
         stages = {stage: {"attempted": sum(stage in item.get("attempted", []) for item in items.values()),
                           "passed": sum(stage in item.get("passed", []) for item in items.values())}
-                  for stage in ("family_author", "family_repair", "solver", "wrong_methods", "export")}
+                  for stage in ("family_author", "family_repair", "solver", "wrong_methods", "recheck", "export")}
         billing = {}
         for call in self.state.data["calls"].values():
             row = billing.setdefault(call["backend"], {"cost_usd": Decimal(0), "calls": 0,
@@ -298,25 +333,43 @@ class FamilyForge:
             "latency_basis": "recorded_model_calls_once",
             "per_topic": {topic: totals([items[family.template_id] for family in families
                           if family.template_id in items and family.variants[0].topic == topic]) for topic in sorted(topics)}}
+        if getattr(self, "recheck_ids", ()):
+            selected = [items["family_" + family_id] for family_id in self.recheck_ids if "family_" + family_id in items]
+            report["recheck"] = {"requested": list(self.recheck_ids), "parameter_revision": PARAMETER_REVISION,
+                "completed": sum(item.get("rechecked_parameter_revision") == PARAMETER_REVISION for item in selected),
+                "verified": sum(item["status"] == "verified" for item in selected),
+                "fallback": sum(item["status"] == "fallback" for item in selected),
+                "additional_model_calls": len(self.state.data["calls"]) - self.recheck_call_count,
+                "additional_cost_usd": str(self.models.spent() - self.recheck_start_cost)}
         atomic_json(self.funnel, report)
         return report
 
-    def run(self, families):
+    def run(self, families, *, recheck_families=()):
+        self.recheck_ids = tuple(dict.fromkeys(recheck_families))
+        if not set(self.recheck_ids) <= {family.family_id for family in families}:
+            raise ValueError("Unknown family in recheck selection")
+        self.recheck_call_count, self.recheck_start_cost = len(self.state.data["calls"]), self.models.spent()
         fingerprint = hashlib.sha256(json.dumps([asdict(family) for family in families], sort_keys=True,
                                                 default=str).encode()).hexdigest()
         if self.state.data.setdefault("families_sha256", fingerprint) != fingerprint:
             raise ValueError("Family source changed; use a new private work directory")
         halt = None
         for family in families:
+            if self.recheck_ids and family.family_id not in self.recheck_ids:
+                continue
             item = self.state.data["items"].setdefault(family.template_id, {"status": "pending", "attempted": [], "passed": []})
-            if item["status"] in {"verified", "fallback"}:
+            recheck = bool(self.recheck_ids) and item.get("rechecked_parameter_revision") != PARAMETER_REVISION
+            if not recheck and item["status"] in {"verified", "fallback"}:
                 if not (self.output / (family.template_id + ".json")).exists():
                     self.export(family, item)
                 continue
             self.models.current_topics = tuple(dict.fromkeys(row.topic for row in family.variants))
             if halt is None:
                 try:
-                    self.process(family, item)
+                    if recheck:
+                        self.recheck(family, item)
+                    else:
+                        self.process(family, item)
                 except BudgetStop:
                     halt = "budget_stop"
                 except ReplayMissing:

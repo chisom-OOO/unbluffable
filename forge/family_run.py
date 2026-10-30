@@ -4,6 +4,7 @@ from decimal import Decimal
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 
 from forge.families import FamilyForge, load_families
@@ -22,10 +23,14 @@ def main(argv=None):
     parser.add_argument("--mode", choices=("live", "replay"), default="replay")
     parser.add_argument("--budget-usd", type=Decimal, default=Decimal(5))
     parser.add_argument("--work-dir", type=Path, default=ROOT / "data" / "forge" / "families1")
+    parser.add_argument("--recheck-families", default=None, help="Comma/space-separated family IDs; recheck cached drafts only, with no model calls")
     parser.add_argument("--price", action="append", default=[], metavar="BACKEND=INPUT,OUTPUT")
     parser.add_argument("--timeout-s", type=float, default=10)
     parser.add_argument("--memory-mb", type=int, default=128)
     args = parser.parse_args(argv)
+    recheck_ids = [value for value in re.split(r"[,\s]+", (args.recheck_families or "").strip()) if value]
+    if args.recheck_families is not None and not recheck_ids:
+        parser.error("--recheck-families must contain at least one family ID")
     if not args.work_dir.resolve().is_relative_to((ROOT / "data" / "forge").resolve()):
         parser.error("--work-dir must stay inside ignored data/forge")
     if args.csv.suffix.casefold() != ".csv" or any(part.casefold() in {".env", "captures", "recordings"} for part in args.csv.parts):
@@ -58,7 +63,7 @@ def main(argv=None):
             models = Models(state, mode=args.mode, budget_usd=args.budget_usd, prices=prices, author=author)
             forge = FamilyForge(models, output=ROOT / "content" / "forge", funnel=args.work_dir / "funnel.json",
                                 sandbox=Sandbox(args.timeout_s, args.memory_mb))
-            report = forge.run(families)
+            report = forge.run(families, recheck_families=recheck_ids)
             atomic_json(ROOT / "forge" / "funnel.json", report)
     except (OSError, ValueError, ArithmeticError, MissingKey) as error:
         # Exception bodies can contain source text or filesystem details.

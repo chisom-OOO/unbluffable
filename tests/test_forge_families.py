@@ -368,3 +368,105 @@ def test_real_batch_solver_checks_all_seventy_five_points():
     solved = Sandbox().run_batch(SOLVER, [{"n": n} for n in range(1, 76)])
     assert len(solved) == 75
     assert all(Fraction(row["answer"]) == Fraction(n, 2) for n, row in enumerate(solved, 1))
+
+
+def test_batch_converts_numeric_strings_recursively_but_preserves_labels_and_native_ints():
+    from forge.sandbox import Sandbox
+    code = """from fractions import Fraction
+def solve(params):
+    assert isinstance(params['ratio'], Fraction)
+    assert isinstance(params['whole_string'], Fraction)
+    assert isinstance(params['n'], int)
+    assert params['label'] == 'heads'
+    value = params['ratio'] * params['n'] + sum(params['nested'][0]) + params['nested'][1]['p']
+    return {'answer': value, 'steps': {'whole': params['whole_string']}}
+"""
+    rows = [{"ratio": "1/3", "whole_string": "3", "n": 6, "label": "heads",
+             "nested": [["1/6", "5/6"], {"p": "0.25"}]}]
+    result = Sandbox().run_batch(code, rows)
+    assert result == [{"answer": "13/4", "steps": [{"name": "whole", "value": "3"}]}]
+
+
+def test_targeted_recheck_uses_cached_drafts_and_leaves_other_items_and_exports_unchanged(tmp_path):
+    _, _, families, models, sandbox, forge = setup(tmp_path, family_count=2)
+    sandbox.bad_last = True
+    forge.run(families)
+    untouched = copy.deepcopy(models.state.data["items"]["family_2"])
+    untouched_bytes = (tmp_path / "public" / "family_2.json").read_bytes()
+    sandbox.bad_last = False
+    before_calls = copy.deepcopy(models.calls)
+    models.call = lambda *a, **k: pytest.fail("Cached recheck spent on a model call")
+    report = forge.run(families, recheck_families=["1"])
+    assert report["recheck"]["verified"] == 1
+    assert report["recheck"]["additional_model_calls"] == 0
+    assert report["recheck"]["additional_cost_usd"] == "0"
+    assert models.state.data["items"]["family_2"] == untouched
+    assert (tmp_path / "public" / "family_2.json").read_bytes() == untouched_bytes
+    assert models.calls == before_calls
+    artifact = json.loads((tmp_path / "public" / "family_1.json").read_text())
+    assert artifact["verification"]["misconceptions_verified"] is True
+    sandbox.run_batch = lambda *a, **k: pytest.fail("Finished recheck ran again")
+    forge.run(families, recheck_families=["1"])
+
+
+def test_recheck_can_recover_original_if_corrected_draft_has_unrelated_error(tmp_path):
+    _, _, families, models, sandbox, forge = setup(tmp_path)
+    models.corrected["solver"] = "broken"
+    sandbox.bad_last = True
+    forge.run(families)
+    sandbox.bad_last = False
+    models.call = lambda *a, **k: pytest.fail("Recheck made a new model call")
+    forge.run(families, recheck_families=["1"])
+    item = models.state.data["items"]["family_1"]
+    assert item["status"] == "verified" and item["rechecked_draft"] == "draft"
+
+
+def test_recheck_never_loosens_a_wrong_method_collision_gate(tmp_path):
+    _, _, families, models, _, forge = setup(tmp_path)
+    models.original["wrong"][0]["code"] = SOLVER
+    models.corrected = copy.deepcopy(models.original)
+    forge.run(families)
+    models.call = lambda *a, **k: pytest.fail("Recheck made a new model call")
+    report = forge.run(families, recheck_families=["1"])
+    assert report["recheck"]["verified"] == 0 and report["recheck"]["fallback"] == 1
+    artifact = json.loads((tmp_path / "public" / "family_1.json").read_text())
+    assert all(row["wrong"] == [] for row in artifact["instances"])
+
+
+def test_unknown_recheck_family_does_not_touch_state(tmp_path):
+    _, _, families, models, _, forge = setup(tmp_path)
+    before = copy.deepcopy(models.state.data)
+    with pytest.raises(ValueError):
+        forge.run(families, recheck_families=["not-in-source"])
+    assert models.state.data == before
+
+
+@pytest.mark.parametrize("selection", ["", ",", "   "])
+def test_family_cli_rejects_empty_explicit_recheck_before_source_read(tmp_path, monkeypatch, selection):
+    from forge import family_run
+    monkeypatch.setattr(family_run, "ROOT", tmp_path)
+    monkeypatch.setattr(family_run, "load_families", lambda path: pytest.fail("Empty recheck read source"))
+    with pytest.raises(SystemExit):
+        family_run.main(["--csv", str(tmp_path / "invented.csv"), "--recheck-families", selection])
+
+
+@pytest.mark.parametrize("code", [
+    "import math\ndef solve(params): return math.comb(params['n'], 2)",
+    "import fractions as f\ndef solve(params): return f.Fraction(params['n'], 2)",
+])
+def test_plain_allowed_imports_work_in_batched_solver(code):
+    from forge.sandbox import Sandbox
+    result = Sandbox().run_batch(code, [{"n": 4}])
+    assert result[0]["answer"] in {"6", "2"}
+
+
+@pytest.mark.parametrize("code", [
+    "import os\ndef solve(params): return 1",
+    "import socket\ndef solve(params): return 1",
+    "from fractions import sys\ndef solve(params): return 1",
+])
+def test_plain_import_fix_does_not_expand_allowed_modules_or_members(code):
+    from forge.sandbox import Sandbox
+    with pytest.raises(Reject) as error:
+        Sandbox().run_batch(code, [{"n": 4}])
+    assert error.value.reason == "forbidden_import"

@@ -7,6 +7,7 @@ import json
 import math
 import os
 import random
+import re
 import sys
 import types
 from fractions import Fraction
@@ -131,7 +132,7 @@ def execute(request):
         if level or name not in safe_modules:
             raise PolicyError("forbidden_import")
         module = safe_modules[name]
-        for member in fromlist:
+        for member in fromlist or ():
             if member.startswith("_") or not hasattr(module, member):
                 raise PolicyError("forbidden_import")
         return module
@@ -160,7 +161,18 @@ def execute(request):
                     if not math.isfinite(value):
                         raise PolicyError("invalid_parameter")
                     return Fraction(str(value))
-                if value is None or isinstance(value, (str, int, bool)):
+                if isinstance(value, str):
+                    literal = value.strip()
+                    if re.fullmatch(r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?|[+-]?\d+\s*/\s*[+-]?\d+", literal):
+                        exponent = re.search(r"[eE]([+-]?\d+)$", literal)
+                        if len(literal) > 512 or (exponent and abs(int(exponent[1])) > 1000):
+                            raise PolicyError("parameter_numeric_limit")
+                        try:
+                            return Fraction(*(int(part) for part in literal.split("/"))) if "/" in literal else Fraction(literal)
+                        except (ValueError, ZeroDivisionError):
+                            raise PolicyError("invalid_numeric_parameter") from None
+                    return value
+                if value is None or isinstance(value, (int, bool)):
                     return value
                 raise PolicyError("invalid_parameter")
             if not isinstance(raw, dict):

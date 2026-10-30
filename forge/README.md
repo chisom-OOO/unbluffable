@@ -326,8 +326,8 @@ families too; these stay resumable and are not marked finished.
 
 Batched sandbox calls compile once per solver and run every variant with fresh
 generated globals, under the same capability, memory, CPU and wall-time limits.
-Structured parameters expose immutable tuples/mappings, preserve string labels,
-and use exact numeric values. Existing sandbox defaults remain unchanged.
+Structured parameters expose immutable tuples/mappings, preserve nonnumeric
+string labels, and convert numeric strings to exact Fractions. Existing sandbox defaults remain unchanged.
 No generated code is included in public artifacts or executed at app runtime.
 
 Every instance includes interview_friendly and spoken_text from the shared
@@ -351,3 +351,25 @@ recorded latency. Run the same command to resume. Exit 0 means every family was
 processed (including honest fallbacks); exit 2 means pending work remains after
 a budget/replay/interruption stop. Source/configuration errors exit 1.
 Generated content remains uncommitted for the builder's audit.
+
+### Recheck cached families after parameter conversion fixes
+
+Structured sandbox parameters now recursively turn numeric strings (fractions,
+decimals, integers and scientific notation) into exact Fractions. Nonnumeric
+labels remain strings; native JSON integers remain ints. Lists, including nested
+lists, become immutable tuples; nested objects remain read-only mappings.
+
+Use --recheck-families with comma/space-separated family IDs in the SAME work
+directory and --mode replay. It rechecks only those IDs, using the cached corrected
+draft and then the cached original draft if needed. It never makes a new model
+call, clears no ledger entries and does not grant another repair round. The
+existing all-75, exact/tolerance, step and wrong-collision gates still apply.
+
+Rechecks are checkpointed by parameter-runtime revision. A resumed command skips
+already completed rechecks and does not touch other families' checkpoint entries
+or exports. The funnel reports the selected IDs, verified/fallback counts and
+additional calls/cost. Name errors or invalid misconception names that persist
+in both cached drafts remain explicit fallbacks.
+
+The same runtime revision also fixes permitted plain imports whose Python fromlist
+is None; the module/member allowlist and network restrictions remain unchanged.
