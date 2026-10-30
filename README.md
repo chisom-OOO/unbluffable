@@ -21,7 +21,7 @@ so anyone can know what the room feels like before they're in it.
 ---
 
 > [!NOTE]
-> **Status, 30 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode and the end-of-interview report work end to end in tests. Quant runs on cross-checked question families. In progress: investment banking, consulting and software engineering packs, and a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
+> **Status, 30 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode and the end-of-interview report work end to end in tests. Four tracks run on cross-checked question families: quant, investment banking, consulting and software engineering. In progress: a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
 
 ## Why
 
@@ -29,7 +29,7 @@ I struggled in interviews. Not because I didn't know the material, but because I
 
 Some candidates get that practice through coaches, paid prep or people who've been through it. Most don't. They walk into their first real interview to find out what one is like.
 
-I started building this for quant interviews, my own field. But the problem isn't quant. Banking, consulting and software interviews work the same way: you think out loud, commit to an answer, and get pushed on it. Quant is live; investment banking, consulting and software engineering are being added.
+I started building this for quant interviews, my own field. But the problem isn't quant. Banking, consulting and software interviews work the same way: you think out loud, commit to an answer, and get pushed on it. Quant, investment banking, consulting and software engineering are all live.
 
 **It's the interviewer you'd have if you had the connections.** Built for the theme **Build for Your World**.
 
@@ -37,7 +37,8 @@ I started building this for quant interviews, my own field. But the problem isn'
 
 | | |
 | --- | --- |
-| **Hands-free spoken interview** | One tap starts it. The interviewer speaks, you talk it through, and the app decides you've finished from what you said, not from a fixed pause. A silence prompt and an optional Done button are fallbacks. Typed answers work too. |
+| **Four tracks** | Quant, investment banking, consulting and software engineering, each with its own topics and the same interviewer. |
+| **Hands-free spoken interview** | One tap starts it. The interviewer speaks, you talk it through, and the app decides you've finished from what you said, not from a fixed pause. A silence prompt and an optional Done button are fallbacks. Camera and microphone are on, as in a real interview; a typed practice mode is there for anyone who can't use them, labelled *not exam conditions*. |
 | **Exact checking** | The model extracts the answer you committed to and quotes your own words. Every number is checked with exact fractions in code, never by a model. |
 | **Socratic challenge** | A committed wrong answer gets a question that points at the step, not the solution. Nudges and hints are allowed, and the score counts the help it took. |
 | **Same puzzle, new numbers** | A second version with different numbers separates someone who worked it out from someone who remembered an answer. |
@@ -48,7 +49,7 @@ I started building this for quant interviews, my own field. But the problem isn'
 | **Evidence-based scoring** | A Bayesian engine weighs each final answer, discounted by the help used, and stops when the evidence is clear: *Evidence supports understanding*, *Misconception detected*, *Understanding not shown* or *More evidence needed*. |
 | **In-app report** | A headline label, one tab per question, your quoted words beside the exact value, the help taken and time against the guide. |
 | **Which model did what** | Every turn shows which model ran, for which job, with latency and cost. |
-| **Privacy** | Audio and video are never saved; answer text is kept only with consent. The camera preview is local only and off by default. |
+| **Privacy** | Audio and video are never saved; answer text is kept only with consent. The camera self-view stays on this device: never recorded, uploaded or sent to a model. |
 
 ## How it works
 
@@ -126,7 +127,7 @@ From our cloud host, Meta's API showed no Muse Spark models for our key: `GET /v
 | **Interrupting mid-sentence** with realtime keyword rules | 2/10 wrong answers caught on the first gate. Rules widened from the failure types reached 8/10 on those clips but **1/10 on 30 new held-out clips**, with 0/20 false challenges in both runs. We dropped it for a challenge right after the answer ([decision log](spec/DECISION_LOG.md) rows 1–1b). |
 | **End-of-answer detection** on 60 recorded clips | **0 early cut-offs.** 32/60 completed exactly once; every miss was the app waiting too long, never interrupting. A silence check was added afterwards (rows 11–12). |
 | **Last word to spoken acknowledgement** | About 2 s in a timed run, most of it one Muse Spark call |
-| **Question families cross-checked** | **99** quant families: for each one, Muse Spark Open wrote an independent solver, and it reproduced the stored answer on all 75 variants. **0 disagreements.** 62 families also have wrong-method values verified in code, which the interviewer uses to name a misconception. |
+| **Question families cross-checked** | **188** families across four tracks (99 quant, 89 investment banking, consulting and software engineering): for each one, Muse Spark Open wrote an independent solver, and it reproduced the stored answer on every variant. **0 disagreements.** 143 families also have wrong-method values verified in code, which the interviewer uses to name a misconception. |
 | **Automated tests** | 450+ (pytest), including pinned values for the engine maths |
 
 Every change from the original plan is in the [decision log](spec/DECISION_LOG.md), with the evidence that forced it, including what failed.
@@ -136,7 +137,6 @@ Every change from the original plan is in the [decision log](spec/DECISION_LOG.m
 > [!IMPORTANT]
 > In progress. None of this is claimed as a result yet.
 
-- **Investment banking, consulting and software engineering packs.** They go through the same cross-check before they are switched on.
 - **Careful-chatbot comparison.** A pre-registered test on frozen answers: plain Muse Spark, carefully prompted Muse Spark, carefully prompted Muse Spark given the answer key, and Unbluffable, all on the same model, three runs each.
 - **Real users** from a university quant society, with consent.
 
@@ -188,7 +188,7 @@ Open **http://localhost:8000/ui** and start an interview. Wear headphones if you
 ## Disclosures and limits
 
 - **Prior work.** The specification in `spec/` was written before kickoff as a plan. All code was written after kickoff on 26 Oct 2026, and the commit history shows it. Built with AI coding assistants (Claude Code, Codex, Muse Code).
-- **Question set.** The question set was generated by the builder with ChatGPT during the hackathon (30 Oct 2026). Their answers are re-checked in code as described above; ChatGPT is not used by the running app.
+- **Question sets.** The quant, investment banking, consulting and software engineering question sets were generated by the builder with ChatGPT during the hackathon (30 Oct 2026). Their answers are re-checked in code as described above; ChatGPT is not used by the running app.
 - **Probabilities are model estimates.** The engine's likelihoods are stated assumptions (`content/likelihoods.yaml`), not calibrated measurements.
 - **Turn-taking can wait too long.** When it does, the silence prompt or the Done button moves things on.
 - **Interview practice, not a tutor or a hiring tool.** It's built for candidates to practise.

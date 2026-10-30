@@ -1,0 +1,3344 @@
+{
+  "template_id": "sw_F012",
+  "pack": "software",
+  "topic": "Dynamic programming",
+  "topics": [
+    "Dynamic programming"
+  ],
+  "source_topic": "Zero-one knapsack",
+  "difficulty": "Hard",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "Why update capacity downward?",
+    "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "A field kit has three indivisible items. Their weights are 2, 3, 5 and corresponding values are 6, 31, 38. Use each at most once, with capacity 6. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 6,
+        "values": [
+          6,
+          31,
+          38
+        ],
+        "weights": [
+          2,
+          3,
+          5
+        ]
+      },
+      "answer": "38",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A field kit has three indivisible items. Their weights are two, three, five and corresponding values are six, thirty-one, thirty-eight. Use each at most once, with capacity six. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "269/5",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "62",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "38"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "79/5",
+            "relative_gap": "79/190"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "24",
+            "relative_gap": "12/19"
+          }
+        ],
+        "min_wrong_pair_gap": "41/5",
+        "min_distinct_wrong_pair_gap": "41/5"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "A rescue kit has three indivisible items. Their weights are 6, 2, 7 and corresponding values are 14, 10, 36. Use each at most once, with capacity 5. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 5,
+        "values": [
+          14,
+          10,
+          36
+        ],
+        "weights": [
+          6,
+          2,
+          7
+        ]
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A rescue kit has three indivisible items. Their weights are six, two, seven and corresponding values are fourteen, ten, thirty-six. Use each at most once, with capacity five. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "180/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "20",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "110/7",
+            "relative_gap": "11/7"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "10",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "40/7",
+        "min_distinct_wrong_pair_gap": "40/7"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "A repair kit has three indivisible items. Their weights are 4, 3, 8 and corresponding values are 38, 34, 30. Use each at most once, with capacity 10. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 10,
+        "values": [
+          38,
+          34,
+          30
+        ],
+        "weights": [
+          4,
+          3,
+          8
+        ]
+      },
+      "answer": "72",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A repair kit has three indivisible items. Their weights are four, three, eight and corresponding values are thirty-eight, thirty-four, thirty. Use each at most once, with capacity ten. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "333/4",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "106",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "72"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "45/4",
+            "relative_gap": "5/32"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "34",
+            "relative_gap": "17/36"
+          }
+        ],
+        "min_wrong_pair_gap": "91/4",
+        "min_distinct_wrong_pair_gap": "91/4"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "A survey kit has three indivisible items. Their weights are 7, 6, 4 and corresponding values are 29, 23, 39. Use each at most once, with capacity 9. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 9,
+        "values": [
+          29,
+          23,
+          39
+        ],
+        "weights": [
+          7,
+          6,
+          4
+        ]
+      },
+      "answer": "39",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A survey kit has three indivisible items. Their weights are seven, six, four and corresponding values are twenty-nine, twenty-three, thirty-nine. Use each at most once, with capacity nine. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "418/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "78",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "145/7",
+            "relative_gap": "145/273"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "39",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "128/7",
+        "min_distinct_wrong_pair_gap": "128/7"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "A travel kit has three indivisible items. Their weights are 7, 8, 2 and corresponding values are 21, 14, 14. Use each at most once, with capacity 6. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 6,
+        "values": [
+          21,
+          14,
+          14
+        ],
+        "weights": [
+          7,
+          8,
+          2
+        ]
+      },
+      "answer": "14",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A travel kit has three indivisible items. Their weights are seven, eight, two and corresponding values are twenty-one, fourteen, fourteen. Use each at most once, with capacity six. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "26",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "42",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "12",
+            "relative_gap": "6/7"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "28",
+            "relative_gap": "2"
+          }
+        ],
+        "min_wrong_pair_gap": "16",
+        "min_distinct_wrong_pair_gap": "16"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "A field kit has three indivisible items. Their weights are 5, 4, 3 and corresponding values are 26, 28, 15. Use each at most once, with capacity 6. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 6,
+        "values": [
+          26,
+          28,
+          15
+        ],
+        "weights": [
+          5,
+          4,
+          3
+        ]
+      },
+      "answer": "28",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A field kit has three indivisible items. Their weights are five, four, three and corresponding values are twenty-six, twenty-eight, fifteen. Use each at most once, with capacity six. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "192/5",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "28"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "52/5",
+            "relative_gap": "13/35"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "2",
+            "relative_gap": "1/14"
+          }
+        ],
+        "min_wrong_pair_gap": "42/5",
+        "min_distinct_wrong_pair_gap": "42/5"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "A rescue kit has three indivisible items. Their weights are 7, 3, 2 and corresponding values are 32, 13, 34. Use each at most once, with capacity 11. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 11,
+        "values": [
+          32,
+          13,
+          34
+        ],
+        "weights": [
+          7,
+          3,
+          2
+        ]
+      },
+      "answer": "66",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A rescue kit has three indivisible items. Their weights are seven, three, two and corresponding values are thirty-two, thirteen, thirty-four. Use each at most once, with capacity eleven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "224/3",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "170",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "66"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "26/3",
+            "relative_gap": "13/99"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "104",
+            "relative_gap": "52/33"
+          }
+        ],
+        "min_wrong_pair_gap": "286/3",
+        "min_distinct_wrong_pair_gap": "286/3"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "A repair kit has three indivisible items. Their weights are 8, 2, 7 and corresponding values are 10, 19, 39. Use each at most once, with capacity 6. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 6,
+        "values": [
+          10,
+          19,
+          39
+        ],
+        "weights": [
+          8,
+          2,
+          7
+        ]
+      },
+      "answer": "19",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A repair kit has three indivisible items. Their weights are eight, two, seven and corresponding values are ten, nineteen, thirty-nine. Use each at most once, with capacity six. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "289/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "57",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "19"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "156/7",
+            "relative_gap": "156/133"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "38",
+            "relative_gap": "2"
+          }
+        ],
+        "min_wrong_pair_gap": "110/7",
+        "min_distinct_wrong_pair_gap": "110/7"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "A survey kit has three indivisible items. Their weights are 7, 8, 2 and corresponding values are 40, 22, 4. Use each at most once, with capacity 5. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 5,
+        "values": [
+          40,
+          22,
+          4
+        ],
+        "weights": [
+          7,
+          8,
+          2
+        ]
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A survey kit has three indivisible items. Their weights are seven, eight, two and corresponding values are forty, twenty-two, four. Use each at most once, with capacity five. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "200/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "172/7",
+            "relative_gap": "43/7"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "4",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "144/7",
+        "min_distinct_wrong_pair_gap": "144/7"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "A travel kit has three indivisible items. Their weights are 3, 8, 2 and corresponding values are 8, 13, 5. Use each at most once, with capacity 8. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 8,
+        "values": [
+          8,
+          13,
+          5
+        ],
+        "weights": [
+          3,
+          8,
+          2
+        ]
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A travel kit has three indivisible items. Their weights are three, eight, two and corresponding values are eight, thirteen, five. Use each at most once, with capacity eight. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "143/8",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "39/8",
+            "relative_gap": "3/8"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "8",
+            "relative_gap": "8/13"
+          }
+        ],
+        "min_wrong_pair_gap": "25/8",
+        "min_distinct_wrong_pair_gap": "25/8"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "A field kit has three indivisible items. Their weights are 7, 3, 2 and corresponding values are 36, 20, 8. Use each at most once, with capacity 7. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 7,
+        "values": [
+          36,
+          20,
+          8
+        ],
+        "weights": [
+          7,
+          3,
+          2
+        ]
+      },
+      "answer": "36",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A field kit has three indivisible items. Their weights are seven, three, two and corresponding values are thirty-six, twenty, eight. Use each at most once, with capacity seven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "284/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "40",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "36"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "32/7",
+            "relative_gap": "8/63"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "4",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "4/7",
+        "min_distinct_wrong_pair_gap": "4/7"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "A rescue kit has three indivisible items. Their weights are 4, 3, 7 and corresponding values are 13, 10, 6. Use each at most once, with capacity 11. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 11,
+        "values": [
+          13,
+          10,
+          6
+        ],
+        "weights": [
+          4,
+          3,
+          7
+        ]
+      },
+      "answer": "23",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A rescue kit has three indivisible items. Their weights are four, three, seven and corresponding values are thirteen, ten, six. Use each at most once, with capacity eleven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "185/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "24/7",
+            "relative_gap": "24/161"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "13",
+            "relative_gap": "13/23"
+          }
+        ],
+        "min_wrong_pair_gap": "67/7",
+        "min_distinct_wrong_pair_gap": "67/7"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "A repair kit has three indivisible items. Their weights are 5, 3, 7 and corresponding values are 13, 9, 38. Use each at most once, with capacity 13. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 13,
+        "values": [
+          13,
+          9,
+          38
+        ],
+        "weights": [
+          5,
+          3,
+          7
+        ]
+      },
+      "answer": "51",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A repair kit has three indivisible items. Their weights are five, three, seven and corresponding values are thirteen, nine, thirty-eight. Use each at most once, with capacity thirteen. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "274/5",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "56",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "19/5",
+            "relative_gap": "19/255"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "5",
+            "relative_gap": "5/51"
+          }
+        ],
+        "min_wrong_pair_gap": "6/5",
+        "min_distinct_wrong_pair_gap": "6/5"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "A survey kit has three indivisible items. Their weights are 2, 8, 5 and corresponding values are 23, 31, 15. Use each at most once, with capacity 13. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 13,
+        "values": [
+          23,
+          31,
+          15
+        ],
+        "weights": [
+          2,
+          8,
+          5
+        ]
+      },
+      "answer": "54",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A survey kit has three indivisible items. Their weights are two, eight, five and corresponding values are twenty-three, thirty-one, fifteen. Use each at most once, with capacity thirteen. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "63",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "138",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "54"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "9",
+            "relative_gap": "1/6"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "84",
+            "relative_gap": "14/9"
+          }
+        ],
+        "min_wrong_pair_gap": "75",
+        "min_distinct_wrong_pair_gap": "75"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "A travel kit has three indivisible items. Their weights are 4, 8, 3 and corresponding values are 27, 4, 33. Use each at most once, with capacity 8. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 8,
+        "values": [
+          27,
+          4,
+          33
+        ],
+        "weights": [
+          4,
+          8,
+          3
+        ]
+      },
+      "answer": "60",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A travel kit has three indivisible items. Their weights are four, eight, three and corresponding values are twenty-seven, four, thirty-three. Use each at most once, with capacity eight. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "121/2",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "66",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "60"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "1/2",
+            "relative_gap": "1/120"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "6",
+            "relative_gap": "1/10"
+          }
+        ],
+        "min_wrong_pair_gap": "11/2",
+        "min_distinct_wrong_pair_gap": "11/2"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "A field kit has three indivisible items. Their weights are 7, 6, 2 and corresponding values are 32, 36, 39. Use each at most once, with capacity 11. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 11,
+        "values": [
+          32,
+          36,
+          39
+        ],
+        "weights": [
+          7,
+          6,
+          2
+        ]
+      },
+      "answer": "75",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A field kit has three indivisible items. Their weights are seven, six, two and corresponding values are thirty-two, thirty-six, thirty-nine. Use each at most once, with capacity eleven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "621/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "195",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "75"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "96/7",
+            "relative_gap": "32/175"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "120",
+            "relative_gap": "8/5"
+          }
+        ],
+        "min_wrong_pair_gap": "744/7",
+        "min_distinct_wrong_pair_gap": "744/7"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "A rescue kit has three indivisible items. Their weights are 8, 3, 5 and corresponding values are 22, 9, 8. Use each at most once, with capacity 10. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 10,
+        "values": [
+          22,
+          9,
+          8
+        ],
+        "weights": [
+          8,
+          3,
+          5
+        ]
+      },
+      "answer": "22",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A rescue kit has three indivisible items. Their weights are eight, three, five and corresponding values are twenty-two, nine, eight. Use each at most once, with capacity ten. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "113/4",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "27",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "22"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "25/4",
+            "relative_gap": "25/88"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "5",
+            "relative_gap": "5/22"
+          }
+        ],
+        "min_wrong_pair_gap": "5/4",
+        "min_distinct_wrong_pair_gap": "5/4"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "A repair kit has three indivisible items. Their weights are 8, 7, 2 and corresponding values are 28, 20, 16. Use each at most once, with capacity 13. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 13,
+        "values": [
+          28,
+          20,
+          16
+        ],
+        "weights": [
+          8,
+          7,
+          2
+        ]
+      },
+      "answer": "44",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A repair kit has three indivisible items. Their weights are eight, seven, two and corresponding values are twenty-eight, twenty, sixteen. Use each at most once, with capacity thirteen. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "368/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "96",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "44"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "60/7",
+            "relative_gap": "15/77"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "52",
+            "relative_gap": "13/11"
+          }
+        ],
+        "min_wrong_pair_gap": "304/7",
+        "min_distinct_wrong_pair_gap": "304/7"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "A survey kit has three indivisible items. Their weights are 6, 3, 5 and corresponding values are 14, 25, 38. Use each at most once, with capacity 11. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 11,
+        "values": [
+          14,
+          25,
+          38
+        ],
+        "weights": [
+          6,
+          3,
+          5
+        ]
+      },
+      "answer": "63",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A survey kit has three indivisible items. Their weights are six, three, five and corresponding values are fourteen, twenty-five, thirty-eight. Use each at most once, with capacity eleven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "70",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "88",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "63"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "7",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "25",
+            "relative_gap": "25/63"
+          }
+        ],
+        "min_wrong_pair_gap": "18",
+        "min_distinct_wrong_pair_gap": "18"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "A travel kit has three indivisible items. Their weights are 7, 8, 3 and corresponding values are 21, 25, 12. Use each at most once, with capacity 9. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 9,
+        "values": [
+          21,
+          25,
+          12
+        ],
+        "weights": [
+          7,
+          8,
+          3
+        ]
+      },
+      "answer": "25",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A travel kit has three indivisible items. Their weights are seven, eight, three and corresponding values are twenty-one, twenty-five, twelve. Use each at most once, with capacity nine. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "123/4",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "23/4",
+            "relative_gap": "23/100"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "11",
+            "relative_gap": "11/25"
+          }
+        ],
+        "min_wrong_pair_gap": "21/4",
+        "min_distinct_wrong_pair_gap": "21/4"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "A field kit has three indivisible items. Their weights are 7, 2, 5 and corresponding values are 34, 39, 17. Use each at most once, with capacity 10. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 10,
+        "values": [
+          34,
+          39,
+          17
+        ],
+        "weights": [
+          7,
+          2,
+          5
+        ]
+      },
+      "answer": "73",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A field kit has three indivisible items. Their weights are seven, two, five and corresponding values are thirty-four, thirty-nine, seventeen. Use each at most once, with capacity ten. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "382/5",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "195",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "73"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "17/5",
+            "relative_gap": "17/365"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "122",
+            "relative_gap": "122/73"
+          }
+        ],
+        "min_wrong_pair_gap": "593/5",
+        "min_distinct_wrong_pair_gap": "593/5"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "A rescue kit has three indivisible items. Their weights are 8, 2, 5 and corresponding values are 17, 20, 6. Use each at most once, with capacity 5. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 5,
+        "values": [
+          17,
+          20,
+          6
+        ],
+        "weights": [
+          8,
+          2,
+          5
+        ]
+      },
+      "answer": "20",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A rescue kit has three indivisible items. Their weights are eight, two, five and corresponding values are seventeen, twenty, six. Use each at most once, with capacity five. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "211/8",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "40",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "51/8",
+            "relative_gap": "51/160"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "20",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "109/8",
+        "min_distinct_wrong_pair_gap": "109/8"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "A repair kit has three indivisible items. Their weights are 4, 8, 2 and corresponding values are 26, 6, 32. Use each at most once, with capacity 13. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 13,
+        "values": [
+          26,
+          6,
+          32
+        ],
+        "weights": [
+          4,
+          8,
+          2
+        ]
+      },
+      "answer": "58",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A repair kit has three indivisible items. Their weights are four, eight, two and corresponding values are twenty-six, six, thirty-two. Use each at most once, with capacity thirteen. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "253/4",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "192",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "58"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "21/4",
+            "relative_gap": "21/232"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "134",
+            "relative_gap": "67/29"
+          }
+        ],
+        "min_wrong_pair_gap": "515/4",
+        "min_distinct_wrong_pair_gap": "515/4"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "A survey kit has three indivisible items. Their weights are 5, 7, 3 and corresponding values are 7, 6, 28. Use each at most once, with capacity 11. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 11,
+        "values": [
+          7,
+          6,
+          28
+        ],
+        "weights": [
+          5,
+          7,
+          3
+        ]
+      },
+      "answer": "35",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A survey kit has three indivisible items. Their weights are five, seven, three and corresponding values are seven, six, twenty-eight. Use each at most once, with capacity eleven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "263/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "84",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "35"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "18/7",
+            "relative_gap": "18/245"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "49",
+            "relative_gap": "7/5"
+          }
+        ],
+        "min_wrong_pair_gap": "325/7",
+        "min_distinct_wrong_pair_gap": "325/7"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "A travel kit has three indivisible items. Their weights are 6, 2, 3 and corresponding values are 24, 36, 11. Use each at most once, with capacity 5. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 5,
+        "values": [
+          24,
+          36,
+          11
+        ],
+        "weights": [
+          6,
+          2,
+          3
+        ]
+      },
+      "answer": "47",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A travel kit has three indivisible items. Their weights are six, two, three and corresponding values are twenty-four, thirty-six, eleven. Use each at most once, with capacity five. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "48",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "72",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "47"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "1",
+            "relative_gap": "1/47"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "25",
+            "relative_gap": "25/47"
+          }
+        ],
+        "min_wrong_pair_gap": "24",
+        "min_distinct_wrong_pair_gap": "24"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "A field kit has three indivisible items. Their weights are 3, 5, 4 and corresponding values are 16, 16, 11. Use each at most once, with capacity 9. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 9,
+        "values": [
+          16,
+          16,
+          11
+        ],
+        "weights": [
+          3,
+          5,
+          4
+        ]
+      },
+      "answer": "32",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A field kit has three indivisible items. Their weights are three, five, four and corresponding values are sixteen, sixteen, eleven. Use each at most once, with capacity nine. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "139/4",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "48",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "32"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "11/4",
+            "relative_gap": "11/128"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "16",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "53/4",
+        "min_distinct_wrong_pair_gap": "53/4"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "A rescue kit has three indivisible items. Their weights are 5, 2, 6 and corresponding values are 40, 39, 22. Use each at most once, with capacity 12. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 12,
+        "values": [
+          40,
+          39,
+          22
+        ],
+        "weights": [
+          5,
+          2,
+          6
+        ]
+      },
+      "answer": "79",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A rescue kit has three indivisible items. Their weights are five, two, six and corresponding values are forty, thirty-nine, twenty-two. Use each at most once, with capacity twelve. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "292/3",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "234",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "79"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "55/3",
+            "relative_gap": "55/237"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "155",
+            "relative_gap": "155/79"
+          }
+        ],
+        "min_wrong_pair_gap": "410/3",
+        "min_distinct_wrong_pair_gap": "410/3"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "A repair kit has three indivisible items. Their weights are 3, 6, 5 and corresponding values are 24, 13, 37. Use each at most once, with capacity 12. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 12,
+        "values": [
+          24,
+          13,
+          37
+        ],
+        "weights": [
+          3,
+          6,
+          5
+        ]
+      },
+      "answer": "61",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A repair kit has three indivisible items. Their weights are three, six, five and corresponding values are twenty-four, thirteen, thirty-seven. Use each at most once, with capacity twelve. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "209/3",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "96",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "61"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "26/3",
+            "relative_gap": "26/183"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "35",
+            "relative_gap": "35/61"
+          }
+        ],
+        "min_wrong_pair_gap": "79/3",
+        "min_distinct_wrong_pair_gap": "79/3"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "A survey kit has three indivisible items. Their weights are 5, 3, 4 and corresponding values are 36, 28, 22. Use each at most once, with capacity 11. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 11,
+        "values": [
+          36,
+          28,
+          22
+        ],
+        "weights": [
+          5,
+          3,
+          4
+        ]
+      },
+      "answer": "64",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A survey kit has three indivisible items. Their weights are five, three, four and corresponding values are thirty-six, twenty-eight, twenty-two. Use each at most once, with capacity eleven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "161/2",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "92",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "64"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "33/2",
+            "relative_gap": "33/128"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "28",
+            "relative_gap": "7/16"
+          }
+        ],
+        "min_wrong_pair_gap": "23/2",
+        "min_distinct_wrong_pair_gap": "23/2"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "A travel kit has three indivisible items. Their weights are 2, 7, 6 and corresponding values are 22, 23, 20. Use each at most once, with capacity 14. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 14,
+        "values": [
+          22,
+          23,
+          20
+        ],
+        "weights": [
+          2,
+          7,
+          6
+        ]
+      },
+      "answer": "45",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A travel kit has three indivisible items. Their weights are two, seven, six and corresponding values are twenty-two, twenty-three, twenty. Use each at most once, with capacity fourteen. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "432/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "154",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "117/7",
+            "relative_gap": "13/35"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "109",
+            "relative_gap": "109/45"
+          }
+        ],
+        "min_wrong_pair_gap": "646/7",
+        "min_distinct_wrong_pair_gap": "646/7"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "A field kit has three indivisible items. Their weights are 2, 6, 8 and corresponding values are 29, 26, 21. Use each at most once, with capacity 11. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 11,
+        "values": [
+          29,
+          26,
+          21
+        ],
+        "weights": [
+          2,
+          6,
+          8
+        ]
+      },
+      "answer": "55",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A field kit has three indivisible items. Their weights are two, six, eight and corresponding values are twenty-nine, twenty-six, twenty-one. Use each at most once, with capacity eleven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "503/8",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "145",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "55"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "63/8",
+            "relative_gap": "63/440"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "90",
+            "relative_gap": "18/11"
+          }
+        ],
+        "min_wrong_pair_gap": "657/8",
+        "min_distinct_wrong_pair_gap": "657/8"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "A rescue kit has three indivisible items. Their weights are 5, 4, 6 and corresponding values are 8, 16, 12. Use each at most once, with capacity 8. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 8,
+        "values": [
+          8,
+          16,
+          12
+        ],
+        "weights": [
+          5,
+          4,
+          6
+        ]
+      },
+      "answer": "16",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A rescue kit has three indivisible items. Their weights are five, four, six and corresponding values are eight, sixteen, twelve. Use each at most once, with capacity eight. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "32",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "8",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "16",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "A repair kit has three indivisible items. Their weights are 2, 4, 8 and corresponding values are 26, 22, 31. Use each at most once, with capacity 9. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 9,
+        "values": [
+          26,
+          22,
+          31
+        ],
+        "weights": [
+          2,
+          4,
+          8
+        ]
+      },
+      "answer": "48",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A repair kit has three indivisible items. Their weights are two, four, eight and corresponding values are twenty-six, twenty-two, thirty-one. Use each at most once, with capacity nine. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "477/8",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "104",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "48"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "93/8",
+            "relative_gap": "31/128"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "56",
+            "relative_gap": "7/6"
+          }
+        ],
+        "min_wrong_pair_gap": "355/8",
+        "min_distinct_wrong_pair_gap": "355/8"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "A survey kit has three indivisible items. Their weights are 4, 3, 6 and corresponding values are 34, 33, 38. Use each at most once, with capacity 8. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 8,
+        "values": [
+          34,
+          33,
+          38
+        ],
+        "weights": [
+          4,
+          3,
+          6
+        ]
+      },
+      "answer": "67",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A survey kit has three indivisible items. Their weights are four, three, six and corresponding values are thirty-four, thirty-three, thirty-eight. Use each at most once, with capacity eight. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "220/3",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "68",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "67"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "19/3",
+            "relative_gap": "19/201"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "1",
+            "relative_gap": "1/67"
+          }
+        ],
+        "min_wrong_pair_gap": "16/3",
+        "min_distinct_wrong_pair_gap": "16/3"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "A travel kit has three indivisible items. Their weights are 7, 3, 4 and corresponding values are 8, 36, 40. Use each at most once, with capacity 8. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 8,
+        "values": [
+          8,
+          36,
+          40
+        ],
+        "weights": [
+          7,
+          3,
+          4
+        ]
+      },
+      "answer": "76",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A travel kit has three indivisible items. Their weights are seven, three, four and corresponding values are eight, thirty-six, forty. Use each at most once, with capacity eight. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "540/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "80",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "76"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "8/7",
+            "relative_gap": "2/133"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "4",
+            "relative_gap": "1/19"
+          }
+        ],
+        "min_wrong_pair_gap": "20/7",
+        "min_distinct_wrong_pair_gap": "20/7"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "A field kit has three indivisible items. Their weights are 7, 3, 2 and corresponding values are 5, 4, 12. Use each at most once, with capacity 10. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 10,
+        "values": [
+          5,
+          4,
+          12
+        ],
+        "weights": [
+          7,
+          3,
+          2
+        ]
+      },
+      "answer": "17",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A field kit has three indivisible items. Their weights are seven, three, two and corresponding values are five, four, twelve. Use each at most once, with capacity ten. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "137/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "60",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "18/7",
+            "relative_gap": "18/119"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "43",
+            "relative_gap": "43/17"
+          }
+        ],
+        "min_wrong_pair_gap": "283/7",
+        "min_distinct_wrong_pair_gap": "283/7"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "A rescue kit has three indivisible items. Their weights are 4, 8, 2 and corresponding values are 12, 33, 37. Use each at most once, with capacity 11. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 11,
+        "values": [
+          12,
+          33,
+          37
+        ],
+        "weights": [
+          4,
+          8,
+          2
+        ]
+      },
+      "answer": "70",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A rescue kit has three indivisible items. Their weights are four, eight, two and corresponding values are twelve, thirty-three, thirty-seven. Use each at most once, with capacity eleven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "73",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "185",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "70"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "3",
+            "relative_gap": "3/70"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "115",
+            "relative_gap": "23/14"
+          }
+        ],
+        "min_wrong_pair_gap": "112",
+        "min_distinct_wrong_pair_gap": "112"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "A repair kit has three indivisible items. Their weights are 2, 4, 3 and corresponding values are 34, 25, 35. Use each at most once, with capacity 7. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 7,
+        "values": [
+          34,
+          25,
+          35
+        ],
+        "weights": [
+          2,
+          4,
+          3
+        ]
+      },
+      "answer": "69",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A repair kit has three indivisible items. Their weights are two, four, three and corresponding values are thirty-four, twenty-five, thirty-five. Use each at most once, with capacity seven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "163/2",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "103",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "69"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "25/2",
+            "relative_gap": "25/138"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "34",
+            "relative_gap": "34/69"
+          }
+        ],
+        "min_wrong_pair_gap": "43/2",
+        "min_distinct_wrong_pair_gap": "43/2"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "A survey kit has three indivisible items. Their weights are 7, 6, 2 and corresponding values are 17, 29, 18. Use each at most once, with capacity 7. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 7,
+        "values": [
+          17,
+          29,
+          18
+        ],
+        "weights": [
+          7,
+          6,
+          2
+        ]
+      },
+      "answer": "29",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A survey kit has three indivisible items. Their weights are seven, six, two and corresponding values are seventeen, twenty-nine, eighteen. Use each at most once, with capacity seven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "253/6",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "54",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "29"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "79/6",
+            "relative_gap": "79/174"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "25",
+            "relative_gap": "25/29"
+          }
+        ],
+        "min_wrong_pair_gap": "71/6",
+        "min_distinct_wrong_pair_gap": "71/6"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "A travel kit has three indivisible items. Their weights are 3, 8, 7 and corresponding values are 30, 5, 27. Use each at most once, with capacity 12. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 12,
+        "values": [
+          30,
+          5,
+          27
+        ],
+        "weights": [
+          3,
+          8,
+          7
+        ]
+      },
+      "answer": "57",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A travel kit has three indivisible items. Their weights are three, eight, seven and corresponding values are thirty, five, twenty-seven. Use each at most once, with capacity twelve. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "233/4",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "120",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "57"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "5/4",
+            "relative_gap": "5/228"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "63",
+            "relative_gap": "21/19"
+          }
+        ],
+        "min_wrong_pair_gap": "247/4",
+        "min_distinct_wrong_pair_gap": "247/4"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "A field kit has three indivisible items. Their weights are 6, 5, 2 and corresponding values are 22, 8, 31. Use each at most once, with capacity 10. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 10,
+        "values": [
+          22,
+          8,
+          31
+        ],
+        "weights": [
+          6,
+          5,
+          2
+        ]
+      },
+      "answer": "53",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A field kit has three indivisible items. Their weights are six, five, two and corresponding values are twenty-two, eight, thirty-one. Use each at most once, with capacity ten. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "281/5",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "155",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "53"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "16/5",
+            "relative_gap": "16/265"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "102",
+            "relative_gap": "102/53"
+          }
+        ],
+        "min_wrong_pair_gap": "494/5",
+        "min_distinct_wrong_pair_gap": "494/5"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "A rescue kit has three indivisible items. Their weights are 6, 5, 4 and corresponding values are 23, 6, 31. Use each at most once, with capacity 8. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 8,
+        "values": [
+          23,
+          6,
+          31
+        ],
+        "weights": [
+          6,
+          5,
+          4
+        ]
+      },
+      "answer": "31",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A rescue kit has three indivisible items. Their weights are six, five, four and corresponding values are twenty-three, six, thirty-one. Use each at most once, with capacity eight. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "139/3",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "62",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "31"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "46/3",
+            "relative_gap": "46/93"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "31",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "47/3",
+        "min_distinct_wrong_pair_gap": "47/3"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "A repair kit has three indivisible items. Their weights are 4, 5, 8 and corresponding values are 39, 39, 28. Use each at most once, with capacity 14. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 14,
+        "values": [
+          39,
+          39,
+          28
+        ],
+        "weights": [
+          4,
+          5,
+          8
+        ]
+      },
+      "answer": "78",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A repair kit has three indivisible items. Their weights are four, five, eight and corresponding values are thirty-nine, thirty-nine, twenty-eight. Use each at most once, with capacity fourteen. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "191/2",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "117",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "78"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "35/2",
+            "relative_gap": "35/156"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "39",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "43/2",
+        "min_distinct_wrong_pair_gap": "43/2"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "A survey kit has three indivisible items. Their weights are 7, 2, 8 and corresponding values are 29, 21, 17. Use each at most once, with capacity 11. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 11,
+        "values": [
+          29,
+          21,
+          17
+        ],
+        "weights": [
+          7,
+          2,
+          8
+        ]
+      },
+      "answer": "50",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A survey kit has three indivisible items. Their weights are seven, two, eight and corresponding values are twenty-nine, twenty-one, seventeen. Use each at most once, with capacity eleven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "217/4",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "105",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "50"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "17/4",
+            "relative_gap": "17/200"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "55",
+            "relative_gap": "11/10"
+          }
+        ],
+        "min_wrong_pair_gap": "203/4",
+        "min_distinct_wrong_pair_gap": "203/4"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "A travel kit has three indivisible items. Their weights are 8, 5, 4 and corresponding values are 4, 18, 23. Use each at most once, with capacity 14. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 14,
+        "values": [
+          4,
+          18,
+          23
+        ],
+        "weights": [
+          8,
+          5,
+          4
+        ]
+      },
+      "answer": "41",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A travel kit has three indivisible items. Their weights are eight, five, four and corresponding values are four, eighteen, twenty-three. Use each at most once, with capacity fourteen. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "87/2",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "69",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "41"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "5/2",
+            "relative_gap": "5/82"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "28",
+            "relative_gap": "28/41"
+          }
+        ],
+        "min_wrong_pair_gap": "51/2",
+        "min_distinct_wrong_pair_gap": "51/2"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "A field kit has three indivisible items. Their weights are 3, 7, 2 and corresponding values are 6, 26, 20. Use each at most once, with capacity 5. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 5,
+        "values": [
+          6,
+          26,
+          20
+        ],
+        "weights": [
+          3,
+          7,
+          2
+        ]
+      },
+      "answer": "26",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A field kit has three indivisible items. Their weights are three, seven, two and corresponding values are six, twenty-six, twenty. Use each at most once, with capacity five. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "218/7",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "40",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "26"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "36/7",
+            "relative_gap": "18/91"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "14",
+            "relative_gap": "7/13"
+          }
+        ],
+        "min_wrong_pair_gap": "62/7",
+        "min_distinct_wrong_pair_gap": "62/7"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "A rescue kit has three indivisible items. Their weights are 5, 8, 2 and corresponding values are 6, 17, 7. Use each at most once, with capacity 5. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 5,
+        "values": [
+          6,
+          17,
+          7
+        ],
+        "weights": [
+          5,
+          8,
+          2
+        ]
+      },
+      "answer": "7",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A rescue kit has three indivisible items. Their weights are five, eight, two and corresponding values are six, seventeen, seven. Use each at most once, with capacity five. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "107/8",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "14",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "51/8",
+            "relative_gap": "51/56"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "7",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "5/8",
+        "min_distinct_wrong_pair_gap": "5/8"
+      },
+      "follow_up": {
+        "question": "What if items can be divided?",
+        "reference": "Value per unit weight then supports a fractional greedy method. That rule does not generally solve the indivisible problem."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "A repair kit has three indivisible items. Their weights are 7, 6, 2 and corresponding values are 31, 39, 33. Use each at most once, with capacity 5. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 5,
+        "values": [
+          31,
+          39,
+          33
+        ],
+        "weights": [
+          7,
+          6,
+          2
+        ]
+      },
+      "answer": "33",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A repair kit has three indivisible items. Their weights are seven, six, two and corresponding values are thirty-one, thirty-nine, thirty-three. Use each at most once, with capacity five. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "105/2",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "66",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "33"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "39/2",
+            "relative_gap": "13/22"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "33",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "27/2",
+        "min_distinct_wrong_pair_gap": "27/2"
+      },
+      "follow_up": {
+        "question": "Could meet-in-the-middle help with many items?",
+        "reference": "Enumerate selections in two halves. Combining compatible weight-value frontiers can help when capacity is very large."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "A survey kit has three indivisible items. Their weights are 5, 3, 8 and corresponding values are 35, 7, 19. Use each at most once, with capacity 11. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 11,
+        "values": [
+          35,
+          7,
+          19
+        ],
+        "weights": [
+          5,
+          3,
+          8
+        ]
+      },
+      "answer": "42",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A survey kit has three indivisible items. Their weights are five, three, eight and corresponding values are thirty-five, seven, nineteen. Use each at most once, with capacity eleven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "197/4",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "70",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "42"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "29/4",
+            "relative_gap": "29/168"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "28",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "83/4",
+        "min_distinct_wrong_pair_gap": "83/4"
+      },
+      "follow_up": {
+        "question": "Why update capacity downward?",
+        "reference": "Descending updates read states from before the current item was added. Ascending updates can reuse it."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "A travel kit has three indivisible items. Their weights are 7, 3, 8 and corresponding values are 10, 11, 31. Use each at most once, with capacity 7. What is the maximum total value, as a whole number?",
+      "params": {
+        "capacity": 7,
+        "values": [
+          10,
+          11,
+          31
+        ],
+        "weights": [
+          7,
+          3,
+          8
+        ]
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Dynamic programming",
+      "source_topic": "Zero-one knapsack",
+      "difficulty": "Hard",
+      "spoken_text": "A travel kit has three indivisible items. Their weights are seven, three, eight and corresponding values are ten, eleven, thirty-one. Use each at most once, with capacity seven. What is the maximum total value, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "217/8",
+          "misconceptions": [
+            "allows_fractional_items"
+          ]
+        },
+        {
+          "value": "22",
+          "misconceptions": [
+            "reuses_items_without_limit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "optimal_total_value",
+          "value": "11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allows_fractional_items",
+            "absolute_gap": "129/8",
+            "relative_gap": "129/88"
+          },
+          {
+            "misconception": "reuses_items_without_limit",
+            "absolute_gap": "11",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "41/8",
+        "min_distinct_wrong_pair_gap": "41/8"
+      },
+      "follow_up": {
+        "question": "What if every item is too heavy?",
+        "reference": "The empty selection is feasible. Its value is zero."
+      }
+    }
+  ]
+}

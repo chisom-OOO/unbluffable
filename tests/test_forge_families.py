@@ -114,7 +114,7 @@ def test_loader_has_exact_values_and_explicit_numerical_tolerances(tmp_path):
 def test_bad_sources_stop_before_models(tmp_path, case):
     from forge.families import load_families
     path, rows = source(tmp_path, numerical=True)
-    if case == "count": rows.pop()
+    if case == "count": rows = rows[:19]
     elif case == "failed": rows[0]["verification_result"] = "FAIL"
     elif case == "tolerance": rows[0]["verification_tolerance"] = ""
     elif case == "params": rows[0]["parameters"] = "[1, 2]"
@@ -470,3 +470,64 @@ def test_plain_import_fix_does_not_expand_allowed_modules_or_members(code):
     with pytest.raises(Reject) as error:
         Sandbox().run_batch(code, [{"n": 4}])
     assert error.value.reason == "forbidden_import"
+
+
+PERCENT_POINTS = "def solve(params): return {'answer': params['n'] * 50, 'steps': {'half_reward': params['n'] * 50}}"
+
+
+def percentage_setup(tmp_path):
+    from forge.families import FamilyForge, load_families
+    path, rows = source(tmp_path)
+    for row in rows:
+        row["question"] = row["question"].replace("Expected reward?", "What is the expected reward, as an exact percentage?")
+    write_rows(path, rows)
+    families = load_families(path)
+    models, sandbox = FakeModels(tmp_path / "private"), FakeSandbox()
+    original = sandbox.run_batch
+    sandbox.run_batch = lambda code, params: ([{"answer": str(Fraction(p["n"]) * 50), "steps": [{"name": "half_reward", "value": "0"}]}
+                                              for p in params] if code == PERCENT_POINTS else original(code, params))
+    forge = FamilyForge(models, output=tmp_path / "public", funnel=tmp_path / "report.json", sandbox=sandbox)
+    return families, models, forge
+
+
+def test_percentage_answer_must_be_a_fraction_of_one_not_percent_points(tmp_path):
+    from forge.families import PROMPT
+    families, models, forge = percentage_setup(tmp_path)
+    models.original["solver"] = PERCENT_POINTS  # 50% returned as 50, the stored answer is 1/2
+    report = forge.run(families)
+    stages = [stage for stage, _ in models.calls]
+    assert stages == ["family_author", "family_repair"]
+    # The model sees each example's verified answer and is told the scale.
+    assert [row["answer"] for row in models.calls[0][1]["examples"]] == ["1/2", "75/2"]
+    assert "26% is Fraction(13, 50), not 26" in PROMPT
+    # Percent points are never accepted; the repair is told exactly what went wrong.
+    assert models.calls[1][1]["error"] == {"gate": "solver", "error_class": "percent_points_not_fraction", "variant_index": 0}
+    assert report["misconceptions_verified"] == report["accepted_after_repair"] == 1
+
+
+def test_percent_points_with_no_repair_left_stays_a_fallback(tmp_path):
+    families, models, forge = percentage_setup(tmp_path)
+    models.original["solver"] = models.corrected["solver"] = PERCENT_POINTS
+    report = forge.run(families)
+    assert report["misconceptions_verified"] == 0 and report["fallback_families"] == 1
+    item = models.state.data["items"]["family_1"]
+    assert item["failure"]["error_class"] == "percent_points_not_fraction"
+
+
+def test_retry_reauthors_only_named_fallbacks_and_keeps_history(tmp_path):
+    from forge.families import PROMPT_REVISION
+    families, models, forge = percentage_setup(tmp_path)
+    models.original["solver"] = models.corrected["solver"] = PERCENT_POINTS
+    forge.run(families)
+    models.original, models.corrected = draft(), draft()
+    calls = len(models.calls)
+    report = forge.run(families, retry_families=["1"])
+    assert report["misconceptions_verified"] == 1 and len(models.calls) == calls + 1
+    item = models.state.data["items"]["family_1"]
+    assert item["retry_prompt_revision"] == PROMPT_REVISION
+    assert item["retry_history"][0]["failure"]["error_class"] == "percent_points_not_fraction"
+    # A second retry of an already retried family makes no calls.
+    forge.run(families, retry_families=["1"])
+    assert len(models.calls) == calls + 1
+    with pytest.raises(ValueError):
+        forge.run(families, retry_families=["1"], recheck_families=["1"])

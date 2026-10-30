@@ -359,6 +359,17 @@ decimals, integers and scientific notation) into exact Fractions. Nonnumeric
 labels remain strings; native JSON integers remain ints. Lists, including nested
 lists, become immutable tuples; nested objects remain read-only mappings.
 
+Each authoring example carries its verified answer, and a percentage is a fraction
+of one (26% is 13/50). A solver that returns percent points fails the gate as
+percent_points_not_fraction rather than verified_value_mismatch, so the repair is
+told the fix; it is never accepted.
+
+Use --retry-families with comma/space-separated fallback family IDs in the SAME
+work directory and --mode live to author them again under the current prompt. Their
+old drafts move to retry_history; only those IDs are touched, and each is retried
+once per prompt revision. --budget-usd is the work directory's running total, so
+set it to the amount already spent plus the new allowance.
+
 Use --recheck-families with comma/space-separated family IDs in the SAME work
 directory and --mode replay. It rechecks only those IDs, using the cached corrected
 draft and then the cached original draft if needed. It never makes a new model

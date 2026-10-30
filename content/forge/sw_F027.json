@@ -1,0 +1,3846 @@
+{
+  "template_id": "sw_F027",
+  "pack": "software",
+  "topic": "Tries",
+  "topics": [
+    "Tries"
+  ],
+  "source_topic": "Allocated prefix-tree nodes",
+  "difficulty": "Easy",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 3,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "What if one key is a prefix of another?",
+    "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "A word lookup inserts keys bed, sent, reader, cane, carts into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "bed",
+          "sent",
+          "reader",
+          "cane",
+          "carts"
+        ]
+      },
+      "answer": "21",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A word lookup inserts keys bed, sent, reader, cane, carts into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "20",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "20"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "2/21"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "15",
+            "relative_gap": "5/7"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/21"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "A command lookup inserts keys bed, be into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "bed",
+          "be"
+        ]
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A command lookup inserts keys bed, be into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes",
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "3"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "A label lookup inserts keys at, ant into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "at",
+          "ant"
+        ]
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A label lookup inserts keys at, ant into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "4"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "1",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "2",
+            "relative_gap": "2/5"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "A search index inserts keys cap, cat, bed into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "cap",
+          "cat",
+          "bed"
+        ]
+      },
+      "answer": "8",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A search index inserts keys cap, cat, bed into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "10",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "7"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "4",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/8"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "A keyword lookup inserts keys cape, sands, stones, reader, stream, spring into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "cape",
+          "sands",
+          "stones",
+          "reader",
+          "stream",
+          "spring"
+        ]
+      },
+      "answer": "30",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A keyword lookup inserts keys cape, sands, stones, reader, stream, spring into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "29",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "29"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "4",
+            "relative_gap": "2/15"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "23",
+            "relative_gap": "23/30"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/30"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "A word lookup inserts keys be, bed, beds, bee, bees into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "be",
+          "bed",
+          "beds",
+          "bee",
+          "bees"
+        ]
+      },
+      "answer": "7",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A word lookup inserts keys be, bed, beds, bee, bees into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes",
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "6"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "10",
+            "relative_gap": "10/7"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "1",
+            "relative_gap": "1/7"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "A command lookup inserts keys orange, animal, sad, sell, sands into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "orange",
+          "animal",
+          "sad",
+          "sell",
+          "sands"
+        ]
+      },
+      "answer": "22",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A command lookup inserts keys orange, animal, sad, sell, sands into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "21"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "3",
+            "relative_gap": "3/22"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "16",
+            "relative_gap": "8/11"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/22"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "A label lookup inserts keys capes, cart, cars, cane into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "capes",
+          "cart",
+          "cars",
+          "cane"
+        ]
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A label lookup inserts keys capes, cart, cars, cane into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "18",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "10"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "7",
+            "relative_gap": "7/11"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "6",
+            "relative_gap": "6/11"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/11"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "A search index inserts keys cape, sad, dogs, runner, safely, planet into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "cape",
+          "sad",
+          "dogs",
+          "runner",
+          "safely",
+          "planet"
+        ]
+      },
+      "answer": "28",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A search index inserts keys cape, sad, dogs, runner, safely, planet into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "27",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "27"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "1/14"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "21",
+            "relative_gap": "3/4"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/28"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "A keyword lookup inserts keys cars, animal, care, ants, runner into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "cars",
+          "animal",
+          "care",
+          "ants",
+          "runner"
+        ]
+      },
+      "answer": "20",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A keyword lookup inserts keys cars, animal, care, ants, runner into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "19",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "19"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "5",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "14",
+            "relative_gap": "7/10"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/20"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "A word lookup inserts keys bee, be into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "bee",
+          "be"
+        ]
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A word lookup inserts keys bee, be into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes",
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "3"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "A command lookup inserts keys bees, bee, be into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "bees",
+          "bee",
+          "be"
+        ]
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A command lookup inserts keys bees, bee, be into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "10",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes",
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "4"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "5",
+            "relative_gap": "1"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "1",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "A label lookup inserts keys runs, runner, red, run, read, reader into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "runs",
+          "runner",
+          "red",
+          "run",
+          "read",
+          "reader"
+        ]
+      },
+      "answer": "14",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A label lookup inserts keys runs, runner, red, run, read, reader into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "13",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "13"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "13",
+            "relative_gap": "13/14"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "7",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/14"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "A search index inserts keys dove, planet, door into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "dove",
+          "planet",
+          "door"
+        ]
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A search index inserts keys dove, planet, door into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "12"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "2/13"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "9",
+            "relative_gap": "9/13"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/13"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "A keyword lookup inserts keys yellow, doors, garden, sea, dove, orange into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "yellow",
+          "doors",
+          "garden",
+          "sea",
+          "dove",
+          "orange"
+        ]
+      },
+      "answer": "29",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A keyword lookup inserts keys yellow, doors, garden, sea, dove, orange into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "31",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "28",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "28"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "2/29"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "22",
+            "relative_gap": "22/29"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/29"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "A word lookup inserts keys sender, stones, do, planes, dots, can into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "sender",
+          "stones",
+          "do",
+          "planes",
+          "dots",
+          "can"
+        ]
+      },
+      "answer": "25",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A word lookup inserts keys sender, stones, do, planes, dots, can into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "24"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "3",
+            "relative_gap": "3/25"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "18",
+            "relative_gap": "18/25"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/25"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "A command lookup inserts keys ant, ate, ants, an, animal into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "ant",
+          "ate",
+          "ants",
+          "an",
+          "animal"
+        ]
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A command lookup inserts keys ant, ate, ants, an, animal into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "10"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "8",
+            "relative_gap": "8/11"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "5",
+            "relative_gap": "5/11"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/11"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "A label lookup inserts keys cape, care, cart into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "cape",
+          "care",
+          "cart"
+        ]
+      },
+      "answer": "8",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A label lookup inserts keys cape, care, cart into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "7"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "5",
+            "relative_gap": "5/8"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "4",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/8"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "A search index inserts keys send, sells, safe, at, seal, runs into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "send",
+          "sells",
+          "safe",
+          "at",
+          "seal",
+          "runs"
+        ]
+      },
+      "answer": "19",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A search index inserts keys send, sells, safe, at, seal, runs into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "18",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "18"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "5",
+            "relative_gap": "5/19"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "12",
+            "relative_gap": "12/19"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/19"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "A keyword lookup inserts keys runner, run, reader into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "runner",
+          "run",
+          "reader"
+        ]
+      },
+      "answer": "12",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A keyword lookup inserts keys runner, run, reader into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "16",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "11",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "11"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "4",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/12"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "A word lookup inserts keys runs, read, red, run into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "runs",
+          "read",
+          "red",
+          "run"
+        ]
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A word lookup inserts keys runs, read, red, run into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "8"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "6",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "4",
+            "relative_gap": "4/9"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "A command lookup inserts keys cat, dove, an, sands, seal, storms into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "cat",
+          "dove",
+          "an",
+          "sands",
+          "seal",
+          "storms"
+        ]
+      },
+      "answer": "23",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A command lookup inserts keys cat, dove, an, sands, seal, storms into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "22",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "22"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "2/23"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "16",
+            "relative_gap": "16/23"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/23"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "A label lookup inserts keys care, car, carts, cats, cars into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "care",
+          "car",
+          "carts",
+          "cats",
+          "cars"
+        ]
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A label lookup inserts keys care, car, carts, cats, cars into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "9",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "9"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "11",
+            "relative_gap": "11/10"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "4",
+            "relative_gap": "2/5"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/10"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "A search index inserts keys cared, care into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "cared",
+          "care"
+        ]
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A search index inserts keys cared, care into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "10",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "5"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "4",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "3",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/6"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "A keyword lookup inserts keys doors, dogs, dove into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "doors",
+          "dogs",
+          "dove"
+        ]
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A keyword lookup inserts keys doors, dogs, dove into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "14",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "9",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "9"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "4",
+            "relative_gap": "2/5"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "6",
+            "relative_gap": "3/5"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/10"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "A word lookup inserts keys an, safe, ant, can, golden, runner into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "an",
+          "safe",
+          "ant",
+          "can",
+          "golden",
+          "runner"
+        ]
+      },
+      "answer": "23",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A word lookup inserts keys an, safe, ant, can, golden, runner into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "22",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "22"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "2/23"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "16",
+            "relative_gap": "16/23"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/23"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "A command lookup inserts keys sea, animal, car, orange, seas into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "sea",
+          "animal",
+          "car",
+          "orange",
+          "seas"
+        ]
+      },
+      "answer": "20",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A command lookup inserts keys sea, animal, car, orange, seas into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "19",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "19"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "3",
+            "relative_gap": "3/20"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "14",
+            "relative_gap": "7/10"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/20"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "A label lookup inserts keys sells, planes, dove, seas into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "sells",
+          "planes",
+          "dove",
+          "seas"
+        ]
+      },
+      "answer": "18",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A label lookup inserts keys sells, planes, dove, seas into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "17",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "17"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "13",
+            "relative_gap": "13/18"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/18"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "A search index inserts keys sells, seas, spring, sands, stone into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "sells",
+          "seas",
+          "spring",
+          "sands",
+          "stone"
+        ]
+      },
+      "answer": "21",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A search index inserts keys sells, seas, spring, sands, stone into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "26",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "20",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "20"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "5",
+            "relative_gap": "5/21"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "15",
+            "relative_gap": "5/7"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/21"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "A keyword lookup inserts keys dog, silver, stream, runner, orange, storms into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "dog",
+          "silver",
+          "stream",
+          "runner",
+          "orange",
+          "storms"
+        ]
+      },
+      "answer": "31",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A keyword lookup inserts keys dog, silver, stream, runner, orange, storms into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "30"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "3",
+            "relative_gap": "3/31"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "24",
+            "relative_gap": "24/31"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/31"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "A word lookup inserts keys beds, bees, bee into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "beds",
+          "bees",
+          "bee"
+        ]
+      },
+      "answer": "7",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A word lookup inserts keys beds, bees, bee into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "12",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "6"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "5",
+            "relative_gap": "5/7"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "3",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "A command lookup inserts keys car, ate, sand, spring, seas into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "car",
+          "ate",
+          "sand",
+          "spring",
+          "seas"
+        ]
+      },
+      "answer": "19",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A command lookup inserts keys car, ate, sand, spring, seas into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "18",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "18"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "2/19"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "13",
+            "relative_gap": "13/19"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/19"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "A label lookup inserts keys sells, bed, at, garden, storm, cat into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "sells",
+          "bed",
+          "at",
+          "garden",
+          "storm",
+          "cat"
+        ]
+      },
+      "answer": "24",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A label lookup inserts keys sells, bed, at, garden, storm, cat into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "23",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "23"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "1",
+            "relative_gap": "1/24"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "17",
+            "relative_gap": "17/24"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/24"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "A search index inserts keys stony, sad, golden, be into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "stony",
+          "sad",
+          "golden",
+          "be"
+        ]
+      },
+      "answer": "16",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A search index inserts keys stony, sad, golden, be into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "15",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "15"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "1",
+            "relative_gap": "1/16"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "11",
+            "relative_gap": "11/16"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/16"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "A keyword lookup inserts keys read, red, runner, reader into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "read",
+          "red",
+          "runner",
+          "reader"
+        ]
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A keyword lookup inserts keys read, red, runner, reader into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "12"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "7",
+            "relative_gap": "7/13"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "8/13"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/13"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "A word lookup inserts keys carts, yellow, door, stream, sea into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "carts",
+          "yellow",
+          "door",
+          "stream",
+          "sea"
+        ]
+      },
+      "answer": "24",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A word lookup inserts keys carts, yellow, door, stream, sea into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "23",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "23"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "1",
+            "relative_gap": "1/24"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "18",
+            "relative_gap": "3/4"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/24"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "A command lookup inserts keys sender, send, dog, sells, ants into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "sender",
+          "send",
+          "dog",
+          "sells",
+          "ants"
+        ]
+      },
+      "answer": "17",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A command lookup inserts keys sender, send, dog, sells, ants into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "16",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "16"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "6",
+            "relative_gap": "6/17"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "11",
+            "relative_gap": "11/17"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/17"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "A label lookup inserts keys bees, bed, bee, be into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "bees",
+          "bed",
+          "bee",
+          "be"
+        ]
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A label lookup inserts keys bees, bed, bee, be into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes",
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "5"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "7",
+            "relative_gap": "7/6"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "1",
+            "relative_gap": "1/6"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/6"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "A search index inserts keys cared, can, car, cars, cane into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "cared",
+          "can",
+          "car",
+          "cars",
+          "cane"
+        ]
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A search index inserts keys cared, can, car, cars, cane into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "8"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "11",
+            "relative_gap": "11/9"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "3",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "A keyword lookup inserts keys golden, seas, ate, stones, safe, can into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "golden",
+          "seas",
+          "ate",
+          "stones",
+          "safe",
+          "can"
+        ]
+      },
+      "answer": "25",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A keyword lookup inserts keys golden, seas, ate, stones, safe, can into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "24"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "2/25"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "18",
+            "relative_gap": "18/25"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/25"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "A word lookup inserts keys spring, seals, cape into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "spring",
+          "seals",
+          "cape"
+        ]
+      },
+      "answer": "15",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A word lookup inserts keys spring, seals, cape into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "16",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "14",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "14"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "1",
+            "relative_gap": "1/15"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "11",
+            "relative_gap": "11/15"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "A command lookup inserts keys red, can, cape, planet, cart, car into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "red",
+          "can",
+          "cape",
+          "planet",
+          "cart",
+          "car"
+        ]
+      },
+      "answer": "17",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A command lookup inserts keys red, can, cape, planet, cart, car into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "16",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "16"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "7",
+            "relative_gap": "7/17"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "10",
+            "relative_gap": "10/17"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/17"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "A label lookup inserts keys ducks, capes, duck, cared into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "ducks",
+          "capes",
+          "duck",
+          "cared"
+        ]
+      },
+      "answer": "14",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A label lookup inserts keys ducks, capes, duck, cared into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "13",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "13"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "6",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "9",
+            "relative_gap": "9/14"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/14"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "A search index inserts keys sells, storms, sell, cape into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "sells",
+          "storms",
+          "sell",
+          "cape"
+        ]
+      },
+      "answer": "15",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A search index inserts keys sells, storms, sell, cape into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "14",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "14"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "5",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "10",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "A keyword lookup inserts keys animal, cape, dots, stones, bed, sent into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "animal",
+          "cape",
+          "dots",
+          "stones",
+          "bed",
+          "sent"
+        ]
+      },
+      "answer": "27",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A keyword lookup inserts keys animal, cape, dots, stones, bed, sent into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "26",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "26"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "1",
+            "relative_gap": "1/27"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "20",
+            "relative_gap": "20/27"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/27"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "A word lookup inserts keys spring, stone, stony, sad, seas, stones into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "spring",
+          "stone",
+          "stony",
+          "sad",
+          "seas",
+          "stones"
+        ]
+      },
+      "answer": "18",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A word lookup inserts keys spring, stone, stony, sad, seas, stones into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "17",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "17"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "12",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "11",
+            "relative_gap": "11/18"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/18"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "A command lookup inserts keys yellow, can, care, duck into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "yellow",
+          "can",
+          "care",
+          "duck"
+        ]
+      },
+      "answer": "16",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A command lookup inserts keys yellow, can, care, duck into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "18",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "15",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "15"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "1/8"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "11",
+            "relative_gap": "11/16"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/16"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What if a key is inserted twice?",
+        "reference": "The second insertion reuses its character path. A frequency may change, but character nodes need not be added."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "A label lookup inserts keys stones, dogs, sands, storms, care into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "stones",
+          "dogs",
+          "sands",
+          "storms",
+          "care"
+        ]
+      },
+      "answer": "22",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A label lookup inserts keys stones, dogs, sands, storms, care into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "26",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "21"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "4",
+            "relative_gap": "2/11"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "16",
+            "relative_gap": "8/11"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/22"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "How does a compressed trie change storage?",
+        "reference": "It combines an unbranched character run into one labeled edge. The resulting node count follows a different allocation convention."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "A search index inserts keys orange, purple, cars, capes, golden into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "orange",
+          "purple",
+          "cars",
+          "capes",
+          "golden"
+        ]
+      },
+      "answer": "26",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A search index inserts keys orange, purple, cars, capes, golden into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "25",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "25"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "2",
+            "relative_gap": "1/13"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "20",
+            "relative_gap": "10/13"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/26"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What if one key is a prefix of another?",
+        "reference": "Its node can mark a complete key and still have children. A word-end flag needs no additional node."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "A keyword lookup inserts keys cat, cared, capes, cars, can into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "params": {
+        "words": [
+          "cat",
+          "cared",
+          "capes",
+          "cars",
+          "can"
+        ]
+      },
+      "answer": "12",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A keyword lookup inserts keys cat, cared, capes, cars, can into an empty ordinary trie. Count one root and one node per distinct nonempty character prefix. End markers are flags. How many nodes are allocated, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "allocates_a_separate_chain_for_each_key"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "allocates_only_terminal_word_nodes"
+          ]
+        },
+        {
+          "value": "11",
+          "misconceptions": [
+            "counts_characters_instead_of_distinct_prefixes_ignoring_root"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "distinct_nonempty_prefix_count",
+          "value": "11"
+        },
+        {
+          "name": "root_node_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "allocates_a_separate_chain_for_each_key",
+            "absolute_gap": "9",
+            "relative_gap": "3/4"
+          },
+          {
+            "misconception": "allocates_only_terminal_word_nodes",
+            "absolute_gap": "6",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "counts_characters_instead_of_distinct_prefixes_ignoring_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/12"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "Why does insertion order not change the count?",
+        "reference": "Final nodes correspond to distinct prefixes plus the root. That set is independent of insertion order."
+      }
+    }
+  ]
+}
