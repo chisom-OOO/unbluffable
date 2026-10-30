@@ -66,12 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   }
 
-  function pickVoice() {
-    const voices = speechSynthesis.getVoices().filter((v) => v.lang.startsWith("en"))
-      .sort((a, b) => a.name.localeCompare(b.name));
-    return voices.find((v) => /Natural|Online/i.test(v.name)) || voices.find((v) => v.lang === "en-GB")
-      || voices.find((v) => v.lang === "en-US") || voices[0] || null;
-  }
 
   const muted = () => mute.getAttribute("aria-pressed") === "true";
 
@@ -83,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function speak(text, reveal, { mutes = true } = {}) {
     if (muted() || !window.speechSynthesis) { reveal?.finish(); return; }
     const u = new SpeechSynthesisUtterance(text);
-    u.voice = pickVoice();
+    u.voice = window.UB.pickVoice();
     const gen = speechGen;
     let counted = false;
     const guard = window.UBTurn.guardUtterance(u, {
@@ -251,7 +245,8 @@ document.addEventListener("DOMContentLoaded", () => {
         question = event;
         $("puzzle").textContent = event.text;
         $("puzzle-eyebrow").textContent = (event.kind === "check" ? "Drill check"
-          : event.kind === "drill" ? `Drill question ${event.number} of up to 3` : `Question ${event.number} of up to 4`)
+          : event.kind === "drill" ? `Drill question ${event.number} of up to 3`
+          : placement ? `Placement question ${event.number} of 5` : `Question ${event.number} of up to 4`)
           + ` · guide ${fmt(event.guide_seconds)}`;
         $("puzzle-kind").textContent = ({ twin: "Same puzzle, new numbers", drill: "Aimed at one mistake",
                                           check: "New numbers, no help" }[event.kind] || "New puzzle")
@@ -426,8 +421,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const level = document.querySelector('input[name="level"]:checked')?.value || "Easy";
     socket.onopen = () => socket.send(JSON.stringify(drill
       ? { type: "begin", consent: true, headphones: headphones.checked, drill }
-      : { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, topics: topicsKnown ? [...chosenTopics] : null, level,
-          typed_practice: typedPractice }));
+      : placement
+        ? { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, placement: true, typed_practice: typedPractice }
+        : { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, topics: sentTopics(), level,
+            typed_practice: typedPractice }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
       if (phase !== "finished") { phase = "finished"; voice.close(); setStatus("The connection closed. Reload to start again."); render(); }
@@ -460,12 +457,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendTyped(); }
   });
 
-  mute.addEventListener("click", () => {
-    const on = mute.getAttribute("aria-pressed") !== "true";
-    mute.setAttribute("aria-pressed", String(on));
-    mute.setAttribute("aria-label", on ? "Unmute interviewer" : "Mute interviewer");
-    if (on) cancelSpeech();
-  });
+  // The mute button itself is shared (ui.js) and remembered across pages.
+  document.addEventListener("ub-mute", (e) => { if (e.detail.muted) cancelSpeech(); });
   headphones.addEventListener("change", speechChanged);
   consent.addEventListener("change", () => { updateGate(); if (consent.checked) setStatus(""); });
 
@@ -722,7 +715,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ---------- Drill mode (decision log 16): /ui/interview?drill=<report session>&m=<n> ----------
+  // Placement (decision log 23): /ui/interview?placement=1&track=<id>, one question from each
+  // of five strength areas, starting at Medium; topics and level are not chosen.
   const query = new URLSearchParams(location.search);
+  const placement = query.get("placement") === "1" && !query.get("drill");
+  if (placement) {
+    $("setup-title").textContent = "Find your starting level";
+    $("setup-sub").textContent = "Five questions, one from each of five strength areas of the track, starting at Medium. Challenges and help work as usual.";
+    $("puzzle-eyebrow").textContent = "Placement · 5 questions";
+    document.querySelector(".topics-field").hidden = true;
+    $("levels").hidden = true;
+    $("topic-note").hidden = true;
+  }
   const drill = query.get("drill") ? { session: query.get("drill"), index: Number(query.get("m")) } : null;
   if (drill) {
     $("setup").querySelector(".picker").hidden = true;
@@ -735,30 +739,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- Track cards, then topics (template "pack"; tracks being added can't be picked) ----------
   // Topics are toggle chips, all selected by default; the last selection is remembered per
-  // track (this browser only). The fraud alert runs on its own, so choosing it clears the rest.
+  // track (this browser only). A track with no topics hides the picker.
   const trackBox = $("track");
   const topicBox = $("topic");
-  const FRAUD_ID = "fraud";
   let tracks = [], chosenTrack = null, chosenTopics = new Set(), topicsKnown = false, picking = true;
   const trackTopics = () => (tracks.find((t) => t.id === chosenTrack)?.topics || []).filter((o) => o.id !== "Mixed");
-  const regularTopics = () => trackTopics().map((o) => o.id).filter((id) => id !== FRAUD_ID);
-  const defaultTopics = () => new Set(regularTopics().length ? regularTopics() : trackTopics().map((o) => o.id).slice(0, 1));
-  // Drills choose their own questions; a failed topic list falls back to all topics on the server.
-  function topicCount() { return drill || !topicsKnown ? 1 : chosenTopics.size; }
+  const allTopics = () => new Set(trackTopics().map((o) => o.id));
+  // Topics sent with Start: null (the server's default) when the list failed or there are none.
+  const sentTopics = () => (topicsKnown && trackTopics().length ? [...chosenTopics] : null);
+  // Drills choose their own questions.
+  function topicCount() { return drill || placement || !sentTopics() ? 1 : chosenTopics.size; }
   const topicKey = () => `ub-topics:${chosenTrack}`;
   function loadTopics() {
     let saved = null;
     try { saved = JSON.parse(window.UB.store.get(topicKey()) || "null"); } catch { saved = null; }
-    const ids = trackTopics().map((o) => o.id);
-    const kept = Array.isArray(saved) ? saved.filter((id) => ids.includes(id)) : [];
-    return kept.length ? new Set(kept) : defaultTopics();
+    const ids = allTopics();
+    const kept = Array.isArray(saved) ? saved.filter((id) => ids.has(id)) : [];
+    return kept.length ? new Set(kept) : ids;
   }
   function saveTopics() { window.UB.store.set(topicKey(), JSON.stringify([...chosenTopics])); }
   function syncTopics() {
     topicBox.querySelectorAll("button.topic-chip").forEach((b) => b.setAttribute("aria-pressed", String(chosenTopics.has(b.dataset.topic))));
-    const n = chosenTopics.size, all = regularTopics().length;
-    $("topics-note").textContent = chosenTopics.has(FRAUD_ID) ? "The fraud alert runs on its own."
-      : n === 0 ? "Choose at least one topic." : n === all ? "All topics selected." : `${n} of ${all} topics selected.`;
+    const n = chosenTopics.size, all = trackTopics().length;
+    $("topics-note").textContent = n === 0 ? "Choose at least one topic." : n === all ? "All topics selected." : `${n} of ${all} topics selected.`;
     $("topics-note").classList.toggle("bad", n === 0);
     updateGate();
   }
@@ -766,10 +769,11 @@ document.addEventListener("DOMContentLoaded", () => {
     chosenTopics = loadTopics();
     topicBox.innerHTML = trackTopics().map((o) =>
       `<button type="button" class="topic-chip" aria-pressed="false" data-topic="${escapeHtml(o.id)}">${escapeHtml(o.name)}</button>`).join("");
+    topicBox.closest(".topics-field").hidden = placement || trackTopics().length === 0;
     syncTopics();
   }
   function setTopics(next) { if (!picking) return; chosenTopics = next; saveTopics(); syncTopics(); }
-  function selectAllTopics() { setTopics(defaultTopics()); }
+  function selectAllTopics() { setTopics(allTopics()); }
   function lockTopics() {
     picking = false;
     $("setup").querySelectorAll(".picker button").forEach((b) => { b.disabled = true; });
@@ -778,9 +782,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const id = e.target.closest("button.topic-chip")?.dataset.topic;
     if (!id) return;
     const next = new Set(chosenTopics);
-    if (next.has(id)) next.delete(id);
-    else if (id === FRAUD_ID) { next.clear(); next.add(id); }
-    else { next.delete(FRAUD_ID); next.add(id); }
+    if (next.has(id)) next.delete(id); else next.add(id);
     setTopics(next);
   });
   $("topics-all").addEventListener("click", selectAllTopics);
@@ -794,6 +796,20 @@ document.addEventListener("DOMContentLoaded", () => {
       if (on && focus) b.focus();
     });
     showTopics();
+    levelFromProfile();
+  }
+
+  // Decision log 23: the start level follows this track's rating estimate (< 40 Easy,
+  // 40-69 Medium, 70+ Hard); it can still be changed here.
+  function levelFromProfile() {
+    const P = window.UBProfile, S = window.UB.profile();
+    const o = P && S ? P.overall(P.areaScores(S.load(), chosenTrack)) : null;
+    $("level-note").hidden = !o;
+    if (!o) return;
+    const level = P.startLevel(o.rating);
+    const radio = document.querySelector(`input[name="level"][value="${level}"]`);
+    if (radio && !radio.disabled) radio.checked = true;
+    $("level-note").textContent = `Start level from your rating estimate: ${P.shown(o.rating)} (${P.band(o.rating)}).`;
   }
   trackBox.addEventListener("click", (e) => {
     const b = e.target.closest("button.track");
@@ -810,7 +826,8 @@ document.addEventListener("DOMContentLoaded", () => {
   fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {
     tracks = t.tracks;
     const asked = tracks.find((x) => x.id === query.get("track") && x.available);
-    const first = asked ? asked.id : t.default_track;
+    const profileTrack = tracks.find((x) => x.id === window.UB.profile()?.load().default_track && x.available);
+    const first = asked ? asked.id : profileTrack ? profileTrack.id : t.default_track;
     trackBox.innerHTML = tracks.map((x) => trackCard(x, { selected: x.id === first })).join("");
     topicsKnown = true;
     pickTrack(first);

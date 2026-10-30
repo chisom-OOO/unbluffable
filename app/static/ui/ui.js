@@ -29,6 +29,34 @@
     });
   }
 
+  // Mute (the interviewer's voice, and the landing sample): one setting, remembered in this
+  // browser when storage allows. Pages hear changes as a "ub-mute" event.
+  let muted = store.get("ub-muted") === "true";
+  function initMute() {
+    const btn = document.getElementById("mute");
+    if (!btn) return;
+    const sync = () => {
+      btn.setAttribute("aria-pressed", String(muted));
+      btn.setAttribute("aria-label", muted ? "Unmute interviewer" : "Mute interviewer");
+    };
+    sync();
+    btn.addEventListener("click", () => {
+      muted = !muted;
+      store.set("ub-muted", String(muted));
+      sync();
+      document.dispatchEvent(new CustomEvent("ub-mute", { detail: { muted } }));
+    });
+  }
+
+  // An English speech voice: natural-sounding first, then British, then American. `not`
+  // skips one voice, so a second speaker can sound different.
+  function pickVoice(not) {
+    const voices = (window.speechSynthesis?.getVoices() || []).filter((v) => v.lang.startsWith("en") && v !== not)
+      .sort((a, b) => a.name.localeCompare(b.name));
+    return voices.find((v) => /Natural|Online/i.test(v.name)) || voices.find((v) => v.lang === "en-GB")
+      || voices.find((v) => v.lang === "en-US") || voices[0] || null;
+  }
+
   function escapeHtml(s) {
     return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
@@ -75,6 +103,38 @@
     return `<button type="button" class="track" role="radio" aria-checked="${selected}" tabindex="${selected ? 0 : -1}" data-track="${escapeHtml(t.id)}">${inner}</button>`;
   }
 
-  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard };
-  document.addEventListener("DOMContentLoaded", initTheme);
+  // The profile (decision log 23), kept in this browser. One store per page, so a blocked
+  // storage still keeps progress for this visit.
+  const BLOCKED = { getItem() { throw new Error("blocked"); }, setItem() { throw new Error("blocked"); }, removeItem() { throw new Error("blocked"); } };
+  let profileStore = null;
+  function profile() {
+    if (!window.UBProfile) return null;
+    if (!profileStore) {
+      let local = null;
+      try { local = window.localStorage; } catch { local = null; }
+      profileStore = window.UBProfile.store(local || BLOCKED);
+    }
+    return profileStore;
+  }
+  // The rating shown for a profile: its default track, else the track with the most answers.
+  function headlineTrack(p) {
+    if (p.default_track) return p.default_track;
+    const counts = {};
+    p.answers.forEach((a) => { counts[a.t] = (counts[a.t] || 0) + 1; });
+    return Object.keys(counts).sort((a, b) => counts[b] - counts[a])[0] || null;
+  }
+  function initProfileLink() {
+    const link = document.getElementById("profile-link");
+    const S = profile();
+    if (!link || !S) return;
+    const p = S.load(), track = headlineTrack(p);
+    const o = track ? window.UBProfile.overall(window.UBProfile.areaScores(p, track)) : null;
+    const span = link.querySelector(".profile-rating");
+    span.hidden = !o;
+    span.textContent = o ? String(window.UBProfile.shown(o.rating)) : "";
+    link.setAttribute("aria-label", o ? `Profile, rating estimate ${window.UBProfile.shown(o.rating)}` : "Profile");
+  }
+
+  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack };
+  document.addEventListener("DOMContentLoaded", () => { initTheme(); initMute(); initProfileLink(); });
 })();
