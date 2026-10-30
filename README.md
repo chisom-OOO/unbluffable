@@ -21,7 +21,7 @@ so anyone can know what the room feels like before they're in it.
 ---
 
 > [!NOTE]
-> **Status, 30 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode and the end-of-interview report work end to end in tests. Quant runs on 99 cross-checked question families. In progress: investment banking, consulting and software engineering packs, and a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
+> **Status, 30 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode and the end-of-interview report work end to end in tests. Quant runs on cross-checked question families. In progress: investment banking, consulting and software engineering packs, and a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
 
 ## Why
 
@@ -126,7 +126,7 @@ From our cloud host, Meta's API showed no Muse Spark models for our key: `GET /v
 | **Interrupting mid-sentence** with realtime keyword rules | 2/10 wrong answers caught on the first gate. Rules widened from the failure types reached 8/10 on those clips but **1/10 on 30 new held-out clips**, with 0/20 false challenges in both runs. We dropped it for a challenge right after the answer ([decision log](spec/DECISION_LOG.md) rows 1–1b). |
 | **End-of-answer detection** on 60 recorded clips | **0 early cut-offs.** 32/60 completed exactly once; every miss was the app waiting too long, never interrupting. A silence check was added afterwards (rows 11–12). |
 | **Last word to spoken acknowledgement** | About 2 s in a timed run, most of it one Muse Spark call |
-| **Question families cross-checked** | **99 of 101** quant families: for each one, Muse Spark Open wrote an independent solver, and it reproduced the stored answer on all 75 variants. **0 disagreements.** 62 families also have wrong-method values verified in code, which the interviewer uses to name a misconception. |
+| **Question families cross-checked** | **99** quant families: for each one, Muse Spark Open wrote an independent solver, and it reproduced the stored answer on all 75 variants. **0 disagreements.** 62 families also have wrong-method values verified in code, which the interviewer uses to name a misconception. |
 | **Automated tests** | 450+ (pytest), including pinned values for the engine maths |
 
 Every change from the original plan is in the [decision log](spec/DECISION_LOG.md), with the evidence that forced it, including what failed.
@@ -136,7 +136,7 @@ Every change from the original plan is in the [decision log](spec/DECISION_LOG.m
 > [!IMPORTANT]
 > In progress. None of this is claimed as a result yet.
 
-- **Investment banking, consulting and software engineering packs.** 30 question families each, going through the same cross-check before they are switched on.
+- **Investment banking, consulting and software engineering packs.** They go through the same cross-check before they are switched on.
 - **Careful-chatbot comparison.** A pre-registered test on frozen answers: plain Muse Spark, carefully prompted Muse Spark, carefully prompted Muse Spark given the answer key, and Unbluffable, all on the same model, three runs each.
 - **Real users** from a university quant society, with consent.
 
