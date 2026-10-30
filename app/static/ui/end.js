@@ -1,22 +1,21 @@
-// End card. /ui/end?session=ID renders that session's report from /api/interview/ID/report;
-// /ui/end alone renders the labelled sample from fake data. The four labels below are the
-// only verdict vocabulary (spec/01).
+// Report. /ui/end?session=ID renders that session's report from /api/interview/ID/report;
+// without a session there is nothing to show. The four labels below are the only verdict
+// vocabulary (spec/01).
 document.addEventListener("DOMContentLoaded", () => {
   const { highlight, escapeHtml, receiptHtml } = window.UB;
   const $ = (id) => document.getElementById(id);
   const sessionId = new URLSearchParams(location.search).get("session");
 
-  if (!sessionId) { render(window.UB_FAKE.end); return; }
-  $("result-tag").textContent = "Your result";
-  document.title = "Your result · Unbluffable";
+  function unavailable(text) {
+    $("end-sub").textContent = text;
+    $("result-tag").hidden = true;
+    document.querySelectorAll(".section, .end-verdict, #stats").forEach((el) => { el.hidden = true; });
+  }
+  if (!sessionId) { unavailable("No report to show yet. A report appears here at the end of an interview."); return; }
   fetch(`/api/interview/${encodeURIComponent(sessionId)}/report`)
     .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
     .then(render)
-    .catch(() => {
-      $("end-sub").textContent = "This report is no longer available. Reports are kept in memory for the session only.";
-      $("result-tag").hidden = true;
-      document.querySelectorAll(".section, .end-verdict, .report-cols").forEach((el) => { el.hidden = true; });
-    });
+    .catch(() => unavailable("This report is no longer available. Reports are kept in memory for the session only."));
 
   function render(e) {
 
@@ -38,6 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // Drill mode (decision log 16): the check's result, not an interview label.
       const cleared = e.drill.result === "Cleared";
       $("end-title").textContent = "How the drill went";
+      $("end-eyebrow").textContent = "Drill report";
+      $("result-tag").textContent = "Drill complete";
       $("verdict").innerHTML =
         `<p class="verdict ${cleared ? "verdict-supports" : "verdict-misconception"}">${svg(cleared ? "check" : "cross")}<span>${escapeHtml(e.drill.result || "Not finished")}</span></p>` +
         `<p class="misconception-name">Drilled: ${escapeHtml(e.drill.misconception)}. ${escapeHtml(e.drill.note)}</p>`;
@@ -50,6 +51,11 @@ document.addEventListener("DOMContentLoaded", () => {
           ? `<p class="misconception-name">${escapeHtml(e.misconception)}: ${escapeHtml(e.misconception_note || "reading “fraud gets flagged” as “a flag is fraud”.")}</p>` : "");
       $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}. Scored on where you end up, discounted by the help it took.`;
     }
+
+    // Decision log 20: which mode was used.
+    $("conditions").hidden = !e.conditions;
+    $("conditions").textContent = e.conditions || "";
+    $("conditions").classList.toggle("warn", !!e.conditions && !/^Exam/.test(e.conditions));
 
     if (sessionId && e.drills && e.drills.length) {
       $("drills").hidden = false;
@@ -71,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
     const levelBars = Array.from({ length: e.levels }, (_, i) => `<span class="${i < e.level ? "on" : ""}"></span>`).join("");
     $("stats").innerHTML = [
+      `<div class="stat"><dt>Questions</dt><dd>${e.questions}</dd></div>`,
       `<div class="stat"><dt>Challenges</dt><dd>${e.challenges}</dd></div>`,
       `<div class="stat"><dt>Nudges</dt><dd>${e.nudges}</dd></div>`,
       `<div class="stat"><dt>Hints used</dt><dd>${e.hints.length}</dd></div>`,

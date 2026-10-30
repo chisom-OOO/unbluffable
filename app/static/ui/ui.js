@@ -64,6 +64,19 @@
       (r.note ? `<p class="receipt-note">${escapeHtml(r.note)}</p>` : "") + `</div></div></details>`;
   }
 
-  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml };
+  // Track cards from /api/interview/topics (template "pack"; missing means Quant). A track
+  // with no templates shows "Being added" and can't be picked.
+  function trackNote(t) {
+    if (!t.available) return "Being added";
+    return t.count ? `${t.count} template${t.count === 1 ? "" : "s"}` : "Fraud alert (classic)";
+  }
+  function trackCard(t, { href, selected } = {}) {
+    const inner = `<strong>${escapeHtml(t.name)}</strong><small>${trackNote(t)}</small>`;
+    if (!t.available) return `<div class="track" role="${href ? "listitem" : "radio"}" aria-disabled="true" aria-checked="false" data-track="${escapeHtml(t.id)}">${inner}</div>`;
+    if (href) return `<a class="track" role="listitem" href="${href}" data-track="${escapeHtml(t.id)}">${inner}</a>`;
+    return `<button type="button" class="track" role="radio" aria-checked="${selected}" tabindex="${selected ? 0 : -1}" data-track="${escapeHtml(t.id)}">${inner}</button>`;
+  }
+
+  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard };
   document.addEventListener("DOMContentLoaded", initTheme);
 })();

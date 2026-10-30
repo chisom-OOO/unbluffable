@@ -1,8 +1,15 @@
-// Landing: show the puzzle; if the visitor hasn't started within 3 s, play the labelled sample
-// (to be swapped for a real recorded run once one exists).
+// Landing: track cards from the real template packs; the puzzle; if the visitor hasn't
+// started within 3 s, play the labelled sample (to be swapped for a real recorded run).
 document.addEventListener("DOMContentLoaded", () => {
   const data = window.UB_FAKE;
-  const { highlight, escapeHtml, reducedMotion } = window.UB;
+  const { highlight, escapeHtml, reducedMotion, trackCard } = window.UB;
+
+  const tracks = document.getElementById("tracks");
+  tracks.setAttribute("role", "list");
+  fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {
+    tracks.innerHTML = t.tracks.map((track) =>
+      trackCard(track, { href: `/ui/interview?track=${encodeURIComponent(track.id)}` })).join("");
+  }).catch(() => { tracks.hidden = true; });
 
   document.getElementById("landing-puzzle").textContent = data.puzzle.text;
 
@@ -14,11 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Build lines up front (hidden) so layout doesn't jump when they appear.
   const nodes = data.replay.lines.map((line, i) => {
     const el = document.createElement("div");
-    el.className = `utterance ${line.who}` + (line.kind === "challenge" ? " is-challenge" : "");
+    el.className = "sampleline" + (line.kind === "challenge" ? " is-challenge" : "");
     el.hidden = true;
-    const who = line.who === "interviewer" ? "Interviewer" : "Candidate";
-    const tag = line.kind === "challenge" ? `<span class="tag tag-challenge">Challenge</span>` : "";
-    el.innerHTML = `<div class="speaker"><span>${who}</span>${tag}</div><p class="says">${escapeHtml(line.text)}</p>`;
+    const who = line.who === "interviewer" ? `Interviewer${line.kind === "challenge" ? " · Challenge" : ""}` : "Candidate";
+    el.innerHTML = `<b>${who.toUpperCase()}</b><span class="says">“${escapeHtml(line.text)}”</span>`;
     el.dataset.index = i;
     body.appendChild(el);
     return el;
@@ -36,9 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
     clear();
     playing = true;
     setButton("playing");
-    document.getElementById("replay-placeholder")?.remove();
     nodes.forEach((n) => { n.hidden = true; });
-    nodes[0].querySelector(".says").textContent = data.replay.lines[0].text;
+    nodes[0].querySelector(".says").textContent = `“${data.replay.lines[0].text}”`;
     bar.style.width = "0%";
 
     const step = reducedMotion() ? 900 : 2600;
@@ -49,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Once the challenge lands, mark the number it challenged in the candidate's line.
         if (data.replay.lines[i].kind === "challenge") {
           const c = data.replay.lines[0];
-          nodes[0].querySelector(".says").innerHTML = highlight(c.text, c.challenge);
+          nodes[0].querySelector(".says").innerHTML = `“${highlight(c.text, c.challenge)}”`;
         }
       }, i * step + 300));
     });

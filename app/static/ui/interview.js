@@ -2,15 +2,17 @@
 // Hands-free after one Start tap (decision log 4). The indicator shows real state only
 // (decision log 5): Listening while a capture or typed turn is open, "Checking your working"
 // while the server's check runs, Speaking from SpeechSynthesis start/end events.
-// Done is a fallback; Type instead completes a whole interview without the microphone.
+// Decision log 20: Start stays locked until the camera shows a picture, the microphone picks
+// up sound and the server answers; "Can't use a camera or mic?" switches to typed practice,
+// labelled "Not exam conditions". Done is a fallback for noisy rooms.
 document.addEventListener("DOMContentLoaded", () => {
-  const { highlight, escapeHtml, reducedMotion, receiptHtml } = window.UB;
+  const { highlight, escapeHtml, reducedMotion, receiptHtml, trackCard } = window.UB;
   const voice = window.UBVoice;
   const $ = (id) => document.getElementById(id);
 
   const start = $("start"), mic = $("mic"), micState = $("mic-state"), done = $("done");
   const log = $("log"), live = $("live"), liveText = $("live-text");
-  const typePanel = $("type-panel"), typeAnswer = $("type-answer"), typeToggle = $("type-toggle");
+  const typePanel = $("type-panel"), typeAnswer = $("type-answer");
   const mute = $("mute"), consent = $("consent"), headphones = $("headphones"), status = $("status");
 
   const KIND_TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint" };
@@ -26,6 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let question = null, questionStart = 0, answeredThisQuestion = false, offered = false;
   let heard = false;  // any candidate speech, live transcript or typing since this question began
   let lastCandidate = null;
+  // Device gate (decision log 20)
+  let connected = false, micHeard = false, cameraOk = false, typedPractice = false, replay = false;
 
   // ---------- Indicator: derived from real state only ----------
   function render() {
@@ -41,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     mic.dataset.state = shown === "checking" ? "thinking" : (shown === "ready" || shown === "finished" ? "idle" : shown);
     micState.textContent = text;
     done.disabled = phase !== "listening" || (!typing && !capturing);
-    typeToggle.disabled = phase === "finished";
+    $("mic-sub").textContent = typing ? "Type your answer, then Done or Ctrl+Enter" : "Speak naturally · hands-free";
     document.querySelector(".action-bar").classList.toggle("ready", phase === "ready");
   }
 
@@ -146,9 +150,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const el = document.createElement("div");
     const tag = KIND_TAG[kind];
     el.className = "utterance interviewer" + (tag ? ` is-${kind}` : "");
-    el.innerHTML = `<div class="speaker"><span>Interviewer</span>${tag ? `<span class="tag tag-${kind}">${tag}</span>` : ""}</div>` +
+    el.innerHTML = `<span class="avatar" aria-hidden="true">I</span><div>` +
+      `<div class="speaker"><span>Interviewer</span>${tag ? `<span class="tag tag-${kind}">${tag}</span>` : ""}</div>` +
       `<p class="says"><span class="visually-hidden">${escapeHtml(text)}</span><span class="typed" aria-hidden="true"></span></p>` +
-      receiptHtml(receipt);
+      receiptHtml(receipt) + `</div>`;
     log.appendChild(el);
     scrollTo(el);
     const said = speech || text;
@@ -160,7 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function addCandidate(text) {
     const el = document.createElement("div");
     el.className = "utterance candidate";
-    el.innerHTML = `<div class="speaker"><span>You</span></div><p class="says">${escapeHtml(text)}</p>`;
+    el.innerHTML = `<span class="avatar" aria-hidden="true">Y</span><div>` +
+      `<div class="speaker"><span>You</span></div><p class="says">${escapeHtml(text)}</p></div>`;
     log.appendChild(el);
     scrollTo(el);
     return el;
@@ -170,15 +176,22 @@ document.addEventListener("DOMContentLoaded", () => {
     $("help-count").textContent = `Challenges ${c.challenges} · Nudges ${c.nudges} · Hints ${c.hints}`;
   }
 
-  function modelRow(model) {
+  // What each model call did, by the event that reports it.
+  const JOBS = {
+    transcription_model: "Transcript of your answer", endpoint_decision: "Whether you had finished",
+    challenge_result: "Your committed number", scoring_result: "Quoted reasoning", follow_up_result: "Follow-up (model-matched)",
+  };
+  function modelRow(model, job) {
     if (!model || !model.model) return;
     const rows = $("model-rows");
     if (rows.dataset.empty !== "no") { rows.innerHTML = ""; rows.dataset.empty = "no"; }
-    const ms = model.latency_s == null ? "" : model.latency_s >= 1 ? `${model.latency_s.toFixed(1)} s` : `${Math.round(model.latency_s * 1000)} ms`;
-    const cost = model.estimated_cost_usd == null ? "" : `$${model.estimated_cost_usd.toFixed(4)}`;
-    const row = document.createElement("tr");
-    row.innerHTML = `<td class="mono">${escapeHtml(model.model)}${model.mode === "replay" ? " (recorded)" : ""}</td>` +
-      `<td>${escapeHtml(model.job || "")}</td><td class="mono num-col">${ms}</td><td class="mono num-col">${cost}</td>`;
+    const time = model.latency_s == null ? null : model.latency_s >= 1 ? `${model.latency_s.toFixed(1)} s` : model.latency_s < 0.001 ? "under 1 ms" : `${Math.round(model.latency_s * 1000)} ms`;
+    const cost = model.estimated_cost_usd == null ? null : `$${model.estimated_cost_usd.toFixed(4)}`;
+    const row = document.createElement("div");
+    row.className = "modelrow";
+    row.innerHTML = `<div><strong class="mono">${escapeHtml(model.model)}${model.mode === "replay" ? " (recorded)" : ""}</strong>` +
+      `<small>${escapeHtml(JOBS[job] || job)}</small></div>` +
+      `<div class="nums mono">${[time, cost].filter(Boolean).join("<br>")}</div>`;
     rows.appendChild(row);
   }
 
@@ -250,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
         finishReveals();
         break;
       case "follow_up_result":
-        modelRow(event.model);
+        modelRow(event.model, event.type);
         break;
       case "interviewer_line":
         addInterviewer(event.text, event.kind, event.receipt, event.speech);
@@ -291,16 +304,16 @@ document.addEventListener("DOMContentLoaded", () => {
         addInterviewer(event.acknowledgement, "ack");
         break;
       case "challenge_result":
-        modelRow(event.model);
+        modelRow(event.model, event.type);
         break;
       case "scoring_result":
-        modelRow(event.model);
+        modelRow(event.model, event.type);
         break;
       case "transcription_model":
-        modelRow(event.model);
+        modelRow(event.model, event.type);
         break;
       case "endpoint_decision":
-        modelRow(event.model);
+        modelRow(event.model, event.type);
         break;
       case "model_error":
         setStatus(event.message);
@@ -323,19 +336,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- Evidence meter (decision log 16): model estimates after each scored answer ----------
   function showMeter(m) {
-    const panel = $("meter");
-    if (panel.hidden) {
-      panel.hidden = false;
-      panel.open = !window.matchMedia("(max-width: 600px)").matches;  // collapsed on phones
-    }
+    $("meter-empty").hidden = true;
     $("meter-rows").innerHTML = m.estimate.map((r) => {
       const pct = Math.round(r.p * 100);
-      return `<div class="meter-row"><dt>${escapeHtml(r.label)}</dt>` +
-        `<dd><span class="meter-bar" aria-hidden="true"><span style="width:${pct}%"></span></span>` +
-        `<span class="mono meter-pct">${pct}%</span></dd></div>`;
+      return `<div class="meter-row"><dt><span>${escapeHtml(r.label)}</span><span class="mono meter-pct">${pct}%</span></dt>` +
+        `<dd><span class="meter-bar" aria-hidden="true"><span style="width:${pct}%"></span></span></dd></div>`;
     }).join("");
     $("meter-line").textContent = m.line;
-    $("meter-latest").textContent = m.estimate.map((r) => `${r.label} ${Math.round(r.p * 100)}%`).join(" · ");
+    $("meter-line").hidden = !m.line;
   }
 
   function finish(event) {
@@ -355,15 +363,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------- Start: the one tap (browsers need a gesture for mic and speech) ----------
   async function begin() {
     if (!consent.checked) { setStatus("Please agree that your answer text is kept before starting."); consent.focus(); return; }
+    if (!gateOpen()) { updateGate(); return; }
     setStatus("");
     consent.disabled = true;
-    trackSelect.disabled = true;
     topicSelect.disabled = true;
     document.querySelectorAll('input[name="level"]').forEach((r) => { r.disabled = true; });
     stopMeter();
-    $("device-check").hidden = true;
-    start.hidden = true;
-    mic.hidden = false;
+    $("setup-view").hidden = true;
+    $("room").hidden = false;
+    $("practice-tag").hidden = !typedPractice;
+    $("selfview").hidden = !window.UBCamera?.attachSelf();  // the camera stays on, local only
+    window.scrollTo(0, 0);
     phase = "checking";
     render();
     if (!typing) {
@@ -373,7 +383,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const level = document.querySelector('input[name="level"]:checked')?.value || "Easy";
     socket.onopen = () => socket.send(JSON.stringify(drill
       ? { type: "begin", consent: true, headphones: headphones.checked, drill }
-      : { type: "begin", consent: true, headphones: headphones.checked, pack: trackSelect.value || null, topic: topicSelect.value || null, level }));
+      : { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, topic: topicSelect.value || null, level,
+          typed_practice: typedPractice }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
       if (phase !== "finished") { phase = "finished"; voice.close(); setStatus("The connection closed. Reload to start again."); render(); }
@@ -391,11 +402,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   done.addEventListener("click", finishNow);
 
-  // ---------- Type instead ----------
+  // ---------- Typed answers: typed practice, replay mode, or a microphone that fails ----------
   function setTyping(on) {
     typing = on;
-    typeToggle.setAttribute("aria-pressed", String(on));
-    typeToggle.textContent = on ? "Use voice" : "Type instead";
     typePanel.hidden = !on;
     finishReveals();
     if (on && capturing) voice.flush();  // close the open capture; its words come back as a turn
@@ -403,7 +412,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (on && phase === "listening") typeAnswer.focus();
     if (!on && phase === "listening" && !capturing && !captureRequested) openTurn();
   }
-  typeToggle.addEventListener("click", () => setTyping(!typing));
   typeAnswer.addEventListener("input", () => { if (typeAnswer.value.trim()) heard = true; });
   typeAnswer.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendTyped(); }
@@ -416,7 +424,33 @@ document.addEventListener("DOMContentLoaded", () => {
     if (on) cancelSpeech();
   });
   headphones.addEventListener("change", speechChanged);
-  consent.addEventListener("change", () => { start.disabled = !consent.checked; if (consent.checked) setStatus(""); });
+  consent.addEventListener("change", () => { updateGate(); if (consent.checked) setStatus(""); });
+
+  // ---------- Device gate (decision log 20): Start unlocks once everything is checked ----------
+  const exempt = () => typedPractice || replay;
+  function missing() {
+    const need = [];
+    if (!exempt() && !cameraOk) need.push("the camera shows a picture");
+    if (!exempt() && !micHeard) need.push("the microphone picks up sound");
+    if (!connected) need.push("the server connects");
+    if (!consent.checked) need.push("you tick the agreement");
+    return need;
+  }
+  const gateOpen = () => missing().length === 0;
+  function updateGate() {
+    const need = missing();
+    start.disabled = need.length > 0;
+    const list = need.length > 1 ? `${need.slice(0, -1).join(", ")} and ${need[need.length - 1]}` : need[0];
+    $("gate-note").textContent = need.length ? `Start unlocks once ${list}.`
+      : replay ? "Recorded replay mode: answers are typed." : typedPractice ? "Typed practice: not exam conditions." : "Ready when you are.";
+  }
+  document.addEventListener("ub-camera", (e) => { cameraOk = e.detail.ok; updateGate(); });
+  $("typed-practice").addEventListener("click", () => {
+    typedPractice = !typedPractice;
+    $("typed-practice").textContent = typedPractice ? "Use camera and mic instead" : "Can't use a camera or mic?";
+    setTyping(typedPractice || replay);
+    updateGate();
+  });
 
   // Space = Done while listening (unless typing into a field)
   document.addEventListener("keydown", (e) => {
@@ -468,17 +502,32 @@ document.addEventListener("DOMContentLoaded", () => {
   function stopMeter() { if (meterFrame) cancelAnimationFrame(meterFrame); meterFrame = null; }
   $("mic-test").addEventListener("click", async () => {
     const note = $("mic-note");
+    const check = $("mic-check");
     try {
       await voice.open();
     } catch {
-      note.textContent = "The microphone is blocked or missing. You can type your answers instead.";
+      note.textContent = "The microphone is blocked or missing.";
       note.className = "device-note bad";
+      check.textContent = "Not working"; check.className = "check-state bad";
       return;
     }
-    note.textContent = "Say something: the bar should move. Nothing is sent.";
-    note.className = "device-note ok";
+    if (!micHeard) {
+      note.textContent = "Say something: the bar should move. Nothing is sent.";
+      note.className = "device-note";
+      check.textContent = "Listening for sound"; check.className = "check-state";
+    }
     const bar = $("mic-meter");
-    const draw = () => { bar.style.width = `${Math.round(voice.level() * 100)}%`; meterFrame = requestAnimationFrame(draw); };
+    const draw = () => {
+      const level = voice.level();
+      bar.style.width = `${Math.round(level * 100)}%`;
+      if (!micHeard && level > 0.08) {
+        micHeard = true;
+        check.textContent = "Sound picked up"; check.className = "check-state ok";
+        note.textContent = "Your microphone works. Nothing was sent."; note.className = "device-note ok";
+        updateGate();
+      }
+      meterFrame = requestAnimationFrame(draw);
+    };
     stopMeter(); draw();
   });
   $("speaker-test").addEventListener("click", () => {
@@ -492,16 +541,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------- Config: connection check, and replay mode has no live microphone path ----------
   fetch("/api/voice/config").then((r) => (r.ok ? r.json() : Promise.reject())).then((c) => {
     config = c;
+    connected = true;
+    $("connection-state").textContent = "Connected"; $("connection-state").className = "check-state ok";
     $("connection-note").textContent = "Connected to the Unbluffable server.";
-    $("connection-note").className = "device-note ok";
     if (c.mode === "replay") {
+      replay = true;
       setTyping(true);
+      $("typed-practice-row").hidden = true;
       setStatus("Recorded replay mode: answers are typed and checked against recorded model calls.");
     }
+    updateGate();
   }).catch(() => {
+    $("connection-state").textContent = "Not connected"; $("connection-state").className = "check-state bad";
     $("connection-note").textContent = "Can't reach the server. Check your connection and reload.";
     $("connection-note").className = "device-note bad";
-    setStatus("Voice configuration is unavailable. You can still type your answers.");
   });
 
   // ---------- Drill mode (decision log 16): /ui/interview?drill=<report session>&m=<n> ----------
@@ -509,16 +562,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const drill = query.get("drill") ? { session: query.get("drill"), index: Number(query.get("m")) } : null;
   if (drill) {
     $("setup").querySelector(".picker").hidden = true;
+    $("setup-title").textContent = "Prepare your drill";
+    $("choose-title").textContent = "Drill one mistake";
+    $("setup-sub").textContent = "Up to 3 questions aimed at one mistake, then a check with new numbers. Check your camera and microphone, then just talk.";
     $("puzzle").textContent = "The interviewer reads the first drill question when you start.";
     $("puzzle-eyebrow").textContent = "Drill · up to 3 questions, then a check";
   }
 
-  // ---------- Track, then topic: accepted forge templates per track and topic, Mixed, and the fraud alert ----------
-  const trackSelect = $("track");
+  // ---------- Track cards, then topic (template "pack"; tracks being added can't be picked) ----------
+  const trackBox = $("track");
   const topicSelect = $("topic");
-  let tracks = [];
+  let tracks = [], chosenTrack = null;
   const showTopics = () => {
-    const track = tracks.find((t) => t.id === trackSelect.value) || tracks[0];
+    const track = tracks.find((t) => t.id === chosenTrack);
+    if (!track) return;
     topicSelect.replaceChildren(...track.topics.map((o) => {
       const option = document.createElement("option");
       option.value = o.id;
@@ -527,20 +584,38 @@ document.addEventListener("DOMContentLoaded", () => {
       return option;
     }));
   };
-  trackSelect.addEventListener("change", showTopics);
+  function pickTrack(id, focus) {
+    chosenTrack = id;
+    trackBox.querySelectorAll("button.track").forEach((b) => {
+      const on = b.dataset.track === id;
+      b.setAttribute("aria-checked", String(on));
+      b.tabIndex = on ? 0 : -1;
+      if (on && focus) b.focus();
+    });
+    showTopics();
+  }
+  trackBox.addEventListener("click", (e) => {
+    const b = e.target.closest("button.track");
+    if (b && !topicSelect.disabled) pickTrack(b.dataset.track);
+  });
+  trackBox.addEventListener("keydown", (e) => {
+    const open = [...trackBox.querySelectorAll("button.track")];
+    const at = open.findIndex((b) => b.dataset.track === chosenTrack);
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (!step || at < 0) return;
+    e.preventDefault();
+    pickTrack(open[(at + step + open.length) % open.length].dataset.track, true);
+  });
   fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {
     tracks = t.tracks;
-    trackSelect.replaceChildren(...tracks.map((track) => {
-      const option = new Option(track.name, track.id);
-      option.selected = track.id === t.default_track;
-      return option;
-    }));
-    showTopics();
+    const asked = tracks.find((x) => x.id === query.get("track") && x.available);
+    const first = asked ? asked.id : t.default_track;
+    trackBox.innerHTML = tracks.map((x) => trackCard(x, { selected: x.id === first })).join("");
+    pickTrack(first);
   }).catch(() => {
-    trackSelect.replaceChildren(new Option("Default", ""));
     topicSelect.replaceChildren(new Option("Default", ""));
   });
 
-  start.disabled = !consent.checked;
+  updateGate();
   render();
 });
