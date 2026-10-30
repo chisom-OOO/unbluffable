@@ -227,3 +227,53 @@ mismatch rejects. Four SE, twenty instances, blind twins, novelty, random-event
 checks and sandbox/isolation restrictions remain unchanged. Render is counted
 passed only after successful rendering/validation. Accepted content still waits
 for builder audit and must not be committed before that review.
+
+## Scale run: content quality revision
+
+Run from this worktree with both API keys already exported. This selects 500
+source questions in the requested split and reserves at most $20 at the configured
+token prices. It is resumable in its own fresh private directory:
+
+```powershell
+$env:LLM_BACKEND = "open_weights"
+$csvPath = Read-Host "Full path to the bank CSV"
+.\.venv\Scripts\python.exe -m forge.run --mode live --csv $csvPath --limit 500 --per-topic "probability=150,expected value=120,combinations and permutations=100,statistics=80,games=50" --topics "probability,expected value,combinations and permutations,statistics,games" --budget-usd 20 --work-dir data/forge/scale1
+```
+
+Content-quality changes:
+
+- Every exported instance carries interview_friendly, interview_friendly_score
+  and interview_friendly_basis. The exact ANSWER form determines the score:
+  integer=3; reduced fraction with denominator at most 100=2; exactly terminating
+  decimal/percent with at most two significant figures=1; otherwise 0. A rounded
+  approximation never qualifies. This is an answer-arithmetic heuristic, not a
+  measured difficulty rating of the whole question.
+- At least 20 instances and at least 10 friendly instances are required.
+  Sampling continues into the bounded, well-spread reserve when needed; all
+  retained points still pass the existing exact/Monte Carlo/wrong-method gates.
+  Optional part 2 must separately retain 20 points and 10 friendly points.
+- wrong entries have unique exact values and a misconceptions LIST, even for
+  singletons. All source method names survive a merge. Separation still has one
+  row per method; min_wrong_pair_gap keeps its original solver-method meaning
+  (zero when methods collide with each other). min_distinct_wrong_pair_gap is
+  the minimum among distinct exported wrong values, or null for a single value.
+  A collision with the CORRECT answer still drops the instance.
+- Each instance, including part 2, has spoken_text. Code expands exact numeric
+  literals, fractions, decimals, scientific notation, percents and common
+  comparison/arithmetic symbols into spoken English, without rounding.
+- The author must write natural interview English and state assumptions such as
+  fair coins/dice, independence and replacement. Dollar signs, backslash
+  commands, redundant 1 * coefficients and count phrases such as "5 squared
+  observations" trigger the existing single author-repair round. Persistent
+  bad wording rejects the entire template, including bad optional part-2 text.
+  These checks supplement the builder's wording audit.
+- After numerical/blind/novelty checks, one short Spark 1.3 checker call chooses
+  topic from the actual cleaned vocabulary using only generated question text.
+  The old primary bank label is source_topic; topics retains the source labels.
+  A missing vocabulary or an out-of-vocabulary result cannot be accepted.
+  This call uses the same private record/replay and cost ledger.
+
+Verification revision 4 / instance format 3 prevents an old finished checkpoint
+from skipping the new content gates. No generated content is committed before
+builder review. Four SE, simulator isolation, the blind twin and novelty gates
+are unchanged.

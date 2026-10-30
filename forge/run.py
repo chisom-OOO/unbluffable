@@ -10,7 +10,7 @@ from forge.data import PRIORITY, load_csv
 from forge.models import DEFAULT_PRICES, Models, State
 from forge.pipeline import Pipeline
 from forge.sandbox import Sandbox
-from forge.selection import parse_quotas
+from forge.selection import parse_quotas, SCALE_QUOTAS
 from llm.backends import get_backend
 from llm.client import MissingKey, _key
 
@@ -46,7 +46,7 @@ def main(argv=None):
     parser.add_argument("--csv", required=True, type=Path)
     parser.add_argument("--limit", type=int, default=100)
     parser.add_argument("--topics", default=",".join(PRIORITY), help="Comma-separated priority order, not a filter")
-    parser.add_argument("--per-topic", default="", help="Exact topic=count quotas, summing to --limit")
+    parser.add_argument("--per-topic", default="", help="Exact topic=count quotas, summing to --limit. Scale split: " + SCALE_QUOTAS)
     parser.add_argument("--budget-usd", type=float, default=40)
     parser.add_argument("--mode", choices=("live", "replay"), default="replay")
     parser.add_argument("--work-dir", type=Path, default=ROOT / "data" / "forge")
