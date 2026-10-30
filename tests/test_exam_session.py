@@ -460,7 +460,7 @@ def test_report_endpoint(monkeypatch):
     report = client.get(f"/api/interview/{session_id}/report")
     assert report.status_code == 200 and report.json()["label"] == "supports"
     assert client.get("/api/interview/nope/report").status_code == 404
-    assert client.get("/ui/end").status_code == 200  # the labelled sample still works
+    assert client.get("/ui/end").status_code == 200  # the page loads; without a session it says so
 
 
 # --- Silence-prompt commitment check for the current puzzle (twin) ---------

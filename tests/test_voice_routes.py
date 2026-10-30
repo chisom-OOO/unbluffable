@@ -41,7 +41,7 @@ def test_file_fallback_waits_for_confirmation_then_acknowledges(monkeypatch):
 
 def test_public_static_assets_and_consent_controls():
     client = TestClient(app)
-    html = client.get("/practice")
+    html = client.get("/voice-static/practice.html")  # "/practice" now redirects to /ui
     assert html.status_code == 200 and 'id="done"' in html.text and 'id="consent"' in html.text
     js = client.get("/voice-static/voice.js")
     assert js.status_code == 200 and "speak(event.acknowledgement)" in js.text

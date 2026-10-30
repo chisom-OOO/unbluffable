@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.database import initialize_database
@@ -29,15 +29,15 @@ app.mount("/ui-static", StaticFiles(directory=Path(__file__).parent / "static" /
 TEMPLATES = Path(__file__).parent / "templates"
 
 
-@app.get("/", response_class=HTMLResponse)
-def health_page() -> str:
-    """Return a small human-readable health page."""
-    return "<!doctype html><html><head><title>Unbluffable</title></head><body><h1>Unbluffable</h1><p>Service is running.</p><a href='/practice'>Start voice practice</a></body></html>"
+# The site opens on the landing page; /health stays for Render.
+@app.get("/", include_in_schema=False)
+def home():
+    return RedirectResponse("/ui", status_code=307)
 
 
-@app.get("/practice")
-def voice_practice():
-    return FileResponse(Path(__file__).parent / "static" / "practice.html")
+@app.get("/practice", include_in_schema=False)
+def old_practice():
+    return RedirectResponse("/ui", status_code=307)
 
 
 @app.get("/health")
@@ -46,7 +46,7 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-# UI preview screens (Exam Room design, fake data; not wired to the engine yet).
+# The Exam Room screens.
 @app.get("/ui")
 def ui_landing():
     return FileResponse(TEMPLATES / "landing.html")
