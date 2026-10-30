@@ -1,12 +1,12 @@
 {
   "template_id": "sw_F009",
   "pack": "software",
-  "topic": "Heaps",
+  "topic": "Monotonic stack",
   "topics": [
-    "Heaps"
+    "Monotonic stack"
   ],
-  "source_topic": "Descending-rank value",
-  "difficulty": "Easy",
+  "source_topic": "Largest histogram rectangle",
+  "difficulty": "Hard",
   "models": {
     "author": "meta-models/muse-spark-open-1026",
     "checker": null
@@ -25,2366 +25,3554 @@
       "variants_checked": 50,
       "max_absolute_error": "0"
     },
-    "misconceptions_verified": false,
-    "method_count": 0,
-    "repair_attempted": true,
-    "reason": {
-      "gate": "wrong_methods",
-      "error_class": "correct_answer_collision",
-      "variant_index": 0
-    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
     "pending_reason": null,
     "all_variants_retained": true,
     "rechecked_parameter_revision": null,
-    "variant_followups": false
+    "variant_followups": true
   },
   "follow_up": {
-    "question": "How do bounded-heap time and space costs depend on the requested rank?",
-    "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+    "question": "Why can a popped height be evaluated immediately?",
+    "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
   },
   "review_status": "pending_builder_review",
   "instances": [
     {
       "variant": "1",
-      "text": "You rank a small batch of scores. The values are 3, 13, 15, 13, 2, 20. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A bar chart has heights 5, 15, 11, 18, 28, 28, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          3,
-          13,
+          5,
           15,
-          13,
-          2,
-          20
+          11,
+          18,
+          28,
+          28
         ]
       },
-      "answer": "15",
+      "answer": "56",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You rank a small batch of scores. The values are three, thirteen, fifteen, thirteen, two, twenty. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A bar chart has heights five, fifteen, eleven, eighteen, twenty-eight, twenty-eight, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_count",
-          "value": "6"
+          "value": "28",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
         },
         {
-          "name": "one_indexed_k",
+          "value": "30",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_rectangle_height",
+          "value": "28"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "2"
         },
         {
-          "name": "kth_largest_value",
-          "value": "15"
+          "name": "best_rectangle_area",
+          "value": "56"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "28",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "26",
+            "relative_gap": "13/28"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "2",
-      "text": "A stream routine keeps the largest observed values. The values are 16, 11, 5, 19, 12, 13. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 5, as an integer?",
+      "text": "A skyline chart has heights 14, 4, 0, 28, 19, 22, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 5,
         "values": [
-          16,
-          11,
-          5,
+          14,
+          4,
+          0,
+          28,
           19,
-          12,
-          13
+          22
         ]
       },
-      "answer": "11",
+      "answer": "57",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A stream routine keeps the largest observed values. The values are sixteen, eleven, five, nineteen, twelve, thirteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank five, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A skyline chart has heights fourteen, four, zero, twenty-eight, nineteen, twenty-two, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "6"
+          "name": "best_rectangle_height",
+          "value": "19"
         },
         {
-          "name": "one_indexed_k",
-          "value": "5"
+          "name": "best_rectangle_width",
+          "value": "3"
         },
         {
-          "name": "kth_largest_value",
-          "value": "11"
+          "name": "best_rectangle_area",
+          "value": "57"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "29",
+            "relative_gap": "29/57"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "57",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "28",
+        "min_distinct_wrong_pair_gap": "28"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "3",
-      "text": "You inspect a short list of item priorities. The values are 10, 18, 16, 20, 20, 11, 20, 4. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 3, as an integer?",
+      "text": "A capacity chart has heights 27, 7, 26, 11, 4, 27, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 3,
         "values": [
-          10,
-          18,
-          16,
-          20,
-          20,
+          27,
+          7,
+          26,
           11,
-          20,
-          4
+          4,
+          27
         ]
       },
-      "answer": "20",
+      "answer": "28",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You inspect a short list of item priorities. The values are ten, eighteen, sixteen, twenty, twenty, eleven, twenty, four. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank three, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A capacity chart has heights twenty-seven, seven, twenty-six, eleven, four, twenty-seven, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "8"
+          "name": "best_rectangle_height",
+          "value": "7"
         },
         {
-          "name": "one_indexed_k",
-          "value": "3"
+          "name": "best_rectangle_width",
+          "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "20"
+          "name": "best_rectangle_area",
+          "value": "28"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "1",
+            "relative_gap": "1/28"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "4",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "4",
-      "text": "A monitor asks for a descending-rank measurement. The values are 13, 13, 2, 12, 9, 5, 1. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 6, as an integer?",
+      "text": "A histogram has heights 11, 28, 8, 29, 30, 6, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 6,
         "values": [
-          13,
-          13,
-          2,
-          12,
-          9,
-          5,
-          1
+          11,
+          28,
+          8,
+          29,
+          30,
+          6
         ]
       },
-      "answer": "2",
+      "answer": "58",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A monitor asks for a descending-rank measurement. The values are thirteen, thirteen, two, twelve, nine, five, one. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank six, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A histogram has heights eleven, twenty-eight, eight, twenty-nine, thirty, six, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "7"
+          "name": "best_rectangle_height",
+          "value": "29"
         },
         {
-          "name": "one_indexed_k",
-          "value": "6"
-        },
-        {
-          "name": "kth_largest_value",
+          "name": "best_rectangle_width",
           "value": "2"
+        },
+        {
+          "name": "best_rectangle_area",
+          "value": "58"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "28",
+            "relative_gap": "14/29"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "22",
+            "relative_gap": "11/29"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "5",
-      "text": "You trace a top-value selection helper. The values are 13, 9, 16, 15, 0, 0. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 3, as an integer?",
+      "text": "A height chart has heights 23, 22, 28, 24, 18, 9, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 3,
         "values": [
-          13,
-          9,
-          16,
-          15,
-          0,
-          0
+          23,
+          22,
+          28,
+          24,
+          18,
+          9
         ]
       },
-      "answer": "13",
+      "answer": "90",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You trace a top-value selection helper. The values are thirteen, nine, sixteen, fifteen, zero, zero. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank three, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A height chart has heights twenty-three, twenty-two, twenty-eight, twenty-four, eighteen, nine, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "54",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "6"
+          "name": "best_rectangle_height",
+          "value": "18"
         },
         {
-          "name": "one_indexed_k",
-          "value": "3"
+          "name": "best_rectangle_width",
+          "value": "5"
         },
         {
-          "name": "kth_largest_value",
-          "value": "13"
+          "name": "best_rectangle_area",
+          "value": "90"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "62",
+            "relative_gap": "31/45"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "36",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "26",
+        "min_distinct_wrong_pair_gap": "26"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "6",
-      "text": "You rank a small batch of scores. The values are 16, 17, 4. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 1, as an integer?",
+      "text": "A bar chart has heights 20, 21, 25, 19, 24, 8, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 1,
         "values": [
-          16,
-          17,
-          4
+          20,
+          21,
+          25,
+          19,
+          24,
+          8
         ]
       },
-      "answer": "17",
+      "answer": "95",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You rank a small batch of scores. The values are sixteen, seventeen, four. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank one, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A bar chart has heights twenty, twenty-one, twenty-five, nineteen, twenty-four, eight, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "48",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "3"
+          "name": "best_rectangle_height",
+          "value": "19"
         },
         {
-          "name": "one_indexed_k",
-          "value": "1"
+          "name": "best_rectangle_width",
+          "value": "5"
         },
         {
-          "name": "kth_largest_value",
-          "value": "17"
+          "name": "best_rectangle_area",
+          "value": "95"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "70",
+            "relative_gap": "14/19"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "47",
+            "relative_gap": "47/95"
+          }
+        ],
+        "min_wrong_pair_gap": "23",
+        "min_distinct_wrong_pair_gap": "23"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "7",
-      "text": "A stream routine keeps the largest observed values. The values are 13, 4. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A skyline chart has heights 26, 11, 24, 7, 11, 4, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          13,
+          26,
+          11,
+          24,
+          7,
+          11,
           4
         ]
       },
-      "answer": "4",
+      "answer": "35",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A stream routine keeps the largest observed values. The values are thirteen, four. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A skyline chart has heights twenty-six, eleven, twenty-four, seven, eleven, four, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "26",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "2"
+          "name": "best_rectangle_height",
+          "value": "7"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
+          "name": "best_rectangle_width",
+          "value": "5"
         },
         {
-          "name": "kth_largest_value",
-          "value": "4"
+          "name": "best_rectangle_area",
+          "value": "35"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "9",
+            "relative_gap": "9/35"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "11",
+            "relative_gap": "11/35"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "8",
-      "text": "You inspect a short list of item priorities. The values are 11, 6, 6, 14, 1. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 3, as an integer?",
+      "text": "A capacity chart has heights 6, 11, 18, 30, 20, 11, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 3,
         "values": [
+          6,
           11,
-          6,
-          6,
-          14,
-          1
+          18,
+          30,
+          20,
+          11
         ]
       },
-      "answer": "6",
+      "answer": "55",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You inspect a short list of item priorities. The values are eleven, six, six, fourteen, one. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank three, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A capacity chart has heights six, eleven, eighteen, thirty, twenty, eleven, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
+          "name": "best_rectangle_height",
+          "value": "11"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "5"
         },
         {
-          "name": "one_indexed_k",
-          "value": "3"
-        },
-        {
-          "name": "kth_largest_value",
-          "value": "6"
+          "name": "best_rectangle_area",
+          "value": "55"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "25",
+            "relative_gap": "5/11"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "19",
+            "relative_gap": "19/55"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "9",
-      "text": "A monitor asks for a descending-rank measurement. The values are 13, 8. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A histogram has heights 18, 27, 27, 29, 6, 12, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          13,
-          8
+          18,
+          27,
+          27,
+          29,
+          6,
+          12
         ]
       },
-      "answer": "8",
+      "answer": "81",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A monitor asks for a descending-rank measurement. The values are thirteen, eight. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A histogram has heights eighteen, twenty-seven, twenty-seven, twenty-nine, six, twelve, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "2"
+          "name": "best_rectangle_height",
+          "value": "27"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
+          "name": "best_rectangle_width",
+          "value": "3"
         },
         {
-          "name": "kth_largest_value",
-          "value": "8"
+          "name": "best_rectangle_area",
+          "value": "81"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "52",
+            "relative_gap": "52/81"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "45",
+            "relative_gap": "5/9"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "10",
-      "text": "You trace a top-value selection helper. The values are 12, 9, 0, 18, 10. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 5, as an integer?",
+      "text": "A height chart has heights 27, 22, 26, 25, 20, 1, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 5,
         "values": [
-          12,
-          9,
-          0,
-          18,
-          10
+          27,
+          22,
+          26,
+          25,
+          20,
+          1
         ]
       },
-      "answer": "0",
+      "answer": "100",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You trace a top-value selection helper. The values are twelve, nine, zero, eighteen, ten. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank five, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A height chart has heights twenty-seven, twenty-two, twenty-six, twenty-five, twenty, one, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
+          "name": "best_rectangle_height",
+          "value": "20"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "5"
         },
         {
-          "name": "one_indexed_k",
-          "value": "5"
-        },
-        {
-          "name": "kth_largest_value",
-          "value": "0"
+          "name": "best_rectangle_area",
+          "value": "100"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "73",
+            "relative_gap": "73/100"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "94",
+            "relative_gap": "47/50"
+          }
+        ],
+        "min_wrong_pair_gap": "21",
+        "min_distinct_wrong_pair_gap": "21"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "11",
-      "text": "You rank a small batch of scores. The values are 9, 17, 8, 20, 13. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A bar chart has heights 24, 17, 6, 4, 11, 13, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          9,
+          24,
           17,
-          8,
-          20,
+          6,
+          4,
+          11,
           13
         ]
       },
-      "answer": "17",
+      "answer": "34",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You rank a small batch of scores. The values are nine, seventeen, eight, twenty, thirteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A bar chart has heights twenty-four, seventeen, six, four, eleven, thirteen, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles",
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "5"
+          "name": "best_rectangle_height",
+          "value": "17"
         },
         {
-          "name": "one_indexed_k",
+          "name": "best_rectangle_width",
           "value": "2"
         },
         {
-          "name": "kth_largest_value",
-          "value": "17"
+          "name": "best_rectangle_area",
+          "value": "34"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "10",
+            "relative_gap": "5/17"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "10",
+            "relative_gap": "5/17"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "12",
-      "text": "A stream routine keeps the largest observed values. The values are 0, 16, 20. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 3, as an integer?",
+      "text": "A skyline chart has heights 23, 25, 8, 28, 17, 4, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 3,
         "values": [
-          0,
-          16,
-          20
+          23,
+          25,
+          8,
+          28,
+          17,
+          4
         ]
       },
-      "answer": "0",
+      "answer": "46",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A stream routine keeps the largest observed values. The values are zero, sixteen, twenty. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank three, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A skyline chart has heights twenty-three, twenty-five, eight, twenty-eight, seventeen, four, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "3"
+          "name": "best_rectangle_height",
+          "value": "23"
         },
         {
-          "name": "one_indexed_k",
-          "value": "3"
+          "name": "best_rectangle_width",
+          "value": "2"
         },
         {
-          "name": "kth_largest_value",
-          "value": "0"
+          "name": "best_rectangle_area",
+          "value": "46"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "18",
+            "relative_gap": "9/23"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "22",
+            "relative_gap": "11/23"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "13",
-      "text": "You inspect a short list of item priorities. The values are 0, 4, 0, 4, 0, 11. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 1, as an integer?",
+      "text": "A capacity chart has heights 7, 11, 20, 5, 2, 6, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 1,
         "values": [
-          0,
-          4,
-          0,
-          4,
-          0,
-          11
+          7,
+          11,
+          20,
+          5,
+          2,
+          6
         ]
       },
-      "answer": "11",
+      "answer": "22",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You inspect a short list of item priorities. The values are zero, four, zero, four, zero, eleven. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank one, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A capacity chart has heights seven, eleven, twenty, five, two, six, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "6"
-        },
-        {
-          "name": "one_indexed_k",
-          "value": "1"
-        },
-        {
-          "name": "kth_largest_value",
+          "name": "best_rectangle_height",
           "value": "11"
+        },
+        {
+          "name": "best_rectangle_width",
+          "value": "2"
+        },
+        {
+          "name": "best_rectangle_area",
+          "value": "22"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "2",
+            "relative_gap": "1/11"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "10",
+            "relative_gap": "5/11"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "14",
-      "text": "A monitor asks for a descending-rank measurement. The values are 20, 9, 4, 14, 1, 5, 9, 12. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 7, as an integer?",
+      "text": "A histogram has heights 5, 3, 10, 1, 13, 12, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 7,
         "values": [
-          20,
-          9,
-          4,
-          14,
-          1,
           5,
-          9,
+          3,
+          10,
+          1,
+          13,
           12
         ]
       },
-      "answer": "4",
+      "answer": "24",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A monitor asks for a descending-rank measurement. The values are twenty, nine, four, fourteen, one, five, nine, twelve. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank seven, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A histogram has heights five, three, ten, one, thirteen, twelve, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "8"
+          "name": "best_rectangle_height",
+          "value": "12"
         },
         {
-          "name": "one_indexed_k",
-          "value": "7"
+          "name": "best_rectangle_width",
+          "value": "2"
         },
         {
-          "name": "kth_largest_value",
-          "value": "4"
+          "name": "best_rectangle_area",
+          "value": "24"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "11",
+            "relative_gap": "11/24"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "18",
+            "relative_gap": "3/4"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "15",
-      "text": "You trace a top-value selection helper. The values are 6, 19, 3, 12, 7, 4, 14, 0. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 5, as an integer?",
+      "text": "A height chart has heights 7, 25, 11, 25, 11, 3, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 5,
         "values": [
-          6,
-          19,
-          3,
-          12,
           7,
-          4,
-          14,
-          0
+          25,
+          11,
+          25,
+          11,
+          3
         ]
       },
-      "answer": "6",
+      "answer": "44",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You trace a top-value selection helper. The values are six, nineteen, three, twelve, seven, four, fourteen, zero. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank five, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A height chart has heights seven, twenty-five, eleven, twenty-five, eleven, three, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "18",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "8"
+          "name": "best_rectangle_height",
+          "value": "11"
         },
         {
-          "name": "one_indexed_k",
-          "value": "5"
+          "name": "best_rectangle_width",
+          "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "6"
+          "name": "best_rectangle_area",
+          "value": "44"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "19",
+            "relative_gap": "19/44"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "26",
+            "relative_gap": "13/22"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "16",
-      "text": "You rank a small batch of scores. The values are 15, 8. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 1, as an integer?",
+      "text": "A bar chart has heights 25, 26, 27, 30, 30, 6, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 1,
         "values": [
-          15,
-          8
+          25,
+          26,
+          27,
+          30,
+          30,
+          6
         ]
       },
-      "answer": "15",
+      "answer": "125",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You rank a small batch of scores. The values are fifteen, eight. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank one, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A bar chart has heights twenty-five, twenty-six, twenty-seven, thirty, thirty, six, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "2"
+          "name": "best_rectangle_height",
+          "value": "25"
         },
         {
-          "name": "one_indexed_k",
-          "value": "1"
+          "name": "best_rectangle_width",
+          "value": "5"
         },
         {
-          "name": "kth_largest_value",
-          "value": "15"
+          "name": "best_rectangle_area",
+          "value": "125"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "95",
+            "relative_gap": "19/25"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "89",
+            "relative_gap": "89/125"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "17",
-      "text": "A stream routine keeps the largest observed values. The values are 18, 10, 18, 8. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 4, as an integer?",
+      "text": "A skyline chart has heights 4, 8, 5, 5, 6, 15, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 4,
         "values": [
-          18,
-          10,
-          18,
-          8
+          4,
+          8,
+          5,
+          5,
+          6,
+          15
         ]
       },
-      "answer": "8",
+      "answer": "25",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A stream routine keeps the largest observed values. The values are eighteen, ten, eighteen, eight. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank four, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A skyline chart has heights four, eight, five, five, six, fifteen, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "4"
+          "name": "best_rectangle_height",
+          "value": "5"
         },
         {
-          "name": "one_indexed_k",
-          "value": "4"
+          "name": "best_rectangle_width",
+          "value": "5"
         },
         {
-          "name": "kth_largest_value",
-          "value": "8"
+          "name": "best_rectangle_area",
+          "value": "25"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "10",
+            "relative_gap": "2/5"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "1",
+            "relative_gap": "1/25"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "18",
-      "text": "You inspect a short list of item priorities. The values are 19, 5, 2, 18, 14, 9. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 6, as an integer?",
+      "text": "A capacity chart has heights 3, 22, 20, 27, 19, 12, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 6,
         "values": [
+          3,
+          22,
+          20,
+          27,
           19,
-          5,
-          2,
-          18,
-          14,
-          9
+          12
         ]
       },
-      "answer": "2",
+      "answer": "76",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You inspect a short list of item priorities. The values are nineteen, five, two, eighteen, fourteen, nine. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank six, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A capacity chart has heights three, twenty-two, twenty, twenty-seven, nineteen, twelve, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "18",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "6"
+          "name": "best_rectangle_height",
+          "value": "19"
         },
         {
-          "name": "one_indexed_k",
-          "value": "6"
+          "name": "best_rectangle_width",
+          "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "2"
+          "name": "best_rectangle_area",
+          "value": "76"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "49",
+            "relative_gap": "49/76"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "58",
+            "relative_gap": "29/38"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "19",
-      "text": "A monitor asks for a descending-rank measurement. The values are 0, 19, 13. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A histogram has heights 15, 29, 30, 30, 26, 11, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          0,
-          19,
-          13
+          15,
+          29,
+          30,
+          30,
+          26,
+          11
         ]
       },
-      "answer": "13",
+      "answer": "104",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A monitor asks for a descending-rank measurement. The values are zero, nineteen, thirteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A histogram has heights fifteen, twenty-nine, thirty, thirty, twenty-six, eleven, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "66",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "3"
+          "name": "best_rectangle_height",
+          "value": "26"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
+          "name": "best_rectangle_width",
+          "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "13"
+          "name": "best_rectangle_area",
+          "value": "104"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "74",
+            "relative_gap": "37/52"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "38",
+            "relative_gap": "19/52"
+          }
+        ],
+        "min_wrong_pair_gap": "36",
+        "min_distinct_wrong_pair_gap": "36"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "20",
-      "text": "You trace a top-value selection helper. The values are 20, 13, 14. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 1, as an integer?",
+      "text": "A height chart has heights 7, 5, 18, 12, 16, 3, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 1,
         "values": [
-          20,
-          13,
-          14
+          7,
+          5,
+          18,
+          12,
+          16,
+          3
         ]
       },
-      "answer": "20",
+      "answer": "36",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You trace a top-value selection helper. The values are twenty, thirteen, fourteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank one, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A height chart has heights seven, five, eighteen, twelve, sixteen, three, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "18",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles",
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
+          "name": "best_rectangle_height",
+          "value": "12"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "3"
         },
         {
-          "name": "one_indexed_k",
-          "value": "1"
-        },
-        {
-          "name": "kth_largest_value",
-          "value": "20"
+          "name": "best_rectangle_area",
+          "value": "36"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "18",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "18",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "21",
-      "text": "You rank a small batch of scores. The values are 2, 19. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A bar chart has heights 4, 16, 24, 5, 5, 13, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          2,
-          19
+          4,
+          16,
+          24,
+          5,
+          5,
+          13
         ]
       },
-      "answer": "2",
+      "answer": "32",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You rank a small batch of scores. The values are two, nineteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A bar chart has heights four, sixteen, twenty-four, five, five, thirteen, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles",
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
+          "name": "best_rectangle_height",
+          "value": "16"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "2"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
-        },
-        {
-          "name": "kth_largest_value",
-          "value": "2"
+          "name": "best_rectangle_area",
+          "value": "32"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "8",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "8",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
         "min_distinct_wrong_pair_gap": null
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "22",
-      "text": "A stream routine keeps the largest observed values. The values are 15, 8, 8, 1, 3, 3, 6, 7. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A skyline chart has heights 30, 30, 30, 27, 10, 1, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          15,
-          8,
-          8,
-          1,
-          3,
-          3,
-          6,
-          7
+          30,
+          30,
+          30,
+          27,
+          10,
+          1
         ]
       },
-      "answer": "8",
+      "answer": "108",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A stream routine keeps the largest observed values. The values are fifteen, eight, eight, one, three, three, six, seven. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A skyline chart has heights thirty, thirty, thirty, twenty-seven, ten, one, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "8"
+          "name": "best_rectangle_height",
+          "value": "27"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
+          "name": "best_rectangle_width",
+          "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "8"
+          "name": "best_rectangle_area",
+          "value": "108"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "78",
+            "relative_gap": "13/18"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "102",
+            "relative_gap": "17/18"
+          }
+        ],
+        "min_wrong_pair_gap": "24",
+        "min_distinct_wrong_pair_gap": "24"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "23",
-      "text": "You inspect a short list of item priorities. The values are 18, 6, 15, 9. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A capacity chart has heights 21, 25, 3, 24, 22, 22, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          18,
-          6,
-          15,
-          9
+          21,
+          25,
+          3,
+          24,
+          22,
+          22
         ]
       },
-      "answer": "15",
+      "answer": "66",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You inspect a short list of item priorities. The values are eighteen, six, fifteen, nine. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A capacity chart has heights twenty-one, twenty-five, three, twenty-four, twenty-two, twenty-two, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "18",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "4"
+          "name": "best_rectangle_height",
+          "value": "22"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
+          "name": "best_rectangle_width",
+          "value": "3"
         },
         {
-          "name": "kth_largest_value",
-          "value": "15"
+          "name": "best_rectangle_area",
+          "value": "66"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "41",
+            "relative_gap": "41/66"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "48",
+            "relative_gap": "8/11"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "24",
-      "text": "A monitor asks for a descending-rank measurement. The values are 5, 4, 12, 2. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 3, as an integer?",
+      "text": "A histogram has heights 28, 22, 25, 21, 27, 5, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 3,
         "values": [
-          5,
-          4,
-          12,
-          2
+          28,
+          22,
+          25,
+          21,
+          27,
+          5
         ]
       },
-      "answer": "4",
+      "answer": "105",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A monitor asks for a descending-rank measurement. The values are five, four, twelve, two. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank three, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A histogram has heights twenty-eight, twenty-two, twenty-five, twenty-one, twenty-seven, five, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "4"
+          "name": "best_rectangle_height",
+          "value": "21"
         },
         {
-          "name": "one_indexed_k",
-          "value": "3"
+          "name": "best_rectangle_width",
+          "value": "5"
         },
         {
-          "name": "kth_largest_value",
-          "value": "4"
+          "name": "best_rectangle_area",
+          "value": "105"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "77",
+            "relative_gap": "11/15"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "75",
+            "relative_gap": "5/7"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "25",
-      "text": "You trace a top-value selection helper. The values are 6, 13, 16, 1, 4, 12. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 4, as an integer?",
+      "text": "A height chart has heights 25, 18, 14, 28, 14, 5, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 4,
         "values": [
-          6,
-          13,
-          16,
-          1,
-          4,
-          12
+          25,
+          18,
+          14,
+          28,
+          14,
+          5
         ]
       },
-      "answer": "6",
+      "answer": "70",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You trace a top-value selection helper. The values are six, thirteen, sixteen, one, four, twelve. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank four, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A height chart has heights twenty-five, eighteen, fourteen, twenty-eight, fourteen, five, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "6"
+          "name": "best_rectangle_height",
+          "value": "14"
         },
         {
-          "name": "one_indexed_k",
-          "value": "4"
+          "name": "best_rectangle_width",
+          "value": "5"
         },
         {
-          "name": "kth_largest_value",
-          "value": "6"
+          "name": "best_rectangle_area",
+          "value": "70"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "42",
+            "relative_gap": "3/5"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "40",
+            "relative_gap": "4/7"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "26",
-      "text": "You rank a small batch of scores. The values are 7, 13, 9, 19, 11, 11, 6, 17. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 4, as an integer?",
+      "text": "A bar chart has heights 14, 26, 27, 8, 1, 12, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 4,
         "values": [
-          7,
-          13,
-          9,
-          19,
-          11,
-          11,
-          6,
-          17
+          14,
+          26,
+          27,
+          8,
+          1,
+          12
         ]
       },
-      "answer": "11",
+      "answer": "52",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You rank a small batch of scores. The values are seven, thirteen, nine, nineteen, eleven, eleven, six, seventeen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank four, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A bar chart has heights fourteen, twenty-six, twenty-seven, eight, one, twelve, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "8"
+          "name": "best_rectangle_height",
+          "value": "26"
         },
         {
-          "name": "one_indexed_k",
-          "value": "4"
+          "name": "best_rectangle_width",
+          "value": "2"
         },
         {
-          "name": "kth_largest_value",
-          "value": "11"
+          "name": "best_rectangle_area",
+          "value": "52"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "25",
+            "relative_gap": "25/52"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "46",
+            "relative_gap": "23/26"
+          }
+        ],
+        "min_wrong_pair_gap": "21",
+        "min_distinct_wrong_pair_gap": "21"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "27",
-      "text": "A stream routine keeps the largest observed values. The values are 20, 3, 13, 0, 4, 6, 16. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 7, as an integer?",
+      "text": "A skyline chart has heights 3, 2, 23, 28, 27, 28, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 7,
         "values": [
-          20,
           3,
-          13,
-          0,
-          4,
-          6,
-          16
+          2,
+          23,
+          28,
+          27,
+          28
         ]
       },
-      "answer": "0",
+      "answer": "92",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A stream routine keeps the largest observed values. The values are twenty, three, thirteen, zero, four, six, sixteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank seven, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A skyline chart has heights three, two, twenty-three, twenty-eight, twenty-seven, twenty-eight, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "7"
+          "name": "best_rectangle_height",
+          "value": "23"
         },
         {
-          "name": "one_indexed_k",
-          "value": "7"
+          "name": "best_rectangle_width",
+          "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "0"
+          "name": "best_rectangle_area",
+          "value": "92"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "64",
+            "relative_gap": "16/23"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "80",
+            "relative_gap": "20/23"
+          }
+        ],
+        "min_wrong_pair_gap": "16",
+        "min_distinct_wrong_pair_gap": "16"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "28",
-      "text": "You inspect a short list of item priorities. The values are 20, 15, 20. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 1, as an integer?",
+      "text": "A capacity chart has heights 18, 19, 21, 25, 11, 13, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 1,
         "values": [
-          20,
-          15,
-          20
+          18,
+          19,
+          21,
+          25,
+          11,
+          13
         ]
       },
-      "answer": "20",
+      "answer": "72",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You inspect a short list of item priorities. The values are twenty, fifteen, twenty. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank one, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A capacity chart has heights eighteen, nineteen, twenty-one, twenty-five, eleven, thirteen, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "66",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "3"
+          "name": "best_rectangle_height",
+          "value": "18"
         },
         {
-          "name": "one_indexed_k",
-          "value": "1"
+          "name": "best_rectangle_width",
+          "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "20"
+          "name": "best_rectangle_area",
+          "value": "72"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "47",
+            "relative_gap": "47/72"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "6",
+            "relative_gap": "1/12"
+          }
+        ],
+        "min_wrong_pair_gap": "41",
+        "min_distinct_wrong_pair_gap": "41"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "29",
-      "text": "A monitor asks for a descending-rank measurement. The values are 13, 4, 7, 16. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A histogram has heights 19, 24, 17, 28, 22, 14, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          13,
-          4,
-          7,
-          16
+          19,
+          24,
+          17,
+          28,
+          22,
+          14
         ]
       },
-      "answer": "13",
+      "answer": "85",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A monitor asks for a descending-rank measurement. The values are thirteen, four, seven, sixteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A histogram has heights nineteen, twenty-four, seventeen, twenty-eight, twenty-two, fourteen, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "84",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "4"
+          "name": "best_rectangle_height",
+          "value": "17"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
+          "name": "best_rectangle_width",
+          "value": "5"
         },
         {
-          "name": "kth_largest_value",
-          "value": "13"
+          "name": "best_rectangle_area",
+          "value": "85"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "57",
+            "relative_gap": "57/85"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "1",
+            "relative_gap": "1/85"
+          }
+        ],
+        "min_wrong_pair_gap": "56",
+        "min_distinct_wrong_pair_gap": "56"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "30",
-      "text": "You trace a top-value selection helper. The values are 9, 4, 19, 17, 12. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A height chart has heights 17, 29, 10, 26, 2, 2, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          9,
-          4,
-          19,
           17,
-          12
+          29,
+          10,
+          26,
+          2,
+          2
         ]
       },
-      "answer": "17",
+      "answer": "40",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You trace a top-value selection helper. The values are nine, four, nineteen, seventeen, twelve. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A height chart has heights seventeen, twenty-nine, ten, twenty-six, two, two, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "5"
+          "name": "best_rectangle_height",
+          "value": "10"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
+          "name": "best_rectangle_width",
+          "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "17"
+          "name": "best_rectangle_area",
+          "value": "40"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "11",
+            "relative_gap": "11/40"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "28",
+            "relative_gap": "7/10"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "31",
-      "text": "You rank a small batch of scores. The values are 4, 4, 7, 16, 15, 14, 8. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 4, as an integer?",
+      "text": "A bar chart has heights 14, 9, 24, 0, 1, 21, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 4,
         "values": [
-          4,
-          4,
-          7,
-          16,
-          15,
           14,
-          8
+          9,
+          24,
+          0,
+          1,
+          21
         ]
       },
-      "answer": "8",
+      "answer": "27",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You rank a small batch of scores. The values are four, four, seven, sixteen, fifteen, fourteen, eight. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank four, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A bar chart has heights fourteen, nine, twenty-four, zero, one, twenty-one, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "7"
+          "name": "best_rectangle_height",
+          "value": "9"
         },
         {
-          "name": "one_indexed_k",
-          "value": "4"
+          "name": "best_rectangle_width",
+          "value": "3"
         },
         {
-          "name": "kth_largest_value",
-          "value": "8"
+          "name": "best_rectangle_area",
+          "value": "27"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "3",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "27",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "24",
+        "min_distinct_wrong_pair_gap": "24"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "32",
-      "text": "A stream routine keeps the largest observed values. The values are 2, 4, 14, 7, 1. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 3, as an integer?",
+      "text": "A skyline chart has heights 12, 26, 16, 9, 30, 7, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 3,
         "values": [
-          2,
-          4,
-          14,
-          7,
-          1
+          12,
+          26,
+          16,
+          9,
+          30,
+          7
         ]
       },
-      "answer": "4",
+      "answer": "45",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A stream routine keeps the largest observed values. The values are two, four, fourteen, seven, one. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank three, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A skyline chart has heights twelve, twenty-six, sixteen, nine, thirty, seven, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "42",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
+          "name": "best_rectangle_height",
+          "value": "9"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "5"
         },
         {
-          "name": "one_indexed_k",
-          "value": "3"
-        },
-        {
-          "name": "kth_largest_value",
-          "value": "4"
+          "name": "best_rectangle_area",
+          "value": "45"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "15",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "3",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "33",
-      "text": "You inspect a short list of item priorities. The values are 11, 11, 0, 19. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 4, as an integer?",
+      "text": "A capacity chart has heights 21, 15, 17, 22, 13, 8, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 4,
         "values": [
-          11,
-          11,
-          0,
-          19
+          21,
+          15,
+          17,
+          22,
+          13,
+          8
         ]
       },
-      "answer": "0",
+      "answer": "65",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You inspect a short list of item priorities. The values are eleven, eleven, zero, nineteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank four, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A capacity chart has heights twenty-one, fifteen, seventeen, twenty-two, thirteen, eight, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "22",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "48",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "4"
+          "name": "best_rectangle_height",
+          "value": "13"
         },
         {
-          "name": "one_indexed_k",
-          "value": "4"
+          "name": "best_rectangle_width",
+          "value": "5"
         },
         {
-          "name": "kth_largest_value",
-          "value": "0"
+          "name": "best_rectangle_area",
+          "value": "65"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "43",
+            "relative_gap": "43/65"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "17",
+            "relative_gap": "17/65"
+          }
+        ],
+        "min_wrong_pair_gap": "26",
+        "min_distinct_wrong_pair_gap": "26"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "34",
-      "text": "A monitor asks for a descending-rank measurement. The values are 1, 15. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 1, as an integer?",
+      "text": "A histogram has heights 3, 6, 16, 12, 7, 15, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 1,
         "values": [
-          1,
+          3,
+          6,
+          16,
+          12,
+          7,
           15
         ]
       },
-      "answer": "15",
+      "answer": "30",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A monitor asks for a descending-rank measurement. The values are one, fifteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank one, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A histogram has heights three, six, sixteen, twelve, seven, fifteen, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "16",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "18",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "2"
+          "name": "best_rectangle_height",
+          "value": "6"
         },
         {
-          "name": "one_indexed_k",
-          "value": "1"
+          "name": "best_rectangle_width",
+          "value": "5"
         },
         {
-          "name": "kth_largest_value",
-          "value": "15"
+          "name": "best_rectangle_area",
+          "value": "30"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "14",
+            "relative_gap": "7/15"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "12",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "35",
-      "text": "You trace a top-value selection helper. The values are 2, 13, 16, 14, 20, 4. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 1, as an integer?",
+      "text": "A height chart has heights 5, 21, 0, 13, 27, 24, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 1,
         "values": [
-          2,
+          5,
+          21,
+          0,
           13,
-          16,
-          14,
-          20,
-          4
+          27,
+          24
         ]
       },
-      "answer": "20",
+      "answer": "48",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You trace a top-value selection helper. The values are two, thirteen, sixteen, fourteen, twenty, four. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank one, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A height chart has heights five, twenty-one, zero, thirteen, twenty-seven, twenty-four, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "6"
+          "name": "best_rectangle_height",
+          "value": "24"
         },
         {
-          "name": "one_indexed_k",
-          "value": "1"
+          "name": "best_rectangle_width",
+          "value": "2"
         },
         {
-          "name": "kth_largest_value",
-          "value": "20"
+          "name": "best_rectangle_area",
+          "value": "48"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "21",
+            "relative_gap": "7/16"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "48",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "27",
+        "min_distinct_wrong_pair_gap": "27"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "36",
-      "text": "You rank a small batch of scores. The values are 3, 5, 20, 17, 0, 0, 17, 4. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 3, as an integer?",
+      "text": "A bar chart has heights 14, 15, 21, 7, 5, 9, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 3,
         "values": [
-          3,
+          14,
+          15,
+          21,
+          7,
           5,
-          20,
-          17,
-          0,
-          0,
-          17,
-          4
+          9
         ]
       },
-      "answer": "17",
+      "answer": "42",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You rank a small batch of scores. The values are three, five, twenty, seventeen, zero, zero, seventeen, four. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank three, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A bar chart has heights fourteen, fifteen, twenty-one, seven, five, nine, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_count",
-          "value": "8"
+          "value": "21",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
         },
         {
-          "name": "one_indexed_k",
+          "value": "30",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_rectangle_height",
+          "value": "14"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "3"
         },
         {
-          "name": "kth_largest_value",
-          "value": "17"
+          "name": "best_rectangle_area",
+          "value": "42"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "21",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "12",
+            "relative_gap": "2/7"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "37",
-      "text": "A stream routine keeps the largest observed values. The values are 13, 16, 6, 20, 20, 16, 8. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 7, as an integer?",
+      "text": "A skyline chart has heights 21, 3, 21, 27, 23, 13, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 7,
         "values": [
-          13,
-          16,
-          6,
-          20,
-          20,
-          16,
-          8
+          21,
+          3,
+          21,
+          27,
+          23,
+          13
         ]
       },
-      "answer": "6",
+      "answer": "63",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A stream routine keeps the largest observed values. The values are thirteen, sixteen, six, twenty, twenty, sixteen, eight. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank seven, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A skyline chart has heights twenty-one, three, twenty-one, twenty-seven, twenty-three, thirteen, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "18",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "7"
+          "name": "best_rectangle_height",
+          "value": "21"
         },
         {
-          "name": "one_indexed_k",
-          "value": "7"
+          "name": "best_rectangle_width",
+          "value": "3"
         },
         {
-          "name": "kth_largest_value",
-          "value": "6"
+          "name": "best_rectangle_area",
+          "value": "63"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "36",
+            "relative_gap": "4/7"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "45",
+            "relative_gap": "5/7"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "38",
-      "text": "You inspect a short list of item priorities. The values are 4, 13, 2. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 1, as an integer?",
+      "text": "A capacity chart has heights 9, 16, 19, 17, 18, 21, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 1,
         "values": [
-          4,
-          13,
-          2
+          9,
+          16,
+          19,
+          17,
+          18,
+          21
         ]
       },
-      "answer": "13",
+      "answer": "80",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You inspect a short list of item priorities. The values are four, thirteen, two. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank one, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A capacity chart has heights nine, sixteen, nineteen, seventeen, eighteen, twenty-one, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "54",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "3"
+          "name": "best_rectangle_height",
+          "value": "16"
         },
         {
-          "name": "one_indexed_k",
-          "value": "1"
+          "name": "best_rectangle_width",
+          "value": "5"
         },
         {
-          "name": "kth_largest_value",
-          "value": "13"
+          "name": "best_rectangle_area",
+          "value": "80"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "59",
+            "relative_gap": "59/80"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "26",
+            "relative_gap": "13/40"
+          }
+        ],
+        "min_wrong_pair_gap": "33",
+        "min_distinct_wrong_pair_gap": "33"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "39",
-      "text": "A monitor asks for a descending-rank measurement. The values are 14, 0, 11, 4, 6. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A histogram has heights 9, 2, 30, 23, 21, 25, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          14,
-          0,
-          11,
-          4,
-          6
+          9,
+          2,
+          30,
+          23,
+          21,
+          25
         ]
       },
-      "answer": "11",
+      "answer": "84",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A monitor asks for a descending-rank measurement. The values are fourteen, zero, eleven, four, six. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A histogram has heights nine, two, thirty, twenty-three, twenty-one, twenty-five, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "5"
+          "name": "best_rectangle_height",
+          "value": "21"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
+          "name": "best_rectangle_width",
+          "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "11"
+          "name": "best_rectangle_area",
+          "value": "84"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "54",
+            "relative_gap": "9/14"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "72",
+            "relative_gap": "6/7"
+          }
+        ],
+        "min_wrong_pair_gap": "18",
+        "min_distinct_wrong_pair_gap": "18"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "40",
-      "text": "You trace a top-value selection helper. The values are 16, 2. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A height chart has heights 21, 13, 14, 8, 5, 3, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          16,
-          2
+          21,
+          13,
+          14,
+          8,
+          5,
+          3
         ]
       },
-      "answer": "2",
+      "answer": "39",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You trace a top-value selection helper. The values are sixteen, two. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A height chart has heights twenty-one, thirteen, fourteen, eight, five, three, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "18",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "2"
+          "name": "best_rectangle_height",
+          "value": "13"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
+          "name": "best_rectangle_width",
+          "value": "3"
         },
         {
-          "name": "kth_largest_value",
-          "value": "2"
+          "name": "best_rectangle_area",
+          "value": "39"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "18",
+            "relative_gap": "6/13"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "21",
+            "relative_gap": "7/13"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "41",
-      "text": "You rank a small batch of scores. The values are 0, 16, 18. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 3, as an integer?",
+      "text": "A bar chart has heights 15, 15, 11, 0, 24, 12, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 3,
         "values": [
+          15,
+          15,
+          11,
           0,
-          16,
-          18
+          24,
+          12
         ]
       },
-      "answer": "0",
+      "answer": "33",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You rank a small batch of scores. The values are zero, sixteen, eighteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank three, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A bar chart has heights fifteen, fifteen, eleven, zero, twenty-four, twelve, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
+          "name": "best_rectangle_height",
+          "value": "11"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "3"
         },
         {
-          "name": "one_indexed_k",
-          "value": "3"
-        },
-        {
-          "name": "kth_largest_value",
-          "value": "0"
+          "name": "best_rectangle_area",
+          "value": "33"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "9",
+            "relative_gap": "3/11"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "33",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "24",
+        "min_distinct_wrong_pair_gap": "24"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "42",
-      "text": "A stream routine keeps the largest observed values. The values are 2, 1, 16, 12, 5, 13. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 5, as an integer?",
+      "text": "A skyline chart has heights 27, 2, 18, 27, 22, 11, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 5,
         "values": [
+          27,
           2,
-          1,
-          16,
-          12,
-          5,
-          13
+          18,
+          27,
+          22,
+          11
         ]
       },
-      "answer": "2",
+      "answer": "54",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A stream routine keeps the largest observed values. The values are two, one, sixteen, twelve, five, thirteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank five, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A skyline chart has heights twenty-seven, two, eighteen, twenty-seven, twenty-two, eleven, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "6"
+          "name": "best_rectangle_height",
+          "value": "18"
         },
         {
-          "name": "one_indexed_k",
-          "value": "5"
+          "name": "best_rectangle_width",
+          "value": "3"
         },
         {
-          "name": "kth_largest_value",
-          "value": "2"
+          "name": "best_rectangle_area",
+          "value": "54"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "27",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "42",
+            "relative_gap": "7/9"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "43",
-      "text": "You inspect a short list of item priorities. The values are 14, 11, 16, 4, 1, 18. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 5, as an integer?",
+      "text": "A capacity chart has heights 19, 2, 3, 24, 23, 23, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 5,
         "values": [
-          14,
-          11,
-          16,
-          4,
-          1,
-          18
+          19,
+          2,
+          3,
+          24,
+          23,
+          23
         ]
       },
-      "answer": "4",
+      "answer": "69",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You inspect a short list of item priorities. The values are fourteen, eleven, sixteen, four, one, eighteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank five, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A capacity chart has heights nineteen, two, three, twenty-four, twenty-three, twenty-three, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "6"
+          "name": "best_rectangle_height",
+          "value": "23"
         },
         {
-          "name": "one_indexed_k",
-          "value": "5"
+          "name": "best_rectangle_width",
+          "value": "3"
         },
         {
-          "name": "kth_largest_value",
-          "value": "4"
+          "name": "best_rectangle_area",
+          "value": "69"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "45",
+            "relative_gap": "15/23"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "57",
+            "relative_gap": "19/23"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "44",
-      "text": "A monitor asks for a descending-rank measurement. The values are 5, 14, 13, 1, 16, 13, 5. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 3, as an integer?",
+      "text": "A histogram has heights 2, 26, 25, 5, 8, 11, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 3,
         "values": [
+          2,
+          26,
+          25,
           5,
-          14,
-          13,
-          1,
-          16,
-          13,
-          5
+          8,
+          11
         ]
       },
-      "answer": "13",
+      "answer": "50",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A monitor asks for a descending-rank measurement. The values are five, fourteen, thirteen, one, sixteen, thirteen, five. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank three, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A histogram has heights two, twenty-six, twenty-five, five, eight, eleven, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "26",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "7"
+          "name": "best_rectangle_height",
+          "value": "25"
         },
         {
-          "name": "one_indexed_k",
-          "value": "3"
+          "name": "best_rectangle_width",
+          "value": "2"
         },
         {
-          "name": "kth_largest_value",
-          "value": "13"
+          "name": "best_rectangle_area",
+          "value": "50"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "24",
+            "relative_gap": "12/25"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "38",
+            "relative_gap": "19/25"
+          }
+        ],
+        "min_wrong_pair_gap": "14",
+        "min_distinct_wrong_pair_gap": "14"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "45",
-      "text": "You trace a top-value selection helper. The values are 18, 11, 8, 2. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 3, as an integer?",
+      "text": "A height chart has heights 0, 12, 7, 11, 1, 8, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 3,
         "values": [
-          18,
+          0,
+          12,
+          7,
           11,
-          8,
-          2
+          1,
+          8
         ]
       },
-      "answer": "8",
+      "answer": "21",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You trace a top-value selection helper. The values are eighteen, eleven, eight, two. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank three, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A height chart has heights zero, twelve, seven, eleven, one, eight, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_count",
-          "value": "4"
+          "value": "12",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
         },
         {
-          "name": "one_indexed_k",
+          "value": "0",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_rectangle_height",
+          "value": "7"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "3"
         },
         {
-          "name": "kth_largest_value",
-          "value": "8"
+          "name": "best_rectangle_area",
+          "value": "21"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "9",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "21",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "46",
-      "text": "You rank a small batch of scores. The values are 20, 6, 18, 12. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 1, as an integer?",
+      "text": "A bar chart has heights 12, 15, 25, 26, 18, 1, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 1,
         "values": [
-          20,
-          6,
+          12,
+          15,
+          25,
+          26,
           18,
-          12
+          1
         ]
       },
-      "answer": "20",
+      "answer": "60",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You rank a small batch of scores. The values are twenty, six, eighteen, twelve. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank one, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A bar chart has heights twelve, fifteen, twenty-five, twenty-six, eighteen, one, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "26",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
+          "name": "best_rectangle_height",
+          "value": "15"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "4"
         },
         {
-          "name": "one_indexed_k",
-          "value": "1"
-        },
-        {
-          "name": "kth_largest_value",
-          "value": "20"
+          "name": "best_rectangle_area",
+          "value": "60"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "34",
+            "relative_gap": "17/30"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "54",
+            "relative_gap": "9/10"
+          }
+        ],
+        "min_wrong_pair_gap": "20",
+        "min_distinct_wrong_pair_gap": "20"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     },
     {
       "variant": "47",
-      "text": "A stream routine keeps the largest observed values. The values are 15, 13. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 1, as an integer?",
+      "text": "A skyline chart has heights 17, 25, 29, 21, 7, 2, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 1,
         "values": [
-          15,
-          13
+          17,
+          25,
+          29,
+          21,
+          7,
+          2
         ]
       },
-      "answer": "15",
+      "answer": "68",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A stream routine keeps the largest observed values. The values are fifteen, thirteen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank one, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A skyline chart has heights seventeen, twenty-five, twenty-nine, twenty-one, seven, two, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "2"
+          "name": "best_rectangle_height",
+          "value": "17"
         },
         {
-          "name": "one_indexed_k",
-          "value": "1"
+          "name": "best_rectangle_width",
+          "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "15"
+          "name": "best_rectangle_area",
+          "value": "68"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "39",
+            "relative_gap": "39/68"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "56",
+            "relative_gap": "14/17"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "What if bar widths differ?",
+        "reference": "Index differences no longer measure physical width. Use cumulative widths to score a span."
       }
     },
     {
       "variant": "48",
-      "text": "You inspect a short list of item priorities. The values are 17, 17. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A capacity chart has heights 17, 8, 5, 19, 2, 8, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
           17,
-          17
+          8,
+          5,
+          19,
+          2,
+          8
         ]
       },
-      "answer": "17",
+      "answer": "20",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You inspect a short list of item priorities. The values are seventeen, seventeen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A capacity chart has heights seventeen, eight, five, nineteen, two, eight, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
-          "value": "2"
+          "name": "best_rectangle_height",
+          "value": "5"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
+          "name": "best_rectangle_width",
+          "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "17"
+          "name": "best_rectangle_area",
+          "value": "20"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "1",
+            "relative_gap": "1/20"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "8",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why is enumerating spans a valid verifier?",
+        "reference": "Every rectangle is limited by a minimum height within its span. Testing all spans therefore includes every optimum."
       }
     },
     {
       "variant": "49",
-      "text": "A monitor asks for a descending-rank measurement. The values are 1, 6, 8, 3, 7, 10. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 4, as an integer?",
+      "text": "A histogram has heights 14, 22, 26, 30, 29, 8, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 4,
         "values": [
-          1,
-          6,
-          8,
-          3,
-          7,
-          10
+          14,
+          22,
+          26,
+          30,
+          29,
+          8
         ]
       },
-      "answer": "6",
+      "answer": "88",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "A monitor asks for a descending-rank measurement. The values are one, six, eight, three, seven, ten. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank four, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A histogram has heights fourteen, twenty-two, twenty-six, thirty, twenty-nine, eight, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "total_count",
-          "value": "6"
+          "value": "30",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
         },
         {
-          "name": "one_indexed_k",
+          "value": "48",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_rectangle_height",
+          "value": "22"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "4"
         },
         {
-          "name": "kth_largest_value",
-          "value": "6"
+          "name": "best_rectangle_area",
+          "value": "88"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "58",
+            "relative_gap": "29/44"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "40",
+            "relative_gap": "5/11"
+          }
+        ],
+        "min_wrong_pair_gap": "18",
+        "min_distinct_wrong_pair_gap": "18"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "Why can a popped height be evaluated immediately?",
+        "reference": "The new shorter bar ends its possible rightward span. The remaining stack supplies its shorter left boundary."
       }
     },
     {
       "variant": "50",
-      "text": "You trace a top-value selection helper. The values are 6, 6, 3, 11, 17. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank 2, as an integer?",
+      "text": "A height chart has heights 20, 30, 15, 22, 25, 4, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "params": {
-        "rank": 2,
         "values": [
-          6,
-          6,
-          3,
-          11,
-          17
+          20,
+          30,
+          15,
+          22,
+          25,
+          4
         ]
       },
-      "answer": "11",
+      "answer": "75",
       "tolerance": "0",
-      "topic": "Heaps",
-      "source_topic": "Descending-rank value",
-      "difficulty": "Easy",
-      "spoken_text": "You trace a top-value selection helper. The values are six, six, three, eleven, seventeen. Rank all elements from largest to smallest, counting duplicate elements separately and using one-based ranks. What value is at rank two, as an integer?",
+      "topic": "Monotonic stack",
+      "source_topic": "Largest histogram rectangle",
+      "difficulty": "Hard",
+      "spoken_text": "A height chart has heights twenty, thirty, fifteen, twenty-two, twenty-five, four, in order, with unit-width bars. What is the area of the largest rectangle fitting beneath consecutive bars, as a whole number of square units?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_only_single_bar_rectangles"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "uses_only_full_width_rectangle"
+          ]
+        }
+      ],
       "steps": [
         {
-          "name": "total_count",
+          "name": "best_rectangle_height",
+          "value": "15"
+        },
+        {
+          "name": "best_rectangle_width",
           "value": "5"
         },
         {
-          "name": "one_indexed_k",
-          "value": "2"
-        },
-        {
-          "name": "kth_largest_value",
-          "value": "11"
+          "name": "best_rectangle_area",
+          "value": "75"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "uses_only_single_bar_rectangles",
+            "absolute_gap": "45",
+            "relative_gap": "3/5"
+          },
+          {
+            "misconception": "uses_only_full_width_rectangle",
+            "absolute_gap": "51",
+            "relative_gap": "17/25"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "How do bounded-heap time and space costs depend on the requested rank?",
-        "reference": "Yes, the ranking is over array elements, not distinct values. A bounded heap takes O(n log(k plus 1)) time and O(k) space, while sorting the full input takes O(n log n) time."
+        "question": "How does a zero-height bar behave?",
+        "reference": "It ends every positive-height rectangle crossing that position. Its own rectangle contributes zero area."
       }
     }
   ]

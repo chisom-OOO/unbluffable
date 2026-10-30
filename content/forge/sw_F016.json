@@ -1,0 +1,4544 @@
+{
+  "template_id": "sw_F016",
+  "pack": "software",
+  "topic": "Graphs",
+  "topics": [
+    "Graphs"
+  ],
+  "source_topic": "Directed shortest route",
+  "difficulty": "Hard",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "Why can the cheapest next link be misleading?",
+    "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "A courier network has only these one-way links: A to B costs 22; A to C costs 26; C to B costs 2; B to D costs 20; C to D costs 15. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            22
+          ],
+          [
+            "A",
+            "C",
+            26
+          ],
+          [
+            "C",
+            "B",
+            2
+          ],
+          [
+            "B",
+            "D",
+            20
+          ],
+          [
+            "C",
+            "D",
+            15
+          ]
+        ]
+      },
+      "answer": "41",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A courier network has only these one-way links: A to B costs twenty-two; A to C costs twenty-six; C to B costs two; B to D costs twenty; C to D costs fifteen. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "39",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "42",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "42"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "41"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "48"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "2",
+            "relative_gap": "2/41"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/41"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "A fare network has only these one-way links: A to B costs 14; A to C costs 19; C to B costs 4; B to D costs 20; C to D costs 5. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            14
+          ],
+          [
+            "A",
+            "C",
+            19
+          ],
+          [
+            "C",
+            "B",
+            4
+          ],
+          [
+            "B",
+            "D",
+            20
+          ],
+          [
+            "C",
+            "D",
+            5
+          ]
+        ]
+      },
+      "answer": "24",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A fare network has only these one-way links: A to B costs fourteen; A to C costs nineteen; C to B costs four; B to D costs twenty; C to D costs five. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "34"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "24"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "43"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/24"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "10",
+            "relative_gap": "5/12"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "A service network has only these one-way links: A to B costs 4; A to C costs 18; C to B costs 9; B to D costs 23; C to D costs 2. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            4
+          ],
+          [
+            "A",
+            "C",
+            18
+          ],
+          [
+            "C",
+            "B",
+            9
+          ],
+          [
+            "B",
+            "D",
+            23
+          ],
+          [
+            "C",
+            "D",
+            2
+          ]
+        ]
+      },
+      "answer": "20",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A service network has only these one-way links: A to B costs four; A to C costs eighteen; C to B costs nine; B to D costs twenty-three; C to D costs two. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "27",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "27"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "20"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "50"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "5",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "7",
+            "relative_gap": "7/20"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "A transfer network has only these one-way links: A to B costs 19; A to C costs 28; C to B costs 8; B to D costs 11; C to D costs 1. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            19
+          ],
+          [
+            "A",
+            "C",
+            28
+          ],
+          [
+            "C",
+            "B",
+            8
+          ],
+          [
+            "B",
+            "D",
+            11
+          ],
+          [
+            "C",
+            "D",
+            1
+          ]
+        ]
+      },
+      "answer": "29",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A transfer network has only these one-way links: A to B costs nineteen; A to C costs twenty-eight; C to B costs eight; B to D costs eleven; C to D costs one. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "30"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "29"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "47"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/29"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/29"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "A routing network has only these one-way links: A to B costs 2; A to C costs 12; C to B costs 5; B to D costs 22; C to D costs 3. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            2
+          ],
+          [
+            "A",
+            "C",
+            12
+          ],
+          [
+            "C",
+            "B",
+            5
+          ],
+          [
+            "B",
+            "D",
+            22
+          ],
+          [
+            "C",
+            "D",
+            3
+          ]
+        ]
+      },
+      "answer": "15",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A routing network has only these one-way links: A to B costs two; A to C costs twelve; C to B costs five; B to D costs twenty-two; C to D costs three. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "10",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "24"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "15"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "5",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "9",
+            "relative_gap": "3/5"
+          }
+        ],
+        "min_wrong_pair_gap": "14",
+        "min_distinct_wrong_pair_gap": "14"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "A courier network has only these one-way links: A to B costs 7; A to C costs 23; C to B costs 2; B to D costs 29; C to D costs 4. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            7
+          ],
+          [
+            "A",
+            "C",
+            23
+          ],
+          [
+            "C",
+            "B",
+            2
+          ],
+          [
+            "B",
+            "D",
+            29
+          ],
+          [
+            "C",
+            "D",
+            4
+          ]
+        ]
+      },
+      "answer": "27",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A courier network has only these one-way links: A to B costs seven; A to C costs twenty-three; C to B costs two; B to D costs twenty-nine; C to D costs four. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "36"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "27"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "54"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "14",
+            "relative_gap": "14/27"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "9",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "23",
+        "min_distinct_wrong_pair_gap": "23"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "A fare network has only these one-way links: A to B costs 5; A to C costs 15; C to B costs 9; B to D costs 26; C to D costs 2. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            5
+          ],
+          [
+            "A",
+            "C",
+            15
+          ],
+          [
+            "C",
+            "B",
+            9
+          ],
+          [
+            "B",
+            "D",
+            26
+          ],
+          [
+            "C",
+            "D",
+            2
+          ]
+        ]
+      },
+      "answer": "17",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A fare network has only these one-way links: A to B costs five; A to C costs fifteen; C to B costs nine; B to D costs twenty-six; C to D costs two. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "16",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "31",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "31"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "17"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "50"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/17"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "14",
+            "relative_gap": "14/17"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "A service network has only these one-way links: A to B costs 18; A to C costs 21; C to B costs 1; B to D costs 19; C to D costs 15. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            18
+          ],
+          [
+            "A",
+            "C",
+            21
+          ],
+          [
+            "C",
+            "B",
+            1
+          ],
+          [
+            "B",
+            "D",
+            19
+          ],
+          [
+            "C",
+            "D",
+            15
+          ]
+        ]
+      },
+      "answer": "36",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A service network has only these one-way links: A to B costs eighteen; A to C costs twenty-one; C to B costs one; B to D costs nineteen; C to D costs fifteen. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "37",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "37"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "36"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "41"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "2",
+            "relative_gap": "1/18"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/36"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "A transfer network has only these one-way links: A to B costs 18; A to C costs 25; C to B costs 3; B to D costs 16; C to D costs 7. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            18
+          ],
+          [
+            "A",
+            "C",
+            25
+          ],
+          [
+            "C",
+            "B",
+            3
+          ],
+          [
+            "B",
+            "D",
+            16
+          ],
+          [
+            "C",
+            "D",
+            7
+          ]
+        ]
+      },
+      "answer": "32",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A transfer network has only these one-way links: A to B costs eighteen; A to C costs twenty-five; C to B costs three; B to D costs sixteen; C to D costs seven. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "34"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "32"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "44"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "4",
+            "relative_gap": "1/8"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "1/16"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "A routing network has only these one-way links: A to B costs 3; A to C costs 7; C to B costs 3; B to D costs 27; C to D costs 5. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            3
+          ],
+          [
+            "A",
+            "C",
+            7
+          ],
+          [
+            "C",
+            "B",
+            3
+          ],
+          [
+            "B",
+            "D",
+            27
+          ],
+          [
+            "C",
+            "D",
+            5
+          ]
+        ]
+      },
+      "answer": "12",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A routing network has only these one-way links: A to B costs three; A to C costs seven; C to B costs three; B to D costs twenty-seven; C to D costs five. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "30"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "12"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "37"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/12"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "18",
+            "relative_gap": "3/2"
+          }
+        ],
+        "min_wrong_pair_gap": "19",
+        "min_distinct_wrong_pair_gap": "19"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "A courier network has only these one-way links: A to B costs 4; A to C costs 15; C to B costs 2; B to D costs 22; C to D costs 4. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            4
+          ],
+          [
+            "A",
+            "C",
+            15
+          ],
+          [
+            "C",
+            "B",
+            2
+          ],
+          [
+            "B",
+            "D",
+            22
+          ],
+          [
+            "C",
+            "D",
+            4
+          ]
+        ]
+      },
+      "answer": "19",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A courier network has only these one-way links: A to B costs four; A to C costs fifteen; C to B costs two; B to D costs twenty-two; C to D costs four. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "10",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "26",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "26"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "19"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "9",
+            "relative_gap": "9/19"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "7",
+            "relative_gap": "7/19"
+          }
+        ],
+        "min_wrong_pair_gap": "16",
+        "min_distinct_wrong_pair_gap": "16"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "A fare network has only these one-way links: A to B costs 17; A to C costs 29; C to B costs 5; B to D costs 29; C to D costs 2. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            17
+          ],
+          [
+            "A",
+            "C",
+            29
+          ],
+          [
+            "C",
+            "B",
+            5
+          ],
+          [
+            "B",
+            "D",
+            29
+          ],
+          [
+            "C",
+            "D",
+            2
+          ]
+        ]
+      },
+      "answer": "31",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A fare network has only these one-way links: A to B costs seventeen; A to C costs twenty-nine; C to B costs five; B to D costs twenty-nine; C to D costs two. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "46",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "46"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "31"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "63"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "7",
+            "relative_gap": "7/31"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "15",
+            "relative_gap": "15/31"
+          }
+        ],
+        "min_wrong_pair_gap": "22",
+        "min_distinct_wrong_pair_gap": "22"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "A service network has only these one-way links: A to B costs 4; A to C costs 14; C to B costs 5; B to D costs 19; C to D costs 3. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            4
+          ],
+          [
+            "A",
+            "C",
+            14
+          ],
+          [
+            "C",
+            "B",
+            5
+          ],
+          [
+            "B",
+            "D",
+            19
+          ],
+          [
+            "C",
+            "D",
+            3
+          ]
+        ]
+      },
+      "answer": "17",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A service network has only these one-way links: A to B costs four; A to C costs fourteen; C to B costs five; B to D costs nineteen; C to D costs three. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "12",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "23",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "23"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "17"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "38"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "5",
+            "relative_gap": "5/17"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "6",
+            "relative_gap": "6/17"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "A transfer network has only these one-way links: A to B costs 19; A to C costs 21; C to B costs 1; B to D costs 20; C to D costs 15. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            19
+          ],
+          [
+            "A",
+            "C",
+            21
+          ],
+          [
+            "C",
+            "B",
+            1
+          ],
+          [
+            "B",
+            "D",
+            20
+          ],
+          [
+            "C",
+            "D",
+            15
+          ]
+        ]
+      },
+      "answer": "36",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A transfer network has only these one-way links: A to B costs nineteen; A to C costs twenty-one; C to B costs one; B to D costs twenty; C to D costs fifteen. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "35",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "39",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "39"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "36"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "42"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/36"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "1/12"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "A routing network has only these one-way links: A to B costs 5; A to C costs 15; C to B costs 4; B to D costs 22; C to D costs 3. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            5
+          ],
+          [
+            "A",
+            "C",
+            15
+          ],
+          [
+            "C",
+            "B",
+            4
+          ],
+          [
+            "B",
+            "D",
+            22
+          ],
+          [
+            "C",
+            "D",
+            3
+          ]
+        ]
+      },
+      "answer": "18",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A routing network has only these one-way links: A to B costs five; A to C costs fifteen; C to B costs four; B to D costs twenty-two; C to D costs three. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "12",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "27",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "27"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "18"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "41"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "6",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "9",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "A courier network has only these one-way links: A to B costs 22; A to C costs 30; C to B costs 4; B to D costs 24; C to D costs 14. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            22
+          ],
+          [
+            "A",
+            "C",
+            30
+          ],
+          [
+            "C",
+            "B",
+            4
+          ],
+          [
+            "B",
+            "D",
+            24
+          ],
+          [
+            "C",
+            "D",
+            14
+          ]
+        ]
+      },
+      "answer": "44",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A courier network has only these one-way links: A to B costs twenty-two; A to C costs thirty; C to B costs four; B to D costs twenty-four; C to D costs fourteen. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "40",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "46",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "46"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "44"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "58"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "4",
+            "relative_gap": "1/11"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "1/22"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "A fare network has only these one-way links: A to B costs 16; A to C costs 22; C to B costs 4; B to D costs 25; C to D costs 10. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            16
+          ],
+          [
+            "A",
+            "C",
+            22
+          ],
+          [
+            "C",
+            "B",
+            4
+          ],
+          [
+            "B",
+            "D",
+            25
+          ],
+          [
+            "C",
+            "D",
+            10
+          ]
+        ]
+      },
+      "answer": "32",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A fare network has only these one-way links: A to B costs sixteen; A to C costs twenty-two; C to B costs four; B to D costs twenty-five; C to D costs ten. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "41",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "41"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "32"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "2",
+            "relative_gap": "1/16"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "9",
+            "relative_gap": "9/32"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "A service network has only these one-way links: A to B costs 22; A to C costs 30; C to B costs 4; B to D costs 24; C to D costs 12. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            22
+          ],
+          [
+            "A",
+            "C",
+            30
+          ],
+          [
+            "C",
+            "B",
+            4
+          ],
+          [
+            "B",
+            "D",
+            24
+          ],
+          [
+            "C",
+            "D",
+            12
+          ]
+        ]
+      },
+      "answer": "42",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A service network has only these one-way links: A to B costs twenty-two; A to C costs thirty; C to B costs four; B to D costs twenty-four; C to D costs twelve. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "38",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "46",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "46"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "42"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "58"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "4",
+            "relative_gap": "2/21"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "2/21"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "A transfer network has only these one-way links: A to B costs 22; A to C costs 24; C to B costs 1; B to D costs 22; C to D costs 16. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            22
+          ],
+          [
+            "A",
+            "C",
+            24
+          ],
+          [
+            "C",
+            "B",
+            1
+          ],
+          [
+            "B",
+            "D",
+            22
+          ],
+          [
+            "C",
+            "D",
+            16
+          ]
+        ]
+      },
+      "answer": "40",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A transfer network has only these one-way links: A to B costs twenty-two; A to C costs twenty-four; C to B costs one; B to D costs twenty-two; C to D costs sixteen. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "39",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "44",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "44"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "40"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "47"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/40"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "1/10"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "A routing network has only these one-way links: A to B costs 9; A to C costs 16; C to B costs 2; B to D costs 29; C to D costs 17. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            9
+          ],
+          [
+            "A",
+            "C",
+            16
+          ],
+          [
+            "C",
+            "B",
+            2
+          ],
+          [
+            "B",
+            "D",
+            29
+          ],
+          [
+            "C",
+            "D",
+            17
+          ]
+        ]
+      },
+      "answer": "33",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A routing network has only these one-way links: A to B costs nine; A to C costs sixteen; C to B costs two; B to D costs twenty-nine; C to D costs seventeen. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "38",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "38"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "33"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "47"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "5",
+            "relative_gap": "5/33"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "5",
+            "relative_gap": "5/33"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "A courier network has only these one-way links: A to B costs 10; A to C costs 15; C to B costs 2; B to D costs 26; C to D costs 1. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            10
+          ],
+          [
+            "A",
+            "C",
+            15
+          ],
+          [
+            "C",
+            "B",
+            2
+          ],
+          [
+            "B",
+            "D",
+            26
+          ],
+          [
+            "C",
+            "D",
+            1
+          ]
+        ]
+      },
+      "answer": "16",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A courier network has only these one-way links: A to B costs ten; A to C costs fifteen; C to B costs two; B to D costs twenty-six; C to D costs one. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "36"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "16"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "43"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "3",
+            "relative_gap": "3/16"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "20",
+            "relative_gap": "5/4"
+          }
+        ],
+        "min_wrong_pair_gap": "23",
+        "min_distinct_wrong_pair_gap": "23"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "A fare network has only these one-way links: A to B costs 11; A to C costs 29; C to B costs 13; B to D costs 27; C to D costs 5. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            11
+          ],
+          [
+            "A",
+            "C",
+            29
+          ],
+          [
+            "C",
+            "B",
+            13
+          ],
+          [
+            "B",
+            "D",
+            27
+          ],
+          [
+            "C",
+            "D",
+            5
+          ]
+        ]
+      },
+      "answer": "34",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A fare network has only these one-way links: A to B costs eleven; A to C costs twenty-nine; C to B costs thirteen; B to D costs twenty-seven; C to D costs five. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "38",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "38"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "34"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "69"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "5",
+            "relative_gap": "5/34"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "2/17"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "A service network has only these one-way links: A to B costs 4; A to C costs 17; C to B costs 3; B to D costs 21; C to D costs 2. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            4
+          ],
+          [
+            "A",
+            "C",
+            17
+          ],
+          [
+            "C",
+            "B",
+            3
+          ],
+          [
+            "B",
+            "D",
+            21
+          ],
+          [
+            "C",
+            "D",
+            2
+          ]
+        ]
+      },
+      "answer": "19",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A service network has only these one-way links: A to B costs four; A to C costs seventeen; C to B costs three; B to D costs twenty-one; C to D costs two. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "25",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "25"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "19"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "41"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "10",
+            "relative_gap": "10/19"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "6",
+            "relative_gap": "6/19"
+          }
+        ],
+        "min_wrong_pair_gap": "16",
+        "min_distinct_wrong_pair_gap": "16"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "A transfer network has only these one-way links: A to B costs 20; A to C costs 29; C to B costs 5; B to D costs 20; C to D costs 10. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            20
+          ],
+          [
+            "A",
+            "C",
+            29
+          ],
+          [
+            "C",
+            "B",
+            5
+          ],
+          [
+            "B",
+            "D",
+            20
+          ],
+          [
+            "C",
+            "D",
+            10
+          ]
+        ]
+      },
+      "answer": "39",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A transfer network has only these one-way links: A to B costs twenty; A to C costs twenty-nine; C to B costs five; B to D costs twenty; C to D costs ten. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "35",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "40",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "40"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "39"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "54"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "4",
+            "relative_gap": "4/39"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/39"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "A routing network has only these one-way links: A to B costs 9; A to C costs 22; C to B costs 5; B to D costs 23; C to D costs 9. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            9
+          ],
+          [
+            "A",
+            "C",
+            22
+          ],
+          [
+            "C",
+            "B",
+            5
+          ],
+          [
+            "B",
+            "D",
+            23
+          ],
+          [
+            "C",
+            "D",
+            9
+          ]
+        ]
+      },
+      "answer": "31",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A routing network has only these one-way links: A to B costs nine; A to C costs twenty-two; C to B costs five; B to D costs twenty-three; C to D costs nine. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "32",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "32"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "31"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "50"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "8",
+            "relative_gap": "8/31"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/31"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "A courier network has only these one-way links: A to B costs 15; A to C costs 24; C to B costs 8; B to D costs 28; C to D costs 16. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            15
+          ],
+          [
+            "A",
+            "C",
+            24
+          ],
+          [
+            "C",
+            "B",
+            8
+          ],
+          [
+            "B",
+            "D",
+            28
+          ],
+          [
+            "C",
+            "D",
+            16
+          ]
+        ]
+      },
+      "answer": "40",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A courier network has only these one-way links: A to B costs fifteen; A to C costs twenty-four; C to B costs eight; B to D costs twenty-eight; C to D costs sixteen. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "39",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "43",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "43"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "40"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "60"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/40"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "3/40"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "A fare network has only these one-way links: A to B costs 14; A to C costs 19; C to B costs 2; B to D costs 17; C to D costs 3. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            14
+          ],
+          [
+            "A",
+            "C",
+            19
+          ],
+          [
+            "C",
+            "B",
+            2
+          ],
+          [
+            "B",
+            "D",
+            17
+          ],
+          [
+            "C",
+            "D",
+            3
+          ]
+        ]
+      },
+      "answer": "22",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A fare network has only these one-way links: A to B costs fourteen; A to C costs nineteen; C to B costs two; B to D costs seventeen; C to D costs three. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "31",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "31"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "22"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "38"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "3",
+            "relative_gap": "3/22"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "9",
+            "relative_gap": "9/22"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "A service network has only these one-way links: A to B costs 9; A to C costs 17; C to B costs 1; B to D costs 21; C to D costs 10. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            9
+          ],
+          [
+            "A",
+            "C",
+            17
+          ],
+          [
+            "C",
+            "B",
+            1
+          ],
+          [
+            "B",
+            "D",
+            21
+          ],
+          [
+            "C",
+            "D",
+            10
+          ]
+        ]
+      },
+      "answer": "27",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A service network has only these one-way links: A to B costs nine; A to C costs seventeen; C to B costs one; B to D costs twenty-one; C to D costs ten. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "30"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "27"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "7",
+            "relative_gap": "7/27"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "A transfer network has only these one-way links: A to B costs 9; A to C costs 25; C to B costs 8; B to D costs 22; C to D costs 1. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            9
+          ],
+          [
+            "A",
+            "C",
+            25
+          ],
+          [
+            "C",
+            "B",
+            8
+          ],
+          [
+            "B",
+            "D",
+            22
+          ],
+          [
+            "C",
+            "D",
+            1
+          ]
+        ]
+      },
+      "answer": "26",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A transfer network has only these one-way links: A to B costs nine; A to C costs twenty-five; C to B costs eight; B to D costs twenty-two; C to D costs one. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "18",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "31",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "31"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "26"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "55"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "8",
+            "relative_gap": "4/13"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "5",
+            "relative_gap": "5/26"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "A routing network has only these one-way links: A to B costs 11; A to C costs 28; C to B costs 8; B to D costs 27; C to D costs 2. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            11
+          ],
+          [
+            "A",
+            "C",
+            28
+          ],
+          [
+            "C",
+            "B",
+            8
+          ],
+          [
+            "B",
+            "D",
+            27
+          ],
+          [
+            "C",
+            "D",
+            2
+          ]
+        ]
+      },
+      "answer": "30",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A routing network has only these one-way links: A to B costs eleven; A to C costs twenty-eight; C to B costs eight; B to D costs twenty-seven; C to D costs two. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "38",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "38"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "30"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "63"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "9",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "8",
+            "relative_gap": "4/15"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "A courier network has only these one-way links: A to B costs 9; A to C costs 17; C to B costs 7; B to D costs 28; C to D costs 4. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            9
+          ],
+          [
+            "A",
+            "C",
+            17
+          ],
+          [
+            "C",
+            "B",
+            7
+          ],
+          [
+            "B",
+            "D",
+            28
+          ],
+          [
+            "C",
+            "D",
+            4
+          ]
+        ]
+      },
+      "answer": "21",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A courier network has only these one-way links: A to B costs nine; A to C costs seventeen; C to B costs seven; B to D costs twenty-eight; C to D costs four. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "37",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "37"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "21"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "52"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/21"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "16",
+            "relative_gap": "16/21"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "A fare network has only these one-way links: A to B costs 9; A to C costs 14; C to B costs 4; B to D costs 25; C to D costs 4. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            9
+          ],
+          [
+            "A",
+            "C",
+            14
+          ],
+          [
+            "C",
+            "B",
+            4
+          ],
+          [
+            "B",
+            "D",
+            25
+          ],
+          [
+            "C",
+            "D",
+            4
+          ]
+        ]
+      },
+      "answer": "18",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A fare network has only these one-way links: A to B costs nine; A to C costs fourteen; C to B costs four; B to D costs twenty-five; C to D costs four. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "34"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "18"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "43"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/18"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "16",
+            "relative_gap": "8/9"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "A service network has only these one-way links: A to B costs 12; A to C costs 23; C to B costs 9; B to D costs 22; C to D costs 7. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            12
+          ],
+          [
+            "A",
+            "C",
+            23
+          ],
+          [
+            "C",
+            "B",
+            9
+          ],
+          [
+            "B",
+            "D",
+            22
+          ],
+          [
+            "C",
+            "D",
+            7
+          ]
+        ]
+      },
+      "answer": "30",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A service network has only these one-way links: A to B costs twelve; A to C costs twenty-three; C to B costs nine; B to D costs twenty-two; C to D costs seven. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "34"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "30"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "54"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "2",
+            "relative_gap": "1/15"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "2/15"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "A transfer network has only these one-way links: A to B costs 1; A to C costs 21; C to B costs 1; B to D costs 24; C to D costs 1. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            1
+          ],
+          [
+            "A",
+            "C",
+            21
+          ],
+          [
+            "C",
+            "B",
+            1
+          ],
+          [
+            "B",
+            "D",
+            24
+          ],
+          [
+            "C",
+            "D",
+            1
+          ]
+        ]
+      },
+      "answer": "22",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A transfer network has only these one-way links: A to B costs one; A to C costs twenty-one; C to B costs one; B to D costs twenty-four; C to D costs one. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "25",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "25"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "22"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "46"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "19",
+            "relative_gap": "19/22"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "3/22"
+          }
+        ],
+        "min_wrong_pair_gap": "22",
+        "min_distinct_wrong_pair_gap": "22"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "A routing network has only these one-way links: A to B costs 4; A to C costs 13; C to B costs 7; B to D costs 15; C to D costs 3. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            4
+          ],
+          [
+            "A",
+            "C",
+            13
+          ],
+          [
+            "C",
+            "B",
+            7
+          ],
+          [
+            "B",
+            "D",
+            15
+          ],
+          [
+            "C",
+            "D",
+            3
+          ]
+        ]
+      },
+      "answer": "16",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A routing network has only these one-way links: A to B costs four; A to C costs thirteen; C to B costs seven; B to D costs fifteen; C to D costs three. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "14",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "19",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "19"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "16"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "35"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "2",
+            "relative_gap": "1/8"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "3/16"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "A courier network has only these one-way links: A to B costs 19; A to C costs 23; C to B costs 1; B to D costs 20; C to D costs 15. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            19
+          ],
+          [
+            "A",
+            "C",
+            23
+          ],
+          [
+            "C",
+            "B",
+            1
+          ],
+          [
+            "B",
+            "D",
+            20
+          ],
+          [
+            "C",
+            "D",
+            15
+          ]
+        ]
+      },
+      "answer": "38",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A courier network has only these one-way links: A to B costs nineteen; A to C costs twenty-three; C to B costs one; B to D costs twenty; C to D costs fifteen. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "35",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "39",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "39"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "38"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "44"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "3",
+            "relative_gap": "3/38"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/38"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "A fare network has only these one-way links: A to B costs 14; A to C costs 18; C to B costs 1; B to D costs 20; C to D costs 8. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            14
+          ],
+          [
+            "A",
+            "C",
+            18
+          ],
+          [
+            "C",
+            "B",
+            1
+          ],
+          [
+            "B",
+            "D",
+            20
+          ],
+          [
+            "C",
+            "D",
+            8
+          ]
+        ]
+      },
+      "answer": "26",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A fare network has only these one-way links: A to B costs fourteen; A to C costs eighteen; C to B costs one; B to D costs twenty; C to D costs eight. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "34"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "26"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "3",
+            "relative_gap": "3/26"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "8",
+            "relative_gap": "4/13"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "A service network has only these one-way links: A to B costs 12; A to C costs 23; C to B costs 4; B to D costs 29; C to D costs 15. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            12
+          ],
+          [
+            "A",
+            "C",
+            23
+          ],
+          [
+            "C",
+            "B",
+            4
+          ],
+          [
+            "B",
+            "D",
+            29
+          ],
+          [
+            "C",
+            "D",
+            15
+          ]
+        ]
+      },
+      "answer": "38",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A service network has only these one-way links: A to B costs twelve; A to C costs twenty-three; C to B costs four; B to D costs twenty-nine; C to D costs fifteen. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "31",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "41",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "41"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "38"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "56"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "7",
+            "relative_gap": "7/38"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "3/38"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "A transfer network has only these one-way links: A to B costs 10; A to C costs 24; C to B costs 1; B to D costs 26; C to D costs 10. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            10
+          ],
+          [
+            "A",
+            "C",
+            24
+          ],
+          [
+            "C",
+            "B",
+            1
+          ],
+          [
+            "B",
+            "D",
+            26
+          ],
+          [
+            "C",
+            "D",
+            10
+          ]
+        ]
+      },
+      "answer": "34",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A transfer network has only these one-way links: A to B costs ten; A to C costs twenty-four; C to B costs one; B to D costs twenty-six; C to D costs ten. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "36"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "34"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "13",
+            "relative_gap": "13/34"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "1/17"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "A routing network has only these one-way links: A to B costs 7; A to C costs 14; C to B costs 4; B to D costs 29; C to D costs 6. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            7
+          ],
+          [
+            "A",
+            "C",
+            14
+          ],
+          [
+            "C",
+            "B",
+            4
+          ],
+          [
+            "B",
+            "D",
+            29
+          ],
+          [
+            "C",
+            "D",
+            6
+          ]
+        ]
+      },
+      "answer": "20",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A routing network has only these one-way links: A to B costs seven; A to C costs fourteen; C to B costs four; B to D costs twenty-nine; C to D costs six. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "36"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "20"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "47"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "3",
+            "relative_gap": "3/20"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "16",
+            "relative_gap": "4/5"
+          }
+        ],
+        "min_wrong_pair_gap": "19",
+        "min_distinct_wrong_pair_gap": "19"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "A courier network has only these one-way links: A to B costs 6; A to C costs 27; C to B costs 20; B to D costs 27; C to D costs 1. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            6
+          ],
+          [
+            "A",
+            "C",
+            27
+          ],
+          [
+            "C",
+            "B",
+            20
+          ],
+          [
+            "B",
+            "D",
+            27
+          ],
+          [
+            "C",
+            "D",
+            1
+          ]
+        ]
+      },
+      "answer": "28",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A courier network has only these one-way links: A to B costs six; A to C costs twenty-seven; C to B costs twenty; B to D costs twenty-seven; C to D costs one. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "33",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "33"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "28"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "74"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/28"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "5",
+            "relative_gap": "5/28"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "A fare network has only these one-way links: A to B costs 3; A to C costs 20; C to B costs 7; B to D costs 21; C to D costs 1. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            3
+          ],
+          [
+            "A",
+            "C",
+            20
+          ],
+          [
+            "C",
+            "B",
+            7
+          ],
+          [
+            "B",
+            "D",
+            21
+          ],
+          [
+            "C",
+            "D",
+            1
+          ]
+        ]
+      },
+      "answer": "21",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A fare network has only these one-way links: A to B costs three; A to C costs twenty; C to B costs seven; B to D costs twenty-one; C to D costs one. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "24"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "21"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "48"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "10",
+            "relative_gap": "10/21"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "A service network has only these one-way links: A to B costs 16; A to C costs 28; C to B costs 3; B to D costs 24; C to D costs 5. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            16
+          ],
+          [
+            "A",
+            "C",
+            28
+          ],
+          [
+            "C",
+            "B",
+            3
+          ],
+          [
+            "B",
+            "D",
+            24
+          ],
+          [
+            "C",
+            "D",
+            5
+          ]
+        ]
+      },
+      "answer": "33",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A service network has only these one-way links: A to B costs sixteen; A to C costs twenty-eight; C to B costs three; B to D costs twenty-four; C to D costs five. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "40",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "40"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "33"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "55"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "9",
+            "relative_gap": "3/11"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "7",
+            "relative_gap": "7/33"
+          }
+        ],
+        "min_wrong_pair_gap": "16",
+        "min_distinct_wrong_pair_gap": "16"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "A transfer network has only these one-way links: A to B costs 19; A to C costs 22; C to B costs 2; B to D costs 15; C to D costs 3. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            19
+          ],
+          [
+            "A",
+            "C",
+            22
+          ],
+          [
+            "C",
+            "B",
+            2
+          ],
+          [
+            "B",
+            "D",
+            15
+          ],
+          [
+            "C",
+            "D",
+            3
+          ]
+        ]
+      },
+      "answer": "25",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A transfer network has only these one-way links: A to B costs nineteen; A to C costs twenty-two; C to B costs two; B to D costs fifteen; C to D costs three. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "34"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "25"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/25"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "9",
+            "relative_gap": "9/25"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "A routing network has only these one-way links: A to B costs 1; A to C costs 14; C to B costs 8; B to D costs 24; C to D costs 9. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            1
+          ],
+          [
+            "A",
+            "C",
+            14
+          ],
+          [
+            "C",
+            "B",
+            8
+          ],
+          [
+            "B",
+            "D",
+            24
+          ],
+          [
+            "C",
+            "D",
+            9
+          ]
+        ]
+      },
+      "answer": "23",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A routing network has only these one-way links: A to B costs one; A to C costs fourteen; C to B costs eight; B to D costs twenty-four; C to D costs nine. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "18",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "25",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "25"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "23"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "46"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "5",
+            "relative_gap": "5/23"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "2/23"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "A courier network has only these one-way links: A to B costs 5; A to C costs 12; C to B costs 3; B to D costs 17; C to D costs 3. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            5
+          ],
+          [
+            "A",
+            "C",
+            12
+          ],
+          [
+            "C",
+            "B",
+            3
+          ],
+          [
+            "B",
+            "D",
+            17
+          ],
+          [
+            "C",
+            "D",
+            3
+          ]
+        ]
+      },
+      "answer": "15",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A courier network has only these one-way links: A to B costs five; A to C costs twelve; C to B costs three; B to D costs seventeen; C to D costs three. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "22",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "22"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "15"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "32"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "4",
+            "relative_gap": "4/15"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "7",
+            "relative_gap": "7/15"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "A fare network has only these one-way links: A to B costs 4; A to C costs 15; C to B costs 5; B to D costs 30; C to D costs 14. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            4
+          ],
+          [
+            "A",
+            "C",
+            15
+          ],
+          [
+            "C",
+            "B",
+            5
+          ],
+          [
+            "B",
+            "D",
+            30
+          ],
+          [
+            "C",
+            "D",
+            14
+          ]
+        ]
+      },
+      "answer": "29",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A fare network has only these one-way links: A to B costs four; A to C costs fifteen; C to B costs five; B to D costs thirty; C to D costs fourteen. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "34"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "29"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "50"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "6",
+            "relative_gap": "6/29"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "5",
+            "relative_gap": "5/29"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "What if costs may be negative?",
+        "reference": "Dijkstra finalisation is no longer generally valid. An acyclic graph still permits topological relaxation, while Bellman-Ford handles more general graphs."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "A service network has only these one-way links: A to B costs 16; A to C costs 23; C to B costs 6; B to D costs 25; C to D costs 2. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            16
+          ],
+          [
+            "A",
+            "C",
+            23
+          ],
+          [
+            "C",
+            "B",
+            6
+          ],
+          [
+            "B",
+            "D",
+            25
+          ],
+          [
+            "C",
+            "D",
+            2
+          ]
+        ]
+      },
+      "answer": "25",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A service network has only these one-way links: A to B costs sixteen; A to C costs twenty-three; C to B costs six; B to D costs twenty-five; C to D costs two. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "41",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "41"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "25"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "54"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/25"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "16",
+            "relative_gap": "16/25"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "What simpler method works for equal link costs?",
+        "reference": "Breadth-first search minimises link count. With a common positive cost, it also minimises total cost."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "A transfer network has only these one-way links: A to B costs 12; A to C costs 27; C to B costs 14; B to D costs 21; C to D costs 1. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            12
+          ],
+          [
+            "A",
+            "C",
+            27
+          ],
+          [
+            "C",
+            "B",
+            14
+          ],
+          [
+            "B",
+            "D",
+            21
+          ],
+          [
+            "C",
+            "D",
+            1
+          ]
+        ]
+      },
+      "answer": "28",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A transfer network has only these one-way links: A to B costs twelve; A to C costs twenty-seven; C to B costs fourteen; B to D costs twenty-one; C to D costs one. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "33",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "33"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "28"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "62"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "1",
+            "relative_gap": "1/28"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "5",
+            "relative_gap": "5/28"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "Why can the cheapest next link be misleading?",
+        "reference": "It ignores the cost still to come. A dearer first link can lead to a cheaper complete route."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "A routing network has only these one-way links: A to B costs 8; A to C costs 15; C to B costs 2; B to D costs 20; C to D costs 8. What is the cheapest total cost from A to D, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            "A",
+            "B",
+            8
+          ],
+          [
+            "A",
+            "C",
+            15
+          ],
+          [
+            "C",
+            "B",
+            2
+          ],
+          [
+            "B",
+            "D",
+            20
+          ],
+          [
+            "C",
+            "D",
+            8
+          ]
+        ]
+      },
+      "answer": "23",
+      "tolerance": "0",
+      "topic": "Graphs",
+      "source_topic": "Directed shortest route",
+      "difficulty": "Hard",
+      "spoken_text": "A routing network has only these one-way links: A to B costs eight; A to C costs fifteen; C to B costs two; B to D costs twenty; C to D costs eight. What is the cheapest total cost from A to D, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "18",
+          "misconceptions": [
+            "treats_links_as_undirected"
+          ]
+        },
+        {
+          "value": "28",
+          "misconceptions": [
+            "takes_cheapest_next_edge_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "cost_via_a_b_d",
+          "value": "28"
+        },
+        {
+          "name": "cost_via_a_c_d",
+          "value": "23"
+        },
+        {
+          "name": "cost_via_a_c_b_d",
+          "value": "37"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "treats_links_as_undirected",
+            "absolute_gap": "5",
+            "relative_gap": "5/23"
+          },
+          {
+            "misconception": "takes_cheapest_next_edge_greedily",
+            "absolute_gap": "5",
+            "relative_gap": "5/23"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "What if no directed route exists?",
+        "reference": "Use a separate unreachable marker rather than a finite cost. These questions guarantee a route."
+      }
+    }
+  ]
+}

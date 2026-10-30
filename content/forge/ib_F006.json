@@ -25,14 +25,10 @@
       "variants_checked": 50,
       "max_absolute_error": "0"
     },
-    "misconceptions_verified": false,
-    "method_count": 0,
-    "repair_attempted": true,
-    "reason": {
-      "gate": "wrong_methods",
-      "error_class": "correct_answer_collision",
-      "variant_index": 1
-    },
+    "misconceptions_verified": true,
+    "method_count": 3,
+    "repair_attempted": false,
+    "reason": null,
     "pending_reason": null,
     "all_variants_retained": true,
     "rechecked_parameter_revision": null,
@@ -46,7 +42,7 @@
   "instances": [
     {
       "variant": "1",
-      "text": "A subscription business collects a customer prepayment. The customer pays 800 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 225 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 800 million dollars. By year-end, 75 percent is earned and service costs paid are 225 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 800,
@@ -58,19 +54,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A subscription business collects a customer prepayment. The customer pays eight hundred million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays two hundred and twenty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays eight hundred million dollars. By year-end, seventy-five percent is earned and service costs paid are two hundred and twenty-five million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "600"
+          "value": "345",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "200"
+          "value": "335",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "575",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "600"
         },
         {
           "name": "taxable_profit",
@@ -81,14 +92,30 @@
           "value": "150"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "425"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "80",
+            "relative_gap": "16/85"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "90",
+            "relative_gap": "18/85"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "150",
+            "relative_gap": "6/17"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -97,7 +124,7 @@
     },
     {
       "variant": "2",
-      "text": "A maintenance provider sells an upfront service contract. The customer pays 600 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 105 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 600 million dollars. By year-end, 50 percent is earned and service costs paid are 105 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 600,
@@ -109,18 +136,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A maintenance provider sells an upfront service contract. The customer pays six hundred million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays one hundred and five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays six hundred million dollars. By year-end, fifty percent is earned and service costs paid are one hundred and five million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "300"
+          "value": "1485/4",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "420",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "495",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "300"
         },
         {
@@ -132,14 +174,30 @@
           "value": "195/4"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "1785/4"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "75",
+            "relative_gap": "20/119"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "105/4",
+            "relative_gap": "1/17"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "195/4",
+            "relative_gap": "13/119"
+          }
+        ],
+        "min_wrong_pair_gap": "195/4",
+        "min_distinct_wrong_pair_gap": "195/4"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -148,7 +206,7 @@
     },
     {
       "variant": "3",
-      "text": "A training business receives payment before all sessions are delivered. The customer pays 450 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 50 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 450 million dollars. By year-end, 50 percent is earned and service costs paid are 50 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 450,
@@ -160,18 +218,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A training business receives payment before all sessions are delivered. The customer pays four hundred and fifty million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays fifty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays four hundred and fifty million dollars. By year-end, fifty percent is earned and service costs paid are fifty million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "225"
+          "value": "320",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "355",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "400",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "225"
         },
         {
@@ -183,14 +256,30 @@
           "value": "35"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "365"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "45",
+            "relative_gap": "9/73"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "10",
+            "relative_gap": "2/73"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "35",
+            "relative_gap": "7/73"
+          }
+        ],
+        "min_wrong_pair_gap": "35",
+        "min_distinct_wrong_pair_gap": "35"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -199,7 +288,7 @@
     },
     {
       "variant": "4",
-      "text": "A support provider bills a full contract in advance. The customer pays 700 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 40 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 700 million dollars. By year-end, 50 percent is earned and service costs paid are 40 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 700,
@@ -211,18 +300,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A support provider bills a full contract in advance. The customer pays seven hundred million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays forty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays seven hundred million dollars. By year-end, fifty percent is earned and service costs paid are forty million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "350"
+          "value": "396",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "520",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "660",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "350"
         },
         {
@@ -234,14 +338,30 @@
           "value": "124"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "536"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "140",
+            "relative_gap": "35/134"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "16",
+            "relative_gap": "2/67"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "124",
+            "relative_gap": "31/134"
+          }
+        ],
+        "min_wrong_pair_gap": "124",
+        "min_distinct_wrong_pair_gap": "124"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -250,7 +370,7 @@
     },
     {
       "variant": "5",
-      "text": "You review an advance-funded service engagement. The customer pays 700 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 40 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 700 million dollars. By year-end, 25 percent is earned and service costs paid are 40 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 700,
@@ -262,19 +382,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "You review an advance-funded service engagement. The customer pays seven hundred million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays forty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays seven hundred million dollars. By year-end, twenty-five percent is earned and service costs paid are forty million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "175"
+          "value": "396",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "525"
+          "value": "590",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "660",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "175"
         },
         {
           "name": "taxable_profit",
@@ -285,14 +420,30 @@
           "value": "54"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "606"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "210",
+            "relative_gap": "35/101"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "16",
+            "relative_gap": "8/303"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "54",
+            "relative_gap": "9/101"
+          }
+        ],
+        "min_wrong_pair_gap": "70",
+        "min_distinct_wrong_pair_gap": "70"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -301,7 +452,7 @@
     },
     {
       "variant": "6",
-      "text": "A subscription business collects a customer prepayment. The customer pays 200 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 20 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 200 million dollars. By year-end, 50 percent is earned and service costs paid are 20 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 200,
@@ -313,18 +464,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A subscription business collects a customer prepayment. The customer pays two hundred million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays twenty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays two hundred million dollars. By year-end, fifty percent is earned and service costs paid are twenty million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "100"
+          "value": "144",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "160",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "180",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "100"
         },
         {
@@ -336,14 +502,30 @@
           "value": "16"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "164"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "20",
+            "relative_gap": "5/41"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "4",
+            "relative_gap": "1/41"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "16",
+            "relative_gap": "4/41"
+          }
+        ],
+        "min_wrong_pair_gap": "16",
+        "min_distinct_wrong_pair_gap": "16"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -352,7 +534,7 @@
     },
     {
       "variant": "7",
-      "text": "A maintenance provider sells an upfront service contract. The customer pays 350 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 35 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 350 million dollars. By year-end, 75 percent is earned and service costs paid are 35 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 350,
@@ -364,19 +546,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A maintenance provider sells an upfront service contract. The customer pays three hundred and fifty million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays thirty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays three hundred and fifty million dollars. By year-end, seventy-five percent is earned and service costs paid are thirty-five million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "525/2"
+          "value": "945/4",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "175/2"
+          "value": "1995/8",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "315",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "525/2"
         },
         {
           "name": "taxable_profit",
@@ -387,14 +584,30 @@
           "value": "455/8"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "2065/8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "175/8",
+            "relative_gap": "5/59"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "35/4",
+            "relative_gap": "2/59"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "455/8",
+            "relative_gap": "13/59"
+          }
+        ],
+        "min_wrong_pair_gap": "105/8",
+        "min_distinct_wrong_pair_gap": "105/8"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -403,7 +616,7 @@
     },
     {
       "variant": "8",
-      "text": "A training business receives payment before all sessions are delivered. The customer pays 600 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 70 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 600 million dollars. By year-end, 75 percent is earned and service costs paid are 70 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 600,
@@ -415,19 +628,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A training business receives payment before all sessions are delivered. The customer pays six hundred million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays seventy million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays six hundred million dollars. By year-end, seventy-five percent is earned and service costs paid are seventy million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "450"
+          "value": "795/2",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "150"
+          "value": "835/2",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "530",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "450"
         },
         {
           "name": "taxable_profit",
@@ -438,14 +666,30 @@
           "value": "95"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "435"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "75/2",
+            "relative_gap": "5/58"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "35/2",
+            "relative_gap": "7/174"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "95",
+            "relative_gap": "19/87"
+          }
+        ],
+        "min_wrong_pair_gap": "20",
+        "min_distinct_wrong_pair_gap": "20"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -454,7 +698,7 @@
     },
     {
       "variant": "9",
-      "text": "A support provider bills a full contract in advance. The customer pays 200 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 25 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 200 million dollars. By year-end, 25 percent is earned and service costs paid are 25 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 200,
@@ -466,19 +710,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A support provider bills a full contract in advance. The customer pays two hundred million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays twenty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays two hundred million dollars. By year-end, twenty-five percent is earned and service costs paid are twenty-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "50"
+          "value": "140",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "150"
+          "value": "165",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "175",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "50"
         },
         {
           "name": "taxable_profit",
@@ -489,14 +748,30 @@
           "value": "5"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "170"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "30",
+            "relative_gap": "3/17"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "5",
+            "relative_gap": "1/34"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "5",
+            "relative_gap": "1/34"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -505,7 +780,7 @@
     },
     {
       "variant": "10",
-      "text": "You review an advance-funded service engagement. The customer pays 100 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 15 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 100 million dollars. By year-end, 50 percent is earned and service costs paid are 15 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 100,
@@ -517,18 +792,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "You review an advance-funded service engagement. The customer pays one hundred million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays fifteen million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays one hundred million dollars. By year-end, fifty percent is earned and service costs paid are fifteen million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "50"
+          "value": "51",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "65",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "85",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "50"
         },
         {
@@ -540,14 +830,30 @@
           "value": "14"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "71"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "20",
+            "relative_gap": "20/71"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "6",
+            "relative_gap": "6/71"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "14",
+            "relative_gap": "14/71"
+          }
+        ],
+        "min_wrong_pair_gap": "14",
+        "min_distinct_wrong_pair_gap": "14"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -556,7 +862,7 @@
     },
     {
       "variant": "11",
-      "text": "A subscription business collects a customer prepayment. The customer pays 550 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 120 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 550 million dollars. By year-end, 50 percent is earned and service costs paid are 120 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 550,
@@ -568,18 +874,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A subscription business collects a customer prepayment. The customer pays five hundred and fifty million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays one hundred and twenty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays five hundred and fifty million dollars. By year-end, fifty percent is earned and service costs paid are one hundred and twenty million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "275"
+          "value": "258",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "320",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "430",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "275"
         },
         {
@@ -591,14 +912,30 @@
           "value": "62"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "368"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "110",
+            "relative_gap": "55/184"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "48",
+            "relative_gap": "3/23"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "62",
+            "relative_gap": "31/184"
+          }
+        ],
+        "min_wrong_pair_gap": "62",
+        "min_distinct_wrong_pair_gap": "62"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -607,7 +944,7 @@
     },
     {
       "variant": "12",
-      "text": "A maintenance provider sells an upfront service contract. The customer pays 150 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 15 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 150 million dollars. By year-end, 50 percent is earned and service costs paid are 15 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 150,
@@ -619,18 +956,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A maintenance provider sells an upfront service contract. The customer pays one hundred and fifty million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays fifteen million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays one hundred and fifty million dollars. By year-end, fifty percent is earned and service costs paid are fifteen million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "75"
+          "value": "81",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "105",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "135",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "75"
         },
         {
@@ -642,14 +994,30 @@
           "value": "24"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "111"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "30",
+            "relative_gap": "10/37"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "6",
+            "relative_gap": "2/37"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "24",
+            "relative_gap": "8/37"
+          }
+        ],
+        "min_wrong_pair_gap": "24",
+        "min_distinct_wrong_pair_gap": "24"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -658,7 +1026,7 @@
     },
     {
       "variant": "13",
-      "text": "A training business receives payment before all sessions are delivered. The customer pays 1000 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 145 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 1 billion dollars. By year-end, 50 percent is earned and service costs paid are 145 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 1000,
@@ -670,18 +1038,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A training business receives payment before all sessions are delivered. The customer pays one thousand million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays one hundred and forty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays one billion dollars. By year-end, fifty percent is earned and service costs paid are one hundred and forty-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "500"
+          "value": "684",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "755",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "855",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "500"
         },
         {
@@ -693,14 +1076,30 @@
           "value": "71"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "784"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "100",
+            "relative_gap": "25/196"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "29",
+            "relative_gap": "29/784"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "71",
+            "relative_gap": "71/784"
+          }
+        ],
+        "min_wrong_pair_gap": "71",
+        "min_distinct_wrong_pair_gap": "71"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -709,7 +1108,7 @@
     },
     {
       "variant": "14",
-      "text": "A support provider bills a full contract in advance. The customer pays 750 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 85 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 750 million dollars. By year-end, 25 percent is earned and service costs paid are 85 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 750,
@@ -721,19 +1120,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A support provider bills a full contract in advance. The customer pays seven hundred and fifty million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays eighty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays seven hundred and fifty million dollars. By year-end, twenty-five percent is earned and service costs paid are eighty-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "375/2"
+          "value": "532",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "1125/2"
+          "value": "1255/2",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "665",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "375/2"
         },
         {
           "name": "taxable_profit",
@@ -744,14 +1158,30 @@
           "value": "41/2"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "1289/2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "225/2",
+            "relative_gap": "225/1289"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "17",
+            "relative_gap": "34/1289"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "41/2",
+            "relative_gap": "41/1289"
+          }
+        ],
+        "min_wrong_pair_gap": "75/2",
+        "min_distinct_wrong_pair_gap": "75/2"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -760,7 +1190,7 @@
     },
     {
       "variant": "15",
-      "text": "You review an advance-funded service engagement. The customer pays 800 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 60 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 800 million dollars. By year-end, 25 percent is earned and service costs paid are 60 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 800,
@@ -772,19 +1202,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "You review an advance-funded service engagement. The customer pays eight hundred million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays sixty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays eight hundred million dollars. By year-end, twenty-five percent is earned and service costs paid are sixty million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "200"
+          "value": "444",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "600"
+          "value": "660",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "740",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "200"
         },
         {
           "name": "taxable_profit",
@@ -795,14 +1240,30 @@
           "value": "56"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "684"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "240",
+            "relative_gap": "20/57"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "24",
+            "relative_gap": "2/57"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "56",
+            "relative_gap": "14/171"
+          }
+        ],
+        "min_wrong_pair_gap": "80",
+        "min_distinct_wrong_pair_gap": "80"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -811,7 +1272,7 @@
     },
     {
       "variant": "16",
-      "text": "A subscription business collects a customer prepayment. The customer pays 850 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 105 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 850 million dollars. By year-end, 75 percent is earned and service costs paid are 105 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 850,
@@ -823,19 +1284,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A subscription business collects a customer prepayment. The customer pays eight hundred and fifty million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays one hundred and five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays eight hundred and fifty million dollars. By year-end, seventy-five percent is earned and service costs paid are one hundred and five million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "1275/2"
+          "value": "447",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "425/2"
+          "value": "490",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "745",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "1275/2"
         },
         {
           "name": "taxable_profit",
@@ -846,14 +1322,30 @@
           "value": "213"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "532"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "85",
+            "relative_gap": "85/532"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "42",
+            "relative_gap": "3/38"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "213",
+            "relative_gap": "213/532"
+          }
+        ],
+        "min_wrong_pair_gap": "43",
+        "min_distinct_wrong_pair_gap": "43"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -862,7 +1354,7 @@
     },
     {
       "variant": "17",
-      "text": "A maintenance provider sells an upfront service contract. The customer pays 450 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 50 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 450 million dollars. By year-end, 25 percent is earned and service costs paid are 50 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 450,
@@ -874,19 +1366,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A maintenance provider sells an upfront service contract. The customer pays four hundred and fifty million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays fifty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays four hundred and fifty million dollars. By year-end, twenty-five percent is earned and service costs paid are fifty million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "225/2"
+          "value": "300",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "675/2"
+          "value": "2975/8",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "400",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "225/2"
         },
         {
           "name": "taxable_profit",
@@ -897,14 +1404,30 @@
           "value": "125/8"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "3075/8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "675/8",
+            "relative_gap": "9/41"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "25/2",
+            "relative_gap": "4/123"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "125/8",
+            "relative_gap": "5/123"
+          }
+        ],
+        "min_wrong_pair_gap": "225/8",
+        "min_distinct_wrong_pair_gap": "225/8"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -913,7 +1436,7 @@
     },
     {
       "variant": "18",
-      "text": "A training business receives payment before all sessions are delivered. The customer pays 600 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 80 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 600 million dollars. By year-end, 75 percent is earned and service costs paid are 80 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 600,
@@ -925,19 +1448,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A training business receives payment before all sessions are delivered. The customer pays six hundred million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays eighty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays six hundred million dollars. By year-end, seventy-five percent is earned and service costs paid are eighty million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "450"
+          "value": "390",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "150"
+          "value": "815/2",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "520",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "450"
         },
         {
           "name": "taxable_profit",
@@ -948,14 +1486,30 @@
           "value": "185/2"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "855/2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "75/2",
+            "relative_gap": "5/57"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "20",
+            "relative_gap": "8/171"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "185/2",
+            "relative_gap": "37/171"
+          }
+        ],
+        "min_wrong_pair_gap": "35/2",
+        "min_distinct_wrong_pair_gap": "35/2"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -964,7 +1518,7 @@
     },
     {
       "variant": "19",
-      "text": "A support provider bills a full contract in advance. The customer pays 300 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 55 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 300 million dollars. By year-end, 75 percent is earned and service costs paid are 55 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 300,
@@ -976,19 +1530,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A support provider bills a full contract in advance. The customer pays three hundred million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays fifty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays three hundred million dollars. By year-end, seventy-five percent is earned and service costs paid are fifty-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "225"
+          "value": "196",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "75"
+          "value": "200",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "245",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "225"
         },
         {
           "name": "taxable_profit",
@@ -999,14 +1568,30 @@
           "value": "34"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "211"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "15",
+            "relative_gap": "15/211"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "11",
+            "relative_gap": "11/211"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "34",
+            "relative_gap": "34/211"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1015,7 +1600,7 @@
     },
     {
       "variant": "20",
-      "text": "You review an advance-funded service engagement. The customer pays 350 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 30 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 350 million dollars. By year-end, 50 percent is earned and service costs paid are 30 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 350,
@@ -1027,18 +1612,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "You review an advance-funded service engagement. The customer pays three hundred and fifty million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays thirty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays three hundred and fifty million dollars. By year-end, fifty percent is earned and service costs paid are thirty million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "175"
+          "value": "192",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "250",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "320",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "175"
         },
         {
@@ -1050,14 +1650,30 @@
           "value": "58"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "262"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "70",
+            "relative_gap": "35/131"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "12",
+            "relative_gap": "6/131"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "58",
+            "relative_gap": "29/131"
+          }
+        ],
+        "min_wrong_pair_gap": "58",
+        "min_distinct_wrong_pair_gap": "58"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1066,7 +1682,7 @@
     },
     {
       "variant": "21",
-      "text": "A subscription business collects a customer prepayment. The customer pays 750 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 105 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 750 million dollars. By year-end, 75 percent is earned and service costs paid are 105 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 750,
@@ -1078,19 +1694,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A subscription business collects a customer prepayment. The customer pays seven hundred and fifty million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays one hundred and five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays seven hundred and fifty million dollars. By year-end, seventy-five percent is earned and service costs paid are one hundred and five million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "1125/2"
+          "value": "1935/4",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "375/2"
+          "value": "4035/8",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "645",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "1125/2"
         },
         {
           "name": "taxable_profit",
@@ -1101,14 +1732,30 @@
           "value": "915/8"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "4245/8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "375/8",
+            "relative_gap": "25/283"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "105/4",
+            "relative_gap": "14/283"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "915/8",
+            "relative_gap": "61/283"
+          }
+        ],
+        "min_wrong_pair_gap": "165/8",
+        "min_distinct_wrong_pair_gap": "165/8"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1117,7 +1764,7 @@
     },
     {
       "variant": "22",
-      "text": "A maintenance provider sells an upfront service contract. The customer pays 500 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 120 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 500 million dollars. By year-end, 50 percent is earned and service costs paid are 120 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 500,
@@ -1129,18 +1776,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A maintenance provider sells an upfront service contract. The customer pays five hundred million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays one hundred and twenty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays five hundred million dollars. By year-end, fifty percent is earned and service costs paid are one hundred and twenty million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "250"
+          "value": "304",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "330",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "380",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "250"
         },
         {
@@ -1152,14 +1814,30 @@
           "value": "26"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "354"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "50",
+            "relative_gap": "25/177"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "24",
+            "relative_gap": "4/59"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "26",
+            "relative_gap": "13/177"
+          }
+        ],
+        "min_wrong_pair_gap": "26",
+        "min_distinct_wrong_pair_gap": "26"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1168,7 +1846,7 @@
     },
     {
       "variant": "23",
-      "text": "A training business receives payment before all sessions are delivered. The customer pays 950 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 340 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 950 million dollars. By year-end, 75 percent is earned and service costs paid are 340 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 950,
@@ -1180,19 +1858,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A training business receives payment before all sessions are delivered. The customer pays nine hundred and fifty million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays three hundred and forty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays nine hundred and fifty million dollars. By year-end, seventy-five percent is earned and service costs paid are three hundred and forty million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "1425/2"
+          "value": "366",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "475/2"
+          "value": "325",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "610",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "1425/2"
         },
         {
           "name": "taxable_profit",
@@ -1203,14 +1896,30 @@
           "value": "149"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "461"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "95",
+            "relative_gap": "95/461"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "136",
+            "relative_gap": "136/461"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "149",
+            "relative_gap": "149/461"
+          }
+        ],
+        "min_wrong_pair_gap": "41",
+        "min_distinct_wrong_pair_gap": "41"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1219,7 +1928,7 @@
     },
     {
       "variant": "24",
-      "text": "A support provider bills a full contract in advance. The customer pays 100 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 5 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 100 million dollars. By year-end, 25 percent is earned and service costs paid are 5 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 100,
@@ -1231,19 +1940,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A support provider bills a full contract in advance. The customer pays one hundred million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays one hundred million dollars. By year-end, twenty-five percent is earned and service costs paid are five million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "25"
+          "value": "285/4",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "75"
+          "value": "355/4",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "95",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "25"
         },
         {
           "name": "taxable_profit",
@@ -1254,14 +1978,30 @@
           "value": "5"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "90"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "75/4",
+            "relative_gap": "5/24"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "5/4",
+            "relative_gap": "1/72"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "5",
+            "relative_gap": "1/18"
+          }
+        ],
+        "min_wrong_pair_gap": "25/4",
+        "min_distinct_wrong_pair_gap": "25/4"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1270,7 +2010,7 @@
     },
     {
       "variant": "25",
-      "text": "You review an advance-funded service engagement. The customer pays 600 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 85 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 600 million dollars. By year-end, 50 percent is earned and service costs paid are 85 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 600,
@@ -1282,18 +2022,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "You review an advance-funded service engagement. The customer pays six hundred million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays eighty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays six hundred million dollars. By year-end, fifty percent is earned and service costs paid are eighty-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "300"
+          "value": "412",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "455",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "515",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "300"
         },
         {
@@ -1305,14 +2060,30 @@
           "value": "43"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "472"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "60",
+            "relative_gap": "15/118"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "17",
+            "relative_gap": "17/472"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "43",
+            "relative_gap": "43/472"
+          }
+        ],
+        "min_wrong_pair_gap": "43",
+        "min_distinct_wrong_pair_gap": "43"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1321,7 +2092,7 @@
     },
     {
       "variant": "26",
-      "text": "A subscription business collects a customer prepayment. The customer pays 350 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 25 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 350 million dollars. By year-end, 25 percent is earned and service costs paid are 25 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 350,
@@ -1333,19 +2104,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A subscription business collects a customer prepayment. The customer pays three hundred and fifty million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays twenty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays three hundred and fifty million dollars. By year-end, twenty-five percent is earned and service costs paid are twenty-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "175/2"
+          "value": "260",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "525/2"
+          "value": "615/2",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "325",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "175/2"
         },
         {
           "name": "taxable_profit",
@@ -1356,14 +2142,30 @@
           "value": "25/2"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "625/2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "105/2",
+            "relative_gap": "21/125"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "5",
+            "relative_gap": "2/125"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "25/2",
+            "relative_gap": "1/25"
+          }
+        ],
+        "min_wrong_pair_gap": "35/2",
+        "min_distinct_wrong_pair_gap": "35/2"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1372,7 +2174,7 @@
     },
     {
       "variant": "27",
-      "text": "A maintenance provider sells an upfront service contract. The customer pays 900 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 5 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 900 million dollars. By year-end, 50 percent is earned and service costs paid are 5 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 900,
@@ -1384,18 +2186,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A maintenance provider sells an upfront service contract. The customer pays nine hundred million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays nine hundred million dollars. By year-end, fifty percent is earned and service costs paid are five million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "450"
+          "value": "2685/4",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "1565/2",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "895",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "450"
         },
         {
@@ -1407,14 +2224,30 @@
           "value": "445/4"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "3135/4"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "225/2",
+            "relative_gap": "30/209"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "5/4",
+            "relative_gap": "1/627"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "445/4",
+            "relative_gap": "89/627"
+          }
+        ],
+        "min_wrong_pair_gap": "445/4",
+        "min_distinct_wrong_pair_gap": "445/4"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1423,7 +2256,7 @@
     },
     {
       "variant": "28",
-      "text": "A training business receives payment before all sessions are delivered. The customer pays 800 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 10 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 800 million dollars. By year-end, 25 percent is earned and service costs paid are 10 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 800,
@@ -1435,19 +2268,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A training business receives payment before all sessions are delivered. The customer pays eight hundred million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays ten million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays eight hundred million dollars. By year-end, twenty-five percent is earned and service costs paid are ten million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "200"
+          "value": "1185/2",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "600"
+          "value": "740",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "790",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "200"
         },
         {
           "name": "taxable_profit",
@@ -1458,14 +2306,30 @@
           "value": "95/2"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "1485/2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "150",
+            "relative_gap": "20/99"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "5/2",
+            "relative_gap": "1/297"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "95/2",
+            "relative_gap": "19/297"
+          }
+        ],
+        "min_wrong_pair_gap": "50",
+        "min_distinct_wrong_pair_gap": "50"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1474,7 +2338,7 @@
     },
     {
       "variant": "29",
-      "text": "A support provider bills a full contract in advance. The customer pays 250 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 40 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 250 million dollars. By year-end, 50 percent is earned and service costs paid are 40 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 250,
@@ -1486,18 +2350,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A support provider bills a full contract in advance. The customer pays two hundred and fifty million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays forty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays two hundred and fifty million dollars. By year-end, fifty percent is earned and service costs paid are forty million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "125"
+          "value": "168",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "185",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "210",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "125"
         },
         {
@@ -1509,14 +2388,30 @@
           "value": "17"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "193"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "25",
+            "relative_gap": "25/193"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "8",
+            "relative_gap": "8/193"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "17",
+            "relative_gap": "17/193"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1525,7 +2420,7 @@
     },
     {
       "variant": "30",
-      "text": "You review an advance-funded service engagement. The customer pays 600 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 75 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 600 million dollars. By year-end, 25 percent is earned and service costs paid are 75 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 600,
@@ -1537,19 +2432,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "You review an advance-funded service engagement. The customer pays six hundred million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays seventy-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays six hundred million dollars. By year-end, twenty-five percent is earned and service costs paid are seventy-five million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "150"
+          "value": "1575/4",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "450"
+          "value": "975/2",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "525",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "150"
         },
         {
           "name": "taxable_profit",
@@ -1560,14 +2470,30 @@
           "value": "75/4"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "2025/4"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "225/2",
+            "relative_gap": "2/9"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "75/4",
+            "relative_gap": "1/27"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "75/4",
+            "relative_gap": "1/27"
+          }
+        ],
+        "min_wrong_pair_gap": "75/2",
+        "min_distinct_wrong_pair_gap": "75/2"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1576,7 +2502,7 @@
     },
     {
       "variant": "31",
-      "text": "A subscription business collects a customer prepayment. The customer pays 850 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 265 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 850 million dollars. By year-end, 75 percent is earned and service costs paid are 265 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 850,
@@ -1588,19 +2514,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A subscription business collects a customer prepayment. The customer pays eight hundred and fifty million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays two hundred and sixty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays eight hundred and fifty million dollars. By year-end, seventy-five percent is earned and service costs paid are two hundred and sixty-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "1275/2"
+          "value": "468",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "425/2"
+          "value": "915/2",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "585",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "1275/2"
         },
         {
           "name": "taxable_profit",
@@ -1611,14 +2552,30 @@
           "value": "149/2"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "1021/2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "85/2",
+            "relative_gap": "85/1021"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "53",
+            "relative_gap": "106/1021"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "149/2",
+            "relative_gap": "149/1021"
+          }
+        ],
+        "min_wrong_pair_gap": "21/2",
+        "min_distinct_wrong_pair_gap": "21/2"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1627,7 +2584,7 @@
     },
     {
       "variant": "32",
-      "text": "A maintenance provider sells an upfront service contract. The customer pays 850 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 45 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 850 million dollars. By year-end, 25 percent is earned and service costs paid are 45 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 850,
@@ -1639,19 +2596,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A maintenance provider sells an upfront service contract. The customer pays eight hundred and fifty million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays forty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays eight hundred and fifty million dollars. By year-end, twenty-five percent is earned and service costs paid are forty-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "425/2"
+          "value": "644",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "1275/2"
+          "value": "1525/2",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "805",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "425/2"
         },
         {
           "name": "taxable_profit",
@@ -1662,14 +2634,30 @@
           "value": "67/2"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "1543/2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "255/2",
+            "relative_gap": "255/1543"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "9",
+            "relative_gap": "18/1543"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "67/2",
+            "relative_gap": "67/1543"
+          }
+        ],
+        "min_wrong_pair_gap": "85/2",
+        "min_distinct_wrong_pair_gap": "85/2"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1678,7 +2666,7 @@
     },
     {
       "variant": "33",
-      "text": "A training business receives payment before all sessions are delivered. The customer pays 950 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 265 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 950 million dollars. By year-end, 75 percent is earned and service costs paid are 265 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 950,
@@ -1690,19 +2678,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A training business receives payment before all sessions are delivered. The customer pays nine hundred and fifty million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays two hundred and sixty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays nine hundred and fifty million dollars. By year-end, seventy-five percent is earned and service costs paid are two hundred and sixty-five million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "1425/2"
+          "value": "2055/4",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "475/2"
+          "value": "4055/8",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "685",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "1425/2"
         },
         {
           "name": "taxable_profit",
@@ -1713,14 +2716,30 @@
           "value": "895/8"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "4585/8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "475/8",
+            "relative_gap": "95/917"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "265/4",
+            "relative_gap": "106/917"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "895/8",
+            "relative_gap": "179/917"
+          }
+        ],
+        "min_wrong_pair_gap": "55/8",
+        "min_distinct_wrong_pair_gap": "55/8"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1729,7 +2748,7 @@
     },
     {
       "variant": "34",
-      "text": "A support provider bills a full contract in advance. The customer pays 550 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 15 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 550 million dollars. By year-end, 25 percent is earned and service costs paid are 15 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 550,
@@ -1741,19 +2760,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A support provider bills a full contract in advance. The customer pays five hundred and fifty million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays fifteen million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays five hundred and fifty million dollars. By year-end, twenty-five percent is earned and service costs paid are fifteen million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "275/2"
+          "value": "321",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "825/2"
+          "value": "480",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "535",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "275/2"
         },
         {
           "name": "taxable_profit",
@@ -1764,14 +2798,30 @@
           "value": "49"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "486"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "165",
+            "relative_gap": "55/162"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "6",
+            "relative_gap": "1/81"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "49",
+            "relative_gap": "49/486"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1780,7 +2830,7 @@
     },
     {
       "variant": "35",
-      "text": "You review an advance-funded service engagement. The customer pays 300 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 75 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 300 million dollars. By year-end, 75 percent is earned and service costs paid are 75 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 300,
@@ -1792,19 +2842,29 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "You review an advance-funded service engagement. The customer pays three hundred million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays seventy-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays three hundred million dollars. By year-end, seventy-five percent is earned and service costs paid are seventy-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "225"
+          "value": "180",
+          "misconceptions": [
+            "tax_on_full_cash_collection",
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "75"
+          "value": "225",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "225"
         },
         {
           "name": "taxable_profit",
@@ -1815,14 +2875,30 @@
           "value": "30"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "195"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "15",
+            "relative_gap": "1/13"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "15",
+            "relative_gap": "1/13"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "30",
+            "relative_gap": "2/13"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "45"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1831,7 +2907,7 @@
     },
     {
       "variant": "36",
-      "text": "A subscription business collects a customer prepayment. The customer pays 850 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 165 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 850 million dollars. By year-end, 50 percent is earned and service costs paid are 165 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 850,
@@ -1843,18 +2919,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A subscription business collects a customer prepayment. The customer pays eight hundred and fifty million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays one hundred and sixty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays eight hundred and fifty million dollars. By year-end, fifty percent is earned and service costs paid are one hundred and sixty-five million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "425"
+          "value": "2055/4",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "2315/4",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "685",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "425"
         },
         {
@@ -1866,14 +2957,30 @@
           "value": "65"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "620"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "425/4",
+            "relative_gap": "85/496"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "165/4",
+            "relative_gap": "33/496"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "65",
+            "relative_gap": "13/124"
+          }
+        ],
+        "min_wrong_pair_gap": "65",
+        "min_distinct_wrong_pair_gap": "65"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1882,7 +2989,7 @@
     },
     {
       "variant": "37",
-      "text": "A maintenance provider sells an upfront service contract. The customer pays 900 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 105 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 900 million dollars. By year-end, 75 percent is earned and service costs paid are 105 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 900,
@@ -1894,19 +3001,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A maintenance provider sells an upfront service contract. The customer pays nine hundred million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays one hundred and five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays nine hundred million dollars. By year-end, seventy-five percent is earned and service costs paid are one hundred and five million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "675"
+          "value": "2385/4",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "225"
+          "value": "2505/4",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "795",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "675"
         },
         {
           "name": "taxable_profit",
@@ -1917,14 +3039,30 @@
           "value": "285/2"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "1305/2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "225/4",
+            "relative_gap": "5/58"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "105/4",
+            "relative_gap": "7/174"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "285/2",
+            "relative_gap": "19/87"
+          }
+        ],
+        "min_wrong_pair_gap": "30",
+        "min_distinct_wrong_pair_gap": "30"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1933,7 +3071,7 @@
     },
     {
       "variant": "38",
-      "text": "A training business receives payment before all sessions are delivered. The customer pays 750 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 280 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 750 million dollars. By year-end, 75 percent is earned and service costs paid are 280 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 750,
@@ -1945,19 +3083,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A training business receives payment before all sessions are delivered. The customer pays seven hundred and fifty million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays two hundred and eighty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays seven hundred and fifty million dollars. By year-end, seventy-five percent is earned and service costs paid are two hundred and eighty million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "1125/2"
+          "value": "282",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "375/2"
+          "value": "245",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "470",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "1125/2"
         },
         {
           "name": "taxable_profit",
@@ -1968,14 +3121,30 @@
           "value": "113"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "357"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "75",
+            "relative_gap": "25/119"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "112",
+            "relative_gap": "16/51"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "113",
+            "relative_gap": "113/357"
+          }
+        ],
+        "min_wrong_pair_gap": "37",
+        "min_distinct_wrong_pair_gap": "37"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -1984,7 +3153,7 @@
     },
     {
       "variant": "39",
-      "text": "A support provider bills a full contract in advance. The customer pays 450 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 25 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 450 million dollars. By year-end, 25 percent is earned and service costs paid are 25 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 450,
@@ -1996,19 +3165,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A support provider bills a full contract in advance. The customer pays four hundred and fifty million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays twenty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays four hundred and fifty million dollars. By year-end, twenty-five percent is earned and service costs paid are twenty-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "225/2"
+          "value": "340",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "675/2"
+          "value": "805/2",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "425",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "225/2"
         },
         {
           "name": "taxable_profit",
@@ -2019,14 +3203,30 @@
           "value": "35/2"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "815/2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "135/2",
+            "relative_gap": "27/163"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "5",
+            "relative_gap": "2/163"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "35/2",
+            "relative_gap": "7/163"
+          }
+        ],
+        "min_wrong_pair_gap": "45/2",
+        "min_distinct_wrong_pair_gap": "45/2"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -2035,7 +3235,7 @@
     },
     {
       "variant": "40",
-      "text": "You review an advance-funded service engagement. The customer pays 1000 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 70 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 1 billion dollars. By year-end, 50 percent is earned and service costs paid are 70 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 1000,
@@ -2047,18 +3247,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "You review an advance-funded service engagement. The customer pays one thousand million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays seventy million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays one billion dollars. By year-end, fifty percent is earned and service costs paid are seventy million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "500"
+          "value": "1395/2",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "805",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "930",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "500"
         },
         {
@@ -2070,14 +3285,30 @@
           "value": "215/2"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "1645/2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "125",
+            "relative_gap": "50/329"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "35/2",
+            "relative_gap": "1/47"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "215/2",
+            "relative_gap": "43/329"
+          }
+        ],
+        "min_wrong_pair_gap": "215/2",
+        "min_distinct_wrong_pair_gap": "215/2"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -2086,7 +3317,7 @@
     },
     {
       "variant": "41",
-      "text": "A subscription business collects a customer prepayment. The customer pays 800 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 15 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 800 million dollars. By year-end, 50 percent is earned and service costs paid are 15 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 800,
@@ -2098,18 +3329,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A subscription business collects a customer prepayment. The customer pays eight hundred million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays fifteen million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays eight hundred million dollars. By year-end, fifty percent is earned and service costs paid are fifteen million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "400"
+          "value": "628",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "705",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "785",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "400"
         },
         {
@@ -2121,14 +3367,30 @@
           "value": "77"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "708"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "80",
+            "relative_gap": "20/177"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "3",
+            "relative_gap": "1/236"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "77",
+            "relative_gap": "77/708"
+          }
+        ],
+        "min_wrong_pair_gap": "77",
+        "min_distinct_wrong_pair_gap": "77"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -2137,7 +3399,7 @@
     },
     {
       "variant": "42",
-      "text": "A maintenance provider sells an upfront service contract. The customer pays 400 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 50 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 400 million dollars. By year-end, 75 percent is earned and service costs paid are 50 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 400,
@@ -2149,19 +3411,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A maintenance provider sells an upfront service contract. The customer pays four hundred million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays fifty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays four hundred million dollars. By year-end, seventy-five percent is earned and service costs paid are fifty million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "300"
+          "value": "280",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "100"
+          "value": "290",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "350",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "300"
         },
         {
           "name": "taxable_profit",
@@ -2172,14 +3449,30 @@
           "value": "50"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "300"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "20",
+            "relative_gap": "1/15"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "10",
+            "relative_gap": "1/30"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "50",
+            "relative_gap": "1/6"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -2188,7 +3481,7 @@
     },
     {
       "variant": "43",
-      "text": "A training business receives payment before all sessions are delivered. The customer pays 200 million dollars upfront, and 25 percent of the contract is earned by year-end. The company pays 20 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 200 million dollars. By year-end, 25 percent is earned and service costs paid are 20 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/4",
         "payment": 200,
@@ -2200,19 +3493,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A training business receives payment before all sessions are delivered. The customer pays two hundred million dollars upfront, and twenty-five percent of the contract is earned by year-end. The company pays twenty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays two hundred million dollars. By year-end, twenty-five percent is earned and service costs paid are twenty million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "50"
+          "value": "144",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "150"
+          "value": "170",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "180",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "50"
         },
         {
           "name": "taxable_profit",
@@ -2223,14 +3531,30 @@
           "value": "6"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "174"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "30",
+            "relative_gap": "5/29"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "4",
+            "relative_gap": "2/87"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "6",
+            "relative_gap": "1/29"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -2239,7 +3563,7 @@
     },
     {
       "variant": "44",
-      "text": "A support provider bills a full contract in advance. The customer pays 750 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 115 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 750 million dollars. By year-end, 50 percent is earned and service costs paid are 115 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 750,
@@ -2251,18 +3575,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A support provider bills a full contract in advance. The customer pays seven hundred and fifty million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays one hundred and fifteen million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays seven hundred and fifty million dollars. By year-end, fifty percent is earned and service costs paid are one hundred and fifteen million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "375"
+          "value": "508",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "560",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "635",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "375"
         },
         {
@@ -2274,14 +3613,30 @@
           "value": "52"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "583"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "75",
+            "relative_gap": "75/583"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "23",
+            "relative_gap": "23/583"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "52",
+            "relative_gap": "52/583"
+          }
+        ],
+        "min_wrong_pair_gap": "52",
+        "min_distinct_wrong_pair_gap": "52"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -2290,7 +3645,7 @@
     },
     {
       "variant": "45",
-      "text": "You review an advance-funded service engagement. The customer pays 650 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 195 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 650 million dollars. By year-end, 75 percent is earned and service costs paid are 195 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 650,
@@ -2302,19 +3657,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "You review an advance-funded service engagement. The customer pays six hundred and fifty million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays one hundred and ninety-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays six hundred and fifty million dollars. By year-end, seventy-five percent is earned and service costs paid are one hundred and ninety-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "975/2"
+          "value": "364",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "325/2"
+          "value": "715/2",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "455",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "975/2"
         },
         {
           "name": "taxable_profit",
@@ -2325,14 +3695,30 @@
           "value": "117/2"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "793/2"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "65/2",
+            "relative_gap": "5/61"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "39",
+            "relative_gap": "6/61"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "117/2",
+            "relative_gap": "9/61"
+          }
+        ],
+        "min_wrong_pair_gap": "13/2",
+        "min_distinct_wrong_pair_gap": "13/2"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -2341,7 +3727,7 @@
     },
     {
       "variant": "46",
-      "text": "A subscription business collects a customer prepayment. The customer pays 800 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 5 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 40 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 800 million dollars. By year-end, 75 percent is earned and service costs paid are 5 million dollars. Tax is 40 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 800,
@@ -2353,19 +3739,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A subscription business collects a customer prepayment. The customer pays eight hundred million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at forty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays eight hundred million dollars. By year-end, seventy-five percent is earned and service costs paid are five million dollars. Tax is forty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "600"
+          "value": "477",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "200"
+          "value": "555",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "795",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "600"
         },
         {
           "name": "taxable_profit",
@@ -2376,14 +3777,30 @@
           "value": "238"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "557"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "80",
+            "relative_gap": "80/557"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "2",
+            "relative_gap": "2/557"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "238",
+            "relative_gap": "238/557"
+          }
+        ],
+        "min_wrong_pair_gap": "78",
+        "min_distinct_wrong_pair_gap": "78"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -2392,7 +3809,7 @@
     },
     {
       "variant": "47",
-      "text": "A maintenance provider sells an upfront service contract. The customer pays 500 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 125 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 20 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 500 million dollars. By year-end, 50 percent is earned and service costs paid are 125 million dollars. Tax is 20 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 500,
@@ -2404,18 +3821,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A maintenance provider sells an upfront service contract. The customer pays five hundred million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays one hundred and twenty-five million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays five hundred million dollars. By year-end, fifty percent is earned and service costs paid are one hundred and twenty-five million dollars. Tax is twenty percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "250"
+          "value": "300",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "325",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "375",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "250"
         },
         {
@@ -2427,14 +3859,30 @@
           "value": "25"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "350"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "50",
+            "relative_gap": "1/7"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "25",
+            "relative_gap": "1/14"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "25",
+            "relative_gap": "1/14"
+          }
+        ],
+        "min_wrong_pair_gap": "25",
+        "min_distinct_wrong_pair_gap": "25"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -2443,7 +3891,7 @@
     },
     {
       "variant": "48",
-      "text": "A training business receives payment before all sessions are delivered. The customer pays 250 million dollars upfront, and 50 percent of the contract is earned by year-end. The company pays 50 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 250 million dollars. By year-end, 50 percent is earned and service costs paid are 50 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "1/2",
         "payment": 250,
@@ -2455,18 +3903,33 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A training business receives payment before all sessions are delivered. The customer pays two hundred and fifty million dollars upfront, and fifty percent of the contract is earned by year-end. The company pays fifty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays two hundred and fifty million dollars. By year-end, fifty percent is earned and service costs paid are fifty million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "125"
+          "value": "150",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
+          "value": "675/4",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "200",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
           "value": "125"
         },
         {
@@ -2478,14 +3941,30 @@
           "value": "75/4"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "725/4"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "125/4",
+            "relative_gap": "5/29"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "25/2",
+            "relative_gap": "2/29"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "75/4",
+            "relative_gap": "3/29"
+          }
+        ],
+        "min_wrong_pair_gap": "75/4",
+        "min_distinct_wrong_pair_gap": "75/4"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -2494,7 +3973,7 @@
     },
     {
       "variant": "49",
-      "text": "A support provider bills a full contract in advance. The customer pays 150 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 30 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 150 million dollars. By year-end, 75 percent is earned and service costs paid are 30 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 150,
@@ -2506,19 +3985,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "A support provider bills a full contract in advance. The customer pays one hundred and fifty million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays thirty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays one hundred and fifty million dollars. By year-end, seventy-five percent is earned and service costs paid are thirty million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "225/2"
+          "value": "90",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "75/2"
+          "value": "735/8",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "120",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "225/2"
         },
         {
           "name": "taxable_profit",
@@ -2529,14 +4023,30 @@
           "value": "165/8"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "795/8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "75/8",
+            "relative_gap": "5/53"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "15/2",
+            "relative_gap": "4/53"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "165/8",
+            "relative_gap": "11/53"
+          }
+        ],
+        "min_wrong_pair_gap": "15/8",
+        "min_distinct_wrong_pair_gap": "15/8"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",
@@ -2545,7 +4055,7 @@
     },
     {
       "variant": "50",
-      "text": "You review an advance-funded service engagement. The customer pays 450 million dollars upfront, and 75 percent of the contract is earned by year-end. The company pays 130 million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at 25 percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "text": "A customer prepays 450 million dollars. By year-end, 75 percent is earned and service costs paid are 130 million dollars. Tax is 25 percent. What is the cash increase, in millions of dollars?",
       "params": {
         "earned_fraction": "3/4",
         "payment": 450,
@@ -2557,19 +4067,34 @@
       "topic": "Accounting and three-statement linkages",
       "source_topic": "Deferred revenue and cash",
       "difficulty": "Medium",
-      "spoken_text": "You review an advance-funded service engagement. The customer pays four hundred and fifty million dollars upfront, and seventy-five percent of the contract is earned by year-end. The company pays one hundred and thirty million dollars of service costs during the year. Only earned revenue less those costs is taxed now, at twenty-five percent; taxes are paid in cash, and unearned revenue is not yet taxable. There are no other cash flows. What is the net increase in cash, in millions of dollars?",
+      "spoken_text": "A customer prepays four hundred and fifty million dollars. By year-end, seventy-five percent is earned and service costs paid are one hundred and thirty million dollars. Tax is twenty-five percent. What is the cash increase, in millions of dollars?",
       "interview_friendly": true,
       "interview_friendly_score": 2,
       "interview_friendly_basis": "simple_fraction",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "recognized_revenue",
-          "value": "675/2"
+          "value": "240",
+          "misconceptions": [
+            "tax_on_full_cash_collection"
+          ]
         },
         {
-          "name": "deferred_revenue",
-          "value": "225/2"
+          "value": "1885/8",
+          "misconceptions": [
+            "tax_on_recognised_revenue_only_ignoring_costs"
+          ]
+        },
+        {
+          "value": "320",
+          "misconceptions": [
+            "ignores_tax_cash_flow"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "recognised_revenue",
+          "value": "675/2"
         },
         {
           "name": "taxable_profit",
@@ -2580,14 +4105,30 @@
           "value": "415/8"
         },
         {
-          "name": "net_cash_increase",
+          "name": "cash_increase",
           "value": "2145/8"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "tax_on_full_cash_collection",
+            "absolute_gap": "225/8",
+            "relative_gap": "15/143"
+          },
+          {
+            "misconception": "tax_on_recognised_revenue_only_ignoring_costs",
+            "absolute_gap": "65/2",
+            "relative_gap": "4/33"
+          },
+          {
+            "misconception": "ignores_tax_cash_flow",
+            "absolute_gap": "415/8",
+            "relative_gap": "83/429"
+          }
+        ],
+        "min_wrong_pair_gap": "35/8",
+        "min_distinct_wrong_pair_gap": "35/8"
       },
       "follow_up": {
         "question": "Why can cash collected exceed the revenue recognised in the same period?",

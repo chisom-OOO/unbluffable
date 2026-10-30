@@ -1,12 +1,12 @@
 {
   "template_id": "sw_F029",
   "pack": "software",
-  "topic": "Bit manipulation",
+  "topic": "Dynamic programming",
   "topics": [
-    "Bit manipulation"
+    "Dynamic programming"
   ],
-  "source_topic": "Inclusive-range one-bit total",
-  "difficulty": "Medium",
+  "source_topic": "Minimum adjacent joining cost",
+  "difficulty": "Hard",
   "models": {
     "author": "meta-models/muse-spark-open-1026",
     "checker": null
@@ -25,1872 +25,3719 @@
       "variants_checked": 50,
       "max_absolute_error": "0"
     },
-    "misconceptions_verified": false,
-    "method_count": 0,
+    "misconceptions_verified": true,
+    "method_count": 2,
     "repair_attempted": true,
-    "reason": {
-      "gate": "sandbox",
-      "error_class": "NameError"
-    },
+    "reason": null,
     "pending_reason": null,
     "all_variants_retained": true,
     "rechecked_parameter_revision": null,
-    "variant_followups": false
+    "variant_followups": true
   },
   "follow_up": {
-    "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-    "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+    "question": "Why is the final split useful?",
+    "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
   },
   "review_status": "pending_builder_review",
   "instances": [
     {
       "variant": "1",
-      "text": "You inspect binary flags across a counter range. Consider every integer from 8 through 12, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A cable line has piece lengths 11, 18, 17, 20, 19, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 12,
-        "low": 8
+        "values": [
+          11,
+          18,
+          17,
+          20,
+          19
+        ]
       },
-      "answer": "10",
+      "answer": "199",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect binary flags across a counter range. Consider every integer from eight through twelve, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A cable line has piece lengths eleven, eighteen, seventeen, twenty, nineteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "22"
+          "value": "198",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "12"
+          "value": "207",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "233"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "207"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "199"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "217"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "1",
+            "relative_gap": "1/199"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "8",
+            "relative_gap": "8/199"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "2",
-      "text": "A routine totals set bits in consecutive identifiers. Consider every integer from 2 through 3, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A rope line has piece lengths 20, 8, 17, 10, 14, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 3,
-        "low": 2
+        "values": [
+          20,
+          8,
+          17,
+          10,
+          14
+        ]
       },
-      "answer": "3",
+      "answer": "162",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A routine totals set bits in consecutive identifiers. Consider every integer from two through three, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A rope line has piece lengths twenty, eight, seventeen, ten, fourteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "4"
+          "value": "156",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "1"
+          "value": "163",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "167"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "162"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "163"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "179"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "6",
+            "relative_gap": "1/27"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/162"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "3",
-      "text": "You trace a compact bit-count query. Consider every integer from 6 through 9, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A pipe line has piece lengths 12, 8, 15, 8, 17, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 9,
-        "low": 6
+        "values": [
+          12,
+          8,
+          15,
+          8,
+          17
+        ]
       },
-      "answer": "8",
+      "answer": "140",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a compact bit-count query. Consider every integer from six through nine, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A pipe line has piece lengths twelve, eight, fifteen, eight, seventeen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "15"
+          "value": "136",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "7"
+          "value": "143",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "156"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "143"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "140"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "146"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "4",
+            "relative_gap": "1/35"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "3/140"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "4",
-      "text": "A monitor summarises one-bits across numeric states. Consider every integer from 1 through 14, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A tape line has piece lengths 4, 10, 5, 13, 10, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 14,
-        "low": 1
+        "values": [
+          4,
+          10,
+          5,
+          13,
+          10
+        ]
       },
-      "answer": "28",
+      "answer": "98",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor summarises one-bits across numeric states. Consider every integer from one through fourteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A tape line has piece lengths four, ten, five, thirteen, ten, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "28"
+          "value": "93",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "0"
+          "value": "102",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "118"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "102"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "98"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "106"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "5",
+            "relative_gap": "5/98"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "2/49"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "5",
-      "text": "You inspect cumulative binary storage flags. Consider every integer from 16 through 18, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A strip line has piece lengths 16, 9, 15, 5, 13, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 18,
-        "low": 16
+        "values": [
+          16,
+          9,
+          15,
+          5,
+          13
+        ]
       },
-      "answer": "5",
+      "answer": "134",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect cumulative binary storage flags. Consider every integer from sixteen through eighteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A strip line has piece lengths sixteen, nine, fifteen, five, thirteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "37"
+          "value": "130",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "32"
+          "value": "140",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "142"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "134"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "140"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "148"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "4",
+            "relative_gap": "2/67"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "6",
+            "relative_gap": "3/67"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "6",
-      "text": "You inspect binary flags across a counter range. Consider every integer from 10 through 10, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A cable line has piece lengths 6, 15, 12, 10, 18, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 10,
-        "low": 10
+        "values": [
+          6,
+          15,
+          12,
+          10,
+          18
+        ]
       },
-      "answer": "2",
+      "answer": "143",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect binary flags across a counter range. Consider every integer from ten through ten, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A cable line has piece lengths six, fifteen, twelve, ten, eighteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "17"
+          "value": "138",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "15"
+          "value": "144",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "171"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "144"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "143"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "147"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "5",
+            "relative_gap": "5/143"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/143"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "7",
-      "text": "A routine totals set bits in consecutive identifiers. Consider every integer from 1 through 10, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A rope line has piece lengths 5, 15, 10, 16, 15, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 10,
-        "low": 1
+        "values": [
+          5,
+          15,
+          10,
+          16,
+          15
+        ]
       },
-      "answer": "17",
+      "answer": "142",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A routine totals set bits in consecutive identifiers. Consider every integer from one through ten, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A rope line has piece lengths five, fifteen, ten, sixteen, fifteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "17"
+          "value": "137",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "0"
+          "value": "148",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "173"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "148"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "142"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "153"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "5",
+            "relative_gap": "5/142"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "6",
+            "relative_gap": "3/71"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "8",
-      "text": "You trace a compact bit-count query. Consider every integer from 1 through 12, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A pipe line has piece lengths 17, 7, 10, 5, 17, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 12,
-        "low": 1
+        "values": [
+          17,
+          7,
+          10,
+          5,
+          17
+        ]
       },
-      "answer": "22",
+      "answer": "127",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a compact bit-count query. Consider every integer from one through twelve, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A pipe line has piece lengths seventeen, seven, ten, five, seventeen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "22"
+          "value": "124",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "0"
+          "value": "132",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "132"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "127"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "129"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "132"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "3",
+            "relative_gap": "3/127"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "5",
+            "relative_gap": "5/127"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "9",
-      "text": "A monitor summarises one-bits across numeric states. Consider every integer from 9 through 14, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A tape line has piece lengths 7, 12, 18, 8, 19, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 14,
-        "low": 9
+        "values": [
+          7,
+          12,
+          18,
+          8,
+          19
+        ]
       },
-      "answer": "15",
+      "answer": "147",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor summarises one-bits across numeric states. Consider every integer from nine through fourteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A tape line has piece lengths seven, twelve, eighteen, eight, nineteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "28"
+          "value": "143",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "13"
+          "value": "154",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "178"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "154"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "147"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "154"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "4",
+            "relative_gap": "4/147"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "7",
+            "relative_gap": "1/21"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "10",
-      "text": "You inspect cumulative binary storage flags. Consider every integer from 1 through 7, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A strip line has piece lengths 20, 8, 14, 12, 8, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 7,
-        "low": 1
+        "values": [
+          20,
+          8,
+          14,
+          12,
+          8
+        ]
       },
-      "answer": "12",
+      "answer": "144",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect cumulative binary storage flags. Consider every integer from one through seven, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A strip line has piece lengths twenty, eight, fourteen, twelve, eight, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "12"
+          "value": "140",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "0"
+          "value": "146",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "146"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "144"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "146"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "170"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "4",
+            "relative_gap": "1/36"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "1/72"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "11",
-      "text": "You inspect binary flags across a counter range. Consider every integer from 11 through 13, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A cable line has piece lengths 19, 9, 10, 2, 11, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 13,
-        "low": 11
+        "values": [
+          19,
+          9,
+          10,
+          2,
+          11
+        ]
       },
-      "answer": "8",
+      "answer": "114",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect binary flags across a counter range. Consider every integer from eleven through thirteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A cable line has piece lengths nineteen, nine, ten, two, eleven, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "25"
+          "value": "113",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "17"
+          "value": "116",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "115"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "114"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "121"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "124"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "1",
+            "relative_gap": "1/114"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "1/57"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "12",
-      "text": "A routine totals set bits in consecutive identifiers. Consider every integer from 15 through 19, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A rope line has piece lengths 20, 1, 14, 6, 16, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 19,
-        "low": 15
+        "values": [
+          20,
+          1,
+          14,
+          6,
+          16
+        ]
       },
-      "answer": "12",
+      "answer": "129",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A routine totals set bits in consecutive identifiers. Consider every integer from fifteen through nineteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A rope line has piece lengths twenty, one, fourteen, six, sixteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "40"
+          "value": "121",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "28"
+          "value": "130",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "130"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "134"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "129"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "134"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "8",
+            "relative_gap": "8/129"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/129"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "13",
-      "text": "You trace a compact bit-count query. Consider every integer from 4 through 15, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A pipe line has piece lengths 16, 16, 14, 18, 5, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 15,
-        "low": 4
+        "values": [
+          16,
+          16,
+          14,
+          18,
+          5
+        ]
       },
-      "answer": "28",
+      "answer": "161",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a compact bit-count query. Consider every integer from four through fifteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A pipe line has piece lengths sixteen, sixteen, fourteen, eighteen, five, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "32"
+          "value": "157",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "4"
+          "value": "168",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "175"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "161"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "168"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "197"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "4",
+            "relative_gap": "4/161"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "7",
+            "relative_gap": "1/23"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "14",
-      "text": "A monitor summarises one-bits across numeric states. Consider every integer from 13 through 13, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A tape line has piece lengths 8, 15, 6, 15, 2, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 13,
-        "low": 13
+        "values": [
+          8,
+          15,
+          6,
+          15,
+          2
+        ]
       },
-      "answer": "3",
+      "answer": "109",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor summarises one-bits across numeric states. Consider every integer from thirteen through thirteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A tape line has piece lengths eight, fifteen, six, fifteen, two, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "25"
+          "value": "100",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "22"
+          "value": "113",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "122"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "109"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "113"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "134"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "9",
+            "relative_gap": "9/109"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "4/109"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "15",
-      "text": "You inspect cumulative binary storage flags. Consider every integer from 14 through 20, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A strip line has piece lengths 11, 3, 6, 3, 10, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 20,
-        "low": 14
+        "values": [
+          11,
+          3,
+          6,
+          3,
+          10
+        ]
       },
-      "answer": "17",
+      "answer": "75",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect cumulative binary storage flags. Consider every integer from fourteen through twenty, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A strip line has piece lengths eleven, three, six, three, ten, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "42"
+          "value": "72",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "25"
+          "value": "76",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "76"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "75"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "75"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "77"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "3",
+            "relative_gap": "1/25"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/75"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "16",
-      "text": "You inspect binary flags across a counter range. Consider every integer from 14 through 17, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A cable line has piece lengths 15, 20, 8, 16, 5, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 17,
-        "low": 14
+        "values": [
+          15,
+          20,
+          8,
+          16,
+          5
+        ]
       },
-      "answer": "10",
+      "answer": "149",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect binary flags across a counter range. Consider every integer from fourteen through seventeen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A cable line has piece lengths fifteen, twenty, eight, sixteen, five, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "35"
+          "value": "141",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "25"
+          "value": "156",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "162"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "149"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "156"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "182"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "8",
+            "relative_gap": "8/149"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "7",
+            "relative_gap": "7/149"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "17",
-      "text": "A routine totals set bits in consecutive identifiers. Consider every integer from 9 through 17, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A rope line has piece lengths 1, 12, 10, 12, 16, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 17,
-        "low": 9
+        "values": [
+          1,
+          12,
+          10,
+          12,
+          16
+        ]
       },
-      "answer": "22",
+      "answer": "115",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A routine totals set bits in consecutive identifiers. Consider every integer from nine through seventeen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A rope line has piece lengths one, twelve, ten, twelve, sixteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "35"
+          "value": "113",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "13"
+          "value": "121",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "151"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "124"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "115"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "121"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "2",
+            "relative_gap": "2/115"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "6",
+            "relative_gap": "6/115"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "18",
-      "text": "You trace a compact bit-count query. Consider every integer from 12 through 13, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A pipe line has piece lengths 11, 1, 16, 6, 16, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 13,
-        "low": 12
+        "values": [
+          11,
+          1,
+          16,
+          6,
+          16
+        ]
       },
-      "answer": "5",
+      "answer": "112",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a compact bit-count query. Consider every integer from twelve through thirteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A pipe line has piece lengths eleven, one, sixteen, six, sixteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "25"
+          "value": "107",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "20"
+          "value": "118",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "128"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "122"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "112"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "118"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "5",
+            "relative_gap": "5/112"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "6",
+            "relative_gap": "3/56"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "19",
-      "text": "A monitor summarises one-bits across numeric states. Consider every integer from 12 through 12, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A tape line has piece lengths 15, 6, 13, 4, 9, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 12,
-        "low": 12
+        "values": [
+          15,
+          6,
+          13,
+          4,
+          9
+        ]
       },
-      "answer": "2",
+      "answer": "107",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor summarises one-bits across numeric states. Consider every integer from twelve through twelve, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A tape line has piece lengths fifteen, six, thirteen, four, nine, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "22"
+          "value": "104",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "20"
+          "value": "111",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "111"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "107"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "113"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "123"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "3",
+            "relative_gap": "3/107"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "4/107"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "20",
-      "text": "You inspect cumulative binary storage flags. Consider every integer from 14 through 19, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A strip line has piece lengths 20, 20, 13, 16, 9, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 19,
-        "low": 14
+        "values": [
+          20,
+          20,
+          13,
+          16,
+          9
+        ]
       },
-      "answer": "15",
+      "answer": "181",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect cumulative binary storage flags. Consider every integer from fourteen through nineteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A strip line has piece lengths twenty, twenty, thirteen, sixteen, nine, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "40"
+          "value": "178",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "25"
+          "value": "189",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "194"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "181"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "189"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "216"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "3",
+            "relative_gap": "3/181"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "8",
+            "relative_gap": "8/181"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "21",
-      "text": "You inspect binary flags across a counter range. Consider every integer from 6 through 17, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A cable line has piece lengths 1, 11, 5, 9, 5, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 17,
-        "low": 6
+        "values": [
+          1,
+          11,
+          5,
+          9,
+          5
+        ]
       },
-      "answer": "28",
+      "answer": "74",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect binary flags across a counter range. Consider every integer from six through seventeen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A cable line has piece lengths one, eleven, five, nine, five, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "35"
+          "value": "68",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "7"
+          "value": "76",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "91"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "76"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "74"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "83"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "6",
+            "relative_gap": "3/37"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "1/37"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "22",
-      "text": "A routine totals set bits in consecutive identifiers. Consider every integer from 16 through 19, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A rope line has piece lengths 19, 18, 8, 18, 2, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 19,
-        "low": 16
+        "values": [
+          19,
+          18,
+          8,
+          18,
+          2
+        ]
       },
-      "answer": "8",
+      "answer": "150",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A routine totals set bits in consecutive identifiers. Consider every integer from sixteen through nineteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A rope line has piece lengths nineteen, eighteen, eight, eighteen, two, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "40"
+          "value": "140",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "32"
+          "value": "156",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "157"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "150"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "156"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "191"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "10",
+            "relative_gap": "1/15"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "6",
+            "relative_gap": "1/25"
+          }
+        ],
+        "min_wrong_pair_gap": "16",
+        "min_distinct_wrong_pair_gap": "16"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "23",
-      "text": "You trace a compact bit-count query. Consider every integer from 12 through 20, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A pipe line has piece lengths 17, 13, 16, 15, 12, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 20,
-        "low": 12
+        "values": [
+          17,
+          13,
+          16,
+          15,
+          12
+        ]
       },
-      "answer": "22",
+      "answer": "173",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a compact bit-count query. Consider every integer from twelve through twenty, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A pipe line has piece lengths seventeen, thirteen, sixteen, fifteen, twelve, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "42"
+          "value": "171",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "20"
+          "value": "175",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "185"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "173"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "175"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "195"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "2",
+            "relative_gap": "2/173"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "2/173"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "24",
-      "text": "A monitor summarises one-bits across numeric states. Consider every integer from 14 through 18, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A tape line has piece lengths 15, 12, 11, 17, 3, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 18,
-        "low": 14
+        "values": [
+          15,
+          12,
+          11,
+          17,
+          3
+        ]
       },
-      "answer": "12",
+      "answer": "136",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor summarises one-bits across numeric states. Consider every integer from fourteen through eighteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A tape line has piece lengths fifteen, twelve, eleven, seventeen, three, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "37"
+          "value": "130",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "25"
+          "value": "139",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "144"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "136"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "139"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "168"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "6",
+            "relative_gap": "3/68"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "3/136"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "25",
-      "text": "You inspect cumulative binary storage flags. Consider every integer from 11 through 12, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A strip line has piece lengths 13, 6, 16, 7, 19, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 12,
-        "low": 11
+        "values": [
+          13,
+          6,
+          16,
+          7,
+          19
+        ]
       },
-      "answer": "5",
+      "answer": "141",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect cumulative binary storage flags. Consider every integer from eleven through twelve, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A strip line has piece lengths thirteen, six, sixteen, seven, nineteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "22"
+          "value": "135",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "17"
+          "value": "145",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "157"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "145"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "141"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "145"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "6",
+            "relative_gap": "2/47"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "4/141"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "26",
-      "text": "You inspect binary flags across a counter range. Consider every integer from 14 through 14, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A cable line has piece lengths 19, 9, 12, 3, 19, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 14,
-        "low": 14
+        "values": [
+          19,
+          9,
+          12,
+          3,
+          19
+        ]
       },
-      "answer": "3",
+      "answer": "139",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect binary flags across a counter range. Consider every integer from fourteen through fourteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A cable line has piece lengths nineteen, nine, twelve, three, nineteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "28"
+          "value": "136",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "25"
+          "value": "144",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "144"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "139"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "145"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "144"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "3",
+            "relative_gap": "3/139"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "5",
+            "relative_gap": "5/139"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "27",
-      "text": "A routine totals set bits in consecutive identifiers. Consider every integer from 6 through 12, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A rope line has piece lengths 15, 17, 13, 14, 7, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 12,
-        "low": 6
+        "values": [
+          15,
+          17,
+          13,
+          14,
+          7
+        ]
       },
-      "answer": "15",
+      "answer": "153",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A routine totals set bits in consecutive identifiers. Consider every integer from six through twelve, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A rope line has piece lengths fifteen, seventeen, thirteen, fourteen, seven, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "22"
+          "value": "152",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "7"
+          "value": "162",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "168"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "153"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "162"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "184"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "1",
+            "relative_gap": "1/153"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "9",
+            "relative_gap": "1/17"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "28",
-      "text": "You trace a compact bit-count query. Consider every integer from 12 through 18, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A pipe line has piece lengths 11, 18, 3, 5, 20, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 18,
-        "low": 12
+        "values": [
+          11,
+          18,
+          3,
+          5,
+          20
+        ]
       },
-      "answer": "17",
+      "answer": "122",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a compact bit-count query. Consider every integer from twelve through eighteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A pipe line has piece lengths eleven, eighteen, three, five, twenty, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "37"
+          "value": "121",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "20"
+          "value": "128",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "137"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "122"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "135"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "128"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "1",
+            "relative_gap": "1/122"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "6",
+            "relative_gap": "3/61"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "29",
-      "text": "A monitor summarises one-bits across numeric states. Consider every integer from 20 through 20, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A tape line has piece lengths 12, 11, 5, 9, 3, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 20,
-        "low": 20
+        "values": [
+          12,
+          11,
+          5,
+          9,
+          3
+        ]
       },
-      "answer": "2",
+      "answer": "92",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor summarises one-bits across numeric states. Consider every integer from twenty through twenty, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A tape line has piece lengths twelve, eleven, five, nine, three, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "42"
+          "value": "88",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "40"
+          "value": "96",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "96"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "92"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "96"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "114"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "4",
+            "relative_gap": "1/23"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "1/23"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "30",
-      "text": "You inspect cumulative binary storage flags. Consider every integer from 10 through 13, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A strip line has piece lengths 12, 2, 10, 1, 12, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 13,
-        "low": 10
+        "values": [
+          12,
+          2,
+          10,
+          1,
+          12
+        ]
       },
-      "answer": "10",
+      "answer": "85",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect cumulative binary storage flags. Consider every integer from ten through thirteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A strip line has piece lengths twelve, two, ten, one, twelve, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "25"
+          "value": "77",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "15"
+          "value": "86",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "86"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "85"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "86"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "86"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "8",
+            "relative_gap": "8/85"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/85"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "31",
-      "text": "You inspect binary flags across a counter range. Consider every integer from 3 through 3, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A cable line has piece lengths 11, 2, 20, 9, 20, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 3,
-        "low": 3
+        "values": [
+          11,
+          2,
+          20,
+          9,
+          20
+        ]
       },
-      "answer": "2",
+      "answer": "137",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect binary flags across a counter range. Consider every integer from three through three, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A cable line has piece lengths eleven, two, twenty, nine, twenty, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "4"
+          "value": "135",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "2"
+          "value": "146",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "164"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "153"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "137"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "146"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "2",
+            "relative_gap": "2/137"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "9",
+            "relative_gap": "9/137"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "32",
-      "text": "A routine totals set bits in consecutive identifiers. Consider every integer from 10 through 15, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A rope line has piece lengths 11, 3, 10, 5, 15, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 15,
-        "low": 10
+        "values": [
+          11,
+          3,
+          10,
+          5,
+          15
+        ]
       },
-      "answer": "17",
+      "answer": "101",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A routine totals set bits in consecutive identifiers. Consider every integer from ten through fifteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A rope line has piece lengths eleven, three, ten, five, fifteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "32"
+          "value": "96",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "15"
+          "value": "104",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "108"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "103"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "101"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "102"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "5",
+            "relative_gap": "5/101"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "3/101"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "33",
-      "text": "You trace a compact bit-count query. Consider every integer from 18 through 19, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A pipe line has piece lengths 4, 11, 14, 8, 15, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 19,
-        "low": 18
+        "values": [
+          4,
+          11,
+          14,
+          8,
+          15
+        ]
       },
-      "answer": "5",
+      "answer": "119",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a compact bit-count query. Consider every integer from eighteen through nineteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A pipe line has piece lengths four, eleven, fourteen, eight, fifteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "40"
+          "value": "116",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "35"
+          "value": "126",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "148"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "126"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "119"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "126"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "3",
+            "relative_gap": "3/119"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "7",
+            "relative_gap": "1/17"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "34",
-      "text": "A monitor summarises one-bits across numeric states. Consider every integer from 7 through 7, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A tape line has piece lengths 6, 10, 13, 8, 18, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 7,
-        "low": 7
+        "values": [
+          6,
+          10,
+          13,
+          8,
+          18
+        ]
       },
-      "answer": "3",
+      "answer": "126",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor summarises one-bits across numeric states. Consider every integer from seven through seven, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A tape line has piece lengths six, ten, thirteen, eight, eighteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "12"
+          "value": "124",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "9"
+          "value": "129",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "153"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "131"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "126"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "129"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "2",
+            "relative_gap": "1/63"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "1/42"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "35",
-      "text": "You inspect cumulative binary storage flags. Consider every integer from 12 through 17, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A strip line has piece lengths 16, 18, 12, 18, 6, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 17,
-        "low": 12
+        "values": [
+          16,
+          18,
+          12,
+          18,
+          6
+        ]
       },
-      "answer": "15",
+      "answer": "164",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect cumulative binary storage flags. Consider every integer from twelve through seventeen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A strip line has piece lengths sixteen, eighteen, twelve, eighteen, six, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "35"
+          "value": "158",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "20"
+          "value": "170",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "178"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "164"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "170"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "198"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "6",
+            "relative_gap": "3/82"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "6",
+            "relative_gap": "3/82"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "36",
-      "text": "You inspect binary flags across a counter range. Consider every integer from 5 through 8, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A cable line has piece lengths 14, 2, 12, 6, 18, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 8,
-        "low": 5
+        "values": [
+          14,
+          2,
+          12,
+          6,
+          18
+        ]
       },
-      "answer": "8",
+      "answer": "118",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect binary flags across a counter range. Consider every integer from five through eight, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A cable line has piece lengths fourteen, two, twelve, six, eighteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "13"
+          "value": "112",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "5"
+          "value": "120",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "124"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "122"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "118"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "120"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "6",
+            "relative_gap": "3/59"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "1/59"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "37",
-      "text": "A routine totals set bits in consecutive identifiers. Consider every integer from 8 through 19, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A rope line has piece lengths 4, 15, 19, 1, 19, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 19,
-        "low": 8
+        "values": [
+          4,
+          15,
+          19,
+          1,
+          19
+        ]
       },
-      "answer": "28",
+      "answer": "135",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A routine totals set bits in consecutive identifiers. Consider every integer from eight through nineteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A rope line has piece lengths four, fifteen, nineteen, one, nineteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "40"
+          "value": "121",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "12"
+          "value": "136",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "166"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "136"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "135"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "136"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "14",
+            "relative_gap": "14/135"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/135"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "38",
-      "text": "You trace a compact bit-count query. Consider every integer from 13 through 15, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A pipe line has piece lengths 18, 13, 16, 14, 9, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 15,
-        "low": 13
+        "values": [
+          18,
+          13,
+          16,
+          14,
+          9
+        ]
       },
-      "answer": "10",
+      "answer": "163",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a compact bit-count query. Consider every integer from thirteen through fifteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A pipe line has piece lengths eighteen, thirteen, sixteen, fourteen, nine, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "32"
+          "value": "162",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "22"
+          "value": "169",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "174"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "163"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "169"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "192"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "1",
+            "relative_gap": "1/163"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "6",
+            "relative_gap": "6/163"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "39",
-      "text": "A monitor summarises one-bits across numeric states. Consider every integer from 12 through 15, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A tape line has piece lengths 9, 13, 8, 18, 2, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 15,
-        "low": 12
+        "values": [
+          9,
+          13,
+          8,
+          18,
+          2
+        ]
       },
-      "answer": "12",
+      "answer": "120",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor summarises one-bits across numeric states. Consider every integer from twelve through fifteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A tape line has piece lengths nine, thirteen, eight, eighteen, two, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "32"
+          "value": "110",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "20"
+          "value": "121",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "132"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "120"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "121"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "146"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "10",
+            "relative_gap": "1/12"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/120"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "40",
-      "text": "You inspect cumulative binary storage flags. Consider every integer from 0 through 12, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A strip line has piece lengths 4, 18, 7, 17, 16, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 12,
-        "low": 0
+        "values": [
+          4,
+          18,
+          7,
+          17,
+          16
+        ]
       },
-      "answer": "22",
+      "answer": "146",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect cumulative binary storage flags. Consider every integer from zero through twelve, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A strip line has piece lengths four, eighteen, seven, seventeen, sixteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "22"
+          "value": "135",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "0"
+          "value": "148",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "178"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "148"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "146"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "154"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "11",
+            "relative_gap": "11/146"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "1/73"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "41",
-      "text": "You inspect binary flags across a counter range. Consider every integer from 12 through 14, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A cable line has piece lengths 14, 16, 12, 14, 10, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 14,
-        "low": 12
+        "values": [
+          14,
+          16,
+          12,
+          14,
+          10
+        ]
       },
-      "answer": "8",
+      "answer": "156",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect binary flags across a counter range. Consider every integer from twelve through fourteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A cable line has piece lengths fourteen, sixteen, twelve, fourteen, ten, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "28"
+          "value": "154",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "20"
+          "value": "160",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "170"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "156"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "160"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "178"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "2",
+            "relative_gap": "1/78"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "1/39"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "42",
-      "text": "A routine totals set bits in consecutive identifiers. Consider every integer from 16 through 20, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A rope line has piece lengths 6, 16, 2, 2, 16, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 20,
-        "low": 16
+        "values": [
+          6,
+          16,
+          2,
+          2,
+          16
+        ]
       },
-      "answer": "10",
+      "answer": "88",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A routine totals set bits in consecutive identifiers. Consider every integer from sixteen through twenty, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A rope line has piece lengths six, sixteen, two, two, sixteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "42"
+          "value": "82",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "32"
+          "value": "92",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "102"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "88"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "102"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "92"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "6",
+            "relative_gap": "3/44"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "1/22"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "43",
-      "text": "You trace a compact bit-count query. Consider every integer from 10 through 11, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A pipe line has piece lengths 5, 11, 8, 13, 19, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 11,
-        "low": 10
+        "values": [
+          5,
+          11,
+          8,
+          13,
+          19
+        ]
       },
-      "answer": "5",
+      "answer": "128",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a compact bit-count query. Consider every integer from ten through eleven, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A pipe line has piece lengths five, eleven, eight, thirteen, nineteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "20"
+          "value": "125",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "15"
+          "value": "130",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "158"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "133"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "128"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "130"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "3",
+            "relative_gap": "3/128"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "1/64"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "44",
-      "text": "A monitor summarises one-bits across numeric states. Consider every integer from 11 through 15, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A tape line has piece lengths 9, 19, 13, 18, 13, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 15,
-        "low": 11
+        "values": [
+          9,
+          19,
+          13,
+          18,
+          13
+        ]
       },
-      "answer": "15",
+      "answer": "172",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor summarises one-bits across numeric states. Consider every integer from eleven through fifteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A tape line has piece lengths nine, nineteen, thirteen, eighteen, thirteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "32"
+          "value": "166",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "17"
+          "value": "175",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "198"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "175"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "172"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "190"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "6",
+            "relative_gap": "3/86"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "3",
+            "relative_gap": "3/172"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "45",
-      "text": "You inspect cumulative binary storage flags. Consider every integer from 18 through 18, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A strip line has piece lengths 9, 18, 13, 15, 15, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 18,
-        "low": 18
+        "values": [
+          9,
+          18,
+          13,
+          15,
+          15
+        ]
       },
-      "answer": "2",
+      "answer": "167",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect cumulative binary storage flags. Consider every integer from eighteen through eighteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A strip line has piece lengths nine, eighteen, thirteen, fifteen, fifteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "37"
+          "value": "162",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "35"
+          "value": "168",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "192"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "168"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "167"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "180"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "5",
+            "relative_gap": "5/167"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "1",
+            "relative_gap": "1/167"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "46",
-      "text": "You inspect binary flags across a counter range. Consider every integer from 5 through 12, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A cable line has piece lengths 17, 8, 16, 3, 13, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 12,
-        "low": 5
+        "values": [
+          17,
+          8,
+          16,
+          3,
+          13
+        ]
       },
-      "answer": "17",
+      "answer": "130",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect binary flags across a counter range. Consider every integer from five through twelve, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A cable line has piece lengths seventeen, eight, sixteen, three, thirteen, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "22"
+          "value": "125",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "5"
+          "value": "137",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "137"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "130"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "138"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "145"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "5",
+            "relative_gap": "1/26"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "7",
+            "relative_gap": "7/130"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     },
     {
       "variant": "47",
-      "text": "A routine totals set bits in consecutive identifiers. Consider every integer from 0 through 14, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A rope line has piece lengths 14, 10, 9, 11, 2, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 14,
-        "low": 0
+        "values": [
+          14,
+          10,
+          9,
+          11,
+          2
+        ]
       },
-      "answer": "28",
+      "answer": "105",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A routine totals set bits in consecutive identifiers. Consider every integer from zero through fourteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A rope line has piece lengths fourteen, ten, nine, eleven, two, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "28"
+          "value": "103",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "0"
+          "value": "110",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "110"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "105"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "111"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "134"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "2",
+            "relative_gap": "2/105"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "5",
+            "relative_gap": "1/21"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What changes if any pair may be joined?",
+        "reference": "Adjacency no longer restricts the choices. Repeatedly merging the two smallest available pieces solves that different problem."
       }
     },
     {
       "variant": "48",
-      "text": "You trace a compact bit-count query. Consider every integer from 9 through 13, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A pipe line has piece lengths 2, 11, 6, 9, 6, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 13,
-        "low": 9
+        "values": [
+          2,
+          11,
+          6,
+          9,
+          6
+        ]
       },
-      "answer": "12",
+      "answer": "81",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You trace a compact bit-count query. Consider every integer from nine through thirteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A pipe line has piece lengths two, eleven, six, nine, six, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "25"
+          "value": "76",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "13"
+          "value": "83",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "98"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "83"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "81"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "90"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "5",
+            "relative_gap": "5/81"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "2/81"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why can the cheapest adjacent pair fail?",
+        "reference": "Its merged piece may be charged again in several later merges. A slightly more expensive first merge can reduce those repeated future charges."
       }
     },
     {
       "variant": "49",
-      "text": "A monitor summarises one-bits across numeric states. Consider every integer from 4 through 5, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A tape line has piece lengths 17, 5, 16, 8, 8, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 5,
-        "low": 4
+        "values": [
+          17,
+          5,
+          16,
+          8,
+          8
+        ]
       },
-      "answer": "3",
+      "answer": "124",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "A monitor summarises one-bits across numeric states. Consider every integer from four through five, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A tape line has piece lengths seventeen, five, sixteen, eight, eight, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "7"
+          "value": "121",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "4"
+          "value": "128",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "128"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "124"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "129"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "146"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "3",
+            "relative_gap": "3/124"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "4",
+            "relative_gap": "1/31"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "Why is the final split useful?",
+        "reference": "Immediately before the last merge, the interval consists of two contiguous pieces. Their internal optimal costs are independent, and their final merge costs the interval total."
       }
     },
     {
       "variant": "50",
-      "text": "You inspect cumulative binary storage flags. Consider every integer from 10 through 18, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "text": "A strip line has piece lengths 3, 11, 6, 10, 6, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "params": {
-        "high": 18,
-        "low": 10
+        "values": [
+          3,
+          11,
+          6,
+          10,
+          6
+        ]
       },
-      "answer": "22",
+      "answer": "86",
       "tolerance": "0",
-      "topic": "Bit manipulation",
-      "source_topic": "Inclusive-range one-bit total",
-      "difficulty": "Medium",
-      "spoken_text": "You inspect cumulative binary storage flags. Consider every integer from ten through eighteen, including both endpoints. Write each in ordinary binary without leading zeros; zero contributes no one-bits. What is the total number of one-bits across all these representations, as a whole number?",
+      "topic": "Dynamic programming",
+      "source_topic": "Minimum adjacent joining cost",
+      "difficulty": "Hard",
+      "spoken_text": "A strip line has piece lengths three, eleven, six, ten, six, in order. Join only neighboring pieces, paying their combined length each time, until one remains. What is the minimum total cost, as a whole number?",
       "interview_friendly": true,
       "interview_friendly_score": 3,
       "interview_friendly_basis": "integer",
-      "wrong": [],
-      "steps": [
+      "wrong": [
         {
-          "name": "cumulative_through_high",
-          "value": "37"
+          "value": "81",
+          "misconceptions": [
+            "merges_non_neighbors_using_a_heap"
+          ]
         },
         {
-          "name": "cumulative_before_low",
-          "value": "15"
+          "value": "88",
+          "misconceptions": [
+            "merges_cheapest_neighboring_pair_greedily"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_split_after_position_1_total_cost",
+          "value": "102"
+        },
+        {
+          "name": "final_split_after_position_2_total_cost",
+          "value": "88"
+        },
+        {
+          "name": "final_split_after_position_3_total_cost",
+          "value": "86"
+        },
+        {
+          "name": "final_split_after_position_4_total_cost",
+          "value": "96"
         }
       ],
       "separation": {
-        "by_misconception": [],
-        "min_wrong_pair_gap": null,
-        "min_distinct_wrong_pair_gap": null
+        "by_misconception": [
+          {
+            "misconception": "merges_non_neighbors_using_a_heap",
+            "absolute_gap": "5",
+            "relative_gap": "5/86"
+          },
+          {
+            "misconception": "merges_cheapest_neighboring_pair_greedily",
+            "absolute_gap": "2",
+            "relative_gap": "1/43"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
       },
       "follow_up": {
-        "question": "What are the time and auxiliary-space costs of periodic bit-position counting?",
-        "reference": "Subtract the cumulative count through one less than the lower endpoint from the count through the upper endpoint. Per-bit periodic counting takes O(log(R plus 2)) time and O(1) auxiliary space for these machine-word endpoints, where R is the upper endpoint."
+        "question": "What if only one piece is present?",
+        "reference": "There is nothing to join. Its merge cost is zero even though its length is positive."
       }
     }
   ]
