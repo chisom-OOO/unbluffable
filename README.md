@@ -4,8 +4,9 @@
 
 ### Sounding right isn't the same as being right.
 
-A spoken mock interviewer for high-stakes technical interviews.<br/>
-You answer out loud. It checks the maths, not the confidence.
+A spoken mock interviewer that hears your answer, quotes your words back,<br/>
+checks your numbers exactly and pushes back like a real interviewer,<br/>
+so anyone can know what the room feels like before they're in it.
 
 ![Meta Global AI Developer Hackathon](https://img.shields.io/badge/Meta_Global_AI_Developer_Hackathon-Indie_track-0866FF)
 ![Theme](https://img.shields.io/badge/theme-Build_for_Your_World-0866FF)
@@ -20,13 +21,17 @@ You answer out loud. It checks the maths, not the confidence.
 ---
 
 > [!NOTE]
-> **Status, 30 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode and the end-of-interview report work end to end in tests. In progress: loading a 7,575-question set across 19 topics, and a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
+> **Status, 30 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode and the end-of-interview report work end to end in tests. Quant runs on 99 cross-checked question families (7,425 questions). In progress: investment banking, consulting and software engineering packs, and a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
 
 ## Why
 
-A fluent answer and a correct answer sound the same. A chatbot can hand anyone the right number, and a practice tool that grades on fluency can't tell whether you understood it. Real interviewers check: they ask why, they push on a wrong step, and they change the numbers.
+I struggled in interviews. Not because I didn't know the material, but because I'd never been in the room: never had someone stop me mid-answer, question the number I'd just committed to, and ask it again with different numbers.
 
-Unbluffable does the same, out loud, for anyone without access to a coach. I built it for the theme **Build for Your World**: I'm preparing for quant interviews myself.
+Some candidates get that practice through coaches, paid prep or people who've been through it. Most don't. They walk into their first real interview to find out what one is like.
+
+I started building this for quant interviews, my own field. But the problem isn't quant. Banking, consulting and software interviews work the same way: you think out loud, commit to an answer, and get pushed on it. Quant is live; investment banking, consulting and software engineering are being added.
+
+**It's the interviewer you'd have if you had the connections.** Built for the theme **Build for Your World**.
 
 ## What it does
 
@@ -121,6 +126,7 @@ From our cloud host, Meta's API showed no Muse Spark models for our key: `GET /v
 | **Interrupting mid-sentence** with realtime keyword rules | 2/10 wrong answers caught on the first gate. Rules widened from the failure types reached 8/10 on those clips but **1/10 on 30 new held-out clips**, with 0/20 false challenges in both runs. We dropped it for a challenge right after the answer ([decision log](spec/DECISION_LOG.md) rows 1–1b). |
 | **End-of-answer detection** on 60 recorded clips | **0 early cut-offs.** 32/60 completed exactly once; every miss was the app waiting too long, never interrupting. A silence check was added afterwards (rows 11–12). |
 | **Last word to spoken acknowledgement** | About 2 s in a timed run, most of it one Muse Spark call |
+| **Question families cross-checked** | **99 of 101** quant families: for each one, Muse Spark Open wrote an independent solver, and it reproduced the stored answer on all 75 variants. **7,425 answers, 0 disagreements.** 62 families also have wrong-method values verified in code, which the interviewer uses to name a misconception. |
 | **Automated tests** | 450+ (pytest), including pinned values for the engine maths |
 
 Every change from the original plan is in the [decision log](spec/DECISION_LOG.md), with the evidence that forced it, including what failed.
@@ -130,7 +136,7 @@ Every change from the original plan is in the [decision log](spec/DECISION_LOG.m
 > [!IMPORTANT]
 > In progress. None of this is claimed as a result yet.
 
-- **7,575 questions across 19 topics.** 101 question families of 75 variants each: expectations, combinatorics, discrete, continuous and conditional probability, statistics, number theory, stochastic processes, linear algebra, optimisation, geometry and more, each with an exact answer. For every family, Muse Spark Open writes its own solver, the values that common wrong methods produce, and the solution steps. A family counts as cross-checked only if that independent solver reproduces the stored answer on all 75 variants.
+- **Investment banking, consulting and software engineering packs.** 30 question families each (1,500 questions per pack), going through the same cross-check before they are switched on.
 - **Careful-chatbot comparison.** A pre-registered test on frozen answers: plain Muse Spark, carefully prompted Muse Spark, carefully prompted Muse Spark given the answer key, and Unbluffable, all on the same model, three runs each.
 - **Real users** from a university quant society, with consent.
 
