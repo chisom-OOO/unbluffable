@@ -1246,3 +1246,50 @@ def test_report_shows_exam_typed_practice_or_replay(monkeypatch):
         assert interview_report.build(session)["conditions"] == interview_report.CONDITIONS[expected]
     assert interview_routes.conditions({"typed_practice": True}, "replay") == "replay"
     assert interview_report.CONDITIONS["typed"] == "Typed practice: not exam conditions"
+
+
+# --- Report: each quote once, in one evidence card per question -----------------------
+
+def test_report_cards_quote_each_answer_once(bank):
+    from app import interview_report
+    session, _, _ = _named_then_right(bank)
+    report = interview_report.build(session)
+    cards = report["cards"]
+    scored = [q for q in session.questions if q.scored is not None]
+    assert [c["q"] for c in cards] == [interview_report.name(q) for q in scored]
+    assert [c["anchor"] for c in cards] == [f"card-{i + 1}" for i in range(len(cards))]
+    q1, first = cards[0], scored[0]
+    # Named wrong, then right: the opening answer and where you ended up, each quoted once.
+    assert [w["when"] for w in q1["words"]] == ["Opening answer", "Where you ended up"]
+    assert [w["text"] for w in q1["words"]] == [first.answers[0].transcript, first.answers[-1].transcript]
+    assert q1["exact"] == interview_report.exact(first) and ", then " in q1["said"]
+    assert q1["receipt"]["rows"] and q1["outcome"] == interview_report.outcome_text(first)
+    quotes = [w["text"] for c in cards for w in c["words"]]
+    assert len(quotes) == len(set(quotes))
+    # Doing well / to improve point at a card instead of quoting again.
+    r = report["report"]
+    assert r["well"] and r["improve"]
+    for item in r["well"] + r["improve"]:
+        assert item["anchor"] in {c["anchor"] for c in cards}
+        assert item["see"] == next(c["q"] for c in cards if c["anchor"] == item["anchor"])
+
+
+def test_mic_failure_after_start_turns_exam_into_typed_practice(monkeypatch):
+    from app import interview_report
+    bank = _packed_bank(("a", None, "Probability"))
+    monkeypatch.setattr(interview_routes, "_BANK", bank)
+    monkeypatch.setattr(voice_routes, "provider", lambda: ScriptedProvider())
+    client = TestClient(app)
+    for begin, expected in (({}, "typed"), ({"typed_practice": True}, "typed")):
+        with client.websocket_connect("/api/interview/ws") as socket:
+            socket.send_json({"type": "begin", "consent": True, "pack": "quant", "level": "Easy", **begin})
+            while (event := socket.receive_json())["type"] != "session":
+                pass
+            session_id = event["id"]
+            while not ((event := socket.receive_json())["type"] == "state" and event["value"] == "listening"):
+                pass
+            socket.send_json({"type": "mic_failed"})
+            socket.send_json({"type": "end"})
+        session = interview_routes.SESSIONS[session_id]
+        assert session.conditions == expected
+        assert interview_report.build(session)["conditions"] == "Typed practice: not exam conditions"

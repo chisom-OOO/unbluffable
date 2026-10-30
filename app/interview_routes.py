@@ -170,6 +170,10 @@ async def interview_socket(socket: WebSocket):
                         continue
                     await socket.send_json({"type": "transcription_model", "model": model})
                     return text
+                if kind == "mic_failed" and session.conditions == "exam":
+                    # Decision log 20: the microphone failed after Start, so the rest is typed practice.
+                    session.conditions = "typed"
+                    continue
                 # interviewer_speaking and other controls outside a capture: nothing to do
 
         deadline = time.monotonic() + SESSION_SECONDS

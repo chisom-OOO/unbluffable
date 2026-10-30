@@ -192,10 +192,35 @@ def why_item(q: QuestionLog, questions: list[QuestionLog]) -> dict | None:
     return item
 
 
+def card(q: QuestionLog, anchor: str) -> dict | None:
+    """One evidence card per question: each of your answers quoted once, your committed
+    number beside the exact value, the receipt, and any Part 2 or follow-up reply."""
+    checked = [a for a in q.answers if a.outcome is not None]
+    if not checked:
+        return None
+    words = [{"when": "Your answer" if len(checked) == 1 else "Opening answer", "text": checked[0].transcript}]
+    if len(checked) > 1 and checked[-1].transcript != checked[0].transcript:
+        words.append({"when": "Where you ended up", "text": checked[-1].transcript})
+    committed = [a for a in checked if a.stated is not None]
+    out = {"q": name(q), "anchor": anchor, "outcome": outcome_text(q), "words": words,
+           "said": ", then ".join(dict.fromkeys(said(a) for a in committed)) if committed else None,
+           "exact": exact(q), "receipt": (committed or checked)[-1].receipt, "part2": None, "follow_up": None}
+    p = part2_item(q)
+    if p:
+        out["part2"] = {"question": p["question"], "words": p["quote"], "said": p.get("number", {}).get("said"),
+                        "exact": p.get("number", {}).get("exact"), "title": p["title"], "receipt": p["receipt"]}
+    f = q.follow_up
+    if f is not None and f.reply is not None:
+        out["follow_up"] = {"question": f.question, "words": f.reply, "verdict": f.label, "receipt": f.receipt}
+    return out
+
+
 def sections(qs: list[QuestionLog], forge: bool) -> dict:
     """Report lines for scored questions: quotes, checks, times, outcomes, what went well,
     what to improve and the per-question breakdown. Each line carries its receipt."""
     evidence, checks, hints, times, outcomes, follow_ups = [], [], [], [], [], []
+    anchors = {id(q): f"card-{i + 1}" for i, q in enumerate(qs)}
+    cards = [c for c in (card(q, anchors[id(q)]) for q in qs) if c]
     for q in qs:
         if q.follow_up is not None and q.follow_up.reply is not None:
             follow_ups.append({"q": name(q), "question": q.follow_up.question, "verdict": q.follow_up.label,
@@ -221,19 +246,20 @@ def sections(qs: list[QuestionLog], forge: bool) -> dict:
         items = question_items(q)
         if not items:
             continue
+        see = {"see": name(q), "anchor": anchors[id(q)]}
         if q.scored == "correct":
-            well.append({**items[-1], "title": "Keep doing this: " + ("right with no help" if not (q.recovered or q.hints or q.nudges) else "you got there")})
+            well.append({**items[-1], **see, "title": "Keep doing this: " + ("right with no help" if not (q.recovered or q.hints or q.nudges) else "you got there")})
         if q.first_wrong is not None:
             key = q.first_wrong[0].misconception
             title = {"transposed_conditional": "Say which way the condition runs before you give a number",
                      "base_rate_neglect": "Start from the base rate and count both groups"}.get(
                 key, "Show the steps behind your number" if forge else "Show the counts behind your number")
-            improve.append({**items[0], "title": title})
+            improve.append({**items[0], **see, "title": title})
         if q.hints:
             improve.append({"title": "Try the next step yourself before asking for help" if forge
                             else "Pick a round total yourself before asking for help",
                             "text": "You asked for a hint on this question.", "quote": q.said[0] if q.said else items[0]["quote"],
-                            "seen": [q.number], "verdict": f"{q.hints} hint{'s' if q.hints != 1 else ''} used",
+                            "seen": [q.number], **see, "verdict": f"{q.hints} hint{'s' if q.hints != 1 else ''} used",
                             "receipt": score_receipt(q, q.said[0] if q.said else items[0]["quote"])})
 
     kinds = {"twin": "Twin, new numbers", "drill": "Aimed at the mistake", "check": "New numbers, no help"}
@@ -242,7 +268,7 @@ def sections(qs: list[QuestionLog], forge: bool) -> dict:
                   + f"{round(q.seconds or 0) // 60}:{round(q.seconds or 0) % 60:02d} against a "
                   f"{q.guide_seconds // 60}:{q.guide_seconds % 60:02d} guide · {help_phrase(q)}",
                   "items": question_items(q) + [w for w in [follow_up_item(q), why_item(q, qs)] if w]} for q in qs]
-    return {"evidence": evidence, "checks": checks, "follow_ups": follow_ups, "hints": hints, "times": times,
+    return {"cards": cards, "evidence": evidence, "checks": checks, "follow_ups": follow_ups, "hints": hints, "times": times,
             "outcomes": outcomes,
             "well": well[:3], "improve": improve[:3], "breakdown": breakdown}
 
@@ -280,6 +306,7 @@ def build(session: ExamSession, templates: dict | None = None) -> dict:
         "misconception": misconception_name(misconception),
         "misconception_note": MISCONCEPTIONS[misconception][1] if misconception in MISCONCEPTIONS else None,
         "questions": n,
+        "cards": part["cards"],
         "evidence": part["evidence"],
         "checks": part["checks"],
         "follow_ups": part["follow_ups"],
@@ -321,6 +348,7 @@ def build_drill(session: DrillSession) -> dict:
         "label": None,
         "misconception": None,
         "questions": n,
+        "cards": part["cards"],
         "evidence": part["evidence"],
         "checks": part["checks"],
         "follow_ups": part["follow_ups"],
