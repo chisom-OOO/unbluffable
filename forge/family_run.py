@@ -1,4 +1,4 @@
-"""CLI for the verified 75-variant family forge."""
+"""CLI for verified family packs, with at least 20 variants per family."""
 import argparse
 from decimal import Decimal
 import hashlib
@@ -10,6 +10,7 @@ from pathlib import Path
 from forge.families import FamilyForge, load_families
 from forge.models import DEFAULT_PRICES, Models, State, atomic_json
 from forge.run import job_lock
+from forge.packs import PACK_PREFIXES
 from forge.sandbox import Sandbox
 from llm.backends import get_backend
 from llm.client import MissingKey, _key
@@ -20,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--csv", type=Path, required=True)
+    parser.add_argument("--pack", choices=tuple(PACK_PREFIXES), default="quant")
     parser.add_argument("--mode", choices=("live", "replay"), default="replay")
     parser.add_argument("--budget-usd", type=Decimal, default=Decimal(5))
     parser.add_argument("--work-dir", type=Path, default=ROOT / "data" / "forge" / "families1")
@@ -62,9 +64,10 @@ def main(argv=None):
                 raise ValueError("Use a new work directory for a changed CSV")
             models = Models(state, mode=args.mode, budget_usd=args.budget_usd, prices=prices, author=author)
             forge = FamilyForge(models, output=ROOT / "content" / "forge", funnel=args.work_dir / "funnel.json",
-                                sandbox=Sandbox(args.timeout_s, args.memory_mb))
+                                sandbox=Sandbox(args.timeout_s, args.memory_mb), pack=args.pack)
             report = forge.run(families, recheck_families=recheck_ids)
-            atomic_json(ROOT / "forge" / "funnel.json", report)
+            if args.pack == "quant":
+                atomic_json(ROOT / "forge" / "funnel.json", report)
     except (OSError, ValueError, ArithmeticError, MissingKey) as error:
         # Exception bodies can contain source text or filesystem details.
         print(json.dumps({"status": "configuration_error", "type": type(error).__name__}))
