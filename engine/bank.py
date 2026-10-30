@@ -44,6 +44,9 @@ DEFAULT_DIR = Path(__file__).resolve().parents[1] / "content" / "forge"
 DIFFICULTIES = ("Easy", "Medium", "Hard")
 START_LEVELS = ("Easy", "Medium")
 MIXED = "Mixed"
+PACKS = {"quant": "Quant", "ib": "Investment banking", "consulting": "Consulting",
+         "software": "Software engineering"}  # template "pack": the track it belongs to
+DEFAULT_PACK = "quant"  # a template without a pack
 MIN_INSTANCES = 8
 WRONG_OUTCOMES = (Outcome.NAMED_WRONG, Outcome.OTHER_WRONG, Outcome.RECITED)
 PREVIOUS_ANSWER = "repeats the previous question's answer"  # Recited, as a wrong method
@@ -90,6 +93,7 @@ class ForgeTemplate:
     verification: object
     instances: tuple[Instance, ...]
     follow_up: FollowUp | None = None
+    pack: str = DEFAULT_PACK
 
 
 @dataclass(frozen=True)
@@ -215,8 +219,13 @@ def parse_template(raw: dict, where: str = "template") -> ForgeTemplate:
         follow_up = FollowUp(*(_need(raw["follow_up"], key, str, here).strip() for key in ("question", "reference")))
         if not follow_up.question or not follow_up.reference:
             raise ForgeError(f"{here}: question and reference must be non-empty")
+    pack = raw.get("pack")
+    if pack is None:
+        pack = DEFAULT_PACK
+    elif pack not in PACKS:
+        raise ForgeError(f"{where}.pack: must be one of {tuple(PACKS)}")
     return ForgeTemplate(template_id, topic, tuple(topics), difficulty,
-                         raw.get("models"), raw.get("verification"), instances, follow_up)
+                         raw.get("models"), raw.get("verification"), instances, follow_up, pack)
 
 
 @dataclass
@@ -224,14 +233,21 @@ class Bank:
     templates: dict[str, ForgeTemplate] = field(default_factory=dict)
     errors: list[str] = field(default_factory=list)  # files skipped, with the reason
 
-    def topics(self) -> list[tuple[str, int]]:
+    def packs(self) -> list[str]:
+        """Packs with at least one template, in PACKS order."""
+        found = {t.pack for t in self.templates.values()}
+        return [p for p in PACKS if p in found]
+
+    def topics(self, pack: str | None = None) -> list[tuple[str, int]]:
         counts: dict[str, int] = {}
         for t in self.templates.values():
-            counts[t.topic] = counts.get(t.topic, 0) + 1
+            if pack is None or t.pack == pack:
+                counts[t.topic] = counts.get(t.topic, 0) + 1
         return sorted(counts.items(), key=lambda kv: kv[0].lower())
 
-    def pool(self, topic: str) -> list[ForgeTemplate]:
-        return [t for t in self.templates.values() if topic == MIXED or t.topic == topic]
+    def pool(self, topic: str, pack: str | None = None) -> list[ForgeTemplate]:
+        return [t for t in self.templates.values()
+                if (pack is None or t.pack == pack) and (topic == MIXED or t.topic == topic)]
 
 
 def load_bank(directory: Path | str | None = None) -> Bank:
@@ -370,12 +386,13 @@ class BankSource:
     """New questions for engine.Interview: one template per new question, chosen
     from the topic at the ladder's level; twins come from the same template."""
 
-    def __init__(self, bank: Bank, topic: str = MIXED, start: str = "Easy", rng: random.Random | None = None):
+    def __init__(self, bank: Bank, topic: str = MIXED, start: str = "Easy", rng: random.Random | None = None,
+                 pack: str | None = None):
         if start not in START_LEVELS:
             raise ValueError(f"start must be one of {START_LEVELS}")
-        self.templates = {t.template_id: t for t in bank.pool(topic)}
+        self.templates = {t.template_id: t for t in bank.pool(topic, pack)}
         if not self.templates:
-            raise ValueError(f"no accepted templates for topic {topic!r}")
+            raise ValueError(f"no accepted templates for topic {topic!r}" + (f" in pack {pack!r}" if pack else ""))
         self.topic = topic
         self.level = DIFFICULTIES.index(start)
         self.rng = rng if rng is not None else random.Random()

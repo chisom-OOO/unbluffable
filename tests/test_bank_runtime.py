@@ -475,15 +475,19 @@ def test_ladder_moves_between_new_questions_in_mixed(bank):
 def test_topics_list_forge_topics_mixed_and_fraud(monkeypatch, bank):
     monkeypatch.setattr(interview_routes, "_BANK", bank)
     data = TestClient(app).get("/api/interview/topics").json()
-    assert data["default"] == "Mixed" and data["levels"] == ["Easy", "Medium"]
-    assert [(t["id"], t["count"]) for t in data["topics"]] == [
+    assert data["default_track"] == "quant" and data["levels"] == ["Easy", "Medium"]
+    [track] = data["tracks"]  # the fixtures carry no pack, so all are Quant
+    assert (track["id"], track["name"], track["default"]) == ("quant", "Quant", "Mixed")
+    assert [(t["id"], t["count"]) for t in track["topics"]] == [
         ("Mixed", 3), ("Percentages", 1), ("Probability", 1), ("Statistics", 1), ("fraud", None)]
 
 
 def test_fraud_alert_is_the_default_only_without_templates(monkeypatch, tmp_path):
     monkeypatch.setattr(interview_routes, "_BANK", load_bank(tmp_path))
     data = TestClient(app).get("/api/interview/topics").json()
-    assert data["default"] == "fraud" and [t["id"] for t in data["topics"]] == ["fraud"]
+    [track] = data["tracks"]
+    assert data["default_track"] == "quant" and track["default"] == "fraud"
+    assert [t["id"] for t in track["topics"]] == ["fraud"]
 
 
 def test_socket_serves_the_chosen_topic_and_level(monkeypatch, bank):
@@ -1141,3 +1145,74 @@ def test_one_more_digit_is_asked_once_without_counting_as_help():
     assert all(q.scored == Outcome.CORRECT.value for q in session.questions)
     asks = [e for e in events if e["type"] == "interviewer_line" and e["text"] == say.ONE_MORE_DIGIT]
     assert len(asks) == len(session.questions)
+
+
+# --- Tracks: template packs -------------------------------------------------------------
+
+def _packed_bank(*specs):
+    """specs: (template_id, pack, topic); pack None leaves the field out."""
+    from engine.bank import Bank
+    templates = [parse_template(_raw_bag(template_id=tid, pack=pack, topic=topic)) for tid, pack, topic in specs]
+    return Bank({t.template_id: t for t in templates})
+
+
+def test_pack_is_parsed_and_missing_means_quant():
+    assert _bag().pack == "quant"
+    assert _bag(pack="ib").pack == "ib" and _bag(pack="software").pack == "software"
+    for bad in ("banking", "Quant", 3):
+        with pytest.raises(ForgeError):
+            parse_template(_raw_bag(pack=bad))
+
+
+def test_bank_lists_packs_and_topics_per_pack():
+    bank = _packed_bank(("a", None, "Probability"), ("b", "ib", "Valuation"),
+                        ("c", "ib", "Probability"), ("d", "software", "Complexity"))
+    assert bank.packs() == ["quant", "ib", "software"]  # PACKS order; no consulting templates
+    assert bank.topics("ib") == [("Probability", 1), ("Valuation", 1)]
+    assert bank.topics() == [("Complexity", 1), ("Probability", 2), ("Valuation", 1)]
+    assert [t.template_id for t in bank.pool("Probability", "ib")] == ["c"]
+    assert sorted(t.template_id for t in bank.pool("Mixed", "ib")) == ["b", "c"]
+    assert set(BankSource(bank, "Mixed", pack="ib").templates) == {"b", "c"}
+    with pytest.raises(ValueError):
+        BankSource(bank, "Valuation", pack="quant")
+
+
+def test_topic_route_groups_topics_by_track_and_hides_empty_tracks(monkeypatch):
+    bank = _packed_bank(("a", None, "Probability"), ("b", "ib", "Valuation"), ("c", "consulting", "Market sizing"))
+    monkeypatch.setattr(interview_routes, "_BANK", bank)
+    data = TestClient(app).get("/api/interview/topics").json()
+    assert data["default_track"] == "quant"
+    assert [(t["id"], t["name"]) for t in data["tracks"]] == [
+        ("quant", "Quant"), ("ib", "Investment banking"), ("consulting", "Consulting")]  # no software
+    topics = {t["id"]: [(o["id"], o["count"]) for o in t["topics"]] for t in data["tracks"]}
+    assert topics == {"quant": [("Mixed", 1), ("Probability", 1), ("fraud", None)],
+                      "ib": [("Mixed", 1), ("Valuation", 1)],
+                      "consulting": [("Mixed", 1), ("Market sizing", 1)]}
+
+
+def test_default_track_is_the_first_shown_when_quant_has_no_templates(monkeypatch):
+    monkeypatch.setattr(interview_routes, "_BANK", _packed_bank(("b", "ib", "Valuation"), ("d", "software", "Complexity")))
+    data = TestClient(app).get("/api/interview/topics").json()
+    assert data["default_track"] == "ib" and [t["id"] for t in data["tracks"]] == ["ib", "software"]
+
+
+def test_interview_uses_the_chosen_track_and_only_its_topics(monkeypatch):
+    bank = _packed_bank(("a", None, "Probability"), ("b", "ib", "Probability"), ("c", "ib", "Valuation"))
+    monkeypatch.setattr(interview_routes, "_BANK", bank)
+    assert set(interview_routes.interview_for("ib", "Probability", "Easy").source.templates) == {"b"}
+    assert set(interview_routes.interview_for(None, "Probability", "Easy").source.templates) == {"a"}  # default: Quant
+    # A topic from another track falls back to the chosen track's Mixed.
+    assert set(interview_routes.interview_for("ib", "fraud", "Easy").source.templates) == {"b", "c"}
+    assert set(interview_routes.interview_for("software", "Valuation", "Easy").source.templates) == {"a"}
+
+
+def test_socket_serves_the_chosen_track(monkeypatch):
+    bank = _packed_bank(("a", None, "Probability"), ("b", "ib", "Valuation"))
+    monkeypatch.setattr(interview_routes, "_BANK", bank)
+    monkeypatch.setattr(voice_routes, "provider", lambda: ScriptedProvider())
+    with TestClient(app).websocket_connect("/api/interview/ws") as socket:
+        socket.send_json({"type": "begin", "consent": True, "pack": "ib", "topic": "Mixed", "level": "Easy"})
+        while (event := socket.receive_json())["type"] != "question":
+            pass
+        assert event["template"] == "b"
+        socket.send_json({"type": "end"})

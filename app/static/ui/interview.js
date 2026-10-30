@@ -357,6 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!consent.checked) { setStatus("Please agree that your answer text is kept before starting."); consent.focus(); return; }
     setStatus("");
     consent.disabled = true;
+    trackSelect.disabled = true;
     topicSelect.disabled = true;
     document.querySelectorAll('input[name="level"]').forEach((r) => { r.disabled = true; });
     stopMeter();
@@ -372,7 +373,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const level = document.querySelector('input[name="level"]:checked')?.value || "Easy";
     socket.onopen = () => socket.send(JSON.stringify(drill
       ? { type: "begin", consent: true, headphones: headphones.checked, drill }
-      : { type: "begin", consent: true, headphones: headphones.checked, topic: topicSelect.value || null, level }));
+      : { type: "begin", consent: true, headphones: headphones.checked, pack: trackSelect.value || null, topic: topicSelect.value || null, level }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
       if (phase !== "finished") { phase = "finished"; voice.close(); setStatus("The connection closed. Reload to start again."); render(); }
@@ -512,17 +513,31 @@ document.addEventListener("DOMContentLoaded", () => {
     $("puzzle-eyebrow").textContent = "Drill · up to 3 questions, then a check";
   }
 
-  // ---------- Topic picker: accepted forge templates per topic, Mixed, and the fraud alert ----------
+  // ---------- Track, then topic: accepted forge templates per track and topic, Mixed, and the fraud alert ----------
+  const trackSelect = $("track");
   const topicSelect = $("topic");
-  fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {
-    topicSelect.replaceChildren(...t.topics.map((o) => {
+  let tracks = [];
+  const showTopics = () => {
+    const track = tracks.find((t) => t.id === trackSelect.value) || tracks[0];
+    topicSelect.replaceChildren(...track.topics.map((o) => {
       const option = document.createElement("option");
       option.value = o.id;
       option.textContent = o.count == null ? o.name : `${o.name} (${o.count} template${o.count === 1 ? "" : "s"})`;
-      option.selected = o.id === t.default;
+      option.selected = o.id === track.default;
       return option;
     }));
+  };
+  trackSelect.addEventListener("change", showTopics);
+  fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {
+    tracks = t.tracks;
+    trackSelect.replaceChildren(...tracks.map((track) => {
+      const option = new Option(track.name, track.id);
+      option.selected = track.id === t.default_track;
+      return option;
+    }));
+    showTopics();
   }).catch(() => {
+    trackSelect.replaceChildren(new Option("Default", ""));
     topicSelect.replaceChildren(new Option("Default", ""));
   });
 

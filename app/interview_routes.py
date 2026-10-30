@@ -18,7 +18,7 @@ from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 from app import interview_report, voice_routes
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
-from engine.bank import MIXED, START_LEVELS, Bank, BankSource, load_bank
+from engine.bank import DEFAULT_PACK, MIXED, PACKS, START_LEVELS, Bank, BankSource, load_bank
 from engine.interview import Interview
 from voice.recording import VoiceError
 from voice.relay import realtime_answer
@@ -40,25 +40,34 @@ def bank() -> Bank:
 
 
 def topics() -> dict:
-    found = bank().topics()
-    options = []
-    if found:
-        options.append({"id": MIXED, "name": MIXED, "count": sum(n for _, n in found)})
+    """Tracks (template packs) with accepted templates, each with Mixed and its topics.
+    The fraud alert sits under Quant; with no templates at all it is the only choice."""
+    tracks = []
+    for pack in bank().packs():
+        found = bank().topics(pack)
+        options = [{"id": MIXED, "name": MIXED, "count": sum(n for _, n in found)}]
         options += [{"id": name, "name": name, "count": n} for name, n in found]
-    options.append({"id": FRAUD, "name": "Fraud alert (classic)", "count": None})
-    return {"topics": options, "default": options[0]["id"], "levels": list(START_LEVELS),
+        tracks.append({"id": pack, "name": PACKS[pack], "topics": options, "default": MIXED})
+    if not tracks:
+        tracks.append({"id": DEFAULT_PACK, "name": PACKS[DEFAULT_PACK], "topics": [], "default": FRAUD})
+    for track in tracks:
+        if track["id"] == DEFAULT_PACK:
+            track["topics"].append({"id": FRAUD, "name": "Fraud alert (classic)", "count": None})
+    default = DEFAULT_PACK if any(t["id"] == DEFAULT_PACK for t in tracks) else tracks[0]["id"]
+    return {"tracks": tracks, "default_track": default, "levels": list(START_LEVELS),
             "default_level": START_LEVELS[0]}
 
 
-def interview_for(topic, level) -> Interview:
+def interview_for(pack, topic, level) -> Interview:
     """The fraud alert is the fallback only when no forge template is accepted yet."""
-    available = {option["id"] for option in topics()["topics"]}
-    topic = topic if topic in available else topics()["default"]
+    found = topics()
+    track = next((t for t in found["tracks"] if t["id"] == pack), None)         or next(t for t in found["tracks"] if t["id"] == found["default_track"])
+    topic = topic if topic in {option["id"] for option in track["topics"]} else track["default"]
     if topic == FRAUD:
         return Interview(demo=True)
     if level not in START_LEVELS:
         raise VoiceError("Choose a starting level: Easy or Medium.")
-    return Interview(source=BankSource(bank(), topic, level))
+    return Interview(source=BankSource(bank(), topic, level, pack=track["id"]))
 
 
 def keep(session: ExamSession) -> str:
@@ -78,7 +87,7 @@ def replay_speed() -> float:
 
 @router.get("/topics")
 def topic_list():
-    """Topics with accepted templates and their counts, plus Mixed and the fraud alert."""
+    """Tracks with accepted templates; each lists Mixed and its topics with counts (Quant also the fraud alert)."""
     return topics()
 
 
@@ -158,7 +167,7 @@ async def interview_socket(socket: WebSocket):
         if begin.get("drill") is not None:
             session = drill_for(begin["drill"], socket.send_json, listen, VoiceAnalyzer(provider), deadline)
         else:
-            interview = interview_for(begin.get("topic"), begin.get("level", START_LEVELS[0]))
+            interview = interview_for(begin.get("pack"), begin.get("topic"), begin.get("level", START_LEVELS[0]))
             session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
         session_id = keep(session)
         await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,
