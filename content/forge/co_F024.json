@@ -1,0 +1,3744 @@
+{
+  "template_id": "co_F024",
+  "pack": "consulting",
+  "topic": "Unit economics",
+  "topics": [
+    "Unit economics"
+  ],
+  "source_topic": "Finite-horizon retained customer value",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 3,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": false
+  },
+  "follow_up": {
+    "question": "Which retention assumption would you validate before relying on this value?",
+    "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings 900 dollars of revenue and 20 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 900,
+        "annual_customer_variable_cost": 20,
+        "retention": "1/2",
+        "years": 4
+      },
+      "answer": "1650",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings nine hundred dollars of revenue and twenty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "825",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "3520",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "1760",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "880"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "15/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "825",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "1870",
+            "relative_gap": "17/15"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "110",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "935",
+        "min_distinct_wrong_pair_gap": "935"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings 500 dollars of revenue and 440 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 500,
+        "annual_customer_variable_cost": 440,
+        "retention": "4/5",
+        "years": 4
+      },
+      "answer": "4428/25",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings five hundred dollars of revenue and four hundred and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "17712/125",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "240",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "192",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "60"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "369/125"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "4428/125",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "1572/25",
+            "relative_gap": "131/369"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "372/25",
+            "relative_gap": "31/369"
+          }
+        ],
+        "min_wrong_pair_gap": "48",
+        "min_distinct_wrong_pair_gap": "48"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings 750 dollars of revenue and 620 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 750,
+        "annual_customer_variable_cost": 620,
+        "retention": "4/5",
+        "years": 3
+      },
+      "answer": "1586/5",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings seven hundred and fifty dollars of revenue and six hundred and twenty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "6344/25",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "390",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "312",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "130"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "61/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "1586/25",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "364/5",
+            "relative_gap": "14/61"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "26/5",
+            "relative_gap": "1/61"
+          }
+        ],
+        "min_wrong_pair_gap": "1456/25",
+        "min_distinct_wrong_pair_gap": "1456/25"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings 450 dollars of revenue and 200 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 450,
+        "annual_customer_variable_cost": 200,
+        "retention": "4/5",
+        "years": 4
+      },
+      "answer": "738",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings four hundred and fifty dollars of revenue and two hundred dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2952/5",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1000",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "800",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "250"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "369/125"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "738/5",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "262",
+            "relative_gap": "131/369"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "62",
+            "relative_gap": "31/369"
+          }
+        ],
+        "min_wrong_pair_gap": "200",
+        "min_distinct_wrong_pair_gap": "200"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings 100 dollars of revenue and 80 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 100,
+        "annual_customer_variable_cost": 80,
+        "retention": "1/2",
+        "years": 3
+      },
+      "answer": "35",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings one hundred dollars of revenue and eighty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "35/2",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "60",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "20"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "7/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "35/2",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "25",
+            "relative_gap": "5/7"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "5",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "25/2",
+        "min_distinct_wrong_pair_gap": "25/2"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings 850 dollars of revenue and 180 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 850,
+        "annual_customer_variable_cost": 180,
+        "retention": "1/2",
+        "years": 4
+      },
+      "answer": "5025/4",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings eight hundred and fifty dollars of revenue and one hundred and eighty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5025/8",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "2680",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "1340",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "670"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "15/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "5025/8",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "5695/4",
+            "relative_gap": "17/15"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "335/4",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "5695/8",
+        "min_distinct_wrong_pair_gap": "5695/8"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings 650 dollars of revenue and 240 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 650,
+        "annual_customer_variable_cost": 240,
+        "retention": "3/4",
+        "years": 3
+      },
+      "answer": "7585/8",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings six hundred and fifty dollars of revenue and two hundred and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "22755/32",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1230",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "1845/2",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "410"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "37/16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "7585/32",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "2255/8",
+            "relative_gap": "11/37"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "205/8",
+            "relative_gap": "1/37"
+          }
+        ],
+        "min_wrong_pair_gap": "6765/32",
+        "min_distinct_wrong_pair_gap": "6765/32"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings 800 dollars of revenue and 120 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 800,
+        "annual_customer_variable_cost": 120,
+        "retention": "1/2",
+        "years": 2
+      },
+      "answer": "1020",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings eight hundred dollars of revenue and one hundred and twenty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "510",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1360",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "680",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "680"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "3/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "510",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "340",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "340",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "170",
+        "min_distinct_wrong_pair_gap": "170"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings 400 dollars of revenue and 340 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 400,
+        "annual_customer_variable_cost": 340,
+        "retention": "4/5",
+        "years": 2
+      },
+      "answer": "108",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings four hundred dollars of revenue and three hundred and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "432/5",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "120",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "96",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "60"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "9/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "108/5",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "12",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "12",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "48/5",
+        "min_distinct_wrong_pair_gap": "48/5"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings 300 dollars of revenue and 140 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 300,
+        "annual_customer_variable_cost": 140,
+        "retention": "3/4",
+        "years": 4
+      },
+      "answer": "875/2",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings three hundred dollars of revenue and one hundred and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2625/8",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "640",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "480",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "160"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "175/64"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "875/8",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "405/2",
+            "relative_gap": "81/175"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "85/2",
+            "relative_gap": "17/175"
+          }
+        ],
+        "min_wrong_pair_gap": "1215/8",
+        "min_distinct_wrong_pair_gap": "1215/8"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings 650 dollars of revenue and 500 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 650,
+        "annual_customer_variable_cost": 500,
+        "retention": "3/4",
+        "years": 3
+      },
+      "answer": "2775/8",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings six hundred and fifty dollars of revenue and five hundred dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "8325/32",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "450",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "675/2",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "150"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "37/16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "2775/32",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "825/8",
+            "relative_gap": "11/37"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "75/8",
+            "relative_gap": "1/37"
+          }
+        ],
+        "min_wrong_pair_gap": "2475/32",
+        "min_distinct_wrong_pair_gap": "2475/32"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings 900 dollars of revenue and 440 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 900,
+        "annual_customer_variable_cost": 440,
+        "retention": "1/2",
+        "years": 3
+      },
+      "answer": "805",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings nine hundred dollars of revenue and four hundred and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "805/2",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1380",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "690",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "460"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "7/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "805/2",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "575",
+            "relative_gap": "5/7"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "115",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "575/2",
+        "min_distinct_wrong_pair_gap": "575/2"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings 700 dollars of revenue and 380 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 700,
+        "annual_customer_variable_cost": 380,
+        "retention": "4/5",
+        "years": 2
+      },
+      "answer": "576",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings seven hundred dollars of revenue and three hundred and eighty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2304/5",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "640",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "512",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "320"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "9/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "576/5",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "64",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "64",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "256/5",
+        "min_distinct_wrong_pair_gap": "256/5"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings 550 dollars of revenue and 60 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 550,
+        "annual_customer_variable_cost": 60,
+        "retention": "3/4",
+        "years": 3
+      },
+      "answer": "9065/8",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings five hundred and fifty dollars of revenue and sixty dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "27195/32",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1470",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "2205/2",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "490"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "37/16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "9065/32",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "2695/8",
+            "relative_gap": "11/37"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "245/8",
+            "relative_gap": "1/37"
+          }
+        ],
+        "min_wrong_pair_gap": "8085/32",
+        "min_distinct_wrong_pair_gap": "8085/32"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings 400 dollars of revenue and 40 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 400,
+        "annual_customer_variable_cost": 40,
+        "retention": "4/5",
+        "years": 2
+      },
+      "answer": "648",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings four hundred dollars of revenue and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2592/5",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "720",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "576",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "360"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "9/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "648/5",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "72",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "72",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "288/5",
+        "min_distinct_wrong_pair_gap": "288/5"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings 1000 dollars of revenue and 440 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 1000,
+        "annual_customer_variable_cost": 440,
+        "retention": "1/2",
+        "years": 2
+      },
+      "answer": "840",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings one thousand dollars of revenue and four hundred and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "420",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1120",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "560",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "560"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "3/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "420",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "280",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "280",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "140",
+        "min_distinct_wrong_pair_gap": "140"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings 150 dollars of revenue and 100 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 150,
+        "annual_customer_variable_cost": 100,
+        "retention": "4/5",
+        "years": 2
+      },
+      "answer": "90",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings one hundred and fifty dollars of revenue and one hundred dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "72",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "100",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "80",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "50"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "9/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "18",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "10",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "10",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings 300 dollars of revenue and 20 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 300,
+        "annual_customer_variable_cost": 20,
+        "retention": "3/4",
+        "years": 3
+      },
+      "answer": "1295/2",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings three hundred dollars of revenue and twenty dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "3885/8",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "840",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "630",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "280"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "37/16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "1295/8",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "385/2",
+            "relative_gap": "11/37"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "35/2",
+            "relative_gap": "1/37"
+          }
+        ],
+        "min_wrong_pair_gap": "1155/8",
+        "min_distinct_wrong_pair_gap": "1155/8"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings 100 dollars of revenue and 60 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 100,
+        "annual_customer_variable_cost": 60,
+        "retention": "3/4",
+        "years": 4
+      },
+      "answer": "875/8",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings one hundred dollars of revenue and sixty dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2625/32",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "160",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "120",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "40"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "175/64"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "875/32",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "405/8",
+            "relative_gap": "81/175"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "85/8",
+            "relative_gap": "17/175"
+          }
+        ],
+        "min_wrong_pair_gap": "1215/32",
+        "min_distinct_wrong_pair_gap": "1215/32"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings 800 dollars of revenue and 120 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 800,
+        "annual_customer_variable_cost": 120,
+        "retention": "3/4",
+        "years": 3
+      },
+      "answer": "3145/2",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings eight hundred dollars of revenue and one hundred and twenty dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "9435/8",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "2040",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "1530",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "680"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "37/16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "3145/8",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "935/2",
+            "relative_gap": "11/37"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "85/2",
+            "relative_gap": "1/37"
+          }
+        ],
+        "min_wrong_pair_gap": "2805/8",
+        "min_distinct_wrong_pair_gap": "2805/8"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings 250 dollars of revenue and 180 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 250,
+        "annual_customer_variable_cost": 180,
+        "retention": "1/2",
+        "years": 4
+      },
+      "answer": "525/4",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings two hundred and fifty dollars of revenue and one hundred and eighty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "525/8",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "280",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "140",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "70"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "15/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "525/8",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "595/4",
+            "relative_gap": "17/15"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "35/4",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "595/8",
+        "min_distinct_wrong_pair_gap": "595/8"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings 800 dollars of revenue and 700 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 800,
+        "annual_customer_variable_cost": 700,
+        "retention": "4/5",
+        "years": 4
+      },
+      "answer": "1476/5",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings eight hundred dollars of revenue and seven hundred dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5904/25",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "400",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "320",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "100"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "369/125"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "1476/25",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "524/5",
+            "relative_gap": "131/369"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "124/5",
+            "relative_gap": "31/369"
+          }
+        ],
+        "min_wrong_pair_gap": "80",
+        "min_distinct_wrong_pair_gap": "80"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings 600 dollars of revenue and 400 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 600,
+        "annual_customer_variable_cost": 400,
+        "retention": "1/2",
+        "years": 4
+      },
+      "answer": "375",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings six hundred dollars of revenue and four hundred dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "375/2",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "800",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "400",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "200"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "15/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "375/2",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "425",
+            "relative_gap": "17/15"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "25",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "425/2",
+        "min_distinct_wrong_pair_gap": "425/2"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings 450 dollars of revenue and 380 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 450,
+        "annual_customer_variable_cost": 380,
+        "retention": "3/4",
+        "years": 4
+      },
+      "answer": "6125/32",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings four hundred and fifty dollars of revenue and three hundred and eighty dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "18375/128",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "280",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "210",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "70"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "175/64"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "6125/128",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "2835/32",
+            "relative_gap": "81/175"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "595/32",
+            "relative_gap": "17/175"
+          }
+        ],
+        "min_wrong_pair_gap": "8505/128",
+        "min_distinct_wrong_pair_gap": "8505/128"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings 350 dollars of revenue and 100 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 350,
+        "annual_customer_variable_cost": 100,
+        "retention": "1/2",
+        "years": 4
+      },
+      "answer": "1875/4",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings three hundred and fifty dollars of revenue and one hundred dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1875/8",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1000",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "500",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "250"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "15/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "1875/8",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "2125/4",
+            "relative_gap": "17/15"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "125/4",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "2125/8",
+        "min_distinct_wrong_pair_gap": "2125/8"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings 300 dollars of revenue and 80 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 300,
+        "annual_customer_variable_cost": 80,
+        "retention": "3/4",
+        "years": 2
+      },
+      "answer": "385",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings three hundred dollars of revenue and eighty dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1155/4",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "440",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "330",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "220"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "7/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "385/4",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "55",
+            "relative_gap": "1/7"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "55",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "165/4",
+        "min_distinct_wrong_pair_gap": "165/4"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings 900 dollars of revenue and 300 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 900,
+        "annual_customer_variable_cost": 300,
+        "retention": "3/4",
+        "years": 4
+      },
+      "answer": "13125/8",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings nine hundred dollars of revenue and three hundred dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "39375/32",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "2400",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "1800",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "600"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "175/64"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "13125/32",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "6075/8",
+            "relative_gap": "81/175"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "1275/8",
+            "relative_gap": "17/175"
+          }
+        ],
+        "min_wrong_pair_gap": "18225/32",
+        "min_distinct_wrong_pair_gap": "18225/32"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings 950 dollars of revenue and 240 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 950,
+        "annual_customer_variable_cost": 240,
+        "retention": "4/5",
+        "years": 3
+      },
+      "answer": "8662/5",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings nine hundred and fifty dollars of revenue and two hundred and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "34648/25",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "2130",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "1704",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "710"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "61/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "8662/25",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "1988/5",
+            "relative_gap": "14/61"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "142/5",
+            "relative_gap": "1/61"
+          }
+        ],
+        "min_wrong_pair_gap": "7952/25",
+        "min_distinct_wrong_pair_gap": "7952/25"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings 800 dollars of revenue and 40 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 800,
+        "annual_customer_variable_cost": 40,
+        "retention": "4/5",
+        "years": 3
+      },
+      "answer": "9272/5",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings eight hundred dollars of revenue and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "37088/25",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "2280",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "1824",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "760"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "61/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "9272/25",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "2128/5",
+            "relative_gap": "14/61"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "152/5",
+            "relative_gap": "1/61"
+          }
+        ],
+        "min_wrong_pair_gap": "8512/25",
+        "min_distinct_wrong_pair_gap": "8512/25"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings 750 dollars of revenue and 400 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 750,
+        "annual_customer_variable_cost": 400,
+        "retention": "3/4",
+        "years": 2
+      },
+      "answer": "1225/2",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings seven hundred and fifty dollars of revenue and four hundred dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "3675/8",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "700",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "525",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "350"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "7/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "1225/8",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "175/2",
+            "relative_gap": "1/7"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "175/2",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "525/8",
+        "min_distinct_wrong_pair_gap": "525/8"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings 950 dollars of revenue and 600 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 950,
+        "annual_customer_variable_cost": 600,
+        "retention": "1/2",
+        "years": 2
+      },
+      "answer": "525",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings nine hundred and fifty dollars of revenue and six hundred dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "525/2",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "700",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "350",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "350"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "3/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "525/2",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "175",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "175",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "175/2",
+        "min_distinct_wrong_pair_gap": "175/2"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings 300 dollars of revenue and 180 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 300,
+        "annual_customer_variable_cost": 180,
+        "retention": "4/5",
+        "years": 2
+      },
+      "answer": "216",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings three hundred dollars of revenue and one hundred and eighty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "864/5",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "240",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "192",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "120"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "9/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "216/5",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "24",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "24",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "96/5",
+        "min_distinct_wrong_pair_gap": "96/5"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings 550 dollars of revenue and 360 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 550,
+        "annual_customer_variable_cost": 360,
+        "retention": "4/5",
+        "years": 3
+      },
+      "answer": "2318/5",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings five hundred and fifty dollars of revenue and three hundred and sixty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "9272/25",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "570",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "456",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "190"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "61/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "2318/25",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "532/5",
+            "relative_gap": "14/61"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "38/5",
+            "relative_gap": "1/61"
+          }
+        ],
+        "min_wrong_pair_gap": "2128/25",
+        "min_distinct_wrong_pair_gap": "2128/25"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings 1000 dollars of revenue and 40 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 1000,
+        "annual_customer_variable_cost": 40,
+        "retention": "4/5",
+        "years": 3
+      },
+      "answer": "11712/5",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings one thousand dollars of revenue and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "46848/25",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "2880",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "2304",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "960"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "61/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "11712/25",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "2688/5",
+            "relative_gap": "14/61"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "192/5",
+            "relative_gap": "1/61"
+          }
+        ],
+        "min_wrong_pair_gap": "10752/25",
+        "min_distinct_wrong_pair_gap": "10752/25"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings 800 dollars of revenue and 340 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 800,
+        "annual_customer_variable_cost": 340,
+        "retention": "4/5",
+        "years": 3
+      },
+      "answer": "5612/5",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings eight hundred dollars of revenue and three hundred and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "22448/25",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1380",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "1104",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "460"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "61/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "5612/25",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "1288/5",
+            "relative_gap": "14/61"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "92/5",
+            "relative_gap": "1/61"
+          }
+        ],
+        "min_wrong_pair_gap": "5152/25",
+        "min_distinct_wrong_pair_gap": "5152/25"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings 300 dollars of revenue and 40 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 300,
+        "annual_customer_variable_cost": 40,
+        "retention": "1/2",
+        "years": 3
+      },
+      "answer": "455",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings three hundred dollars of revenue and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "455/2",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "780",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "390",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "260"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "7/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "455/2",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "325",
+            "relative_gap": "5/7"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "65",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "325/2",
+        "min_distinct_wrong_pair_gap": "325/2"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings 900 dollars of revenue and 380 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 900,
+        "annual_customer_variable_cost": 380,
+        "retention": "4/5",
+        "years": 3
+      },
+      "answer": "6344/5",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings nine hundred dollars of revenue and three hundred and eighty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "25376/25",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1560",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "1248",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "520"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "61/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "6344/25",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "1456/5",
+            "relative_gap": "14/61"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "104/5",
+            "relative_gap": "1/61"
+          }
+        ],
+        "min_wrong_pair_gap": "5824/25",
+        "min_distinct_wrong_pair_gap": "5824/25"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings 600 dollars of revenue and 20 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 600,
+        "annual_customer_variable_cost": 20,
+        "retention": "1/2",
+        "years": 2
+      },
+      "answer": "870",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings six hundred dollars of revenue and twenty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "435",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1160",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "580",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "580"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "3/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "435",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "290",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "290",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "145",
+        "min_distinct_wrong_pair_gap": "145"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings 350 dollars of revenue and 200 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 350,
+        "annual_customer_variable_cost": 200,
+        "retention": "4/5",
+        "years": 3
+      },
+      "answer": "366",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings three hundred and fifty dollars of revenue and two hundred dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1464/5",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "450",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "360",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "150"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "61/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "366/5",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "84",
+            "relative_gap": "14/61"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "6",
+            "relative_gap": "1/61"
+          }
+        ],
+        "min_wrong_pair_gap": "336/5",
+        "min_distinct_wrong_pair_gap": "336/5"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings 250 dollars of revenue and 200 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 250,
+        "annual_customer_variable_cost": 200,
+        "retention": "4/5",
+        "years": 3
+      },
+      "answer": "122",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings two hundred and fifty dollars of revenue and two hundred dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "488/5",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "150",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "120",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "50"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "61/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "122/5",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "28",
+            "relative_gap": "14/61"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "2",
+            "relative_gap": "1/61"
+          }
+        ],
+        "min_wrong_pair_gap": "112/5",
+        "min_distinct_wrong_pair_gap": "112/5"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings 900 dollars of revenue and 480 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 900,
+        "annual_customer_variable_cost": 480,
+        "retention": "1/2",
+        "years": 2
+      },
+      "answer": "630",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings nine hundred dollars of revenue and four hundred and eighty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "315",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "840",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "420",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "420"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "3/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "315",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "210",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "210",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "105",
+        "min_distinct_wrong_pair_gap": "105"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings 1000 dollars of revenue and 160 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 1000,
+        "annual_customer_variable_cost": 160,
+        "retention": "1/2",
+        "years": 2
+      },
+      "answer": "1260",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings one thousand dollars of revenue and one hundred and sixty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "630",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1680",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "840",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "840"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "3/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "630",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "420",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "420",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "210",
+        "min_distinct_wrong_pair_gap": "210"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings 850 dollars of revenue and 820 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 850,
+        "annual_customer_variable_cost": 820,
+        "retention": "1/2",
+        "years": 3
+      },
+      "answer": "105/2",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings eight hundred and fifty dollars of revenue and eight hundred and twenty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "105/4",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "90",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "45",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "30"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "7/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "105/4",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "75/2",
+            "relative_gap": "5/7"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "15/2",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "75/4",
+        "min_distinct_wrong_pair_gap": "75/4"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings 450 dollars of revenue and 140 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 450,
+        "annual_customer_variable_cost": 140,
+        "retention": "4/5",
+        "years": 3
+      },
+      "answer": "3782/5",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings four hundred and fifty dollars of revenue and one hundred and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "15128/25",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "930",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "744",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "310"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "61/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "3782/25",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "868/5",
+            "relative_gap": "14/61"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "62/5",
+            "relative_gap": "1/61"
+          }
+        ],
+        "min_wrong_pair_gap": "3472/25",
+        "min_distinct_wrong_pair_gap": "3472/25"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings 400 dollars of revenue and 360 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 400,
+        "annual_customer_variable_cost": 360,
+        "retention": "4/5",
+        "years": 2
+      },
+      "answer": "72",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings four hundred dollars of revenue and three hundred and sixty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "288/5",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "80",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "64",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "40"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "9/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "72/5",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "8",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "8",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "32/5",
+        "min_distinct_wrong_pair_gap": "32/5"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings 300 dollars of revenue and 280 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 300,
+        "annual_customer_variable_cost": 280,
+        "retention": "4/5",
+        "years": 2
+      },
+      "answer": "36",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You assess the contribution value of a subscription customer. A newly acquired customer is active throughout year one. Each active year brings three hundred dollars of revenue and two hundred and eighty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "144/5",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "40",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "32",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "20"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "9/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "36/5",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "4",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "4",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "16/5",
+        "min_distinct_wrong_pair_gap": "16/5"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings 800 dollars of revenue and 280 dollars of total variable servicing cost. At each year-end, an active customer has exactly 75 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 800,
+        "annual_customer_variable_cost": 280,
+        "retention": "3/4",
+        "years": 3
+      },
+      "answer": "2405/2",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A service provider values a newly acquired customer over a fixed horizon. A newly acquired customer is active throughout year one. Each active year brings eight hundred dollars of revenue and two hundred and eighty dollars of total variable servicing cost. At each year-end, an active customer has exactly seventy-five percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "7215/8",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "1560",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "1170",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "520"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "37/16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "2405/8",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "715/2",
+            "relative_gap": "11/37"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "65/2",
+            "relative_gap": "1/37"
+          }
+        ],
+        "min_wrong_pair_gap": "2145/8",
+        "min_distinct_wrong_pair_gap": "2145/8"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings 700 dollars of revenue and 220 dollars of total variable servicing cost. At each year-end, an active customer has exactly 80 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 2 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 700,
+        "annual_customer_variable_cost": 220,
+        "retention": "4/5",
+        "years": 2
+      },
+      "answer": "864",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You review customer economics for a maintenance contract. A newly acquired customer is active throughout year one. Each active year brings seven hundred dollars of revenue and two hundred and twenty dollars of total variable servicing cost. At each year-end, an active customer has exactly eighty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first two years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3456/5",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "960",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "768",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "480"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "9/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "864/5",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "96",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "96",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "384/5",
+        "min_distinct_wrong_pair_gap": "384/5"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings 500 dollars of revenue and 320 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 3 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 500,
+        "annual_customer_variable_cost": 320,
+        "retention": "1/2",
+        "years": 3
+      },
+      "answer": "315",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "A membership business evaluates retained annual contribution. A newly acquired customer is active throughout year one. Each active year brings five hundred dollars of revenue and three hundred and twenty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first three years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "315/2",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "540",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "270",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "180"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "7/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "315/2",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "225",
+            "relative_gap": "5/7"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "45",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "225/2",
+        "min_distinct_wrong_pair_gap": "225/2"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings 100 dollars of revenue and 40 dollars of total variable servicing cost. At each year-end, an active customer has exactly 50 percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first 4 years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "params": {
+        "annual_customer_revenue": 100,
+        "annual_customer_variable_cost": 40,
+        "retention": "1/2",
+        "years": 4
+      },
+      "answer": "225/2",
+      "tolerance": "0",
+      "topic": "Unit economics",
+      "source_topic": "Finite-horizon retained customer value",
+      "difficulty": "Medium",
+      "spoken_text": "You compare expected customer contribution with future acquisition spending. A newly acquired customer is active throughout year one. Each active year brings one hundred dollars of revenue and forty dollars of total variable servicing cost. At each year-end, an active customer has exactly fifty percent probability of remaining active for the entire following year; a lost customer never returns. Measure only the first four years, do not discount, and exclude acquisition cost, fixed overhead and tax. What is expected contribution over that horizon per newly acquired customer, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "225/4",
+          "misconceptions": [
+            "off_by_one_retention_applied_to_year_1"
+          ]
+        },
+        {
+          "value": "240",
+          "misconceptions": [
+            "ignores_churn_assumes_full_horizon"
+          ]
+        },
+        {
+          "value": "120",
+          "misconceptions": [
+            "linear_retention_years_times_retention"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "contribution_per_active_year",
+          "value": "60"
+        },
+        {
+          "name": "expected_active_years",
+          "value": "15/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "off_by_one_retention_applied_to_year_1",
+            "absolute_gap": "225/4",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "ignores_churn_assumes_full_horizon",
+            "absolute_gap": "255/2",
+            "relative_gap": "17/15"
+          },
+          {
+            "misconception": "linear_retention_years_times_retention",
+            "absolute_gap": "15/2",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "255/4",
+        "min_distinct_wrong_pair_gap": "255/4"
+      },
+      "follow_up": {
+        "question": "Which retention assumption would you validate before relying on this value?",
+        "reference": "I would check that the stated retention rate is conditional on still being active and applies consistently across the modelled years. If customer cohorts behave differently or former customers can return, this simple lifetime distribution would need to change."
+      }
+    }
+  ]
+}

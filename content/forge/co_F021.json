@@ -1,0 +1,4494 @@
+{
+  "template_id": "co_F021",
+  "pack": "consulting",
+  "topic": "Operations",
+  "topics": [
+    "Operations"
+  ],
+  "source_topic": "Bottleneck throughput",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 3,
+    "repair_attempted": true,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": false
+  },
+  "follow_up": {
+    "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+    "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 70 units per hour; stage two has 2 stations, each handling 70 units per hour; stage three has 2 stations, each handling 100 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 70,
+        "rate_three": 100,
+        "rate_two": 70,
+        "stations_one": 1,
+        "stations_three": 2,
+        "stations_two": 2
+      },
+      "answer": "560",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling seventy units per hour; stage two has two stations, each handling seventy units per hour; stage three has two stations, each handling one hundred units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3280",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "3280/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "1600",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "70"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "140"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "200"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "70"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "560"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "2720",
+            "relative_gap": "34/7"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1600/3",
+            "relative_gap": "20/21"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "1040",
+            "relative_gap": "13/7"
+          }
+        ],
+        "min_wrong_pair_gap": "1520/3",
+        "min_distinct_wrong_pair_gap": "1520/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 150 units per hour; stage two has 4 stations, each handling 80 units per hour; stage three has 2 stations, each handling 150 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 150,
+        "rate_three": 150,
+        "rate_two": 80,
+        "stations_one": 2,
+        "stations_three": 2,
+        "stations_two": 4
+      },
+      "answer": "3000",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling one hundred and fifty units per hour; stage two has four stations, each handling eighty units per hour; stage three has two stations, each handling one hundred and fifty units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9200",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "9200/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3200",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "300"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "320"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "300"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "300"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "3000"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "6200",
+            "relative_gap": "31/15"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "200/3",
+            "relative_gap": "1/45"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "200",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "400/3",
+        "min_distinct_wrong_pair_gap": "400/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 190 units per hour; stage two has 4 stations, each handling 170 units per hour; stage three has 3 stations, each handling 130 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 190,
+        "rate_three": 130,
+        "rate_two": 170,
+        "stations_one": 3,
+        "stations_three": 3,
+        "stations_two": 4
+      },
+      "answer": "3900",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling one hundred and ninety units per hour; stage two has four stations, each handling one hundred and seventy units per hour; stage three has three stations, each handling one hundred and thirty units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "16400",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "16400/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "6800",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "570"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "680"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "390"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "390"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "3900"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "12500",
+            "relative_gap": "125/39"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "4700/3",
+            "relative_gap": "47/117"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "2900",
+            "relative_gap": "29/39"
+          }
+        ],
+        "min_wrong_pair_gap": "4000/3",
+        "min_distinct_wrong_pair_gap": "4000/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 70 units per hour; stage two has 3 stations, each handling 80 units per hour; stage three has 4 stations, each handling 130 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 70,
+        "rate_three": 130,
+        "rate_two": 80,
+        "stations_one": 2,
+        "stations_three": 4,
+        "stations_two": 3
+      },
+      "answer": "1120",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling seventy units per hour; stage two has three stations, each handling eighty units per hour; stage three has four stations, each handling one hundred and thirty units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "7200",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2400",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "4160",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "140"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "240"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "520"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "140"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1120"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "6080",
+            "relative_gap": "38/7"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1280",
+            "relative_gap": "8/7"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "3040",
+            "relative_gap": "19/7"
+          }
+        ],
+        "min_wrong_pair_gap": "1760",
+        "min_distinct_wrong_pair_gap": "1760"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 180 units per hour; stage two has 2 stations, each handling 40 units per hour; stage three has 1 stations, each handling 140 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 180,
+        "rate_three": 140,
+        "rate_two": 40,
+        "stations_one": 1,
+        "stations_three": 1,
+        "stations_two": 2
+      },
+      "answer": "640",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling one hundred and eighty units per hour; stage two has two stations, each handling forty units per hour; stage three has one stations, each handling one hundred and forty units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3200",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "3200/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "1440",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "180"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "80"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "140"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "80"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "640"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "2560",
+            "relative_gap": "4"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1280/3",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "800",
+            "relative_gap": "5/4"
+          }
+        ],
+        "min_wrong_pair_gap": "1120/3",
+        "min_distinct_wrong_pair_gap": "1120/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 80 units per hour; stage two has 2 stations, each handling 50 units per hour; stage three has 3 stations, each handling 120 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 80,
+        "rate_three": 120,
+        "rate_two": 50,
+        "stations_one": 1,
+        "stations_three": 3,
+        "stations_two": 2
+      },
+      "answer": "480",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling eighty units per hour; stage two has two stations, each handling fifty units per hour; stage three has three stations, each handling one hundred and twenty units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3240",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "1080",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "2160",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "80"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "100"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "360"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "80"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "480"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "2760",
+            "relative_gap": "23/4"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "600",
+            "relative_gap": "5/4"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "1680",
+            "relative_gap": "7/2"
+          }
+        ],
+        "min_wrong_pair_gap": "1080",
+        "min_distinct_wrong_pair_gap": "1080"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 110 units per hour; stage two has 4 stations, each handling 170 units per hour; stage three has 4 stations, each handling 70 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 110,
+        "rate_three": 70,
+        "rate_two": 170,
+        "stations_one": 1,
+        "stations_three": 4,
+        "stations_two": 4
+      },
+      "answer": "660",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling one hundred and ten units per hour; stage two has four stations, each handling one hundred and seventy units per hour; stage three has four stations, each handling seventy units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6420",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2140",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "4080",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "110"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "680"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "280"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "110"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "660"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "5760",
+            "relative_gap": "96/11"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1480",
+            "relative_gap": "74/33"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "3420",
+            "relative_gap": "57/11"
+          }
+        ],
+        "min_wrong_pair_gap": "1940",
+        "min_distinct_wrong_pair_gap": "1940"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 80 units per hour; stage two has 1 stations, each handling 160 units per hour; stage three has 1 stations, each handling 50 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 80,
+        "rate_three": 50,
+        "rate_two": 160,
+        "stations_one": 1,
+        "stations_three": 1,
+        "stations_two": 1
+      },
+      "answer": "400",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling eighty units per hour; stage two has one stations, each handling one hundred and sixty units per hour; stage three has one stations, each handling fifty units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2320",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2320/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "1280",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "80"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "160"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "50"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "50"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "400"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "1920",
+            "relative_gap": "24/5"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1120/3",
+            "relative_gap": "14/15"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "880",
+            "relative_gap": "11/5"
+          }
+        ],
+        "min_wrong_pair_gap": "1520/3",
+        "min_distinct_wrong_pair_gap": "1520/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 60 units per hour; stage two has 3 stations, each handling 100 units per hour; stage three has 1 stations, each handling 50 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 60,
+        "rate_three": 50,
+        "rate_two": 100,
+        "stations_one": 3,
+        "stations_three": 1,
+        "stations_two": 3
+      },
+      "answer": "300",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling sixty units per hour; stage two has three stations, each handling one hundred units per hour; stage three has one stations, each handling fifty units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3180",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "1060",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "1800",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "180"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "300"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "50"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "50"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "300"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "2880",
+            "relative_gap": "48/5"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "760",
+            "relative_gap": "38/15"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "1500",
+            "relative_gap": "5"
+          }
+        ],
+        "min_wrong_pair_gap": "740",
+        "min_distinct_wrong_pair_gap": "740"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 60 units per hour; stage two has 3 stations, each handling 190 units per hour; stage three has 3 stations, each handling 120 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 60,
+        "rate_three": 120,
+        "rate_two": 190,
+        "stations_one": 3,
+        "stations_three": 3,
+        "stations_two": 3
+      },
+      "answer": "1800",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling sixty units per hour; stage two has three stations, each handling one hundred and ninety units per hour; stage three has three stations, each handling one hundred and twenty units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11100",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "3700",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "5700",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "180"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "570"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "360"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "180"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1800"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "9300",
+            "relative_gap": "31/6"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1900",
+            "relative_gap": "19/18"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "3900",
+            "relative_gap": "13/6"
+          }
+        ],
+        "min_wrong_pair_gap": "2000",
+        "min_distinct_wrong_pair_gap": "2000"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 60 units per hour; stage two has 1 stations, each handling 60 units per hour; stage three has 3 stations, each handling 40 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 60,
+        "rate_three": 40,
+        "rate_two": 60,
+        "stations_one": 2,
+        "stations_three": 3,
+        "stations_two": 1
+      },
+      "answer": "600",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling sixty units per hour; stage two has one stations, each handling sixty units per hour; stage three has three stations, each handling forty units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3000",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "1000",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "1200",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "120"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "60"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "120"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "60"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "600"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "2400",
+            "relative_gap": "4"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "400",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "600",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "200",
+        "min_distinct_wrong_pair_gap": "200"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has 4 parallel stations, each handling 50 units per hour; stage two has 2 stations, each handling 160 units per hour; stage three has 1 stations, each handling 160 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 50,
+        "rate_three": 160,
+        "rate_two": 160,
+        "stations_one": 4,
+        "stations_three": 1,
+        "stations_two": 2
+      },
+      "answer": "1280",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has four parallel stations, each handling fifty units per hour; stage two has two stations, each handling one hundred and sixty units per hour; stage three has one stations, each handling one hundred and sixty units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5440",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "5440/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "2560",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "200"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "320"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "160"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "160"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1280"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "4160",
+            "relative_gap": "13/4"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1600/3",
+            "relative_gap": "5/12"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "1280",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "2240/3",
+        "min_distinct_wrong_pair_gap": "2240/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 150 units per hour; stage two has 3 stations, each handling 70 units per hour; stage three has 1 stations, each handling 100 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 150,
+        "rate_three": 100,
+        "rate_two": 70,
+        "stations_one": 2,
+        "stations_three": 1,
+        "stations_two": 3
+      },
+      "answer": "1000",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling one hundred and fifty units per hour; stage two has three stations, each handling seventy units per hour; stage three has one stations, each handling one hundred units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6100",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "6100/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3000",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "300"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "210"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "100"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "100"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1000"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "5100",
+            "relative_gap": "51/10"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "3100/3",
+            "relative_gap": "31/30"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "2000",
+            "relative_gap": "2"
+          }
+        ],
+        "min_wrong_pair_gap": "2900/3",
+        "min_distinct_wrong_pair_gap": "2900/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has 4 parallel stations, each handling 140 units per hour; stage two has 4 stations, each handling 100 units per hour; stage three has 4 stations, each handling 80 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 140,
+        "rate_three": 80,
+        "rate_two": 100,
+        "stations_one": 4,
+        "stations_three": 4,
+        "stations_two": 4
+      },
+      "answer": "1920",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has four parallel stations, each handling one hundred and forty units per hour; stage two has four stations, each handling one hundred units per hour; stage three has four stations, each handling eighty units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "7680",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2560",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3360",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "560"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "400"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "320"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "320"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1920"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "5760",
+            "relative_gap": "3"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "640",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "1440",
+            "relative_gap": "3/4"
+          }
+        ],
+        "min_wrong_pair_gap": "800",
+        "min_distinct_wrong_pair_gap": "800"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 70 units per hour; stage two has 4 stations, each handling 100 units per hour; stage three has 4 stations, each handling 160 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 70,
+        "rate_three": 160,
+        "rate_two": 100,
+        "stations_one": 3,
+        "stations_three": 4,
+        "stations_two": 4
+      },
+      "answer": "1260",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling seventy units per hour; stage two has four stations, each handling one hundred units per hour; stage three has four stations, each handling one hundred and sixty units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "7500",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2500",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3840",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "210"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "400"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "640"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "210"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1260"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "6240",
+            "relative_gap": "104/21"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1240",
+            "relative_gap": "62/63"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "2580",
+            "relative_gap": "43/21"
+          }
+        ],
+        "min_wrong_pair_gap": "1340",
+        "min_distinct_wrong_pair_gap": "1340"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has 4 parallel stations, each handling 70 units per hour; stage two has 4 stations, each handling 110 units per hour; stage three has 4 stations, each handling 90 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 70,
+        "rate_three": 90,
+        "rate_two": 110,
+        "stations_one": 4,
+        "stations_three": 4,
+        "stations_two": 4
+      },
+      "answer": "2240",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has four parallel stations, each handling seventy units per hour; stage two has four stations, each handling one hundred and ten units per hour; stage three has four stations, each handling ninety units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "8640",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2880",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3520",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "280"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "440"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "360"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "280"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "2240"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "6400",
+            "relative_gap": "20/7"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "640",
+            "relative_gap": "2/7"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "1280",
+            "relative_gap": "4/7"
+          }
+        ],
+        "min_wrong_pair_gap": "640",
+        "min_distinct_wrong_pair_gap": "640"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 190 units per hour; stage two has 2 stations, each handling 60 units per hour; stage three has 3 stations, each handling 90 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 190,
+        "rate_three": 90,
+        "rate_two": 60,
+        "stations_one": 1,
+        "stations_three": 3,
+        "stations_two": 2
+      },
+      "answer": "1200",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling one hundred and ninety units per hour; stage two has two stations, each handling sixty units per hour; stage three has three stations, each handling ninety units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5800",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "5800/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "2700",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "190"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "120"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "270"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "120"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1200"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "4600",
+            "relative_gap": "23/6"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "2200/3",
+            "relative_gap": "11/18"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "1500",
+            "relative_gap": "5/4"
+          }
+        ],
+        "min_wrong_pair_gap": "2300/3",
+        "min_distinct_wrong_pair_gap": "2300/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 130 units per hour; stage two has 2 stations, each handling 170 units per hour; stage three has 4 stations, each handling 40 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 130,
+        "rate_three": 40,
+        "rate_two": 170,
+        "stations_one": 1,
+        "stations_three": 4,
+        "stations_two": 2
+      },
+      "answer": "1300",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling one hundred and thirty units per hour; stage two has two stations, each handling one hundred and seventy units per hour; stage three has four stations, each handling forty units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6300",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2100",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3400",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "130"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "340"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "160"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "130"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1300"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "5000",
+            "relative_gap": "50/13"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "800",
+            "relative_gap": "8/13"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "2100",
+            "relative_gap": "21/13"
+          }
+        ],
+        "min_wrong_pair_gap": "1300",
+        "min_distinct_wrong_pair_gap": "1300"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 170 units per hour; stage two has 1 stations, each handling 40 units per hour; stage three has 4 stations, each handling 190 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 170,
+        "rate_three": 190,
+        "rate_two": 40,
+        "stations_one": 1,
+        "stations_three": 4,
+        "stations_two": 1
+      },
+      "answer": "240",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling one hundred and seventy units per hour; stage two has one stations, each handling forty units per hour; stage three has four stations, each handling one hundred and ninety units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5820",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "1940",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "4560",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "170"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "40"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "760"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "40"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "240"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "5580",
+            "relative_gap": "93/4"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1700",
+            "relative_gap": "85/12"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "4320",
+            "relative_gap": "18"
+          }
+        ],
+        "min_wrong_pair_gap": "1260",
+        "min_distinct_wrong_pair_gap": "1260"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 60 units per hour; stage two has 2 stations, each handling 60 units per hour; stage three has 1 stations, each handling 140 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 60,
+        "rate_three": 140,
+        "rate_two": 60,
+        "stations_one": 2,
+        "stations_three": 1,
+        "stations_two": 2
+      },
+      "answer": "960",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling sixty units per hour; stage two has two stations, each handling sixty units per hour; stage three has one stations, each handling one hundred and forty units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3040",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "3040/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "1120",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "120"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "120"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "140"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "120"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "960"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "2080",
+            "relative_gap": "13/6"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "160/3",
+            "relative_gap": "1/18"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "160",
+            "relative_gap": "1/6"
+          }
+        ],
+        "min_wrong_pair_gap": "320/3",
+        "min_distinct_wrong_pair_gap": "320/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has 4 parallel stations, each handling 150 units per hour; stage two has 2 stations, each handling 100 units per hour; stage three has 2 stations, each handling 160 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 150,
+        "rate_three": 160,
+        "rate_two": 100,
+        "stations_one": 4,
+        "stations_three": 2,
+        "stations_two": 2
+      },
+      "answer": "2000",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has four parallel stations, each handling one hundred and fifty units per hour; stage two has two stations, each handling one hundred units per hour; stage three has two stations, each handling one hundred and sixty units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11200",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "11200/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "6000",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "600"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "200"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "320"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "200"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "2000"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "9200",
+            "relative_gap": "23/5"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "5200/3",
+            "relative_gap": "13/15"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "4000",
+            "relative_gap": "2"
+          }
+        ],
+        "min_wrong_pair_gap": "6800/3",
+        "min_distinct_wrong_pair_gap": "6800/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 100 units per hour; stage two has 3 stations, each handling 200 units per hour; stage three has 1 stations, each handling 110 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 100,
+        "rate_three": 110,
+        "rate_two": 200,
+        "stations_one": 3,
+        "stations_three": 1,
+        "stations_two": 3
+      },
+      "answer": "1100",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling one hundred units per hour; stage two has three stations, each handling two hundred units per hour; stage three has one stations, each handling one hundred and ten units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "10100",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "10100/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "6000",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "300"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "600"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "110"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "110"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1100"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "9000",
+            "relative_gap": "90/11"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "6800/3",
+            "relative_gap": "68/33"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "4900",
+            "relative_gap": "49/11"
+          }
+        ],
+        "min_wrong_pair_gap": "7900/3",
+        "min_distinct_wrong_pair_gap": "7900/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 130 units per hour; stage two has 3 stations, each handling 120 units per hour; stage three has 2 stations, each handling 200 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 130,
+        "rate_three": 200,
+        "rate_two": 120,
+        "stations_one": 3,
+        "stations_three": 2,
+        "stations_two": 3
+      },
+      "answer": "2880",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling one hundred and thirty units per hour; stage two has three stations, each handling one hundred and twenty units per hour; stage three has two stations, each handling two hundred units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9200",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "9200/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3200",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "390"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "360"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "400"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "360"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "2880"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "6320",
+            "relative_gap": "79/36"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "560/3",
+            "relative_gap": "7/108"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "320",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "400/3",
+        "min_distinct_wrong_pair_gap": "400/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has 4 parallel stations, each handling 180 units per hour; stage two has 1 stations, each handling 120 units per hour; stage three has 2 stations, each handling 140 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 180,
+        "rate_three": 140,
+        "rate_two": 120,
+        "stations_one": 4,
+        "stations_three": 2,
+        "stations_two": 1
+      },
+      "answer": "720",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has four parallel stations, each handling one hundred and eighty units per hour; stage two has one stations, each handling one hundred and twenty units per hour; stage three has two stations, each handling one hundred and forty units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6720",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2240",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "4320",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "720"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "120"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "280"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "120"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "720"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "6000",
+            "relative_gap": "25/3"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1520",
+            "relative_gap": "19/9"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "3600",
+            "relative_gap": "5"
+          }
+        ],
+        "min_wrong_pair_gap": "2080",
+        "min_distinct_wrong_pair_gap": "2080"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 40 units per hour; stage two has 1 stations, each handling 170 units per hour; stage three has 1 stations, each handling 70 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 40,
+        "rate_three": 70,
+        "rate_two": 170,
+        "stations_one": 2,
+        "stations_three": 1,
+        "stations_two": 1
+      },
+      "answer": "420",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling forty units per hour; stage two has one stations, each handling one hundred and seventy units per hour; stage three has one stations, each handling seventy units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1920",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "640",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "1020",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "80"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "170"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "70"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "70"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "420"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "1500",
+            "relative_gap": "25/7"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "220",
+            "relative_gap": "11/21"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "600",
+            "relative_gap": "10/7"
+          }
+        ],
+        "min_wrong_pair_gap": "380",
+        "min_distinct_wrong_pair_gap": "380"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 140 units per hour; stage two has 1 stations, each handling 140 units per hour; stage three has 4 stations, each handling 200 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 140,
+        "rate_three": 200,
+        "rate_two": 140,
+        "stations_one": 3,
+        "stations_three": 4,
+        "stations_two": 1
+      },
+      "answer": "1400",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling one hundred and forty units per hour; stage two has one stations, each handling one hundred and forty units per hour; stage three has four stations, each handling two hundred units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13600",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "13600/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "8000",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "420"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "140"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "800"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "140"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1400"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "12200",
+            "relative_gap": "61/7"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "9400/3",
+            "relative_gap": "47/21"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "6600",
+            "relative_gap": "33/7"
+          }
+        ],
+        "min_wrong_pair_gap": "10400/3",
+        "min_distinct_wrong_pair_gap": "10400/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 170 units per hour; stage two has 2 stations, each handling 120 units per hour; stage three has 2 stations, each handling 90 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 170,
+        "rate_three": 90,
+        "rate_two": 120,
+        "stations_one": 1,
+        "stations_three": 2,
+        "stations_two": 2
+      },
+      "answer": "1020",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling one hundred and seventy units per hour; stage two has two stations, each handling one hundred and twenty units per hour; stage three has two stations, each handling ninety units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3540",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "1180",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "1440",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "170"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "240"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "180"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "170"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1020"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "2520",
+            "relative_gap": "42/17"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "160",
+            "relative_gap": "8/51"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "420",
+            "relative_gap": "7/17"
+          }
+        ],
+        "min_wrong_pair_gap": "260",
+        "min_distinct_wrong_pair_gap": "260"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 170 units per hour; stage two has 3 stations, each handling 150 units per hour; stage three has 3 stations, each handling 200 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 170,
+        "rate_three": 200,
+        "rate_two": 150,
+        "stations_one": 2,
+        "stations_three": 3,
+        "stations_two": 3
+      },
+      "answer": "3400",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling one hundred and seventy units per hour; stage two has three stations, each handling one hundred and fifty units per hour; stage three has three stations, each handling two hundred units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13900",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "13900/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "6000",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "340"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "450"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "600"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "340"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "3400"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "10500",
+            "relative_gap": "105/34"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "3700/3",
+            "relative_gap": "37/102"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "2600",
+            "relative_gap": "13/17"
+          }
+        ],
+        "min_wrong_pair_gap": "4100/3",
+        "min_distinct_wrong_pair_gap": "4100/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 60 units per hour; stage two has 2 stations, each handling 150 units per hour; stage three has 4 stations, each handling 200 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 60,
+        "rate_three": 200,
+        "rate_two": 150,
+        "stations_one": 3,
+        "stations_three": 4,
+        "stations_two": 2
+      },
+      "answer": "1080",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling sixty units per hour; stage two has two stations, each handling one hundred and fifty units per hour; stage three has four stations, each handling two hundred units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "7680",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2560",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "4800",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "180"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "300"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "800"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "180"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1080"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "6600",
+            "relative_gap": "55/9"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1480",
+            "relative_gap": "37/27"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "3720",
+            "relative_gap": "31/9"
+          }
+        ],
+        "min_wrong_pair_gap": "2240",
+        "min_distinct_wrong_pair_gap": "2240"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 190 units per hour; stage two has 4 stations, each handling 80 units per hour; stage three has 3 stations, each handling 170 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 190,
+        "rate_three": 170,
+        "rate_two": 80,
+        "stations_one": 2,
+        "stations_three": 3,
+        "stations_two": 4
+      },
+      "answer": "3200",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling one hundred and ninety units per hour; stage two has four stations, each handling eighty units per hour; stage three has three stations, each handling one hundred and seventy units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "12100",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "12100/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "5100",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "380"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "320"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "510"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "320"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "3200"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "8900",
+            "relative_gap": "89/32"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "2500/3",
+            "relative_gap": "25/96"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "1900",
+            "relative_gap": "19/32"
+          }
+        ],
+        "min_wrong_pair_gap": "3200/3",
+        "min_distinct_wrong_pair_gap": "3200/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has 4 parallel stations, each handling 150 units per hour; stage two has 4 stations, each handling 140 units per hour; stage three has 2 stations, each handling 130 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 150,
+        "rate_three": 130,
+        "rate_two": 140,
+        "stations_one": 4,
+        "stations_three": 2,
+        "stations_two": 4
+      },
+      "answer": "1560",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has four parallel stations, each handling one hundred and fifty units per hour; stage two has four stations, each handling one hundred and forty units per hour; stage three has two stations, each handling one hundred and thirty units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "8520",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2840",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3600",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "600"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "560"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "260"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "260"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1560"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "6960",
+            "relative_gap": "58/13"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1280",
+            "relative_gap": "32/39"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "2040",
+            "relative_gap": "17/13"
+          }
+        ],
+        "min_wrong_pair_gap": "760",
+        "min_distinct_wrong_pair_gap": "760"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 170 units per hour; stage two has 1 stations, each handling 70 units per hour; stage three has 4 stations, each handling 200 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 170,
+        "rate_three": 200,
+        "rate_two": 70,
+        "stations_one": 2,
+        "stations_three": 4,
+        "stations_two": 1
+      },
+      "answer": "700",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling one hundred and seventy units per hour; stage two has one stations, each handling seventy units per hour; stage three has four stations, each handling two hundred units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "12100",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "12100/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "8000",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "340"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "70"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "800"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "70"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "700"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "11400",
+            "relative_gap": "114/7"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "10000/3",
+            "relative_gap": "100/21"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "7300",
+            "relative_gap": "73/7"
+          }
+        ],
+        "min_wrong_pair_gap": "11900/3",
+        "min_distinct_wrong_pair_gap": "11900/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 90 units per hour; stage two has 3 stations, each handling 200 units per hour; stage three has 1 stations, each handling 120 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 90,
+        "rate_three": 120,
+        "rate_two": 200,
+        "stations_one": 1,
+        "stations_three": 1,
+        "stations_two": 3
+      },
+      "answer": "540",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling ninety units per hour; stage two has three stations, each handling two hundred units per hour; stage three has one stations, each handling one hundred and twenty units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "4860",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "1620",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3600",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "90"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "600"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "120"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "90"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "540"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "4320",
+            "relative_gap": "8"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1080",
+            "relative_gap": "2"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "3060",
+            "relative_gap": "17/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1260",
+        "min_distinct_wrong_pair_gap": "1260"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 100 units per hour; stage two has 2 stations, each handling 180 units per hour; stage three has 4 stations, each handling 190 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 100,
+        "rate_three": 190,
+        "rate_two": 180,
+        "stations_one": 1,
+        "stations_three": 4,
+        "stations_two": 2
+      },
+      "answer": "800",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling one hundred units per hour; stage two has two stations, each handling one hundred and eighty units per hour; stage three has four stations, each handling one hundred and ninety units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9760",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "9760/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "6080",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "100"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "360"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "760"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "100"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "800"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "8960",
+            "relative_gap": "56/5"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "7360/3",
+            "relative_gap": "46/15"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "5280",
+            "relative_gap": "33/5"
+          }
+        ],
+        "min_wrong_pair_gap": "8480/3",
+        "min_distinct_wrong_pair_gap": "8480/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 180 units per hour; stage two has 2 stations, each handling 200 units per hour; stage three has 1 stations, each handling 170 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 180,
+        "rate_three": 170,
+        "rate_two": 200,
+        "stations_one": 3,
+        "stations_three": 1,
+        "stations_two": 2
+      },
+      "answer": "1700",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling one hundred and eighty units per hour; stage two has two stations, each handling two hundred units per hour; stage three has one stations, each handling one hundred and seventy units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11100",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "3700",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "5400",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "540"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "400"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "170"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "170"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1700"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "9400",
+            "relative_gap": "94/17"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "2000",
+            "relative_gap": "20/17"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "3700",
+            "relative_gap": "37/17"
+          }
+        ],
+        "min_wrong_pair_gap": "1700",
+        "min_distinct_wrong_pair_gap": "1700"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 190 units per hour; stage two has 3 stations, each handling 90 units per hour; stage three has 3 stations, each handling 200 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 190,
+        "rate_three": 200,
+        "rate_two": 90,
+        "stations_one": 3,
+        "stations_three": 3,
+        "stations_two": 3
+      },
+      "answer": "2700",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling one hundred and ninety units per hour; stage two has three stations, each handling ninety units per hour; stage three has three stations, each handling two hundred units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "14400",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "4800",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "6000",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "570"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "270"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "600"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "270"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "2700"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "11700",
+            "relative_gap": "13/3"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "2100",
+            "relative_gap": "7/9"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "3300",
+            "relative_gap": "11/9"
+          }
+        ],
+        "min_wrong_pair_gap": "1200",
+        "min_distinct_wrong_pair_gap": "1200"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 140 units per hour; stage two has 1 stations, each handling 200 units per hour; stage three has 1 stations, each handling 50 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 140,
+        "rate_three": 50,
+        "rate_two": 200,
+        "stations_one": 3,
+        "stations_three": 1,
+        "stations_two": 1
+      },
+      "answer": "500",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling one hundred and forty units per hour; stage two has one stations, each handling two hundred units per hour; stage three has one stations, each handling fifty units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6700",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "6700/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "4200",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "420"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "200"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "50"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "50"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "500"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "6200",
+            "relative_gap": "62/5"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "5200/3",
+            "relative_gap": "52/15"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "3700",
+            "relative_gap": "37/5"
+          }
+        ],
+        "min_wrong_pair_gap": "5900/3",
+        "min_distinct_wrong_pair_gap": "5900/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has 4 parallel stations, each handling 90 units per hour; stage two has 1 stations, each handling 60 units per hour; stage three has 1 stations, each handling 160 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 90,
+        "rate_three": 160,
+        "rate_two": 60,
+        "stations_one": 4,
+        "stations_three": 1,
+        "stations_two": 1
+      },
+      "answer": "360",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has four parallel stations, each handling ninety units per hour; stage two has one stations, each handling sixty units per hour; stage three has one stations, each handling one hundred and sixty units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3480",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "1160",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "2160",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "360"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "60"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "160"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "60"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "360"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "3120",
+            "relative_gap": "26/3"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "800",
+            "relative_gap": "20/9"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "1800",
+            "relative_gap": "5"
+          }
+        ],
+        "min_wrong_pair_gap": "1000",
+        "min_distinct_wrong_pair_gap": "1000"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 150 units per hour; stage two has 4 stations, each handling 140 units per hour; stage three has 3 stations, each handling 90 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 150,
+        "rate_three": 90,
+        "rate_two": 140,
+        "stations_one": 1,
+        "stations_three": 3,
+        "stations_two": 4
+      },
+      "answer": "900",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling one hundred and fifty units per hour; stage two has four stations, each handling one hundred and forty units per hour; stage three has three stations, each handling ninety units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5880",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "1960",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3360",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "150"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "560"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "270"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "150"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "900"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "4980",
+            "relative_gap": "83/15"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1060",
+            "relative_gap": "53/45"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "2460",
+            "relative_gap": "41/15"
+          }
+        ],
+        "min_wrong_pair_gap": "1400",
+        "min_distinct_wrong_pair_gap": "1400"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 190 units per hour; stage two has 1 stations, each handling 190 units per hour; stage three has 4 stations, each handling 60 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 190,
+        "rate_three": 60,
+        "rate_two": 190,
+        "stations_one": 1,
+        "stations_three": 4,
+        "stations_two": 1
+      },
+      "answer": "1140",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling one hundred and ninety units per hour; stage two has one stations, each handling one hundred and ninety units per hour; stage three has four stations, each handling sixty units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3720",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "1240",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "1440",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "190"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "190"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "240"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "190"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1140"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "2580",
+            "relative_gap": "43/19"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "100",
+            "relative_gap": "5/57"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "300",
+            "relative_gap": "5/19"
+          }
+        ],
+        "min_wrong_pair_gap": "200",
+        "min_distinct_wrong_pair_gap": "200"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has 4 parallel stations, each handling 110 units per hour; stage two has 1 stations, each handling 160 units per hour; stage three has 3 stations, each handling 120 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 110,
+        "rate_three": 120,
+        "rate_two": 160,
+        "stations_one": 4,
+        "stations_three": 3,
+        "stations_two": 1
+      },
+      "answer": "1600",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has four parallel stations, each handling one hundred and ten units per hour; stage two has one stations, each handling one hundred and sixty units per hour; stage three has three stations, each handling one hundred and twenty units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9600",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "3200",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "4400",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "440"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "160"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "360"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "160"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1600"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "8000",
+            "relative_gap": "5"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1600",
+            "relative_gap": "1"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "2800",
+            "relative_gap": "7/4"
+          }
+        ],
+        "min_wrong_pair_gap": "1200",
+        "min_distinct_wrong_pair_gap": "1200"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 70 units per hour; stage two has 1 stations, each handling 180 units per hour; stage three has 1 stations, each handling 140 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 70,
+        "rate_three": 140,
+        "rate_two": 180,
+        "stations_one": 2,
+        "stations_three": 1,
+        "stations_two": 1
+      },
+      "answer": "840",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling seventy units per hour; stage two has one stations, each handling one hundred and eighty units per hour; stage three has one stations, each handling one hundred and forty units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2760",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "920",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "1080",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "140"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "180"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "140"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "140"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "840"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "1920",
+            "relative_gap": "16/7"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "80",
+            "relative_gap": "2/21"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "240",
+            "relative_gap": "2/7"
+          }
+        ],
+        "min_wrong_pair_gap": "160",
+        "min_distinct_wrong_pair_gap": "160"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has 1 parallel stations, each handling 110 units per hour; stage two has 4 stations, each handling 70 units per hour; stage three has 4 stations, each handling 150 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 110,
+        "rate_three": 150,
+        "rate_two": 70,
+        "stations_one": 1,
+        "stations_three": 4,
+        "stations_two": 4
+      },
+      "answer": "880",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has one parallel stations, each handling one hundred and ten units per hour; stage two has four stations, each handling seventy units per hour; stage three has four stations, each handling one hundred and fifty units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "7920",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2640",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "4800",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "110"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "280"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "600"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "110"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "880"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "7040",
+            "relative_gap": "8"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1760",
+            "relative_gap": "2"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "3920",
+            "relative_gap": "49/11"
+          }
+        ],
+        "min_wrong_pair_gap": "2160",
+        "min_distinct_wrong_pair_gap": "2160"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 110 units per hour; stage two has 4 stations, each handling 190 units per hour; stage three has 3 stations, each handling 110 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 110,
+        "rate_three": 110,
+        "rate_two": 190,
+        "stations_one": 3,
+        "stations_three": 3,
+        "stations_two": 4
+      },
+      "answer": "1980",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling one hundred and ten units per hour; stage two has four stations, each handling one hundred and ninety units per hour; stage three has three stations, each handling one hundred and ten units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "8520",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2840",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "4560",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "330"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "760"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "330"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "330"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1980"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "6540",
+            "relative_gap": "109/33"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "860",
+            "relative_gap": "43/99"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "2580",
+            "relative_gap": "43/33"
+          }
+        ],
+        "min_wrong_pair_gap": "1720",
+        "min_distinct_wrong_pair_gap": "1720"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 140 units per hour; stage two has 1 stations, each handling 170 units per hour; stage three has 4 stations, each handling 170 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 140,
+        "rate_three": 170,
+        "rate_two": 170,
+        "stations_one": 2,
+        "stations_three": 4,
+        "stations_two": 1
+      },
+      "answer": "1360",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling one hundred and forty units per hour; stage two has one stations, each handling one hundred and seventy units per hour; stage three has four stations, each handling one hundred and seventy units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9040",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "9040/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "5440",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "280"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "170"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "680"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "170"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1360"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "7680",
+            "relative_gap": "96/17"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "4960/3",
+            "relative_gap": "62/51"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "4080",
+            "relative_gap": "3"
+          }
+        ],
+        "min_wrong_pair_gap": "7280/3",
+        "min_distinct_wrong_pair_gap": "7280/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has 4 parallel stations, each handling 120 units per hour; stage two has 3 stations, each handling 140 units per hour; stage three has 3 stations, each handling 90 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 120,
+        "rate_three": 90,
+        "rate_two": 140,
+        "stations_one": 4,
+        "stations_three": 3,
+        "stations_two": 3
+      },
+      "answer": "2160",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You assess a three-stage assembly process. Every unit must pass through three stages in order. Stage one has four parallel stations, each handling one hundred and twenty units per hour; stage two has three stations, each handling one hundred and forty units per hour; stage three has three stations, each handling ninety units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9360",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "3120",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3840",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "480"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "420"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "270"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "270"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "2160"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "7200",
+            "relative_gap": "10/3"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "960",
+            "relative_gap": "4/9"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "1680",
+            "relative_gap": "7/9"
+          }
+        ],
+        "min_wrong_pair_gap": "720",
+        "min_distinct_wrong_pair_gap": "720"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 80 units per hour; stage two has 4 stations, each handling 200 units per hour; stage three has 2 stations, each handling 200 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 80,
+        "rate_three": 200,
+        "rate_two": 200,
+        "stations_one": 3,
+        "stations_three": 2,
+        "stations_two": 4
+      },
+      "answer": "1440",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A client reviews a sequential packing line. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling eighty units per hour; stage two has four stations, each handling two hundred units per hour; stage three has two stations, each handling two hundred units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "8640",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "2880",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "4800",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "240"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "800"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "400"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "240"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1440"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "7200",
+            "relative_gap": "5"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1440",
+            "relative_gap": "1"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "3360",
+            "relative_gap": "7/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1920",
+        "min_distinct_wrong_pair_gap": "1920"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has 3 parallel stations, each handling 80 units per hour; stage two has 2 stations, each handling 110 units per hour; stage three has 4 stations, each handling 110 units per hour. All stages operate for 6 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 6,
+        "rate_one": 80,
+        "rate_three": 110,
+        "rate_two": 110,
+        "stations_one": 3,
+        "stations_three": 4,
+        "stations_two": 2
+      },
+      "answer": "1320",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You analyse a three-step processing operation. Every unit must pass through three stages in order. Stage one has three parallel stations, each handling eighty units per hour; stage two has two stations, each handling one hundred and ten units per hour; stage three has four stations, each handling one hundred and ten units per hour. All stages operate for six hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5400",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "1800",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "2640",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "240"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "220"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "440"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "220"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1320"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "4080",
+            "relative_gap": "34/11"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "480",
+            "relative_gap": "4/11"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "1320",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "840",
+        "min_distinct_wrong_pair_gap": "840"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 110 units per hour; stage two has 4 stations, each handling 90 units per hour; stage three has 3 stations, each handling 160 units per hour. All stages operate for 8 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 8,
+        "rate_one": 110,
+        "rate_three": 160,
+        "rate_two": 90,
+        "stations_one": 2,
+        "stations_three": 3,
+        "stations_two": 4
+      },
+      "answer": "1760",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "A manufacturer asks for the output limit of linked work areas. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling one hundred and ten units per hour; stage two has four stations, each handling ninety units per hour; stage three has three stations, each handling one hundred and sixty units per hour. All stages operate for eight hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "8480",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "8480/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3840",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "220"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "360"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "480"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "220"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "1760"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "6720",
+            "relative_gap": "42/11"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "3200/3",
+            "relative_gap": "20/33"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "2080",
+            "relative_gap": "13/11"
+          }
+        ],
+        "min_wrong_pair_gap": "3040/3",
+        "min_distinct_wrong_pair_gap": "3040/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has 2 parallel stations, each handling 120 units per hour; stage two has 2 stations, each handling 130 units per hour; stage three has 4 stations, each handling 80 units per hour. All stages operate for 10 hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "params": {
+        "hours": 10,
+        "rate_one": 120,
+        "rate_three": 80,
+        "rate_two": 130,
+        "stations_one": 2,
+        "stations_three": 4,
+        "stations_two": 2
+      },
+      "answer": "2400",
+      "tolerance": "0",
+      "topic": "Operations",
+      "source_topic": "Bottleneck throughput",
+      "difficulty": "Medium",
+      "spoken_text": "You evaluate throughput in a staged production workflow. Every unit must pass through three stages in order. Stage one has two parallel stations, each handling one hundred and twenty units per hour; stage two has two stations, each handling one hundred and thirty units per hour; stage three has four stations, each handling eighty units per hour. All stages operate for ten hours per day. Use steady-state throughput with sufficient work and intermediate buffers, no defects, no downtime and no start-up or end-of-day effects. What is maximum daily completed output, as a whole number of units?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "8200",
+          "misconceptions": [
+            "sum_capacities_not_bottleneck"
+          ]
+        },
+        {
+          "value": "8200/3",
+          "misconceptions": [
+            "average_stage_rate_times_hours"
+          ]
+        },
+        {
+          "value": "3200",
+          "misconceptions": [
+            "max_stage_capacity_as_throughput"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "stage_one_hourly_capacity",
+          "value": "240"
+        },
+        {
+          "name": "stage_two_hourly_capacity",
+          "value": "260"
+        },
+        {
+          "name": "stage_three_hourly_capacity",
+          "value": "320"
+        },
+        {
+          "name": "bottleneck_hourly_rate",
+          "value": "240"
+        },
+        {
+          "name": "daily_completed_output",
+          "value": "2400"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "sum_capacities_not_bottleneck",
+            "absolute_gap": "5800",
+            "relative_gap": "29/12"
+          },
+          {
+            "misconception": "average_stage_rate_times_hours",
+            "absolute_gap": "1000/3",
+            "relative_gap": "5/36"
+          },
+          {
+            "misconception": "max_stage_capacity_as_throughput",
+            "absolute_gap": "800",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1400/3",
+        "min_distinct_wrong_pair_gap": "1400/3"
+      },
+      "follow_up": {
+        "question": "Would increasing capacity at a non-bottleneck stage increase total throughput?",
+        "reference": "Not while another stage remains the binding constraint and all other assumptions stay fixed. It may create spare capacity locally without increasing completed output from the whole process."
+      }
+    }
+  ]
+}

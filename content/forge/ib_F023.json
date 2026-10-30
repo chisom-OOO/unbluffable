@@ -1,0 +1,3994 @@
+{
+  "template_id": "ib_F023",
+  "pack": "ib",
+  "topic": "LBO",
+  "topics": [
+    "LBO"
+  ],
+  "source_topic": "Debt paydown and exit equity",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 3,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": false
+  },
+  "follow_up": {
+    "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+    "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "You review a sponsor's three-year exit case. Entry debt is 1500 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 80, 150 and 110 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 9.5 times exit EBITDA of 275 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1500,
+        "exit_ebitda": 275,
+        "exit_multiple": "19/2",
+        "repayment_one": 80,
+        "repayment_three": 110,
+        "repayment_two": 150
+      },
+      "answer": "2905/2",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You review a sponsor's three-year exit case. Entry debt is one thousand five hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays eighty, one hundred and fifty and one hundred and ten million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at nine point five times exit EBITDA of two hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2225/2",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "5905/2",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "340"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1160"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "5225/2"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "2905/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "340",
+            "relative_gap": "136/581"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1500",
+            "relative_gap": "600/581"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "340",
+            "relative_gap": "136/581"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1840"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "An analyst checks the debt sweep in a buyout model. Entry debt is 1250 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 70, 130 and 150 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 10 times exit EBITDA of 250 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1250,
+        "exit_ebitda": 250,
+        "exit_multiple": "10",
+        "repayment_one": 70,
+        "repayment_three": 150,
+        "repayment_two": 130
+      },
+      "answer": "1600",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An analyst checks the debt sweep in a buyout model. Entry debt is one thousand two hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays seventy, one hundred and thirty and one hundred and fifty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at ten times exit EBITDA of two hundred and fifty million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1250",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2850",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "350"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "900"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2500"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1600"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "350",
+            "relative_gap": "7/32"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1250",
+            "relative_gap": "25/32"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "350",
+            "relative_gap": "7/32"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1600"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is 750 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 30, 50 and 40 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 10 times exit EBITDA of 200 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 750,
+        "exit_ebitda": 200,
+        "exit_multiple": "10",
+        "repayment_one": 30,
+        "repayment_three": 40,
+        "repayment_two": 50
+      },
+      "answer": "1370",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is seven hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays thirty, fifty and forty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at ten times exit EBITDA of two hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1250",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2120",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "120"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "630"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2000"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1370"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "120",
+            "relative_gap": "12/137"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "750",
+            "relative_gap": "75/137"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "120",
+            "relative_gap": "12/137"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "870"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "You estimate sale proceeds after several debt repayments. Entry debt is 750 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 60, 130 and 60 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 8.5 times exit EBITDA of 175 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 750,
+        "exit_ebitda": 175,
+        "exit_multiple": "17/2",
+        "repayment_one": 60,
+        "repayment_three": 60,
+        "repayment_two": 130
+      },
+      "answer": "1975/2",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You estimate sale proceeds after several debt repayments. Entry debt is seven hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays sixty, one hundred and thirty and sixty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eight point five times exit EBITDA of one hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1475/2",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "3475/2",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "250"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "500"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2975/2"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1975/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "250",
+            "relative_gap": "20/79"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "750",
+            "relative_gap": "60/79"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "250",
+            "relative_gap": "20/79"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1000"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is 350 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 70, 80 and 20 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 12 times exit EBITDA of 475 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 350,
+        "exit_ebitda": 475,
+        "exit_multiple": "12",
+        "repayment_one": 70,
+        "repayment_three": 20,
+        "repayment_two": 80
+      },
+      "answer": "5520",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is three hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays seventy, eighty and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at twelve times exit EBITDA of four hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5350",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "5870",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "170"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "180"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "5700"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "5520"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "170",
+            "relative_gap": "17/552"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "350",
+            "relative_gap": "35/552"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "170",
+            "relative_gap": "17/552"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "520"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "You review a sponsor's three-year exit case. Entry debt is 700 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 120, 130 and 60 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 11 times exit EBITDA of 125 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 700,
+        "exit_ebitda": 125,
+        "exit_multiple": "11",
+        "repayment_one": 120,
+        "repayment_three": 60,
+        "repayment_two": 130
+      },
+      "answer": "985",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You review a sponsor's three-year exit case. Entry debt is seven hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and twenty, one hundred and thirty and sixty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eleven times exit EBITDA of one hundred and twenty-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "675",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1685",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "310"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "390"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "1375"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "985"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "310",
+            "relative_gap": "62/197"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "700",
+            "relative_gap": "140/197"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "310",
+            "relative_gap": "62/197"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1010"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "An analyst checks the debt sweep in a buyout model. Entry debt is 1050 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 60, 40 and 120 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 6.5 times exit EBITDA of 375 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1050,
+        "exit_ebitda": 375,
+        "exit_multiple": "13/2",
+        "repayment_one": 60,
+        "repayment_three": 120,
+        "repayment_two": 40
+      },
+      "answer": "3215/2",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An analyst checks the debt sweep in a buyout model. Entry debt is one thousand fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays sixty, forty and one hundred and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at six point five times exit EBITDA of three hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2775/2",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "5315/2",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "220"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "830"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "4875/2"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "3215/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "220",
+            "relative_gap": "88/643"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1050",
+            "relative_gap": "420/643"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "220",
+            "relative_gap": "88/643"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1270"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is 1350 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 20, 70 and 70 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 8.5 times exit EBITDA of 225 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1350,
+        "exit_ebitda": 225,
+        "exit_multiple": "17/2",
+        "repayment_one": 20,
+        "repayment_three": 70,
+        "repayment_two": 70
+      },
+      "answer": "1445/2",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is one thousand three hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays twenty, seventy and seventy million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eight point five times exit EBITDA of two hundred and twenty-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1125/2",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "4145/2",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "160"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1190"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "3825/2"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1445/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "160",
+            "relative_gap": "64/289"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1350",
+            "relative_gap": "540/289"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "160",
+            "relative_gap": "64/289"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1510"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "You estimate sale proceeds after several debt repayments. Entry debt is 1500 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 100, 90 and 20 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 9.5 times exit EBITDA of 500 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1500,
+        "exit_ebitda": 500,
+        "exit_multiple": "19/2",
+        "repayment_one": 100,
+        "repayment_three": 20,
+        "repayment_two": 90
+      },
+      "answer": "3460",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You estimate sale proceeds after several debt repayments. Entry debt is one thousand five hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred, ninety and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at nine point five times exit EBITDA of five hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3250",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "4960",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "210"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1290"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "4750"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "3460"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "210",
+            "relative_gap": "21/346"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1500",
+            "relative_gap": "75/173"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "210",
+            "relative_gap": "21/346"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1710"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is 1200 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 110, 90 and 90 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 7.5 times exit EBITDA of 350 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1200,
+        "exit_ebitda": 350,
+        "exit_multiple": "15/2",
+        "repayment_one": 110,
+        "repayment_three": 90,
+        "repayment_two": 90
+      },
+      "answer": "1715",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is one thousand two hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and ten, ninety and ninety million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at seven point five times exit EBITDA of three hundred and fifty million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1425",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2915",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "290"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "910"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2625"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1715"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "290",
+            "relative_gap": "58/343"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1200",
+            "relative_gap": "240/343"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "290",
+            "relative_gap": "58/343"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1490"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "You review a sponsor's three-year exit case. Entry debt is 850 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 20, 40 and 10 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 10 times exit EBITDA of 300 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 850,
+        "exit_ebitda": 300,
+        "exit_multiple": "10",
+        "repayment_one": 20,
+        "repayment_three": 10,
+        "repayment_two": 40
+      },
+      "answer": "2220",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You review a sponsor's three-year exit case. Entry debt is eight hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays twenty, forty and ten million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at ten times exit EBITDA of three hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2150",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "3070",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "70"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "780"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "3000"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "2220"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "70",
+            "relative_gap": "7/222"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "850",
+            "relative_gap": "85/222"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "70",
+            "relative_gap": "7/222"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "920"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "An analyst checks the debt sweep in a buyout model. Entry debt is 550 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 80, 20 and 100 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 8 times exit EBITDA of 200 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 550,
+        "exit_ebitda": 200,
+        "exit_multiple": "8",
+        "repayment_one": 80,
+        "repayment_three": 100,
+        "repayment_two": 20
+      },
+      "answer": "1250",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An analyst checks the debt sweep in a buyout model. Entry debt is five hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays eighty, twenty and one hundred million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eight times exit EBITDA of two hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1050",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1800",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "200"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "350"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "1600"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1250"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "200",
+            "relative_gap": "4/25"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "550",
+            "relative_gap": "11/25"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "200",
+            "relative_gap": "4/25"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "750"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is 750 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 130, 10 and 140 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 9 times exit EBITDA of 400 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 750,
+        "exit_ebitda": 400,
+        "exit_multiple": "9",
+        "repayment_one": 130,
+        "repayment_three": 140,
+        "repayment_two": 10
+      },
+      "answer": "3130",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is seven hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and thirty, ten and one hundred and forty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at nine times exit EBITDA of four hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2850",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "3880",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "280"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "470"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "3600"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "3130"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "280",
+            "relative_gap": "28/313"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "750",
+            "relative_gap": "75/313"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "280",
+            "relative_gap": "28/313"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1030"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "You estimate sale proceeds after several debt repayments. Entry debt is 1000 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 90, 120 and 40 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 10 times exit EBITDA of 275 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1000,
+        "exit_ebitda": 275,
+        "exit_multiple": "10",
+        "repayment_one": 90,
+        "repayment_three": 40,
+        "repayment_two": 120
+      },
+      "answer": "2000",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You estimate sale proceeds after several debt repayments. Entry debt is one thousand million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays ninety, one hundred and twenty and forty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at ten times exit EBITDA of two hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1750",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "3000",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "250"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "750"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2750"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "2000"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "250",
+            "relative_gap": "1/8"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1000",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "250",
+            "relative_gap": "1/8"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1250"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is 700 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 130, 80 and 110 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 11.5 times exit EBITDA of 375 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 700,
+        "exit_ebitda": 375,
+        "exit_multiple": "23/2",
+        "repayment_one": 130,
+        "repayment_three": 110,
+        "repayment_two": 80
+      },
+      "answer": "7865/2",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is seven hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and thirty, eighty and one hundred and ten million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eleven point five times exit EBITDA of three hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "7225/2",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "9265/2",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "320"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "380"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "8625/2"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "7865/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "320",
+            "relative_gap": "128/1573"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "700",
+            "relative_gap": "280/1573"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "320",
+            "relative_gap": "128/1573"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1020"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "You review a sponsor's three-year exit case. Entry debt is 1050 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 10, 90 and 110 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 7.5 times exit EBITDA of 375 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1050,
+        "exit_ebitda": 375,
+        "exit_multiple": "15/2",
+        "repayment_one": 10,
+        "repayment_three": 110,
+        "repayment_two": 90
+      },
+      "answer": "3945/2",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You review a sponsor's three-year exit case. Entry debt is one thousand fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays ten, ninety and one hundred and ten million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at seven point five times exit EBITDA of three hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "3525/2",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "6045/2",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "210"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "840"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "5625/2"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "3945/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "210",
+            "relative_gap": "28/263"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1050",
+            "relative_gap": "140/263"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "210",
+            "relative_gap": "28/263"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1260"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "An analyst checks the debt sweep in a buyout model. Entry debt is 600 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 30, 40 and 80 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 12 times exit EBITDA of 125 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 600,
+        "exit_ebitda": 125,
+        "exit_multiple": "12",
+        "repayment_one": 30,
+        "repayment_three": 80,
+        "repayment_two": 40
+      },
+      "answer": "1050",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An analyst checks the debt sweep in a buyout model. Entry debt is six hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays thirty, forty and eighty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at twelve times exit EBITDA of one hundred and twenty-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "900",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1650",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "150"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "450"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "1500"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1050"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "150",
+            "relative_gap": "1/7"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "600",
+            "relative_gap": "4/7"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "150",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "750"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is 950 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 70, 30 and 20 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 8 times exit EBITDA of 300 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 950,
+        "exit_ebitda": 300,
+        "exit_multiple": "8",
+        "repayment_one": 70,
+        "repayment_three": 20,
+        "repayment_two": 30
+      },
+      "answer": "1570",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is nine hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays seventy, thirty and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eight times exit EBITDA of three hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1450",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2520",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "120"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "830"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2400"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1570"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "120",
+            "relative_gap": "12/157"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "950",
+            "relative_gap": "95/157"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "120",
+            "relative_gap": "12/157"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1070"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "You estimate sale proceeds after several debt repayments. Entry debt is 1450 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 130, 60 and 120 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 11 times exit EBITDA of 200 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1450,
+        "exit_ebitda": 200,
+        "exit_multiple": "11",
+        "repayment_one": 130,
+        "repayment_three": 120,
+        "repayment_two": 60
+      },
+      "answer": "1060",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You estimate sale proceeds after several debt repayments. Entry debt is one thousand four hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and thirty, sixty and one hundred and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eleven times exit EBITDA of two hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "750",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2510",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "310"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1140"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2200"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1060"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "310",
+            "relative_gap": "31/106"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1450",
+            "relative_gap": "145/106"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "310",
+            "relative_gap": "31/106"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1760"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is 550 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 10, 100 and 120 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 9 times exit EBITDA of 425 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 550,
+        "exit_ebitda": 425,
+        "exit_multiple": "9",
+        "repayment_one": 10,
+        "repayment_three": 120,
+        "repayment_two": 100
+      },
+      "answer": "3505",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is five hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays ten, one hundred and one hundred and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at nine times exit EBITDA of four hundred and twenty-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3275",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "4055",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "230"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "320"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "3825"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "3505"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "230",
+            "relative_gap": "46/701"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "550",
+            "relative_gap": "110/701"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "230",
+            "relative_gap": "46/701"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "780"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "You review a sponsor's three-year exit case. Entry debt is 400 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 130, 60 and 70 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 4 times exit EBITDA of 100 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 400,
+        "exit_ebitda": 100,
+        "exit_multiple": "4",
+        "repayment_one": 130,
+        "repayment_three": 70,
+        "repayment_two": 60
+      },
+      "answer": "260",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You review a sponsor's three-year exit case. Entry debt is four hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and thirty, sixty and seventy million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at four times exit EBITDA of one hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "0",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "660",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "260"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "140"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "400"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "260"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "260",
+            "relative_gap": "1"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "400",
+            "relative_gap": "20/13"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "260",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "660"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "An analyst checks the debt sweep in a buyout model. Entry debt is 850 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 150, 110 and 90 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 10.5 times exit EBITDA of 275 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 850,
+        "exit_ebitda": 275,
+        "exit_multiple": "21/2",
+        "repayment_one": 150,
+        "repayment_three": 90,
+        "repayment_two": 110
+      },
+      "answer": "4775/2",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An analyst checks the debt sweep in a buyout model. Entry debt is eight hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and fifty, one hundred and ten and ninety million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at ten point five times exit EBITDA of two hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4075/2",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "6475/2",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "350"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "500"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "5775/2"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "4775/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "350",
+            "relative_gap": "28/191"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "850",
+            "relative_gap": "68/191"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "350",
+            "relative_gap": "28/191"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1200"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is 1200 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 100, 10 and 80 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 4.5 times exit EBITDA of 400 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1200,
+        "exit_ebitda": 400,
+        "exit_multiple": "9/2",
+        "repayment_one": 100,
+        "repayment_three": 80,
+        "repayment_two": 10
+      },
+      "answer": "790",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is one thousand two hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred, ten and eighty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at four point five times exit EBITDA of four hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "600",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1990",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "190"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1010"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "1800"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "790"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "190",
+            "relative_gap": "19/79"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1200",
+            "relative_gap": "120/79"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "190",
+            "relative_gap": "19/79"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1390"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "You estimate sale proceeds after several debt repayments. Entry debt is 350 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 100, 80 and 150 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 4 times exit EBITDA of 350 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 350,
+        "exit_ebitda": 350,
+        "exit_multiple": "4",
+        "repayment_one": 100,
+        "repayment_three": 150,
+        "repayment_two": 80
+      },
+      "answer": "1380",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You estimate sale proceeds after several debt repayments. Entry debt is three hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred, eighty and one hundred and fifty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at four times exit EBITDA of three hundred and fifty million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1050",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1730",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "330"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "20"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "1400"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1380"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "330",
+            "relative_gap": "11/46"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "350",
+            "relative_gap": "35/138"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "330",
+            "relative_gap": "11/46"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "680"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is 1400 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 150, 110 and 100 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 4 times exit EBITDA of 500 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1400,
+        "exit_ebitda": 500,
+        "exit_multiple": "4",
+        "repayment_one": 150,
+        "repayment_three": 100,
+        "repayment_two": 110
+      },
+      "answer": "960",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is one thousand four hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and fifty, one hundred and ten and one hundred million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at four times exit EBITDA of five hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "600",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2360",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "360"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1040"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2000"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "960"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "360",
+            "relative_gap": "3/8"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1400",
+            "relative_gap": "35/24"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "360",
+            "relative_gap": "3/8"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1760"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "You review a sponsor's three-year exit case. Entry debt is 1150 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 80, 60 and 100 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 9.5 times exit EBITDA of 125 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1150,
+        "exit_ebitda": 125,
+        "exit_multiple": "19/2",
+        "repayment_one": 80,
+        "repayment_three": 100,
+        "repayment_two": 60
+      },
+      "answer": "555/2",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You review a sponsor's three-year exit case. Entry debt is one thousand one hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays eighty, sixty and one hundred million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at nine point five times exit EBITDA of one hundred and twenty-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "75/2",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2855/2",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "240"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "910"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2375/2"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "555/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "240",
+            "relative_gap": "32/37"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1150",
+            "relative_gap": "460/111"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "240",
+            "relative_gap": "32/37"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1390"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "An analyst checks the debt sweep in a buyout model. Entry debt is 350 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 70, 30 and 20 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 6.5 times exit EBITDA of 150 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 350,
+        "exit_ebitda": 150,
+        "exit_multiple": "13/2",
+        "repayment_one": 70,
+        "repayment_three": 20,
+        "repayment_two": 30
+      },
+      "answer": "745",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An analyst checks the debt sweep in a buyout model. Entry debt is three hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays seventy, thirty and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at six point five times exit EBITDA of one hundred and fifty million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "625",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1095",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "120"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "230"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "975"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "745"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "120",
+            "relative_gap": "24/149"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "350",
+            "relative_gap": "70/149"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "120",
+            "relative_gap": "24/149"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "470"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is 1400 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 50, 110 and 50 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 10 times exit EBITDA of 125 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1400,
+        "exit_ebitda": 125,
+        "exit_multiple": "10",
+        "repayment_one": 50,
+        "repayment_three": 50,
+        "repayment_two": 110
+      },
+      "answer": "60",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is one thousand four hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays fifty, one hundred and ten and fifty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at ten times exit EBITDA of one hundred and twenty-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-150",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1460",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "210"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1190"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "1250"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "60"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "210",
+            "relative_gap": "7/2"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1400",
+            "relative_gap": "70/3"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "210",
+            "relative_gap": "7/2"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1610"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "You estimate sale proceeds after several debt repayments. Entry debt is 1150 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 60, 130 and 120 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 4.5 times exit EBITDA of 350 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1150,
+        "exit_ebitda": 350,
+        "exit_multiple": "9/2",
+        "repayment_one": 60,
+        "repayment_three": 120,
+        "repayment_two": 130
+      },
+      "answer": "735",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You estimate sale proceeds after several debt repayments. Entry debt is one thousand one hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays sixty, one hundred and thirty and one hundred and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at four point five times exit EBITDA of three hundred and fifty million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "425",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1885",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "310"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "840"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "1575"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "735"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "310",
+            "relative_gap": "62/147"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1150",
+            "relative_gap": "230/147"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "310",
+            "relative_gap": "62/147"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1460"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is 800 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 120, 120 and 60 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 11 times exit EBITDA of 75 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 800,
+        "exit_ebitda": 75,
+        "exit_multiple": "11",
+        "repayment_one": 120,
+        "repayment_three": 60,
+        "repayment_two": 120
+      },
+      "answer": "325",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is eight hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and twenty, one hundred and twenty and sixty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eleven times exit EBITDA of seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1125",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "300"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "500"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "825"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "325"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "300",
+            "relative_gap": "12/13"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "800",
+            "relative_gap": "32/13"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "300",
+            "relative_gap": "12/13"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1100"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "You review a sponsor's three-year exit case. Entry debt is 500 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 90, 100 and 140 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 7 times exit EBITDA of 375 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 500,
+        "exit_ebitda": 375,
+        "exit_multiple": "7",
+        "repayment_one": 90,
+        "repayment_three": 140,
+        "repayment_two": 100
+      },
+      "answer": "2455",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You review a sponsor's three-year exit case. Entry debt is five hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays ninety, one hundred and one hundred and forty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at seven times exit EBITDA of three hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2125",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2955",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "330"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "170"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2625"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "2455"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "330",
+            "relative_gap": "66/491"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "500",
+            "relative_gap": "100/491"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "330",
+            "relative_gap": "66/491"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "830"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "An analyst checks the debt sweep in a buyout model. Entry debt is 1300 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 110, 90 and 110 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 12 times exit EBITDA of 125 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1300,
+        "exit_ebitda": 125,
+        "exit_multiple": "12",
+        "repayment_one": 110,
+        "repayment_three": 110,
+        "repayment_two": 90
+      },
+      "answer": "510",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An analyst checks the debt sweep in a buyout model. Entry debt is one thousand three hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and ten, ninety and one hundred and ten million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at twelve times exit EBITDA of one hundred and twenty-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "200",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1810",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "310"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "990"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "1500"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "510"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "310",
+            "relative_gap": "31/51"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1300",
+            "relative_gap": "130/51"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "310",
+            "relative_gap": "31/51"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1610"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is 1000 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 130, 70 and 140 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 12 times exit EBITDA of 475 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1000,
+        "exit_ebitda": 475,
+        "exit_multiple": "12",
+        "repayment_one": 130,
+        "repayment_three": 140,
+        "repayment_two": 70
+      },
+      "answer": "5040",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is one thousand million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and thirty, seventy and one hundred and forty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at twelve times exit EBITDA of four hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "4700",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "6040",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "340"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "660"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "5700"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "5040"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "340",
+            "relative_gap": "17/252"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1000",
+            "relative_gap": "25/126"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "340",
+            "relative_gap": "17/252"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1340"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "You estimate sale proceeds after several debt repayments. Entry debt is 1450 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 150, 50 and 100 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 7 times exit EBITDA of 375 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1450,
+        "exit_ebitda": 375,
+        "exit_multiple": "7",
+        "repayment_one": 150,
+        "repayment_three": 100,
+        "repayment_two": 50
+      },
+      "answer": "1475",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You estimate sale proceeds after several debt repayments. Entry debt is one thousand four hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and fifty, fifty and one hundred million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at seven times exit EBITDA of three hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1175",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2925",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "300"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1150"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2625"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1475"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "300",
+            "relative_gap": "12/59"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1450",
+            "relative_gap": "58/59"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "300",
+            "relative_gap": "12/59"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1750"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is 1050 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 130, 130 and 30 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 4.5 times exit EBITDA of 400 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1050,
+        "exit_ebitda": 400,
+        "exit_multiple": "9/2",
+        "repayment_one": 130,
+        "repayment_three": 30,
+        "repayment_two": 130
+      },
+      "answer": "1040",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is one thousand fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and thirty, one hundred and thirty and thirty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at four point five times exit EBITDA of four hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "750",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2090",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "290"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "760"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "1800"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1040"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "290",
+            "relative_gap": "29/104"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1050",
+            "relative_gap": "105/104"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "290",
+            "relative_gap": "29/104"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1340"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "You review a sponsor's three-year exit case. Entry debt is 1000 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 150, 20 and 60 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 7 times exit EBITDA of 400 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1000,
+        "exit_ebitda": 400,
+        "exit_multiple": "7",
+        "repayment_one": 150,
+        "repayment_three": 60,
+        "repayment_two": 20
+      },
+      "answer": "2030",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You review a sponsor's three-year exit case. Entry debt is one thousand million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and fifty, twenty and sixty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at seven times exit EBITDA of four hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1800",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "3030",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "230"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "770"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2800"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "2030"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "230",
+            "relative_gap": "23/203"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1000",
+            "relative_gap": "100/203"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "230",
+            "relative_gap": "23/203"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1230"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "An analyst checks the debt sweep in a buyout model. Entry debt is 550 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 70, 60 and 100 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 7.5 times exit EBITDA of 400 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 550,
+        "exit_ebitda": 400,
+        "exit_multiple": "15/2",
+        "repayment_one": 70,
+        "repayment_three": 100,
+        "repayment_two": 60
+      },
+      "answer": "2680",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An analyst checks the debt sweep in a buyout model. Entry debt is five hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays seventy, sixty and one hundred million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at seven point five times exit EBITDA of four hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2450",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "3230",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "230"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "320"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "3000"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "2680"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "230",
+            "relative_gap": "23/268"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "550",
+            "relative_gap": "55/268"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "230",
+            "relative_gap": "23/268"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "780"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is 450 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 30, 20 and 130 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 10.5 times exit EBITDA of 75 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 450,
+        "exit_ebitda": 75,
+        "exit_multiple": "21/2",
+        "repayment_one": 30,
+        "repayment_three": 130,
+        "repayment_two": 20
+      },
+      "answer": "1035/2",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is four hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays thirty, twenty and one hundred and thirty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at ten point five times exit EBITDA of seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "675/2",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1935/2",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "180"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "270"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "1575/2"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1035/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "180",
+            "relative_gap": "8/23"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "450",
+            "relative_gap": "20/23"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "180",
+            "relative_gap": "8/23"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "630"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "You estimate sale proceeds after several debt repayments. Entry debt is 300 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 10, 30 and 120 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 11.5 times exit EBITDA of 475 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 300,
+        "exit_ebitda": 475,
+        "exit_multiple": "23/2",
+        "repayment_one": 10,
+        "repayment_three": 120,
+        "repayment_two": 30
+      },
+      "answer": "10645/2",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You estimate sale proceeds after several debt repayments. Entry debt is three hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays ten, thirty and one hundred and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eleven point five times exit EBITDA of four hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "10325/2",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "11245/2",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "160"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "140"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "10925/2"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "10645/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "160",
+            "relative_gap": "64/2129"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "300",
+            "relative_gap": "120/2129"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "160",
+            "relative_gap": "64/2129"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "460"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is 300 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 110, 30 and 80 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 8 times exit EBITDA of 300 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 300,
+        "exit_ebitda": 300,
+        "exit_multiple": "8",
+        "repayment_one": 110,
+        "repayment_three": 80,
+        "repayment_two": 30
+      },
+      "answer": "2320",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is three hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and ten, thirty and eighty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eight times exit EBITDA of three hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2100",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2620",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "220"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "80"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2400"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "2320"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "220",
+            "relative_gap": "11/116"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "300",
+            "relative_gap": "15/116"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "220",
+            "relative_gap": "11/116"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "520"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "You review a sponsor's three-year exit case. Entry debt is 1350 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 140, 50 and 120 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 10.5 times exit EBITDA of 425 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1350,
+        "exit_ebitda": 425,
+        "exit_multiple": "21/2",
+        "repayment_one": 140,
+        "repayment_three": 120,
+        "repayment_two": 50
+      },
+      "answer": "6845/2",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You review a sponsor's three-year exit case. Entry debt is one thousand three hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and forty, fifty and one hundred and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at ten point five times exit EBITDA of four hundred and twenty-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "6225/2",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "9545/2",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "310"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1040"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "8925/2"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "6845/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "310",
+            "relative_gap": "124/1369"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1350",
+            "relative_gap": "540/1369"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "310",
+            "relative_gap": "124/1369"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1660"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "An analyst checks the debt sweep in a buyout model. Entry debt is 1400 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 130, 140 and 40 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 8.5 times exit EBITDA of 250 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1400,
+        "exit_ebitda": 250,
+        "exit_multiple": "17/2",
+        "repayment_one": 130,
+        "repayment_three": 40,
+        "repayment_two": 140
+      },
+      "answer": "1035",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An analyst checks the debt sweep in a buyout model. Entry debt is one thousand four hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and thirty, one hundred and forty and forty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eight point five times exit EBITDA of two hundred and fifty million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "725",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2435",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "310"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1090"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2125"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1035"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "310",
+            "relative_gap": "62/207"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1400",
+            "relative_gap": "280/207"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "310",
+            "relative_gap": "62/207"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1710"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is 950 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 130, 90 and 60 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 6 times exit EBITDA of 250 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 950,
+        "exit_ebitda": 250,
+        "exit_multiple": "6",
+        "repayment_one": 130,
+        "repayment_three": 60,
+        "repayment_two": 90
+      },
+      "answer": "830",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is nine hundred and fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and thirty, ninety and sixty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at six times exit EBITDA of two hundred and fifty million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "550",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1780",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "280"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "670"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "1500"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "830"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "280",
+            "relative_gap": "28/83"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "950",
+            "relative_gap": "95/83"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "280",
+            "relative_gap": "28/83"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1230"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "You estimate sale proceeds after several debt repayments. Entry debt is 600 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 10, 20 and 120 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 4 times exit EBITDA of 150 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 600,
+        "exit_ebitda": 150,
+        "exit_multiple": "4",
+        "repayment_one": 10,
+        "repayment_three": 120,
+        "repayment_two": 20
+      },
+      "answer": "150",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You estimate sale proceeds after several debt repayments. Entry debt is six hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays ten, twenty and one hundred and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at four times exit EBITDA of one hundred and fifty million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "0",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "750",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "150"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "450"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "600"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "150"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "150",
+            "relative_gap": "1"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "600",
+            "relative_gap": "4"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "150",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "750"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is 900 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 120, 130 and 40 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 11 times exit EBITDA of 200 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 900,
+        "exit_ebitda": 200,
+        "exit_multiple": "11",
+        "repayment_one": 120,
+        "repayment_three": 40,
+        "repayment_two": 130
+      },
+      "answer": "1590",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is nine hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays one hundred and twenty, one hundred and thirty and forty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eleven times exit EBITDA of two hundred million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1300",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2490",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "290"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "610"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2200"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1590"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "290",
+            "relative_gap": "29/159"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "900",
+            "relative_gap": "30/53"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "290",
+            "relative_gap": "29/159"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1190"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "You review a sponsor's three-year exit case. Entry debt is 700 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 80, 100 and 100 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 11.5 times exit EBITDA of 50 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 700,
+        "exit_ebitda": 50,
+        "exit_multiple": "23/2",
+        "repayment_one": 80,
+        "repayment_three": 100,
+        "repayment_two": 100
+      },
+      "answer": "155",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You review a sponsor's three-year exit case. Entry debt is seven hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays eighty, one hundred and one hundred million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at eleven point five times exit EBITDA of fifty million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-125",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "855",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "280"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "420"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "575"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "155"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "280",
+            "relative_gap": "56/31"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "700",
+            "relative_gap": "140/31"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "280",
+            "relative_gap": "56/31"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "980"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "An analyst checks the debt sweep in a buyout model. Entry debt is 1050 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 30, 100 and 130 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 12 times exit EBITDA of 75 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1050,
+        "exit_ebitda": 75,
+        "exit_multiple": "12",
+        "repayment_one": 30,
+        "repayment_three": 130,
+        "repayment_two": 100
+      },
+      "answer": "110",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An analyst checks the debt sweep in a buyout model. Entry debt is one thousand fifty million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays thirty, one hundred and one hundred and thirty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at twelve times exit EBITDA of seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-150",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "1160",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "260"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "790"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "900"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "110"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "260",
+            "relative_gap": "26/11"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1050",
+            "relative_gap": "105/11"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "260",
+            "relative_gap": "26/11"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1310"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is 1100 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 80, 140 and 150 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 9.5 times exit EBITDA of 250 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1100,
+        "exit_ebitda": 250,
+        "exit_multiple": "19/2",
+        "repayment_one": 80,
+        "repayment_three": 150,
+        "repayment_two": 140
+      },
+      "answer": "1645",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "A portfolio company uses operating cash to repay acquisition debt. Entry debt is one thousand one hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays eighty, one hundred and forty and one hundred and fifty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at nine point five times exit EBITDA of two hundred and fifty million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1275",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2745",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "370"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "730"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2375"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1645"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "370",
+            "relative_gap": "74/329"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1100",
+            "relative_gap": "220/329"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "370",
+            "relative_gap": "74/329"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1470"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "You estimate sale proceeds after several debt repayments. Entry debt is 1500 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 30, 10 and 120 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 10 times exit EBITDA of 275 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1500,
+        "exit_ebitda": 275,
+        "exit_multiple": "10",
+        "repayment_one": 30,
+        "repayment_three": 120,
+        "repayment_two": 10
+      },
+      "answer": "1410",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "You estimate sale proceeds after several debt repayments. Entry debt is one thousand five hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays thirty, ten and one hundred and twenty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at ten times exit EBITDA of two hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1250",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2910",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "160"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1340"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2750"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1410"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "160",
+            "relative_gap": "16/141"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1500",
+            "relative_gap": "50/47"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "160",
+            "relative_gap": "16/141"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1660"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is 1400 million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays 10, 20 and 50 million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at 10 times exit EBITDA of 275 million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "params": {
+        "entry_debt": 1400,
+        "exit_ebitda": 275,
+        "exit_multiple": "10",
+        "repayment_one": 10,
+        "repayment_three": 50,
+        "repayment_two": 20
+      },
+      "answer": "1430",
+      "tolerance": "0",
+      "topic": "LBO",
+      "source_topic": "Debt paydown and exit equity",
+      "difficulty": "Medium",
+      "spoken_text": "An investment team asks how deleveraging changes its exit cheque. Entry debt is one thousand four hundred million dollars. In years one, two and three, cash available after all operating costs, interest, taxes and capex repays ten, twenty and fifty million dollars of debt. There is no additional borrowing, dividend or cash accumulation. Immediately after the year-three repayment, the business is sold at ten times exit EBITDA of two hundred and seventy-five million dollars. There are no sale fees or other claims, sponsor-level taxes are ignored, and the sponsor owns all common equity. What are the sponsor exit equity proceeds, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1350",
+          "misconceptions": [
+            "ignores_deleveraging_uses_entry_debt",
+            "subtracts_repayments_twice_from_equity"
+          ]
+        },
+        {
+          "value": "2830",
+          "misconceptions": [
+            "adds_repayments_to_enterprise_value"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_debt_repaid",
+          "value": "80"
+        },
+        {
+          "name": "remaining_debt_at_exit",
+          "value": "1320"
+        },
+        {
+          "name": "exit_enterprise_value",
+          "value": "2750"
+        },
+        {
+          "name": "sponsor_exit_equity_proceeds",
+          "value": "1430"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_deleveraging_uses_entry_debt",
+            "absolute_gap": "80",
+            "relative_gap": "8/143"
+          },
+          {
+            "misconception": "adds_repayments_to_enterprise_value",
+            "absolute_gap": "1400",
+            "relative_gap": "140/143"
+          },
+          {
+            "misconception": "subtracts_repayments_twice_from_equity",
+            "absolute_gap": "80",
+            "relative_gap": "8/143"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "1480"
+      },
+      "follow_up": {
+        "question": "How can debt repayment increase sponsor proceeds without a higher exit multiple?",
+        "reference": "At a fixed enterprise value, a smaller debt claim leaves a larger residual for equity. The increase depends on the debt actually repaid, not on an accounting reclassification."
+      }
+    }
+  ]
+}
