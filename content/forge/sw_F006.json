@@ -1,0 +1,3094 @@
+{
+  "template_id": "sw_F006",
+  "pack": "software",
+  "topic": "Prefix sums and hashing",
+  "topics": [
+    "Prefix sums and hashing"
+  ],
+  "source_topic": "Consecutive target-total slices",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": true,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": false
+  },
+  "follow_up": {
+    "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+    "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "You inspect a short counter-increment log. The values are 2, 1, 3, 5, 1, 3, 1, 0 and the target total is 5. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 5,
+        "values": [
+          2,
+          1,
+          3,
+          5,
+          1,
+          3,
+          1,
+          0
+        ]
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect a short counter-increment log. The values are two, one, three, five, one, three, one, zero and the target total is five. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "A monitor searches for consecutive load totals. The values are 0, 2, 0, 0, 0, 3 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          0,
+          2,
+          0,
+          0,
+          0,
+          3
+        ]
+      },
+      "answer": "7",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A monitor searches for consecutive load totals. The values are zero, two, zero, zero, zero, three and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "4",
+            "relative_gap": "4/7"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "3",
+            "relative_gap": "3/7"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "You trace a rolling ledger of numeric events. The values are 0, 0, 0, 5, 1 and the target total is 6. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 6,
+        "values": [
+          0,
+          0,
+          0,
+          5,
+          1
+        ]
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You trace a rolling ledger of numeric events. The values are zero, zero, zero, five, one and the target total is six. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "3",
+            "relative_gap": "3/4"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "3",
+            "relative_gap": "3/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "A data routine counts exact-total slices. The values are 0, 2, 0, 0, 3, 0 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          0,
+          2,
+          0,
+          0,
+          3,
+          0
+        ]
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A data routine counts exact-total slices. The values are zero, two, zero, zero, three, zero and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "2",
+            "relative_gap": "2/5"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "You review a target-total query on a short sequence. The values are 1, 0, 0, 0, 5, 0, 0 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          1,
+          0,
+          0,
+          0,
+          5,
+          0,
+          0
+        ]
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You review a target-total query on a short sequence. The values are one, zero, zero, zero, five, zero, zero and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "6",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "4",
+            "relative_gap": "4/9"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "You inspect a short counter-increment log. The values are 0, 5, 0, 0 and the target total is 5. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 5,
+        "values": [
+          0,
+          5,
+          0,
+          0
+        ]
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect a short counter-increment log. The values are zero, five, zero, zero and the target total is five. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "5",
+            "relative_gap": "5/6"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "5",
+            "relative_gap": "5/6"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "A monitor searches for consecutive load totals. The values are 0, 0, 0, 0, 2 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          0,
+          0,
+          0,
+          0,
+          2
+        ]
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A monitor searches for consecutive load totals. The values are zero, zero, zero, zero, two and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "8",
+            "relative_gap": "4/5"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "6",
+            "relative_gap": "3/5"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "You trace a rolling ledger of numeric events. The values are 0, 0, 0, 3, 0, 1 and the target total is 6. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 6,
+        "values": [
+          0,
+          0,
+          0,
+          3,
+          0,
+          1
+        ]
+      },
+      "answer": "0",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You trace a rolling ledger of numeric events. The values are zero, zero, zero, three, zero, one and the target total is six. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": null
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": null
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "A data routine counts exact-total slices. The values are 0, 3, 0, 1, 1 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          0,
+          3,
+          0,
+          1,
+          1
+        ]
+      },
+      "answer": "2",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A data routine counts exact-total slices. The values are zero, three, zero, one, one and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "2",
+            "relative_gap": "1"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "You review a target-total query on a short sequence. The values are 0, 5, 3, 5, 5, 2 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          0,
+          5,
+          3,
+          5,
+          5,
+          2
+        ]
+      },
+      "answer": "1",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You review a target-total query on a short sequence. The values are zero, five, three, five, five, two and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "5",
+            "relative_gap": "5"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "You inspect a short counter-increment log. The values are 1, 0, 0, 0, 5 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          1,
+          0,
+          0,
+          0,
+          5
+        ]
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect a short counter-increment log. The values are one, zero, zero, zero, five and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "3",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "3",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "A monitor searches for consecutive load totals. The values are 2, 1, 2, 0, 0, 3 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          2,
+          1,
+          2,
+          0,
+          0,
+          3
+        ]
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A monitor searches for consecutive load totals. The values are two, one, two, zero, zero, three and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "2",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "You trace a rolling ledger of numeric events. The values are 0, 1, 0, 1, 0, 0 and the target total is 1. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 1,
+        "values": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You trace a rolling ledger of numeric events. The values are zero, one, zero, one, zero, zero and the target total is one. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "8",
+            "relative_gap": "4/5"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "8",
+            "relative_gap": "4/5"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "A data routine counts exact-total slices. The values are 2, 3, 0, 0, 0 and the target total is 2. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 2,
+        "values": [
+          2,
+          3,
+          0,
+          0,
+          0
+        ]
+      },
+      "answer": "1",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A data routine counts exact-total slices. The values are two, three, zero, zero, zero and the target total is two. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "You review a target-total query on a short sequence. The values are 0, 5, 0, 2 and the target total is 6. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 6,
+        "values": [
+          0,
+          5,
+          0,
+          2
+        ]
+      },
+      "answer": "0",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You review a target-total query on a short sequence. The values are zero, five, zero, two and the target total is six. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": null
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": null
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "You inspect a short counter-increment log. The values are 0, 0, 1, 1, 1, 0, 2, 0 and the target total is 2. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 2,
+        "values": [
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          2,
+          0
+        ]
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect a short counter-increment log. The values are zero, zero, one, one, one, zero, two, zero and the target total is two. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "6",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "7",
+            "relative_gap": "7/9"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "A monitor searches for consecutive load totals. The values are 0, 1, 0, 0, 0, 3, 1 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          3,
+          1
+        ]
+      },
+      "answer": "7",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A monitor searches for consecutive load totals. The values are zero, one, zero, zero, zero, three, one and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "3",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "3",
+            "relative_gap": "3/7"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "You trace a rolling ledger of numeric events. The values are 1, 0, 0, 0, 3, 5, 3, 1 and the target total is 3. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 3,
+        "values": [
+          1,
+          0,
+          0,
+          0,
+          3,
+          5,
+          3,
+          1
+        ]
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You trace a rolling ledger of numeric events. The values are one, zero, zero, zero, three, five, three, one and the target total is three. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "3",
+            "relative_gap": "3/5"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "3",
+            "relative_gap": "3/5"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "A data routine counts exact-total slices. The values are 0, 2, 1, 0, 3, 3 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          0,
+          2,
+          1,
+          0,
+          3,
+          3
+        ]
+      },
+      "answer": "2",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A data routine counts exact-total slices. The values are zero, two, one, zero, three, three and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "3",
+            "relative_gap": "3/2"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "You review a target-total query on a short sequence. The values are 5, 0, 3, 0 and the target total is 3. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 3,
+        "values": [
+          5,
+          0,
+          3,
+          0
+        ]
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You review a target-total query on a short sequence. The values are five, zero, three, zero and the target total is three. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "3",
+            "relative_gap": "3/4"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "3",
+            "relative_gap": "3/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "You inspect a short counter-increment log. The values are 2, 0, 5, 2, 5, 1 and the target total is 8. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 8,
+        "values": [
+          2,
+          0,
+          5,
+          2,
+          5,
+          1
+        ]
+      },
+      "answer": "1",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect a short counter-increment log. The values are two, zero, five, two, five, one and the target total is eight. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "A monitor searches for consecutive load totals. The values are 1, 2, 0, 2, 0 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          1,
+          2,
+          0,
+          2,
+          0
+        ]
+      },
+      "answer": "2",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A monitor searches for consecutive load totals. The values are one, two, zero, two, zero and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "2",
+            "relative_gap": "1"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "You trace a rolling ledger of numeric events. The values are 5, 0, 0, 0, 0, 0, 3, 2 and the target total is 3. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 3,
+        "values": [
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          2
+        ]
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You trace a rolling ledger of numeric events. The values are five, zero, zero, zero, zero, zero, three, two and the target total is three. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "5",
+            "relative_gap": "5/6"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "5",
+            "relative_gap": "5/6"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "A data routine counts exact-total slices. The values are 1, 0, 0, 5, 0, 0, 0 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          1,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0
+        ]
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A data routine counts exact-total slices. The values are one, zero, zero, five, zero, zero, zero and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "6",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "4",
+            "relative_gap": "4/9"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "You review a target-total query on a short sequence. The values are 0, 1, 1, 0, 2, 0, 0 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          0,
+          1,
+          1,
+          0,
+          2,
+          0,
+          0
+        ]
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You review a target-total query on a short sequence. The values are zero, one, one, zero, two, zero, zero and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "You inspect a short counter-increment log. The values are 0, 0, 0, 3, 1, 3, 1 and the target total is 8. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 8,
+        "values": [
+          0,
+          0,
+          0,
+          3,
+          1,
+          3,
+          1
+        ]
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect a short counter-increment log. The values are zero, zero, zero, three, one, three, one and the target total is eight. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "3",
+            "relative_gap": "3/4"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "3",
+            "relative_gap": "3/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "A monitor searches for consecutive load totals. The values are 0, 0, 0, 5, 0, 0, 0 and the target total is 4. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 4,
+        "values": [
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0
+        ]
+      },
+      "answer": "0",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A monitor searches for consecutive load totals. The values are zero, zero, zero, five, zero, zero, zero and the target total is four. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": null
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": null
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "You trace a rolling ledger of numeric events. The values are 3, 3, 5, 0, 0, 0, 1, 0 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          3,
+          3,
+          5,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "answer": "7",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You trace a rolling ledger of numeric events. The values are three, three, five, zero, zero, zero, one, zero and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "2",
+            "relative_gap": "2/7"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "3",
+            "relative_gap": "3/7"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "A data routine counts exact-total slices. The values are 1, 0, 5, 1, 1, 1 and the target total is 6. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 6,
+        "values": [
+          1,
+          0,
+          5,
+          1,
+          1,
+          1
+        ]
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A data routine counts exact-total slices. The values are one, zero, five, one, one, one and the target total is six. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "2",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "You review a target-total query on a short sequence. The values are 0, 0, 0, 0 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You review a target-total query on a short sequence. The values are zero, zero, zero, zero and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "9",
+            "relative_gap": "9/10"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "6",
+            "relative_gap": "3/5"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "You inspect a short counter-increment log. The values are 3, 1, 3, 5, 0 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          3,
+          1,
+          3,
+          5,
+          0
+        ]
+      },
+      "answer": "1",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect a short counter-increment log. The values are three, one, three, five, zero and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "4",
+            "relative_gap": "4"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "A monitor searches for consecutive load totals. The values are 2, 1, 0, 3, 0, 0, 0, 2 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          2,
+          1,
+          0,
+          3,
+          0,
+          0,
+          0,
+          2
+        ]
+      },
+      "answer": "7",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A monitor searches for consecutive load totals. The values are two, one, zero, three, zero, zero, zero, two and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "2",
+            "relative_gap": "2/7"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "3",
+            "relative_gap": "3/7"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "You trace a rolling ledger of numeric events. The values are 3, 3, 0, 0, 1, 0, 5, 0 and the target total is 6. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 6,
+        "values": [
+          3,
+          3,
+          0,
+          0,
+          1,
+          0,
+          5,
+          0
+        ]
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You trace a rolling ledger of numeric events. The values are three, three, zero, zero, one, zero, five, zero and the target total is six. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "7",
+            "relative_gap": "7/9"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "7",
+            "relative_gap": "7/9"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "A data routine counts exact-total slices. The values are 0, 0, 5, 0, 3, 3 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          0,
+          0,
+          5,
+          0,
+          3,
+          3
+        ]
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A data routine counts exact-total slices. The values are zero, zero, five, zero, three, three and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "You review a target-total query on a short sequence. The values are 0, 0, 5, 2 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          0,
+          0,
+          5,
+          2
+        ]
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You review a target-total query on a short sequence. The values are zero, zero, five, two and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "You inspect a short counter-increment log. The values are 1, 0, 1, 0 and the target total is 4. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 4,
+        "values": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      "answer": "0",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect a short counter-increment log. The values are one, zero, one, zero and the target total is four. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": null
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": null
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "A monitor searches for consecutive load totals. The values are 5, 0, 0, 0, 1 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          5,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A monitor searches for consecutive load totals. The values are five, zero, zero, zero, one and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "3",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "3",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "You trace a rolling ledger of numeric events. The values are 5, 0, 0, 0, 0 and the target total is 5. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 5,
+        "values": [
+          5,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You trace a rolling ledger of numeric events. The values are five, zero, zero, zero, zero and the target total is five. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "4",
+            "relative_gap": "4/5"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "4",
+            "relative_gap": "4/5"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "A data routine counts exact-total slices. The values are 1, 1, 2, 0, 1, 0 and the target total is 5. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 5,
+        "values": [
+          1,
+          1,
+          2,
+          0,
+          1,
+          0
+        ]
+      },
+      "answer": "2",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A data routine counts exact-total slices. The values are one, one, two, zero, one, zero and the target total is five. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "You review a target-total query on a short sequence. The values are 0, 3, 0, 0, 0, 0, 1 and the target total is 3. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 3,
+        "values": [
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You review a target-total query on a short sequence. The values are zero, three, zero, zero, zero, zero, one and the target total is three. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "9",
+            "relative_gap": "9/10"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "9",
+            "relative_gap": "9/10"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "You inspect a short counter-increment log. The values are 0, 1, 1, 0, 2, 0, 0, 1 and the target total is 1. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 1,
+        "values": [
+          0,
+          1,
+          1,
+          0,
+          2,
+          0,
+          0,
+          1
+        ]
+      },
+      "answer": "7",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect a short counter-increment log. The values are zero, one, one, zero, two, zero, zero, one and the target total is one. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "4",
+            "relative_gap": "4/7"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "4",
+            "relative_gap": "4/7"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "A monitor searches for consecutive load totals. The values are 2, 0, 0, 3, 5, 0, 3, 0 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          2,
+          0,
+          0,
+          3,
+          5,
+          0,
+          3,
+          0
+        ]
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A monitor searches for consecutive load totals. The values are two, zero, zero, three, five, zero, three, zero and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "You trace a rolling ledger of numeric events. The values are 5, 5, 2, 5, 3 and the target total is 10. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 10,
+        "values": [
+          5,
+          5,
+          2,
+          5,
+          3
+        ]
+      },
+      "answer": "2",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You trace a rolling ledger of numeric events. The values are five, five, two, five, three and the target total is ten. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "A data routine counts exact-total slices. The values are 5, 0, 0, 2, 0 and the target total is 0. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 0,
+        "values": [
+          5,
+          0,
+          0,
+          2,
+          0
+        ]
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A data routine counts exact-total slices. The values are five, zero, zero, two, zero and the target total is zero. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "You review a target-total query on a short sequence. The values are 3, 5, 0, 0, 0, 1, 0, 1 and the target total is 1. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 1,
+        "values": [
+          3,
+          5,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ]
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You review a target-total query on a short sequence. The values are three, five, zero, zero, zero, one, zero, one and the target total is one. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "8",
+            "relative_gap": "4/5"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "8",
+            "relative_gap": "4/5"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "You inspect a short counter-increment log. The values are 0, 0, 5, 1, 0, 3, 5 and the target total is 6. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 6,
+        "values": [
+          0,
+          0,
+          5,
+          1,
+          0,
+          3,
+          5
+        ]
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect a short counter-increment log. The values are zero, zero, five, one, zero, three, five and the target total is six. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "5",
+            "relative_gap": "5/6"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "5",
+            "relative_gap": "5/6"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "A monitor searches for consecutive load totals. The values are 0, 5, 1, 2, 5, 5, 0 and the target total is 3. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 3,
+        "values": [
+          0,
+          5,
+          1,
+          2,
+          5,
+          5,
+          0
+        ]
+      },
+      "answer": "1",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A monitor searches for consecutive load totals. The values are zero, five, one, two, five, five, zero and the target total is three. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "You trace a rolling ledger of numeric events. The values are 3, 0, 2, 2, 1 and the target total is 2. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 2,
+        "values": [
+          3,
+          0,
+          2,
+          2,
+          1
+        ]
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You trace a rolling ledger of numeric events. The values are three, zero, two, two, one and the target total is two. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "A data routine counts exact-total slices. The values are 0, 2, 0, 0, 0 and the target total is 10. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 10,
+        "values": [
+          0,
+          2,
+          0,
+          0,
+          0
+        ]
+      },
+      "answer": "0",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "A data routine counts exact-total slices. The values are zero, two, zero, zero, zero and the target total is ten. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "1",
+            "relative_gap": null
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "1",
+            "relative_gap": null
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "You review a target-total query on a short sequence. The values are 0, 2, 0, 0, 0, 5, 2 and the target total is 2. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "params": {
+        "target": 2,
+        "values": [
+          0,
+          2,
+          0,
+          0,
+          0,
+          5,
+          2
+        ]
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Prefix sums and hashing",
+      "source_topic": "Consecutive target-total slices",
+      "difficulty": "Medium",
+      "spoken_text": "You review a target-total query on a short sequence. The values are zero, two, zero, zero, zero, five, two and the target total is two. Count all nonempty contiguous slices with that total, treating different start or end positions as different slices. What count is returned, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "counts_distinct_prefix_values_instead_of_multiplicities",
+            "counts_only_non_overlapping_or_minimal_slices"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_subarrays_matching_target",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_distinct_prefix_values_instead_of_multiplicities",
+            "absolute_gap": "7",
+            "relative_gap": "7/9"
+          },
+          {
+            "misconception": "counts_only_non_overlapping_or_minimal_slices",
+            "absolute_gap": "7",
+            "relative_gap": "7/9"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What are the time and space costs of the prefix-frequency method, and what must its table store?",
+        "reference": "Each earlier matching prefix represents a different slice ending at the current position. A frequency map preserves those multiplicities, giving O(n) expected time and O(n) auxiliary space."
+      }
+    }
+  ]
+}

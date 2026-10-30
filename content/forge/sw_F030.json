@@ -1,0 +1,4090 @@
+{
+  "template_id": "sw_F030",
+  "pack": "software",
+  "topic": "Tries",
+  "topics": [
+    "Tries"
+  ],
+  "source_topic": "Allocated prefix-tree nodes",
+  "difficulty": "Easy",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 3,
+    "repair_attempted": true,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": false
+  },
+  "follow_up": {
+    "question": "What time and space does trie insertion use in terms of total input characters?",
+    "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "You trace an autocomplete prefix tree. The words are spelled as word 1: d, d, a, b, c, e; word 2: d, f, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "ddabce",
+          "dff"
+        ]
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You trace an autocomplete prefix tree. The words are spelled as word one: d, d, a, b, c, e; word two: d, f, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "11",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes",
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "8"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "2",
+            "relative_gap": "2/9"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "2",
+            "relative_gap": "2/9"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "A parser allocates nodes for a small word dictionary. The words are spelled as word 1: c, a, b, d; word 2: c, a, b, c, b, f, e, c, e; word 3: c, a, b, f, e, a, e; word 4: c, a, b, a; word 5: c, a, b, c; word 6: c, a, b, b, d, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "cabd",
+          "cabcbfece",
+          "cabfeae",
+          "caba",
+          "cabc",
+          "cabbdf"
+        ]
+      },
+      "answer": "19",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A parser allocates nodes for a small word dictionary. The words are spelled as word one: c, a, b, d; word two: c, a, b, c, b, f, e, c, e; word three: c, a, b, f, e, a, e; word four: c, a, b, a; word five: c, a, b, c; word six: c, a, b, b, d, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "18",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "25",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "18"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "19"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/19"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "6",
+            "relative_gap": "6/19"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "17",
+            "relative_gap": "17/19"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "You inspect the memory shape of a character trie. The words are spelled as word 1: w, b, i, d, k, x, o; word 2: n, a, b, x, f, b, u, h, c, k; word 3: l, h, r, j, u, d, t, v; word 4: i, n, q, z, x, d, v, c; word 5: v, c, f, z, c, p, x, n, o; word 6: k, m, a, e, j, x, a, g; word 7: h, m, v, y, z, c, h; word 8: z, a, w, f, d, w, a, c, v. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "wbidkxo",
+          "nabxfbuhck",
+          "lhrjudtv",
+          "inqzxdvc",
+          "vcfzcpxno",
+          "kmaejxag",
+          "hmvyzch",
+          "zawfdwacv"
+        ]
+      },
+      "answer": "67",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You inspect the memory shape of a character trie. The words are spelled as word one: w, b, i, d, k, x, o; word two: n, a, b, x, f, b, u, h, c, k; word three: l, h, r, j, u, d, t, v; word four: i, n, q, z, x, d, v, c; word five: v, c, f, z, c, p, x, n, o; word six: k, m, a, e, j, x, a, g; word seven: h, m, v, y, z, c, h; word eight: z, a, w, f, d, w, a, c, v. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "66",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "75",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "68",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "66"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "67"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/67"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "8/67"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/67"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "A lookup service inserts a short list of keys. The words are spelled as word 1: f, d, b, b, a, f, e, b; word 2: b, c, a, a, d; word 3: d; word 4: f, d, f, b, d; word 5: f, e, c, d, f; word 6: e, e, d, c, c, f, b, d, e; word 7: b, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "fdbbafeb",
+          "bcaad",
+          "d",
+          "fdfbd",
+          "fecdf",
+          "eedccfbde",
+          "be"
+        ]
+      },
+      "answer": "32",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A lookup service inserts a short list of keys. The words are spelled as word one: f, d, b, b, a, f, e, b; word two: b, c, a, a, d; word three: d; word four: f, d, f, b, d; word five: f, e, c, d, f; word six: e, e, d, c, c, f, b, d, e; word seven: b, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "31",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "39",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "37",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "31"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "32"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/32"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "7",
+            "relative_gap": "7/32"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "5",
+            "relative_gap": "5/32"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word 1: j, j, a, a, f, v, z, o; word 2: e, h, t, y, d, d, x; word 3: i, c, g, d, h, r, p; word 4: u, b, n, l, m, j, m, i; word 5: x, p, m, u, r, x, x, z, i; word 6: s, q, o, r, z, l, x; word 7: l, w, h, n, q, w, a, e, h, q. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "jjaafvzo",
+          "ehtyddx",
+          "icgdhrp",
+          "ubnlmjmi",
+          "xpmurxxzi",
+          "sqorzlx",
+          "lwhnqwaehq"
+        ]
+      },
+      "answer": "57",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word one: j, j, a, a, f, v, z, o; word two: e, h, t, y, d, d, x; word three: i, c, g, d, h, r, p; word four: u, b, n, l, m, j, m, i; word five: x, p, m, u, r, x, x, z, i; word six: s, q, o, r, z, l, x; word seven: l, w, h, n, q, w, a, e, h, q. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "56",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "64",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "58",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "56"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "57"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/57"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "7",
+            "relative_gap": "7/57"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/57"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "You trace an autocomplete prefix tree. The words are spelled as word 1: g, t, r, n, t, s, v, o; word 2: b, j, c, z, q, r, i, l, v, p; word 3: g, t, d, p, n, n, v, y, s; word 4: c, r, j, r, k, x, j; word 5: p, a, l, t, f, g, k, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "gtrntsvo",
+          "bjczqrilvp",
+          "gtdpnnvys",
+          "crjrkxj",
+          "paltfgka"
+        ]
+      },
+      "answer": "41",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You trace an autocomplete prefix tree. The words are spelled as word one: g, t, r, n, t, s, v, o; word two: b, j, c, z, q, r, i, l, v, p; word three: g, t, d, p, n, n, v, y, s; word four: c, r, j, r, k, x, j; word five: p, a, l, t, f, g, k, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "40",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "46",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "44",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "40"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "41"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/41"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "5",
+            "relative_gap": "5/41"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "3",
+            "relative_gap": "3/41"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "A parser allocates nodes for a small word dictionary. The words are spelled as word 1: c, d, c, f, f, c, c, b, a; word 2: c, f, f, e, a, d, f, c, a, e; word 3: c, a, d, e, b, b, c, a, e; word 4: c, f, c, a, e, a, a, d; word 5: c, d, b, a, b, e, f, a, b, e; word 6: c, d, a, e, c, b, a, f, b; word 7: c, e, d, b, a, d, d; word 8: c, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "cdcffccba",
+          "cffeadfcae",
+          "cadebbcae",
+          "cfcaeaad",
+          "cdbabefabe",
+          "cdaecbafb",
+          "cedbadd",
+          "cf"
+        ]
+      },
+      "answer": "54",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A parser allocates nodes for a small word dictionary. The words are spelled as word one: c, d, c, f, f, c, c, b, a; word two: c, f, f, e, a, d, f, c, a, e; word three: c, a, d, e, b, b, c, a, e; word four: c, f, c, a, e, a, a, d; word five: c, d, b, a, b, e, f, a, b, e; word six: c, d, a, e, c, b, a, f, b; word seven: c, e, d, b, a, d, d; word eight: c, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "53",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "62",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "66",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "53"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "54"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/54"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "4/27"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "12",
+            "relative_gap": "2/9"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "You inspect the memory shape of a character trie. The words are spelled as word 1: c, c, d, c, b, a, d, b; word 2: b, d, b, d, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "ccdcbadb",
+          "bdbda"
+        ]
+      },
+      "answer": "14",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You inspect the memory shape of a character trie. The words are spelled as word one: c, c, d, c, b, a, d, b; word two: b, d, b, d, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "16",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "15",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "13"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/14"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "2",
+            "relative_gap": "1/7"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/14"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "A lookup service inserts a short list of keys. The words are spelled as word 1: e, d, d, e, e, c, c, f, f; word 2: e; word 3: b, f, e, f, b. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "eddeeccff",
+          "e",
+          "bfefb"
+        ]
+      },
+      "answer": "15",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A lookup service inserts a short list of keys. The words are spelled as word one: e, d, d, e, e, c, c, f, f; word two: e; word three: b, f, e, f, b. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "14",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "18",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "17",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "14"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "15"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/15"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "3",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "2",
+            "relative_gap": "2/15"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word 1: a, c, b, e, b, b, d, e; word 2: a, c, b, b, f, f, c; word 3: a, c, c, b, f, a, f, c; word 4: a, c, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "acbebbde",
+          "acbbffc",
+          "accbfafc",
+          "ace"
+        ]
+      },
+      "answer": "20",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word one: a, c, b, e, b, b, d, e; word two: a, c, b, b, f, f, c; word three: a, c, c, b, f, a, f, c; word four: a, c, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "24",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "28",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "19"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/20"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "4",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "8",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "You trace an autocomplete prefix tree. The words are spelled as word 1: i, v, p, z, y, l, f, c, g, j; word 2: z, o, e, n, z, m, z; word 3: b, l, y, w, o, u, n, t, s; word 4: c, v, f, v, e, b, j, r; word 5: y, x, t, w, t, b, z, r. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "ivpzylfcgj",
+          "zoenzmz",
+          "blywounts",
+          "cvfvebjr",
+          "yxtwtbzr"
+        ]
+      },
+      "answer": "43",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You trace an autocomplete prefix tree. The words are spelled as word one: i, v, p, z, y, l, f, c, g, j; word two: z, o, e, n, z, m, z; word three: b, l, y, w, o, u, n, t, s; word four: c, v, f, v, e, b, j, r; word five: y, x, t, w, t, b, z, r. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "42",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "48",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "44",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "42"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "43"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/43"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "5",
+            "relative_gap": "5/43"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/43"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "A parser allocates nodes for a small word dictionary. The words are spelled as word 1: a, d, e, b, b, d. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "adebbd"
+        ]
+      },
+      "answer": "7",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A parser allocates nodes for a small word dictionary. The words are spelled as word one: a, d, e, b, b, d. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes",
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "6"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/7"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "1",
+            "relative_gap": "1/7"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "You inspect the memory shape of a character trie. The words are spelled as word 1: a, c, c, e, f, d, d, d; word 2: a, b, c; word 3: a, e, c, b, e, d, c; word 4: a, b, d, e, f, a, c, e, c; word 5: a, e, c, d, e, e, d; word 6: a, d, e, f, d, f, f, d, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "accefddd",
+          "abc",
+          "aecbedc",
+          "abdefacec",
+          "aecdeed",
+          "adefdffda"
+        ]
+      },
+      "answer": "36",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You inspect the memory shape of a character trie. The words are spelled as word one: a, c, c, e, f, d, d, d; word two: a, b, c; word three: a, e, c, b, e, d, c; word four: a, b, d, e, f, a, c, e, c; word five: a, e, c, d, e, e, d; word six: a, d, e, f, d, f, f, d, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "35",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "42",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "45",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "35"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "36"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/36"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "6",
+            "relative_gap": "1/6"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "9",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "A lookup service inserts a short list of keys. The words are spelled as word 1: c, f, f, f; word 2: c, d, d; word 3: c, f, a, f; word 4: c, c, b, c, c; word 5: c, a, e, c, f, e; word 6: c, c, c, c, d, a, b, f, f; word 7: c, d, d, d, e, b, d, f, a, e; word 8: c, e, a, c, c, c, c, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "cfff",
+          "cdd",
+          "cfaf",
+          "ccbcc",
+          "caecfe",
+          "ccccdabff",
+          "cdddebdfae",
+          "ceaccccf"
+        ]
+      },
+      "answer": "39",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A lookup service inserts a short list of keys. The words are spelled as word one: c, f, f, f; word two: c, d, d; word three: c, f, a, f; word four: c, c, b, c, c; word five: c, a, e, c, f, e; word six: c, c, c, c, d, a, b, f, f; word seven: c, d, d, d, e, b, d, f, a, e; word eight: c, e, a, c, c, c, c, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "38",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "47",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "51",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "38"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/39"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "8/39"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "12",
+            "relative_gap": "4/13"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word 1: m, u, o, m, d, c, d, f, z; word 2: u, r, o, g, i, j, v, t, s, n; word 3: l, y, c, j, b, n, m, k, v, p; word 4: v, i, j, w, p, z, v, a, a, x; word 5: u, a, n, v, p, u, o, h, c, m. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "muomdcdfz",
+          "urogijvtsn",
+          "lycjbnmkvp",
+          "vijwpzvaax",
+          "uanvpuohcm"
+        ]
+      },
+      "answer": "49",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word one: m, u, o, m, d, c, d, f, z; word two: u, r, o, g, i, j, v, t, s, n; word three: l, y, c, j, b, n, m, k, v, p; word four: v, i, j, w, p, z, v, a, a, x; word five: u, a, n, v, p, u, o, h, c, m. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "48",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "54",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "51",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "48"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "49"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/49"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "5",
+            "relative_gap": "5/49"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "2",
+            "relative_gap": "2/49"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "You trace an autocomplete prefix tree. The words are spelled as word 1: t, h, a, k, r, p, d, b; word 2: c, u, s, b, d, h, g, a, o; word 3: y, g, b, j, q, a, i, q, y, z. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "thakrpdb",
+          "cusbdhgao",
+          "ygbjqaiqyz"
+        ]
+      },
+      "answer": "28",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You trace an autocomplete prefix tree. The words are spelled as word one: t, h, a, k, r, p, d, b; word two: c, u, s, b, d, h, g, a, o; word three: y, g, b, j, q, a, i, q, y, z. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "31",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "29",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "27"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "28"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/28"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "3",
+            "relative_gap": "3/28"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/28"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "A parser allocates nodes for a small word dictionary. The words are spelled as word 1: b, k, j, c, f, f, c, v; word 2: h, m, g, r, x, a, g, o; word 3: u, m, q, c, f, i, h, y; word 4: y, y, j, f, h, b, p, i, n; word 5: h, s, w, q, u, u, i, h; word 6: i, j, u, h, i, w, n, j, p, c; word 7: d, i, b, h, l, z, z; word 8: e, b, y, m, k, m, i, p, j, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "bkjcffcv",
+          "hmgrxago",
+          "umqcfihy",
+          "yyjfhbpin",
+          "hswquuih",
+          "ijuhiwnjpc",
+          "dibhlzz",
+          "ebymkmipje"
+        ]
+      },
+      "answer": "68",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A parser allocates nodes for a small word dictionary. The words are spelled as word one: b, k, j, c, f, f, c, v; word two: h, m, g, r, x, a, g, o; word three: u, m, q, c, f, i, h, y; word four: y, y, j, f, h, b, p, i, n; word five: h, s, w, q, u, u, i, h; word six: i, j, u, h, i, w, n, j, p, c; word seven: d, i, b, h, l, z, z; word eight: e, b, y, m, k, m, i, p, j, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "67",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "76",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "70",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "67"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "68"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/68"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "2/17"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "2",
+            "relative_gap": "1/34"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "You inspect the memory shape of a character trie. The words are spelled as word 1: y, v, a, t, t, i, l, h, y; word 2: b, u, t, r, e, c, o; word 3: f, t, c, a, u, e, u; word 4: a, t, v, f, w, j, y, d, q; word 5: j, p, y, k, i, r, y, s; word 6: b, y, m, b, y, k, y. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "yvattilhy",
+          "butreco",
+          "ftcaueu",
+          "atvfwjydq",
+          "jpykirys",
+          "bymbyky"
+        ]
+      },
+      "answer": "47",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You inspect the memory shape of a character trie. The words are spelled as word one: y, v, a, t, t, i, l, h, y; word two: b, u, t, r, e, c, o; word three: f, t, c, a, u, e, u; word four: a, t, v, f, w, j, y, d, q; word five: j, p, y, k, i, r, y, s; word six: b, y, m, b, y, k, y. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "46",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "53",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "49",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "46"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "47"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/47"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "6",
+            "relative_gap": "6/47"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "2",
+            "relative_gap": "2/47"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "A lookup service inserts a short list of keys. The words are spelled as word 1: p, b, u, t, c, h, l, r, w, u; word 2: l, m, v, n, l, w, v, k, v; word 3: d, y, a, g, y, s, z, t, i, o; word 4: e, l, h, f, y, a, f, e, e, r; word 5: h, p, r, p, l, e, a, k. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "pbutchlrwu",
+          "lmvnlwvkv",
+          "dyagysztio",
+          "elhfyafeer",
+          "hprpleak"
+        ]
+      },
+      "answer": "48",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A lookup service inserts a short list of keys. The words are spelled as word one: p, b, u, t, c, h, l, r, w, u; word two: l, m, v, n, l, w, v, k, v; word three: d, y, a, g, y, s, z, t, i, o; word four: e, l, h, f, y, a, f, e, e, r; word five: h, p, r, p, l, e, a, k. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "47",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "53",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "49",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "47"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "48"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/48"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "5",
+            "relative_gap": "5/48"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/48"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word 1: i, b, d, u, l, t, f, q, e; word 2: w, t, p, z, x, b, u; word 3: n, o, h, k, y, f, p, a, q, q; word 4: j, y, w, a, p, q, s, x, y, o; word 5: i, v, n, o, f, f, q, h; word 6: u, p, p, q, f, w, f, k, g; word 7: c, m, u, n, l, q, x, m, x. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "ibdultfqe",
+          "wtpzxbu",
+          "nohkyfpaqq",
+          "jywapqsxyo",
+          "ivnoffqh",
+          "uppqfwfkg",
+          "cmunlqxmx"
+        ]
+      },
+      "answer": "62",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word one: i, b, d, u, l, t, f, q, e; word two: w, t, p, z, x, b, u; word three: n, o, h, k, y, f, p, a, q, q; word four: j, y, w, a, p, q, s, x, y, o; word five: i, v, n, o, f, f, q, h; word six: u, p, p, q, f, w, f, k, g; word seven: c, m, u, n, l, q, x, m, x. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "61",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "69",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "64",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "61"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "62"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/62"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "7",
+            "relative_gap": "7/62"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "2",
+            "relative_gap": "1/31"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "You trace an autocomplete prefix tree. The words are spelled as word 1: k, y, r, l, j, d, u, t; word 2: x, w, c, q, k, h, h, o; word 3: h, k, p, r, w, s, j; word 4: w, v, j, u, t, v, g, s, j, p; word 5: n, o, g, c, g, z, z, j, v; word 6: y, k, a, r, e, u, n, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "kyrljdut",
+          "xwcqkhho",
+          "hkprwsj",
+          "wvjutvgsjp",
+          "nogcgzzjv",
+          "ykareune"
+        ]
+      },
+      "answer": "51",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You trace an autocomplete prefix tree. The words are spelled as word one: k, y, r, l, j, d, u, t; word two: x, w, c, q, k, h, h, o; word three: h, k, p, r, w, s, j; word four: w, v, j, u, t, v, g, s, j, p; word five: n, o, g, c, g, z, z, j, v; word six: y, k, a, r, e, u, n, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "50",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "57",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "52",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "50"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/51"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "6",
+            "relative_gap": "2/17"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/51"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "A parser allocates nodes for a small word dictionary. The words are spelled as word 1: b, a, f, d, d, b, f, a, c; word 2: b, a, b, a, d. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "bafddbfac",
+          "babad"
+        ]
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A parser allocates nodes for a small word dictionary. The words are spelled as word one: b, a, f, d, d, b, f, a, c; word two: b, a, b, a, d. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "12",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "15",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "16",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "12"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/13"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "2",
+            "relative_gap": "2/13"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "3",
+            "relative_gap": "3/13"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "You inspect the memory shape of a character trie. The words are spelled as word 1: d, k, e, c, h, e, t, k, m; word 2: m, h, l, i, g, t, i, h, t, s; word 3: m, t, v, v, m, w, q, w; word 4: g, i, o, c, w, o, k, e; word 5: u, d, v, z, m, f, q, q, u. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "dkechetkm",
+          "mhligtihts",
+          "mtvvmwqw",
+          "giocwoke",
+          "udvzmfqqu"
+        ]
+      },
+      "answer": "44",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You inspect the memory shape of a character trie. The words are spelled as word one: d, k, e, c, h, e, t, k, m; word two: m, h, l, i, g, t, i, h, t, s; word three: m, t, v, v, m, w, q, w; word four: g, i, o, c, w, o, k, e; word five: u, d, v, z, m, f, q, q, u. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "43",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "49",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "46",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "43"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "44"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/44"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "5",
+            "relative_gap": "5/44"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "2",
+            "relative_gap": "1/22"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "A lookup service inserts a short list of keys. The words are spelled as word 1: c, a, a, f, c, d, d, f, e, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "caafcddfef"
+        ]
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A lookup service inserts a short list of keys. The words are spelled as word one: c, a, a, f, c, d, d, f, e, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "10",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes",
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "10"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/11"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "1",
+            "relative_gap": "1/11"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/11"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word 1: a, a, e, c, a, c, e, b, b; word 2: a, a, f, e, e, b; word 3: a, a, b, c, c; word 4: a, a, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "aaecacebb",
+          "aafeeb",
+          "aabcc",
+          "aae"
+        ]
+      },
+      "answer": "17",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word one: a, a, e, c, a, c, e, b, b; word two: a, a, f, e, e, b; word three: a, a, b, c, c; word four: a, a, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "16",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "25",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "16"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/17"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "4",
+            "relative_gap": "4/17"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "8",
+            "relative_gap": "8/17"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "You trace an autocomplete prefix tree. The words are spelled as word 1: d, e, e, a, b, b, a; word 2: d, c, b, f, d, e, a, c; word 3: d, d, d; word 4: a, f, c, a, a; word 5: f, b, a, b, b, f, b, a, c. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "deeabba",
+          "dcbfdeac",
+          "ddd",
+          "afcaa",
+          "fbabbfbac"
+        ]
+      },
+      "answer": "31",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You trace an autocomplete prefix tree. The words are spelled as word one: d, e, e, a, b, b, a; word two: d, c, b, f, d, e, a, c; word three: d, d, d; word four: a, f, c, a, a; word five: f, b, a, b, b, f, b, a, c. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "30"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "31"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/31"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "5",
+            "relative_gap": "5/31"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "3",
+            "relative_gap": "3/31"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "A parser allocates nodes for a small word dictionary. The words are spelled as word 1: v, y, p, y, o, b, b; word 2: l, v, w, z, j, e, a; word 3: l, a, x, h, t, t, k; word 4: a, r, n, n, n, g, c; word 5: o, q, l, r, q, c, m, k, f; word 6: u, j, n, d, u, g, q; word 7: c, a, g, s, t, t, q; word 8: h, s, i, m, c, v, i. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "vypyobb",
+          "lvwzjea",
+          "laxhttk",
+          "arnnngc",
+          "oqlrqcmkf",
+          "ujndugq",
+          "cagsttq",
+          "hsimcvi"
+        ]
+      },
+      "answer": "58",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A parser allocates nodes for a small word dictionary. The words are spelled as word one: v, y, p, y, o, b, b; word two: l, v, w, z, j, e, a; word three: l, a, x, h, t, t, k; word four: a, r, n, n, n, g, c; word five: o, q, l, r, q, c, m, k, f; word six: u, j, n, d, u, g, q; word seven: c, a, g, s, t, t, q; word eight: h, s, i, m, c, v, i. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "57",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "66",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "60",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "57"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "58"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/58"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "4/29"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "2",
+            "relative_gap": "1/29"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "You inspect the memory shape of a character trie. The words are spelled as word 1: v, b, w, e, q, o, b; word 2: m, n, z, r, r, x, e; word 3: i, m, c, l, k, u, a; word 4: u, o, a, p, n, c, t, s, c; word 5: s, v, r, p, r, e, j, r; word 6: f, s, l, x, d, q, i, j; word 7: v, x, s, b, c, i, b, j, f, u. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "vbweqob",
+          "mnzrrxe",
+          "imclkua",
+          "uoapnctsc",
+          "svrprejr",
+          "fslxdqij",
+          "vxsbcibjfu"
+        ]
+      },
+      "answer": "56",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You inspect the memory shape of a character trie. The words are spelled as word one: v, b, w, e, q, o, b; word two: m, n, z, r, r, x, e; word three: i, m, c, l, k, u, a; word four: u, o, a, p, n, c, t, s, c; word five: s, v, r, p, r, e, j, r; word six: f, s, l, x, d, q, i, j; word seven: v, x, s, b, c, i, b, j, f, u. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "55",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "63",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "58",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "55"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "56"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/56"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "7",
+            "relative_gap": "1/8"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "2",
+            "relative_gap": "1/28"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "A lookup service inserts a short list of keys. The words are spelled as word 1: b, b, a, c, e, e, c; word 2: b, b, c, e, e; word 3: b, b, e; word 4: b, b, a, b, b, c, b, c, e, e; word 5: b, b, e, d, b; word 6: b, b, b; word 7: b, b, d, e, f, e, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "bbaceec",
+          "bbcee",
+          "bbe",
+          "bbabbcbcee",
+          "bbedb",
+          "bbb",
+          "bbdefef"
+        ]
+      },
+      "answer": "27",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A lookup service inserts a short list of keys. The words are spelled as word one: b, b, a, c, e, e, c; word two: b, b, c, e, e; word three: b, b, e; word four: b, b, a, b, b, c, b, c, e, e; word five: b, b, e, d, b; word six: b, b, b; word seven: b, b, d, e, f, e, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "26",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "42",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "26"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/27"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "7",
+            "relative_gap": "7/27"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "15",
+            "relative_gap": "5/9"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word 1: b, a, c, f; word 2: b, a, c, f, a; word 3: b, a, c, b, b, e, d, b, c, a; word 4: b, a, c, d, d, d, e; word 5: b, a, c, d, d, b, d; word 6: b, a, c, b; word 7: b, a, c, f, c, c; word 8: b, a, c, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "bacf",
+          "bacfa",
+          "bacbbedbca",
+          "bacddde",
+          "bacddbd",
+          "bacb",
+          "bacfcc",
+          "baca"
+        ]
+      },
+      "answer": "22",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word one: b, a, c, f; word two: b, a, c, f, a; word three: b, a, c, b, b, e, d, b, c, a; word four: b, a, c, d, d, d, e; word five: b, a, c, d, d, b, d; word six: b, a, c, b; word seven: b, a, c, f, c, c; word eight: b, a, c, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "49",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "21"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "22"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/22"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "4/11"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "27",
+            "relative_gap": "27/22"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "You trace an autocomplete prefix tree. The words are spelled as word 1: a, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "ae"
+        ]
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You trace an autocomplete prefix tree. The words are spelled as word one: a, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes",
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "2"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "A parser allocates nodes for a small word dictionary. The words are spelled as word 1: a, c, b, e, a, f, c, e, c; word 2: a, c, b, f, e, b; word 3: a, c, b, b, e, d, f, d; word 4: a, c, b, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "acbeafcec",
+          "acbfeb",
+          "acbbedfd",
+          "acbe"
+        ]
+      },
+      "answer": "18",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A parser allocates nodes for a small word dictionary. The words are spelled as word one: a, c, b, e, a, f, c, e, c; word two: a, c, b, f, e, b; word three: a, c, b, b, e, d, f, d; word four: a, c, b, e. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "22",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "29",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "17"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "18"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/18"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "4",
+            "relative_gap": "2/9"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "11",
+            "relative_gap": "11/18"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "You inspect the memory shape of a character trie. The words are spelled as word 1: e, f, t, r, u, o, i, z, j, s; word 2: z, z, s, a, k, w, o, q, u; word 3: h, e, g, t, s, z, e, w; word 4: v, v, t, r, c, q, m. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "eftruoizjs",
+          "zzsakwoqu",
+          "hegtszew",
+          "vvtrcqm"
+        ]
+      },
+      "answer": "35",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You inspect the memory shape of a character trie. The words are spelled as word one: e, f, t, r, u, o, i, z, j, s; word two: z, z, s, a, k, w, o, q, u; word three: h, e, g, t, s, z, e, w; word four: v, v, t, r, c, q, m. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "39",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "34"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "35"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/35"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "4",
+            "relative_gap": "4/35"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/35"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "A lookup service inserts a short list of keys. The words are spelled as word 1: b, b, c, f, f, b; word 2: b, b, c, f; word 3: b, b, c, f, b, e, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "bbcffb",
+          "bbcf",
+          "bbcfbef"
+        ]
+      },
+      "answer": "10",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A lookup service inserts a short list of keys. The words are spelled as word one: b, b, c, f, f, b; word two: b, b, c, f; word three: b, b, c, f, b, e, f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "13",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "19",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "9"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/10"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "3",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "9",
+            "relative_gap": "9/10"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word 1: b, b, d; word 2: b, f; word 3: b, d, f, e, c, d; word 4: b, a, c, e, c, a; word 5: b, e; word 6: b, b, b, b, d, e, c, f, f; word 7: b, d. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "bbd",
+          "bf",
+          "bdfecd",
+          "baceca",
+          "be",
+          "bbbbdecff",
+          "bd"
+        ]
+      },
+      "answer": "23",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word one: b, b, d; word two: b, f; word three: b, d, f, e, c, d; word four: b, a, c, e, c, a; word five: b, e; word six: b, b, b, b, d, e, c, f, f; word seven: b, d. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "22",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "32",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "22"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/23"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "7",
+            "relative_gap": "7/23"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "9",
+            "relative_gap": "9/23"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "You trace an autocomplete prefix tree. The words are spelled as word 1: a, m, a, y, s, w, t, a, a; word 2: x, u, e, g, m, k, u, z, w; word 3: m, j, s, j, r, n, l, x; word 4: u, u, b, r, l, y, e, r, d; word 5: k, r, i, c, k, x, g, r; word 6: b, n, s, c, p, m, j, t, e, e; word 7: v, h, i, c, a, c, g; word 8: j, z, m, o, j, z, l, c. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "amayswtaa",
+          "xuegmkuzw",
+          "mjsjrnlx",
+          "uubrlyerd",
+          "krickxgr",
+          "bnscpmjtee",
+          "vhicacg",
+          "jzmojzlc"
+        ]
+      },
+      "answer": "69",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You trace an autocomplete prefix tree. The words are spelled as word one: a, m, a, y, s, w, t, a, a; word two: x, u, e, g, m, k, u, z, w; word three: m, j, s, j, r, n, l, x; word four: u, u, b, r, l, y, e, r, d; word five: k, r, i, c, k, x, g, r; word six: b, n, s, c, p, m, j, t, e, e; word seven: v, h, i, c, a, c, g; word eight: j, z, m, o, j, z, l, c. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "68",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "77",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "70",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "68"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "69"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/69"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "8/69"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/69"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "A parser allocates nodes for a small word dictionary. The words are spelled as word 1: c, f, e, d, d, f, b, f, b; word 2: c, f; word 3: c, e, d, d, d, f; word 4: c, c, e, a, f; word 5: c, e, a, b; word 6: c, f, b, a, e, d, c, f, d; word 7: c, e, c, a, e, b, a; word 8: c, c, b. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "cfeddfbfb",
+          "cf",
+          "cedddf",
+          "cceaf",
+          "ceab",
+          "cfbaedcfd",
+          "cecaeba",
+          "ccb"
+        ]
+      },
+      "answer": "34",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A parser allocates nodes for a small word dictionary. The words are spelled as word one: c, f, e, d, d, f, b, f, b; word two: c, f; word three: c, e, d, d, d, f; word four: c, c, e, a, f; word five: c, e, a, b; word six: c, f, b, a, e, d, c, f, d; word seven: c, e, c, a, e, b, a; word eight: c, c, b. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "33",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "42",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "47",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "33"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "34"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/34"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "4/17"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "13",
+            "relative_gap": "13/34"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "You inspect the memory shape of a character trie. The words are spelled as word 1: u, p, o, a, w, s, r, r, k; word 2: x, x, z, c, j, h, d, y; word 3: a, x, j, l, j, y, l, t, o, w; word 4: p, w, z, k, r, l, w, q; word 5: b, x, q, s, b, q, o, n, q; word 6: e, q, g, l, p, n, f, u; word 7: t, d, x, n, m, n, c, p, u, y. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "upoawsrrk",
+          "xxzcjhdy",
+          "axjljyltow",
+          "pwzkrlwq",
+          "bxqsbqonq",
+          "eqglpnfu",
+          "tdxnmncpuy"
+        ]
+      },
+      "answer": "63",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You inspect the memory shape of a character trie. The words are spelled as word one: u, p, o, a, w, s, r, r, k; word two: x, x, z, c, j, h, d, y; word three: a, x, j, l, j, y, l, t, o, w; word four: p, w, z, k, r, l, w, q; word five: b, x, q, s, b, q, o, n, q; word six: e, q, g, l, p, n, f, u; word seven: t, d, x, n, m, n, c, p, u, y. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "62",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "70",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "64",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "62"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "63"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/63"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "7",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/63"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "A lookup service inserts a short list of keys. The words are spelled as word 1: c, c, e, b, b, c, d, a; word 2: b; word 3: b, b, d, c, f, b, c, f; word 4: e, b, f, e, f; word 5: c, f, a, e, b, c, d; word 6: a, b, a, f, e, c, d; word 7: e, e, d, e, d, b. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "ccebbcda",
+          "b",
+          "bbdcfbcf",
+          "ebfef",
+          "cfaebcd",
+          "abafecd",
+          "eededb"
+        ]
+      },
+      "answer": "40",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A lookup service inserts a short list of keys. The words are spelled as word one: c, c, e, b, b, c, d, a; word two: b; word three: b, b, d, c, f, b, c, f; word four: e, b, f, e, f; word five: c, f, a, e, b, c, d; word six: a, b, a, f, e, c, d; word seven: e, e, d, e, d, b. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "39",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "47",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "44",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "39"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "40"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/40"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "7",
+            "relative_gap": "7/40"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "4",
+            "relative_gap": "1/10"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word 1: f, e, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "fea"
+        ]
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word one: f, e, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes",
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "3"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "You trace an autocomplete prefix tree. The words are spelled as word 1: b, b, b, c, e, e, f, c, e, c; word 2: b, b, b, b, c, e; word 3: b, b, b, e, b, f, b, b, f; word 4: b, b, b, a, f, e, f, b, b, f; word 5: b, b, b, c; word 6: b, b, b, b, b, a; word 7: b, b, b, f; word 8: b, b, b, b. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "bbbceefcec",
+          "bbbbce",
+          "bbbebfbbf",
+          "bbbafefbbf",
+          "bbbc",
+          "bbbbba",
+          "bbbf",
+          "bbbb"
+        ]
+      },
+      "answer": "30",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You trace an autocomplete prefix tree. The words are spelled as word one: b, b, b, c, e, e, f, c, e, c; word two: b, b, b, b, c, e; word three: b, b, b, e, b, f, b, b, f; word four: b, b, b, a, f, e, f, b, b, f; word five: b, b, b, c; word six: b, b, b, b, b, a; word seven: b, b, b, f; word eight: b, b, b, b. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "38",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "29"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "30"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/30"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "4/15"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "25",
+            "relative_gap": "5/6"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "A parser allocates nodes for a small word dictionary. The words are spelled as word 1: h, x, a, e, j, m, c, m, h, t; word 2: o, n, p, h, n, l, x; word 3: g, v, j, l, u, d, o, b; word 4: m, b, o, s, j, g, s, v, p, y; word 5: x, x, l, k, u, i, e, v, s, r; word 6: o, m, u, n, g, i, l, q, y; word 7: r, o, a, g, m, o, e, a; word 8: b, y, t, y, p, f, u, f, p. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "hxaejmcmht",
+          "onphnlx",
+          "gvjludob",
+          "mbosjgsvpy",
+          "xxlkuievsr",
+          "omungilqy",
+          "roagmoea",
+          "bytypfufp"
+        ]
+      },
+      "answer": "71",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A parser allocates nodes for a small word dictionary. The words are spelled as word one: h, x, a, e, j, m, c, m, h, t; word two: o, n, p, h, n, l, x; word three: g, v, j, l, u, d, o, b; word four: m, b, o, s, j, g, s, v, p, y; word five: x, x, l, k, u, i, e, v, s, r; word six: o, m, u, n, g, i, l, q, y; word seven: r, o, a, g, m, o, e, a; word eight: b, y, t, y, p, f, u, f, p. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "70",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "79",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "73",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "70"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "71"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/71"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "8/71"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "2",
+            "relative_gap": "2/71"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "You inspect the memory shape of a character trie. The words are spelled as word 1: a, d, e, a, e, e; word 2: e, e, f, c, d, a, a, a, c, e; word 3: e, f, f, a; word 4: b, b, d, c, c, a, a, b; word 5: e, a, a, b, c, a, c, d; word 6: f, e, b, f, b, e, f, f, c, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "adeaee",
+          "eefcdaaace",
+          "effa",
+          "bbdccaab",
+          "eaabcacd",
+          "febfbeffca"
+        ]
+      },
+      "answer": "45",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You inspect the memory shape of a character trie. The words are spelled as word one: a, d, e, a, e, e; word two: e, e, f, c, d, a, a, a, c, e; word three: e, f, f, a; word four: b, b, d, c, c, a, a, b; word five: e, a, a, b, c, a, c, d; word six: f, e, b, f, b, e, f, f, c, a. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "44",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "51",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "48",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "44"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/45"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "6",
+            "relative_gap": "2/15"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "3",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "A lookup service inserts a short list of keys. The words are spelled as word 1: b, b, d, e, c, d, b, a, c; word 2: b, b, e; word 3: b, b, f, a, a, d, f, b, c; word 4: b, b, d, d, a, f, c, a, a; word 5: b, b, b, c; word 6: b, b, e, b, a, a, c, e; word 7: b, b, a, a, b, a, a, d. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "bbdecdbac",
+          "bbe",
+          "bbfaadfbc",
+          "bbddafcaa",
+          "bbbc",
+          "bbebaace",
+          "bbaabaad"
+        ]
+      },
+      "answer": "37",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A lookup service inserts a short list of keys. The words are spelled as word one: b, b, d, e, c, d, b, a, c; word two: b, b, e; word three: b, b, f, a, a, d, f, b, c; word four: b, b, d, d, a, f, c, a, a; word five: b, b, b, c; word six: b, b, e, b, a, a, c, e; word seven: b, b, a, a, b, a, a, d. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "36",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "44",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "52",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "36"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "37"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/37"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "7",
+            "relative_gap": "7/37"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "15",
+            "relative_gap": "15/37"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word 1: q, y, s, p, v, c, a, l, g, a; word 2: u, b, c, z, i, s, d, r, h, w; word 3: y, h, t, y, e, e, u, a; word 4: w, w, e, d, z, s, p, r, c; word 5: m, d, r, c, m, t, j; word 6: h, e, m, d, j, z, y. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "qyspvcalga",
+          "ubczisdrhw",
+          "yhtyeeua",
+          "wwedzsprc",
+          "mdrcmtj",
+          "hemdjzy"
+        ]
+      },
+      "answer": "52",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word one: q, y, s, p, v, c, a, l, g, a; word two: u, b, c, z, i, s, d, r, h, w; word three: y, h, t, y, e, e, u, a; word four: w, w, e, d, z, s, p, r, c; word five: m, d, r, c, m, t, j; word six: h, e, m, d, j, z, y. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "51",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "58",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "53",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "51"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "52"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/52"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "6",
+            "relative_gap": "3/26"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/52"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "You trace an autocomplete prefix tree. The words are spelled as word 1: n, v, c, x, z, d, p, c; word 2: a, u, h, k, q, t, t, f; word 3: b, g, d, p, p, c, y. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "nvcxzdpc",
+          "auhkqttf",
+          "bgdppcy"
+        ]
+      },
+      "answer": "24",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You trace an autocomplete prefix tree. The words are spelled as word one: n, v, c, x, z, d, p, c; word two: a, u, h, k, q, t, t, f; word three: b, g, d, p, p, c, y. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "27",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "25",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "23"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/24"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "3",
+            "relative_gap": "1/8"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/24"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "A parser allocates nodes for a small word dictionary. The words are spelled as word 1: v, t, r, h, g, t, j; word 2: z, y, j, e, o, q, r, r; word 3: t, l, s, d, v, b, q; word 4: c, v, v, d, w, o, u; word 5: a, m, a, t, w, t, s, t, z, a; word 6: b, c, i, t, p, g, s, y; word 7: t, s, p, b, j, x, r, i, u; word 8: m, z, l, f, p, f, c, j. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "vtrhgtj",
+          "zyjeoqrr",
+          "tlsdvbq",
+          "cvvdwou",
+          "amatwtstza",
+          "bcitpgsy",
+          "tspbjxriu",
+          "mzlfpfcj"
+        ]
+      },
+      "answer": "64",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A parser allocates nodes for a small word dictionary. The words are spelled as word one: v, t, r, h, g, t, j; word two: z, y, j, e, o, q, r, r; word three: t, l, s, d, v, b, q; word four: c, v, v, d, w, o, u; word five: a, m, a, t, w, t, s, t, z, a; word six: b, c, i, t, p, g, s, y; word seven: t, s, p, b, j, x, r, i, u; word eight: m, z, l, f, p, f, c, j. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "63",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "72",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "66",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "63"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "64"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/64"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "1/8"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "2",
+            "relative_gap": "1/32"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "You inspect the memory shape of a character trie. The words are spelled as word 1: a, a, a, f, f, b; word 2: a, a, a, b, c, b, f, d, f; word 3: a, a, a, a; word 4: a, a, a, c; word 5: a, a, a, f, a, b, d; word 6: a, a, a, d, d, a, c, b; word 7: a, a, a, d, f; word 8: a, a, a, a, f, b. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "aaaffb",
+          "aaabcbfdf",
+          "aaaa",
+          "aaac",
+          "aaafabd",
+          "aaaddacb",
+          "aaadf",
+          "aaaafb"
+        ]
+      },
+      "answer": "26",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You inspect the memory shape of a character trie. The words are spelled as word one: a, a, a, f, f, b; word two: a, a, a, b, c, b, f, d, f; word three: a, a, a, a; word four: a, a, a, c; word five: a, a, a, f, a, b, d; word six: a, a, a, d, d, a, c, b; word seven: a, a, a, d, f; word eight: a, a, a, a, f, b. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "25",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "34",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "51",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "25"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "26"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/26"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "8",
+            "relative_gap": "4/13"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "25",
+            "relative_gap": "25/26"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "A lookup service inserts a short list of keys. The words are spelled as word 1: q, b, c, r, p, k, h; word 2: g, q, v, y, x, b, a, l, y, e; word 3: e, o, c, s, j, s, s, d; word 4: n, k, r, c, o, c, x, q, q; word 5: a, c, e, g, t, o, a, d; word 6: p, d, k, n, c, g, i, o, e, m. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "qbcrpkh",
+          "gqvyxbalye",
+          "eocsjssd",
+          "nkrcocxqq",
+          "acegtoad",
+          "pdkncgioem"
+        ]
+      },
+      "answer": "53",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "A lookup service inserts a short list of keys. The words are spelled as word one: q, b, c, r, p, k, h; word two: g, q, v, y, x, b, a, l, y, e; word three: e, o, c, s, j, s, s, d; word four: n, k, r, c, o, c, x, q, q; word five: a, c, e, g, t, o, a, d; word six: p, d, k, n, c, g, i, o, e, m. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "52",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "59",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "54",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "52"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "53"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/53"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "6",
+            "relative_gap": "6/53"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/53"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word 1: d, f, a, c; word 2: f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "params": {
+        "words": [
+          "dfac",
+          "f"
+        ]
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Tries",
+      "source_topic": "Allocated prefix-tree nodes",
+      "difficulty": "Easy",
+      "spoken_text": "You count trie nodes allocated while storing lowercase words. The words are spelled as word one: d, f, a, c; word two: f. Insert them in that order into an initially empty character trie that already has one root node. Each new character prefix needs one node, shared prefixes reuse existing nodes, and end-of-word markers are flags that allocate no nodes. What is the total allocated node count after insertion, including the root, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "forgets_initial_root"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "counts_end_of_word_markers_as_nodes"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "sums_word_lengths_without_sharing"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "initial_root_node_count",
+          "value": "1"
+        },
+        {
+          "name": "distinct_character_prefix_count",
+          "value": "5"
+        },
+        {
+          "name": "total_allocated_node_count",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "forgets_initial_root",
+            "absolute_gap": "1",
+            "relative_gap": "1/6"
+          },
+          {
+            "misconception": "counts_end_of_word_markers_as_nodes",
+            "absolute_gap": "2",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "sums_word_lengths_without_sharing",
+            "absolute_gap": "1",
+            "relative_gap": "1/6"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "What time and space does trie insertion use in terms of total input characters?",
+        "reference": "A trie node represents a character prefix rather than a whole-word occurrence. Insertion takes O(total input characters) expected time and at most O(total input characters) space, while shared prefixes reduce the actual node count."
+      }
+    }
+  ]
+}

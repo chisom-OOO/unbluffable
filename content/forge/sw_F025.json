@@ -1,0 +1,3907 @@
+{
+  "template_id": "sw_F025",
+  "pack": "software",
+  "topic": "Union-find",
+  "topics": [
+    "Union-find"
+  ],
+  "source_topic": "Disconnected vertex-pair count",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": true,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": false
+  },
+  "follow_up": {
+    "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+    "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "You merge groups of linked devices. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 4; 2 and 3; 3 and 5; 4 and 5. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You merge groups of linked devices. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and four; two and three; three and five; four and five. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "10"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "6",
+            "relative_gap": "6/5"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "1",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "A service tracks which node pairs remain disconnected. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 1; 1 and 2; 1 and 3; 2 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A service tracks which node pairs remain disconnected. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and one; one and two; one and three; two and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "6"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "10",
+            "relative_gap": "10/9"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "You inspect connectivity after a list of network links. There are 2 vertices numbered zero through 1, and the complete list of undirected edges is 0 and 1. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "nodes": 2
+      },
+      "answer": "0",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect connectivity after a list of network links. There are two vertices numbered zero through one, and the complete list of undirected edges is zero and one. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "-2",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "1"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "1"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "1",
+            "relative_gap": null
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": null
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "A grouping routine combines linked records. There are 4 vertices numbered zero through 3, and the complete list of undirected edges is 0 and 2; 1 and 2. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "nodes": 4
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A grouping routine combines linked records. There are four vertices numbered zero through three, and the complete list of undirected edges is zero and two; one and two. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "7",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "1",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "6"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "3"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "4",
+            "relative_gap": "4/3"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "You trace cross-component pairs after union operations. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 5. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            5
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "14",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You trace cross-component pairs after union operations. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and five. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "1"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "15",
+            "relative_gap": "15/14"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "You merge groups of linked devices. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 2; 0 and 4; 1 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You merge groups of linked devices. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and two; zero and four; one and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "4"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "7",
+            "relative_gap": "7/6"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "A service tracks which node pairs remain disconnected. There are 4 vertices numbered zero through 3, and the complete list of undirected edges is 0 and 3; 1 and 2. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "nodes": 4
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A service tracks which node pairs remain disconnected. There are four vertices numbered zero through three, and the complete list of undirected edges is zero and three; one and two. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "1",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "6"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "2"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "5",
+            "relative_gap": "5/4"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/4"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "You inspect connectivity after a list of network links. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 1 and 3; 4 and 5. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            1,
+            3
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect connectivity after a list of network links. There are six vertices numbered zero through five, and the complete list of undirected edges is one and three; four and five. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "2"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "14",
+            "relative_gap": "14/13"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/13"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "A grouping routine combines linked records. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 4; 1 and 5; 2 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A grouping routine combines linked records. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and four; one and five; two and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "4"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "12",
+            "relative_gap": "12/11"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/11"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "You trace cross-component pairs after union operations. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 1; 3 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "8",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You trace cross-component pairs after union operations. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and one; three and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "2"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "9",
+            "relative_gap": "9/8"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/8"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "You merge groups of linked devices. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 3 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            3,
+            4
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You merge groups of linked devices. There are five vertices numbered zero through four, and the complete list of undirected edges is three and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "1"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "10",
+            "relative_gap": "10/9"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "2/9"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "A service tracks which node pairs remain disconnected. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 1 and 2; 3 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A service tracks which node pairs remain disconnected. There are six vertices numbered zero through five, and the complete list of undirected edges is one and two; three and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "2"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "14",
+            "relative_gap": "14/13"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/13"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "You inspect connectivity after a list of network links. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 5; 1 and 5; 2 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect connectivity after a list of network links. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and five; one and five; two and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "4"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "12",
+            "relative_gap": "12/11"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/11"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "A grouping routine combines linked records. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 3; 0 and 4; 2 and 4; 2 and 5; 3 and 4; 3 and 5; 4 and 5. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A grouping routine combines linked records. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and three; zero and four; two and four; two and five; three and four; three and five; four and five. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "0",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "10"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "6",
+            "relative_gap": "6/5"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "5",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "You trace cross-component pairs after union operations. There are 4 vertices numbered zero through 3, and the complete list of undirected edges is 0 and 2; 0 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "nodes": 4
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You trace cross-component pairs after union operations. There are four vertices numbered zero through three, and the complete list of undirected edges is zero and two; zero and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "7",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "1",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "6"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "3"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "4",
+            "relative_gap": "4/3"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "You merge groups of linked devices. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 3; 1 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "8",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You merge groups of linked devices. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and three; one and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "2"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "9",
+            "relative_gap": "9/8"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/8"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "A service tracks which node pairs remain disconnected. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 1; 0 and 2; 0 and 4; 1 and 2; 1 and 4; 2 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A service tracks which node pairs remain disconnected. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and one; zero and two; zero and four; one and two; one and four; two and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "-3",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "6"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "5",
+            "relative_gap": "5/4"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "7",
+            "relative_gap": "7/4"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "You inspect connectivity after a list of network links. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 3; 1 and 4; 2 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect connectivity after a list of network links. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and three; one and four; two and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "4"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "7",
+            "relative_gap": "7/6"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "A grouping routine combines linked records. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 1 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            1,
+            4
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "14",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A grouping routine combines linked records. There are six vertices numbered zero through five, and the complete list of undirected edges is one and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "1"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "15",
+            "relative_gap": "15/14"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "You trace cross-component pairs after union operations. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 1; 0 and 2; 0 and 3; 0 and 4; 1 and 2; 1 and 3; 1 and 4; 2 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "0",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You trace cross-component pairs after union operations. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and one; zero and two; zero and three; zero and four; one and two; one and three; one and four; two and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "-7",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "10"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "1",
+            "relative_gap": null
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "7",
+            "relative_gap": null
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "You merge groups of linked devices. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 2. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            2
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "14",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You merge groups of linked devices. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and two. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "1"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "15",
+            "relative_gap": "15/14"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "A service tracks which node pairs remain disconnected. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 1 and 4; 1 and 5; 2 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A service tracks which node pairs remain disconnected. There are six vertices numbered zero through five, and the complete list of undirected edges is one and four; one and five; two and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "4"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "12",
+            "relative_gap": "12/11"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/11"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "You inspect connectivity after a list of network links. There are 4 vertices numbered zero through 3, and the complete list of undirected edges is 1 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            1,
+            3
+          ]
+        ],
+        "nodes": 4
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect connectivity after a list of network links. There are four vertices numbered zero through three, and the complete list of undirected edges is one and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "6"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "1"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "6",
+            "relative_gap": "6/5"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "A grouping routine combines linked records. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 2. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            2
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A grouping routine combines linked records. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and two. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "7",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "1"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "10",
+            "relative_gap": "10/9"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "2/9"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "You trace cross-component pairs after union operations. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 1; 2 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You trace cross-component pairs after union operations. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and one; two and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "2"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "14",
+            "relative_gap": "14/13"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/13"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "You merge groups of linked devices. There are 4 vertices numbered zero through 3, and the complete list of undirected edges is 0 and 1; 0 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "nodes": 4
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You merge groups of linked devices. There are four vertices numbered zero through three, and the complete list of undirected edges is zero and one; zero and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "7",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "1",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "6"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "3"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "4",
+            "relative_gap": "4/3"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "A service tracks which node pairs remain disconnected. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 4; 1 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "8",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A service tracks which node pairs remain disconnected. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and four; one and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "2"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "9",
+            "relative_gap": "9/8"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/8"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "You inspect connectivity after a list of network links. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 3; 1 and 2; 1 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect connectivity after a list of network links. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and three; one and two; one and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "6"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "5",
+            "relative_gap": "5/4"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "A grouping routine combines linked records. There are 4 vertices numbered zero through 3, and the complete list of undirected edges is 0 and 1; 0 and 2; 1 and 2; 2 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "nodes": 4
+      },
+      "answer": "0",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A grouping routine combines linked records. There are four vertices numbered zero through three, and the complete list of undirected edges is zero and one; zero and two; one and two; two and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "-3",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "6"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "6"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "1",
+            "relative_gap": null
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": null
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "You trace cross-component pairs after union operations. There are 4 vertices numbered zero through 3, and the complete list of undirected edges is none. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [],
+        "nodes": 4
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You trace cross-component pairs after union operations. There are four vertices numbered zero through three, and the complete list of undirected edges is none. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "6"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "0"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "7",
+            "relative_gap": "7/6"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "1",
+            "relative_gap": "1/6"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "You merge groups of linked devices. There are 4 vertices numbered zero through 3, and the complete list of undirected edges is 0 and 3; 1 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "nodes": 4
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You merge groups of linked devices. There are four vertices numbered zero through three, and the complete list of undirected edges is zero and three; one and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "7",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "1",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "6"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "3"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "4",
+            "relative_gap": "4/3"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "A service tracks which node pairs remain disconnected. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 1; 2 and 3; 3 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A service tracks which node pairs remain disconnected. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and one; two and three; three and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "4"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "7",
+            "relative_gap": "7/6"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "You inspect connectivity after a list of network links. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 1 and 2; 1 and 3; 2 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect connectivity after a list of network links. There are six vertices numbered zero through five, and the complete list of undirected edges is one and two; one and three; two and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "6"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "10",
+            "relative_gap": "10/9"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "1",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "A grouping routine combines linked records. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 3; 1 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A grouping routine combines linked records. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and three; one and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "2"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "14",
+            "relative_gap": "14/13"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/13"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "You trace cross-component pairs after union operations. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 1; 1 and 4; 3 and 4; 3 and 5; 4 and 5. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You trace cross-component pairs after union operations. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and one; one and four; three and four; three and five; four and five. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "4",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "10"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "6",
+            "relative_gap": "6/5"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "1",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "You merge groups of linked devices. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 2; 0 and 3; 0 and 4; 1 and 2; 1 and 4; 2 and 3; 2 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "0",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You merge groups of linked devices. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and two; zero and three; zero and four; one and two; one and four; two and three; two and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "-5",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "10"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "1",
+            "relative_gap": null
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "5",
+            "relative_gap": null
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "A service tracks which node pairs remain disconnected. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 2; 1 and 3; 2 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A service tracks which node pairs remain disconnected. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and two; one and three; two and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "6"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "5",
+            "relative_gap": "5/4"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "You inspect connectivity after a list of network links. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 4; 2 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            4
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "8",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect connectivity after a list of network links. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and four; two and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "5",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "2"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "9",
+            "relative_gap": "9/8"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/8"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "A grouping routine combines linked records. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 1. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "14",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A grouping routine combines linked records. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and one. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "1"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "15",
+            "relative_gap": "15/14"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "You trace cross-component pairs after union operations. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 1 and 3; 1 and 4; 2 and 5; 3 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You trace cross-component pairs after union operations. There are six vertices numbered zero through five, and the complete list of undirected edges is one and three; one and four; two and five; three and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "4"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "12",
+            "relative_gap": "12/11"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "5",
+            "relative_gap": "5/11"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "You merge groups of linked devices. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 1; 2 and 5; 3 and 4; 3 and 5. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "8",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You merge groups of linked devices. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and one; two and five; three and four; three and five. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "6",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "7"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "9",
+            "relative_gap": "9/8"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "A service tracks which node pairs remain disconnected. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 1; 0 and 4; 1 and 4; 2 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A service tracks which node pairs remain disconnected. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and one; zero and four; one and four; two and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "13",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "1",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "4"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "7",
+            "relative_gap": "7/6"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "5",
+            "relative_gap": "5/6"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "You inspect connectivity after a list of network links. There are 4 vertices numbered zero through 3, and the complete list of undirected edges is 0 and 1; 1 and 2. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "nodes": 4
+      },
+      "answer": "3",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect connectivity after a list of network links. There are four vertices numbered zero through three, and the complete list of undirected edges is zero and one; one and two. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "7",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "1",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "6"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "3"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "4",
+            "relative_gap": "4/3"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "A grouping routine combines linked records. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 4; 1 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A grouping routine combines linked records. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and four; one and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "10",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "2"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "14",
+            "relative_gap": "14/13"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/13"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "You trace cross-component pairs after union operations. There are 4 vertices numbered zero through 3, and the complete list of undirected edges is 1 and 2. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            1,
+            2
+          ]
+        ],
+        "nodes": 4
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You trace cross-component pairs after union operations. There are four vertices numbered zero through three, and the complete list of undirected edges is one and two. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "6"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "1"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "6",
+            "relative_gap": "6/5"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "You merge groups of linked devices. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 5; 2 and 3; 2 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            5
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You merge groups of linked devices. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and five; two and three; two and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "4"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "12",
+            "relative_gap": "12/11"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "3",
+            "relative_gap": "3/11"
+          }
+        ],
+        "min_wrong_pair_gap": "15",
+        "min_distinct_wrong_pair_gap": "15"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "A service tracks which node pairs remain disconnected. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 2; 1 and 2; 2 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A service tracks which node pairs remain disconnected. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and two; one and two; two and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "3",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "6"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "5",
+            "relative_gap": "5/4"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "1",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "You inspect connectivity after a list of network links. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 1; 0 and 4; 3 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You inspect connectivity after a list of network links. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and one; zero and four; three and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "8",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "6"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "10",
+            "relative_gap": "10/9"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "1",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "A grouping routine combines linked records. There are 5 vertices numbered zero through 4, and the complete list of undirected edges is 0 and 2; 0 and 3; 0 and 4; 1 and 3; 1 and 4; 2 and 3; 2 and 4; 3 and 4. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "nodes": 5
+      },
+      "answer": "0",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "A grouping routine combines linked records. There are five vertices numbered zero through four, and the complete list of undirected edges is zero and two; zero and three; zero and four; one and three; one and four; two and three; two and four; three and four. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "-7",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "10"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "10"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "1",
+            "relative_gap": null
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "7",
+            "relative_gap": null
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "You trace cross-component pairs after union operations. There are 6 vertices numbered zero through 5, and the complete list of undirected edges is 0 and 3. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "params": {
+        "edges": [
+          [
+            0,
+            3
+          ]
+        ],
+        "nodes": 6
+      },
+      "answer": "14",
+      "tolerance": "0",
+      "topic": "Union-find",
+      "source_topic": "Disconnected vertex-pair count",
+      "difficulty": "Medium",
+      "spoken_text": "You trace cross-component pairs after union operations. There are six vertices numbered zero through five, and the complete list of undirected edges is zero and three. There are no other edges. Count unordered pairs of different vertices with no connecting path after all these links are present. Isolated vertices are included. What is the disconnected-pair count, as a whole number?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "counts_ordered_pairs_double"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "subtracts_edge_count_instead_of_connected_pairs"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_unordered_pairs",
+          "value": "15"
+        },
+        {
+          "name": "connected_pairs_within_components",
+          "value": "1"
+        },
+        {
+          "name": "disconnected_pair_count",
+          "value": "14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "counts_ordered_pairs_double",
+            "absolute_gap": "15",
+            "relative_gap": "15/14"
+          },
+          {
+            "misconception": "subtracts_edge_count_instead_of_connected_pairs",
+            "absolute_gap": "2",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "With union by size and path compression, what are the total time and auxiliary-space costs?",
+        "reference": "Each vertex in the first component becomes connected to every vertex in the second, creating exactly that many newly connected pairs. Union by size with path compression takes O((V plus E) times inverse Ackermann of V) time and O(V) auxiliary space."
+      }
+    }
+  ]
+}
