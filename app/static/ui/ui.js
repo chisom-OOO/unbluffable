@@ -103,6 +103,38 @@
     return `<button type="button" class="track" role="radio" aria-checked="${selected}" tabindex="${selected ? 0 : -1}" data-track="${escapeHtml(t.id)}">${inner}</button>`;
   }
 
-  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice };
-  document.addEventListener("DOMContentLoaded", () => { initTheme(); initMute(); });
+  // The profile (decision log 23), kept in this browser. One store per page, so a blocked
+  // storage still keeps progress for this visit.
+  const BLOCKED = { getItem() { throw new Error("blocked"); }, setItem() { throw new Error("blocked"); }, removeItem() { throw new Error("blocked"); } };
+  let profileStore = null;
+  function profile() {
+    if (!window.UBProfile) return null;
+    if (!profileStore) {
+      let local = null;
+      try { local = window.localStorage; } catch { local = null; }
+      profileStore = window.UBProfile.store(local || BLOCKED);
+    }
+    return profileStore;
+  }
+  // The rating shown for a profile: its default track, else the track with the most answers.
+  function headlineTrack(p) {
+    if (p.default_track) return p.default_track;
+    const counts = {};
+    p.answers.forEach((a) => { counts[a.t] = (counts[a.t] || 0) + 1; });
+    return Object.keys(counts).sort((a, b) => counts[b] - counts[a])[0] || null;
+  }
+  function initProfileLink() {
+    const link = document.getElementById("profile-link");
+    const S = profile();
+    if (!link || !S) return;
+    const p = S.load(), track = headlineTrack(p);
+    const o = track ? window.UBProfile.overall(window.UBProfile.areaScores(p, track)) : null;
+    const span = link.querySelector(".profile-rating");
+    span.hidden = !o;
+    span.textContent = o ? String(window.UBProfile.shown(o.rating)) : "";
+    link.setAttribute("aria-label", o ? `Profile, rating estimate ${window.UBProfile.shown(o.rating)}` : "Profile");
+  }
+
+  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack };
+  document.addEventListener("DOMContentLoaded", () => { initTheme(); initMute(); initProfileLink(); });
 })();

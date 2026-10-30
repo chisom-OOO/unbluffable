@@ -4,6 +4,11 @@
 // each line appearing as it is spoken: the interviewer in one voice, the candidate in another
 // (or, with a single voice, at a different pitch and rate). The mute setting is respected.
 document.addEventListener("DOMContentLoaded", () => {
+  // First visit (decision log 23): the one-screen onboarding, unless storage is blocked
+  // (then a skip couldn't be remembered, so the page just works without a profile).
+  const store = window.UB.profile();
+  if (store && store.ok && !store.load().onboarded) { location.replace("/ui/welcome"); return; }
+
   const data = window.UB_FAKE;
   const { highlight, escapeHtml, reducedMotion, trackCard, pickVoice } = window.UB;
   const $ = (id) => document.getElementById(id);

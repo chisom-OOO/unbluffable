@@ -17,6 +17,40 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(render)
     .catch(() => unavailable("This report is no longer available. Reports are kept in memory for the session only."));
 
+  // Decision log 23: add this interview to the profile once, then show what changed.
+  function showProgress(e) {
+    const P = window.UBProfile, S = window.UB.profile();
+    if (!P || !S || !e.track || !Array.isArray(e.rating_items)) return;
+    const profile = S.load();
+    const entry = P.applyReport(profile, e, sessionId, new Date().toISOString().slice(0, 10), null);
+    if (!entry) return;
+    S.save(profile);
+    const n = (x) => (x === null ? null : P.shown(x));
+    const changes = entry.areas.map((a) => {
+      const text = a.after === null ? "Not assessed yet" : a.before === null ? `${n(a.after)} (first estimate)` : `${n(a.before)} → ${n(a.after)}`;
+      return `<li><span>${escapeHtml(a.area)}</span><span class="mono">${escapeHtml(text)}</span></li>`;
+    }).join("");
+    const head = entry.after === null ? "<p>No rating estimate yet: an area is assessed after two answers.</p>"
+      : entry.placement ? `<p><strong>Starting rating estimate: <span class="mono">${n(entry.after)}</span></strong> · ${P.band(entry.after)}. Interviews on this track now start at ${P.startLevel(entry.after)}.</p>`
+      : `<p>Overall estimate: <span class="mono">${entry.before === null ? n(entry.after) : `${n(entry.before)} → ${n(entry.after)}`}</span> · ${P.band(entry.after)}</p>`;
+    let radar = "";
+    if (entry.placement && profile.placement[e.track]) {
+      const areas = Object.keys(profile.placement[e.track].scores);
+      if (areas.length) {
+        radar = `<figure class="radar-figure">${P.radarSvg(areas, [{ key: "placement", name: "Placement", values: profile.placement[e.track].scores }],
+          "Placement estimates by strength area, 0 to 100")}<ul class="legend"><li><span class="swatch swatch-placement" aria-hidden="true"></span>Placement</li></ul></figure>`;
+      }
+    }
+    $("progress-body").innerHTML = head + (changes ? `<ul class="change-list">${changes}</ul>` : "") + radar
+      + (S.ok ? "" : `<p class="storage-note">Your browser is blocking storage, so this lasts only for this visit.</p>`)
+      + `<p class="fine">Estimates from your scored answers. <a href="/ui/profile?track=${encodeURIComponent(e.track)}">See your profile</a></p>`;
+    $("progress").hidden = false;
+    // The header link shows the new rating.
+    const link = document.querySelector("#profile-link .profile-rating");
+    const o = P.overall(P.areaScores(profile, window.UB.headlineTrack(profile)));
+    if (link && o) { link.hidden = false; link.textContent = String(P.shown(o.rating)); }
+  }
+
   function render(e) {
 
     const ICON = {
@@ -157,6 +191,8 @@ document.addEventListener("DOMContentLoaded", () => {
         select(to, true);
       });
     });
+
+    showProgress(e);
 
     $("estimate").innerHTML = e.estimate.map((r) =>
       `<tr><td>${escapeHtml(r.label)}</td><td class="mono num-col">${escapeHtml(r.p)}</td></tr>`).join("");
