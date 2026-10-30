@@ -16,9 +16,11 @@ from contextlib import suppress
 from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 
 from app import interview_report, voice_routes
+from app.areas import AREAS
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
-from engine.bank import DEFAULT_PACK, MIXED, PACKS, START_LEVELS, Bank, BankSource, load_bank
+from app.placement import PlacementInterview, PlacementSource
+from engine.bank import DEFAULT_PACK, DIFFICULTIES, MIXED, PACKS, START_LEVELS, Bank, BankSource, load_bank
 from engine.interview import Interview
 from voice.recording import VoiceError
 from voice.relay import realtime_answer
@@ -49,10 +51,12 @@ def topics() -> dict:
         options = [{"id": MIXED, "name": MIXED, "count": count}] if found else []
         options += [{"id": topic, "name": topic, "count": n} for topic, n in found]
         tracks.append({"id": pack, "name": name, "count": count, "available": bool(options),
-                       "topics": options, "default": options[0]["id"] if options else None})
+                       "topics": options, "default": options[0]["id"] if options else None,
+                       "areas": list(AREAS[pack])})
     open_tracks = [t["id"] for t in tracks if t["available"]]
     default = DEFAULT_PACK if DEFAULT_PACK in open_tracks else open_tracks[0] if open_tracks else None
-    return {"tracks": tracks, "default_track": default, "levels": list(START_LEVELS),
+    # Easy and Medium are chosen in setup; Hard is the start for a rating of 70+ (decision log 23).
+    return {"tracks": tracks, "default_track": default, "levels": list(DIFFICULTIES),
             "default_level": START_LEVELS[0]}
 
 
@@ -79,6 +83,12 @@ def selection(pack, topic) -> tuple[dict, str | tuple[str, ...]]:
     return track, tuple(dict.fromkeys(chosen))
 
 
+def placement_for(pack) -> tuple[str, Interview]:
+    """Placement (decision log 23): five questions from five strength areas, from Medium."""
+    track, _ = selection(pack, None)
+    return track["id"], PlacementInterview(source=PlacementSource(bank(), track["id"]))
+
+
 def topic_label(pack, topic) -> str:
     """For the report header: the selected topics, or "All topics"."""
     _, chosen = selection(pack, topic)
@@ -88,8 +98,8 @@ def topic_label(pack, topic) -> str:
 def interview_for(pack, topic, level) -> Interview:
     """A forge interview on the chosen track and topics."""
     track, chosen = selection(pack, topic)
-    if level not in START_LEVELS:
-        raise VoiceError("Choose a starting level: Easy or Medium.")
+    if level not in DIFFICULTIES:
+        raise VoiceError("Choose a starting level: Easy, Medium or Hard.")
     return Interview(source=BankSource(bank(), chosen, level, pack=track["id"]))
 
 
@@ -201,12 +211,17 @@ async def interview_socket(socket: WebSocket):
         deadline = time.monotonic() + SESSION_SECONDS
         if begin.get("drill") is not None:
             session = drill_for(begin["drill"], socket.send_json, listen, VoiceAnalyzer(provider), deadline)
+        elif begin.get("placement") is True:
+            track, interview = placement_for(begin.get("pack"))
+            session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
+            session.track, session.placement, session.topics = track, True, "Placement: one question per strength area"
         else:
             # "topics" (a list) is what the page sends; a single "topic" or none (all) still works.
             chosen = begin["topics"] if begin.get("topics") is not None else begin.get("topic")
             interview = interview_for(begin.get("pack"), chosen, begin.get("level", START_LEVELS[0]))
             session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
             session.topics = topic_label(begin.get("pack"), chosen)
+            session.track = selection(begin.get("pack"), chosen)[0]["id"]
         session.conditions = conditions(begin, provider.mode)
         session_id = keep(session)
         await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,

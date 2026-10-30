@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from app.database import initialize_database
 from app.model_diagnostics import log_startup_models
 from app.voice_routes import router as voice_router
+from app.interest import router as interest_router
 from app.interview_routes import router as interview_router
 
 
@@ -23,6 +24,7 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title="Unbluffable", lifespan=lifespan)
 app.include_router(voice_router)
 app.include_router(interview_router)
+app.include_router(interest_router)
 app.mount("/voice-static", StaticFiles(directory=Path(__file__).parent / "static"), name="voice-static")
 app.mount("/ui-static", StaticFiles(directory=Path(__file__).parent / "static" / "ui"), name="ui-static")
 
@@ -60,3 +62,13 @@ def ui_interview():
 @app.get("/ui/end")
 def ui_end():
     return FileResponse(TEMPLATES / "end.html")
+
+
+@app.get("/ui/profile")
+def ui_profile():
+    return FileResponse(TEMPLATES / "profile.html")
+
+
+@app.get("/ui/welcome")
+def ui_welcome():
+    return FileResponse(TEMPLATES / "welcome.html")

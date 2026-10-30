@@ -358,7 +358,8 @@ def test_report_uses_only_recorded_values():
                        + [value(nv.value) for q in session.questions for nv in q.puzzle.named_values]
                        + [value(x) for q in session.questions if q.puzzle.diagnostic  # "Why these numbers?"
                           for x in (q.puzzle.diagnostic.correct, q.puzzle.diagnostic.wrong)])
-    extra = (numbers(without_receipts(report)) - recorded - numbers(report["estimate"])
+    # rating_items carry the engine's weight times the difficulty cap (decision log 23).
+    extra = (numbers(without_receipts(report)) - recorded - numbers(report["estimate"]) - numbers(report["rating_items"])
              - numbers([report["times"], [b["sub"] for b in report["report"]["breakdown"]]]) - {"0", "1", "2", "3", "4"})
     assert extra == set()
     # Receipts show the exact computation: numbers from the candidate's words or the engine's

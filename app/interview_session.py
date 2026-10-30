@@ -290,6 +290,8 @@ class ExamSession:
         self._followed: set[str] = set()  # templates whose follow-up was asked
         self.conditions = "exam"  # decision log 20: exam / typed / replay, set by the route
         self.topics = None  # the selected topics for the report header, set by the route
+        self.track = None  # the track (template pack), set by the route
+        self.placement = False  # a placement interview (decision log 23)
 
     # --- events ---
     async def line(self, kind: str, text: str, target: int | None = None, receipt: dict | None = None,

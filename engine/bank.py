@@ -392,8 +392,8 @@ class BankSource:
 
     def __init__(self, bank: Bank, topic: str = MIXED, start: str = "Easy", rng: random.Random | None = None,
                  pack: str | None = None):
-        if start not in START_LEVELS:
-            raise ValueError(f"start must be one of {START_LEVELS}")
+        if start not in DIFFICULTIES:  # Easy and Medium by choice; Hard from a rating of 70+ (decision log 23)
+            raise ValueError(f"start must be one of {DIFFICULTIES}")
         self.templates = {t.template_id: t for t in bank.pool(topic, pack)}
         if not self.templates:
             raise ValueError(f"no accepted templates for topic {topic!r}" + (f" in pack {pack!r}" if pack else ""))

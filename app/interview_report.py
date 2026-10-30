@@ -12,6 +12,7 @@ from fractions import Fraction
 
 from app import exam_text as say
 from app import receipts
+from app.areas import answer_value, area_for
 from app.drill import DrillSession, drill_targets
 from app.interview_session import ExamSession, QuestionLog
 from engine.bank import ForgePuzzle, same_mistake
@@ -257,6 +258,21 @@ CONDITIONS = {
 }
 
 
+def rating_items(session: ExamSession, qs: list[QuestionLog]) -> list[dict]:
+    """Decision log 23: one item per scored original or twin (not part 2 or follow-ups),
+    from the engine's outcome and weight. The profile's rating is built from these."""
+    out = []
+    for q in qs:
+        if q.kind not in ("new", "twin"):
+            continue
+        topic = getattr(q.puzzle, "topic", None)
+        value = answer_value(q.scored, q.weight, q.puzzle.difficulty)
+        out.append({"q": name(q), "topic": topic, "area": area_for(session.track or "", topic),
+                    "difficulty": q.puzzle.difficulty, "outcome": q.scored, "weight": str(q.weight),
+                    "value": str(value), "value_float": round(float(value), 4)})
+    return out
+
+
 def build(session: ExamSession, templates: dict | None = None) -> dict:
     iv = session.interview
     qs = [q for q in session.questions if q.scored is not None]
@@ -279,6 +295,9 @@ def build(session: ExamSession, templates: dict | None = None) -> dict:
         "sample": False,
         "conditions": CONDITIONS[session.conditions],
         "topics": session.topics,
+        "track": session.track,
+        "placement": session.placement,
+        "rating_items": rating_items(session, qs),
         "label": LABEL_KEYS[label],
         "misconception": misconception_name(misconception),
         "misconception_note": None,

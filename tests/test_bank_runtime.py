@@ -273,9 +273,10 @@ def test_session_twin_is_aimed_and_explained_after_it_is_answered(bank):
     assert all(item["title"] != "Why these numbers?" for item in report["report"]["breakdown"][0]["items"])
 
 
-def test_ladder_starts_easy_or_medium_and_steps_on_first_answers(bank):
+def test_ladder_starts_at_a_known_level_and_steps_on_first_answers(bank):
     with pytest.raises(ValueError):
-        BankSource(bank, start="Hard")
+        BankSource(bank, start="Expert")
+    assert BankSource(bank, start="Hard").difficulty == "Hard"  # a rating of 70+ starts here (decision log 23)
     source = BankSource(bank, start="Easy", rng=random.Random(1))
     assert source.candidates() == ["fx_dice_total"]
     source.step(Outcome.CORRECT)
@@ -476,7 +477,7 @@ def test_ladder_moves_between_new_questions_in_mixed(bank):
 def test_topics_list_forge_topics_and_mixed(monkeypatch, bank):
     monkeypatch.setattr(interview_routes, "_BANK", bank)
     data = TestClient(app).get("/api/interview/topics").json()
-    assert data["default_track"] == "quant" and data["levels"] == ["Easy", "Medium"]
+    assert data["default_track"] == "quant" and data["levels"] == ["Easy", "Medium", "Hard"]
     track, *rest = data["tracks"]  # the fixtures carry no pack, so all are Quant
     assert (track["id"], track["name"], track["default"], track["available"]) == ("quant", "Quant", "Mixed", True)
     assert [(t["id"], t["available"], t["topics"]) for t in rest] == [
