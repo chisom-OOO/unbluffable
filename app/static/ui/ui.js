@@ -29,6 +29,34 @@
     });
   }
 
+  // Mute (the interviewer's voice, and the landing sample): one setting, remembered in this
+  // browser when storage allows. Pages hear changes as a "ub-mute" event.
+  let muted = store.get("ub-muted") === "true";
+  function initMute() {
+    const btn = document.getElementById("mute");
+    if (!btn) return;
+    const sync = () => {
+      btn.setAttribute("aria-pressed", String(muted));
+      btn.setAttribute("aria-label", muted ? "Unmute interviewer" : "Mute interviewer");
+    };
+    sync();
+    btn.addEventListener("click", () => {
+      muted = !muted;
+      store.set("ub-muted", String(muted));
+      sync();
+      document.dispatchEvent(new CustomEvent("ub-mute", { detail: { muted } }));
+    });
+  }
+
+  // An English speech voice: natural-sounding first, then British, then American. `not`
+  // skips one voice, so a second speaker can sound different.
+  function pickVoice(not) {
+    const voices = (window.speechSynthesis?.getVoices() || []).filter((v) => v.lang.startsWith("en") && v !== not)
+      .sort((a, b) => a.name.localeCompare(b.name));
+    return voices.find((v) => /Natural|Online/i.test(v.name)) || voices.find((v) => v.lang === "en-GB")
+      || voices.find((v) => v.lang === "en-US") || voices[0] || null;
+  }
+
   function escapeHtml(s) {
     return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
@@ -75,6 +103,6 @@
     return `<button type="button" class="track" role="radio" aria-checked="${selected}" tabindex="${selected ? 0 : -1}" data-track="${escapeHtml(t.id)}">${inner}</button>`;
   }
 
-  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard };
-  document.addEventListener("DOMContentLoaded", initTheme);
+  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice };
+  document.addEventListener("DOMContentLoaded", () => { initTheme(); initMute(); });
 })();

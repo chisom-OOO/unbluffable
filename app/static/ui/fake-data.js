@@ -1,21 +1,21 @@
 // The landing page's puzzle and its labelled sample exchange. Nothing here comes from a model or the engine.
-// The puzzle states percentages only (decision log 9); the hint introduces the round population of 2,000.
-// Numbers are consistent with it: 20 fraud, 18 flagged; 1,980 genuine, 99 flagged; 18/117 = 2/13.
+// Two fair dice numbered 1 to 9 total 16 only as 7+9, 8+8 and 9+7; the first die is above seven
+// in two of those three, so the exact answer is 2/3 (tests/test_landing_sample.py checks this).
 window.UB_FAKE = {
   puzzle: {
     pack: "Quant",
-    title: "The flagged transaction",
-    text: "1% of transactions are fraudulent. The detector flags 90% of fraudulent transactions and 5% of genuine ones. A transaction is flagged. What is the probability it is fraud?",
-    guideSeconds: 120,
+    title: "Two dice, total sixteen",
+    text: "I roll two fair dice numbered one to nine and tell you the total is sixteen. What's the chance the first die is above seven?",
     kind: "New puzzle",
   },
 
-  // Landing sample (spec/01 "Landing"). Written text, labelled as a sample until a real run is recorded.
-  // Challenges are Socratic questions about the candidate's own words, never explanations.
+  // Landing sample (spec/01 "Landing"), labelled "Sample". `challenge` marks the words the
+  // challenge quotes. Challenges are Socratic questions about the candidate's own words.
   replay: {
     lines: [
-      { who: "candidate", text: "…so if a transaction gets flagged, it's about 90 percent likely to be fraud.", challenge: "90 percent" },
-      { who: "interviewer", kind: "challenge", text: "You said 90 percent. Is that the chance a flag is fraud, or the chance fraud gets flagged?" },
+      { who: "candidate", text: "…so about a half, one half.", challenge: "a half" },
+      { who: "interviewer", kind: "challenge", text: "You said a half. Which pairs actually give sixteen, and how many have the first die above seven?" },
+      { who: "candidate", text: "Seven-nine, eight-eight, nine-seven. Two of three, so two thirds." },
     ],
   },
 };
