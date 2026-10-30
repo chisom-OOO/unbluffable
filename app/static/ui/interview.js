@@ -725,12 +725,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- Track cards, then topics (template "pack"; tracks being added can't be picked) ----------
   // Topics are toggle chips, all selected by default; the last selection is remembered per
-  // track (this browser only). The classic fraud alert is not offered here: the server still
-  // runs it for a track with no templates (the picker is then hidden), for replay and tests.
+  // track (this browser only). A track with no topics hides the picker.
   const trackBox = $("track");
   const topicBox = $("topic");
   let tracks = [], chosenTrack = null, chosenTopics = new Set(), topicsKnown = false, picking = true;
-  const trackTopics = () => (tracks.find((t) => t.id === chosenTrack)?.topics || []).filter((o) => o.id !== "Mixed" && o.id !== "fraud");
+  const trackTopics = () => (tracks.find((t) => t.id === chosenTrack)?.topics || []).filter((o) => o.id !== "Mixed");
   const allTopics = () => new Set(trackTopics().map((o) => o.id));
   // Topics sent with Start: null (the server's default) when the list failed or there are none.
   const sentTopics = () => (topicsKnown && trackTopics().length ? [...chosenTopics] : null);

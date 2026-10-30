@@ -27,7 +27,6 @@ router = APIRouter(prefix="/api/interview")
 
 MAX_SESSIONS = 200
 SESSIONS: OrderedDict[str, ExamSession] = OrderedDict()
-FRAUD = "fraud"  # the classic T1-T3 interview with the fraud alert flagship; selectable, not the default
 _BANK: Bank | None = None
 
 
@@ -41,30 +40,31 @@ def bank() -> Bank:
 
 def topics() -> dict:
     """Every track (template pack), each with Mixed and its topics. A track with no
-    accepted templates is listed as not available ("Being added"). The fraud alert sits
-    under Quant; with no templates at all it is the only choice."""
-    tracks, anything = [], bool(bank().templates)
+    accepted templates is listed as not available ("Being added"); with no templates at
+    all there is no default track and no interview can start."""
+    tracks = []
     for pack, name in PACKS.items():
         found = bank().topics(pack)
         count = sum(n for _, n in found)
         options = [{"id": MIXED, "name": MIXED, "count": count}] if found else []
         options += [{"id": topic, "name": topic, "count": n} for topic, n in found]
-        if pack == DEFAULT_PACK and (found or not anything):
-            options.append({"id": FRAUD, "name": "Fraud alert (classic)", "count": None})
         tracks.append({"id": pack, "name": name, "count": count, "available": bool(options),
                        "topics": options, "default": options[0]["id"] if options else None})
     open_tracks = [t["id"] for t in tracks if t["available"]]
-    default = DEFAULT_PACK if DEFAULT_PACK in open_tracks else open_tracks[0]
+    default = DEFAULT_PACK if DEFAULT_PACK in open_tracks else open_tracks[0] if open_tracks else None
     return {"tracks": tracks, "default_track": default, "levels": list(START_LEVELS),
             "default_level": START_LEVELS[0]}
 
 
 def selection(pack, topic) -> tuple[dict, str | tuple[str, ...]]:
     """The track (an unavailable one falls back to the default) and the chosen topics:
-    a list of the track's topics, one topic, or None / Mixed for all of them. The fraud
-    alert is chosen on its own. Unknown topics are rejected."""
+    a list of the track's topics, one topic, or None / Mixed for all of them. Unknown
+    topics are rejected."""
     found = topics()
-    track = next((t for t in found["tracks"] if t["id"] == pack and t["available"]), None)         or next(t for t in found["tracks"] if t["id"] == found["default_track"])
+    if found["default_track"] is None:
+        raise VoiceError("No questions are available yet.")
+    track = next((t for t in found["tracks"] if t["id"] == pack and t["available"]), None) \
+        or next(t for t in found["tracks"] if t["id"] == found["default_track"])
     known = {option["id"] for option in track["topics"]}
     if topic is None:
         return track, track["default"]
@@ -73,11 +73,7 @@ def selection(pack, topic) -> tuple[dict, str | tuple[str, ...]]:
         raise VoiceError("Choose at least one topic.")
     if not all(isinstance(t, str) and t in known for t in chosen):
         raise VoiceError("Choose topics from this track.")
-    if FRAUD in chosen:
-        if len(chosen) > 1:
-            raise VoiceError("The fraud alert runs on its own; choose it without other topics.")
-        return track, FRAUD
-    forge = known - {MIXED, FRAUD}
+    forge = known - {MIXED}
     if MIXED in chosen or set(chosen) == forge:
         return track, MIXED
     return track, tuple(dict.fromkeys(chosen))
@@ -86,14 +82,12 @@ def selection(pack, topic) -> tuple[dict, str | tuple[str, ...]]:
 def topic_label(pack, topic) -> str:
     """For the report header: the selected topics, or "All topics"."""
     _, chosen = selection(pack, topic)
-    return {MIXED: "All topics", FRAUD: "Fraud alert (classic)"}.get(chosen) if isinstance(chosen, str) else ", ".join(chosen)
+    return "All topics" if chosen == MIXED else ", ".join(chosen)
 
 
 def interview_for(pack, topic, level) -> Interview:
-    """The fraud alert is the fallback only when no forge template is accepted yet."""
+    """A forge interview on the chosen track and topics."""
     track, chosen = selection(pack, topic)
-    if chosen == FRAUD:
-        return Interview(demo=True)
     if level not in START_LEVELS:
         raise VoiceError("Choose a starting level: Easy or Medium.")
     return Interview(source=BankSource(bank(), chosen, level, pack=track["id"]))
@@ -124,7 +118,7 @@ def replay_speed() -> float:
 
 @router.get("/topics")
 def topic_list():
-    """Tracks with accepted templates; each lists Mixed and its topics with counts (Quant also the fraud alert)."""
+    """Tracks with accepted templates; each lists Mixed and its topics with counts."""
     return topics()
 
 

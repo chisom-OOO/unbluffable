@@ -23,19 +23,7 @@ LABEL_KEYS = {
     Label.NOT_SHOWN: "not-shown",
     Label.MORE_EVIDENCE: "more-evidence",
 }
-MISCONCEPTIONS = {
-    "transposed_conditional": ("Transposed conditional", "reading the chance of the evidence given the cause as the chance of the cause given the evidence."),
-    "base_rate_neglect": ("Base rate neglect", "leaving out how rare the cause is to begin with."),
-    "ignores_data": ("Ignores the evidence", "answering with the starting chance alone."),
-    "ignores_prior": ("Ignores the starting chance", "using the evidence but dropping the prior."),
-}
-TIPS = {
-    "transposed_conditional": "Before you answer, say which way the condition runs (\"given flagged, how likely fraud?\"). Then count both groups that show the evidence out of a round total.",
-    "base_rate_neglect": "Start from a round total and the base rate, then count both groups that show the evidence before you divide.",
-    "ignores_data": "After the starting chance, ask what the evidence changes: count both groups that show it.",
-    "ignores_prior": "Keep the starting chance in: picture a round total and split it by the prior before applying the evidence.",
-    None: "Say your plan out loud before the numbers: pick a round total, count both groups that show the evidence, then divide.",
-}
+# One tip for every report: forge questions name their own misconceptions.
 FORGE_TIP = "Say your plan out loud before the numbers, work one step at a time, and check each step against the question."
 LEVELS = 3
 
@@ -51,18 +39,11 @@ def exact_value(puzzle) -> str:
 
 
 def exact(q: QuestionLog) -> str:
-    if isinstance(q.puzzle, ForgePuzzle):
-        return exact_value(q.puzzle)
-    a, c = q.puzzle.answer, q.puzzle.counts
-    keys = {"T1": ("fraud_flagged", "genuine_flagged"), "T2": ("defective_a", "defective_b"),
-            "T3": ("biased_all_heads", "fair_all_heads")}[q.puzzle.template_id]
-    hit, other = c[keys[0]], c[keys[1]]
-    ratio = f"{hit}/{hit + other} = " if Fraction(hit, hit + other) == a and (hit, hit + other) != (a.numerator, a.denominator) else ""
-    return f"{ratio}{a.numerator}/{a.denominator} ≈ {pct(a)}"
+    return exact_value(q.puzzle)
 
 
 def misconception_name(key: str | None) -> str | None:
-    return MISCONCEPTIONS[key][0] if key in MISCONCEPTIONS else key
+    return key  # forge misconceptions are named in the template
 
 
 def said(answer) -> str:
@@ -250,21 +231,16 @@ def sections(qs: list[QuestionLog], forge: bool) -> dict:
         if q.scored == "correct":
             well.append({**items[-1], **see, "title": "Keep doing this: " + ("right with no help" if not (q.recovered or q.hints or q.nudges) else "you got there")})
         if q.first_wrong is not None:
-            key = q.first_wrong[0].misconception
-            title = {"transposed_conditional": "Say which way the condition runs before you give a number",
-                     "base_rate_neglect": "Start from the base rate and count both groups"}.get(
-                key, "Show the steps behind your number" if forge else "Show the counts behind your number")
-            improve.append({**items[0], **see, "title": title})
+            improve.append({**items[0], **see, "title": "Show the steps behind your number"})
         if q.hints:
-            improve.append({"title": "Try the next step yourself before asking for help" if forge
-                            else "Pick a round total yourself before asking for help",
+            improve.append({"title": "Try the next step yourself before asking for help",
                             "text": "You asked for a hint on this question.", "quote": q.said[0] if q.said else items[0]["quote"],
                             "seen": [q.number], **see, "verdict": f"{q.hints} hint{'s' if q.hints != 1 else ''} used",
                             "receipt": score_receipt(q, q.said[0] if q.said else items[0]["quote"])})
 
     kinds = {"twin": "Twin, new numbers", "drill": "Aimed at the mistake", "check": "New numbers, no help"}
     breakdown = [{"tab": name(q), "sub": f"{kinds.get(q.kind, 'New puzzle')} · "
-                  + (f"{q.puzzle.topic}, {q.puzzle.difficulty} · " if isinstance(q.puzzle, ForgePuzzle) else "")
+                  + f"{q.puzzle.topic}, {q.puzzle.difficulty} · "
                   + f"{round(q.seconds or 0) // 60}:{round(q.seconds or 0) % 60:02d} against a "
                   f"{q.guide_seconds // 60}:{q.guide_seconds % 60:02d} guide · {help_phrase(q)}",
                   "items": question_items(q) + [w for w in [follow_up_item(q), why_item(q, qs)] if w]} for q in qs]
@@ -305,7 +281,7 @@ def build(session: ExamSession, templates: dict | None = None) -> dict:
         "topics": session.topics,
         "label": LABEL_KEYS[label],
         "misconception": misconception_name(misconception),
-        "misconception_note": MISCONCEPTIONS[misconception][1] if misconception in MISCONCEPTIONS else None,
+        "misconception_note": None,
         "questions": n,
         "cards": part["cards"],
         "evidence": part["evidence"],
@@ -319,7 +295,7 @@ def build(session: ExamSession, templates: dict | None = None) -> dict:
         # Escalation levels 2-3 are not built yet, so every session ends at level 1.
         "level": 1,
         "levels": LEVELS,
-        "tip": TIPS[tip_key] if tip_key in TIPS else FORGE_TIP if forge else TIPS[None],
+        "tip": FORGE_TIP,
         "estimate": [{"label": text, "p": f"{float(iv.posterior[key]):.3f}"} for key, text in estimate_names],
         "report": {"overall": overall, "well": part["well"], "improve": part["improve"], "breakdown": part["breakdown"]},
         # Drill mode (decision log 16): one "Drill this mistake" per detected misconception.

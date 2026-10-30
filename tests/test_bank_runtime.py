@@ -473,7 +473,7 @@ def test_ladder_moves_between_new_questions_in_mixed(bank):
 
 # --- Routes: topic picker ------------------------------------------------------------
 
-def test_topics_list_forge_topics_mixed_and_fraud(monkeypatch, bank):
+def test_topics_list_forge_topics_and_mixed(monkeypatch, bank):
     monkeypatch.setattr(interview_routes, "_BANK", bank)
     data = TestClient(app).get("/api/interview/topics").json()
     assert data["default_track"] == "quant" and data["levels"] == ["Easy", "Medium"]
@@ -482,16 +482,15 @@ def test_topics_list_forge_topics_mixed_and_fraud(monkeypatch, bank):
     assert [(t["id"], t["available"], t["topics"]) for t in rest] == [
         ("ib", False, []), ("consulting", False, []), ("software", False, [])]
     assert [(t["id"], t["count"]) for t in track["topics"]] == [
-        ("Mixed", 3), ("Percentages", 1), ("Probability", 1), ("Statistics", 1), ("fraud", None)]
+        ("Mixed", 3), ("Percentages", 1), ("Probability", 1), ("Statistics", 1)]
 
 
-def test_fraud_alert_is_the_default_only_without_templates(monkeypatch, tmp_path):
+def test_without_templates_no_track_is_open_and_no_interview_starts(monkeypatch, tmp_path):
     monkeypatch.setattr(interview_routes, "_BANK", load_bank(tmp_path))
     data = TestClient(app).get("/api/interview/topics").json()
-    track = data["tracks"][0]
-    assert data["default_track"] == "quant" and track["default"] == "fraud" and track["available"]
-    assert not any(t["available"] for t in data["tracks"][1:])
-    assert [t["id"] for t in track["topics"]] == ["fraud"]
+    assert data["default_track"] is None and not any(t["available"] for t in data["tracks"])
+    with pytest.raises(VoiceError, match="No questions are available yet"):
+        interview_routes.interview_for(None, None, "Easy")
 
 
 def test_socket_serves_the_chosen_topic_and_level(monkeypatch, bank):
@@ -507,7 +506,7 @@ def test_socket_serves_the_chosen_topic_and_level(monkeypatch, bank):
         socket.send_json({"type": "end"})
 
 
-def test_socket_without_topic_starts_mixed_not_fraud(monkeypatch, bank):
+def test_socket_without_topic_starts_mixed(monkeypatch, bank):
     monkeypatch.setattr(interview_routes, "_BANK", bank)
     monkeypatch.setattr(voice_routes, "provider", lambda: ScriptedProvider())
     with TestClient(app).websocket_connect("/api/interview/ws") as socket:
@@ -1190,7 +1189,7 @@ def test_topic_route_groups_topics_by_track_and_marks_empty_tracks(monkeypatch):
         ("quant", "Quant", 1, True), ("ib", "Investment banking", 1, True), ("consulting", "Consulting", 1, True),
         ("software", "Software engineering", 0, False)]  # no software templates: "Being added"
     topics = {t["id"]: [(o["id"], o["count"]) for o in t["topics"]] for t in data["tracks"]}
-    assert topics == {"quant": [("Mixed", 1), ("Probability", 1), ("fraud", None)],
+    assert topics == {"quant": [("Mixed", 1), ("Probability", 1)],
                       "ib": [("Mixed", 1), ("Valuation", 1)],
                       "consulting": [("Mixed", 1), ("Market sizing", 1)], "software": []}
 
@@ -1200,7 +1199,7 @@ def test_default_track_is_the_first_shown_when_quant_has_no_templates(monkeypatc
     data = TestClient(app).get("/api/interview/topics").json()
     assert data["default_track"] == "ib"
     assert [t["id"] for t in data["tracks"] if t["available"]] == ["ib", "software"]
-    assert data["tracks"][0]["topics"] == []  # Quant: no templates, so no fraud alert either
+    assert data["tracks"][0]["topics"] == []  # Quant: no templates
 
 
 def test_interview_uses_the_chosen_track_and_only_its_topics(monkeypatch):
@@ -1349,10 +1348,9 @@ def test_begin_takes_a_list_of_topics_a_single_topic_or_none(monkeypatch):
     assert pool(["Probability", "Counting"]) == {"p1", "p2", "p3", "c1", "c2", "c3"}
     assert pool("Statistics") == {"s1", "s2", "s3"}
     assert pool(None) == pool("Mixed") == {t for t, _, _ in TOPIC_SPECS}
-    for bad in (["Probability", "Valuation"], "Valuation", [], ["Probability", 3], ["fraud", "Probability"]):
+    for bad in (["Probability", "Valuation"], "Valuation", [], ["Probability", 3], ["fraud"], "fraud"):
         with pytest.raises(VoiceError):
             interview_routes.interview_for("quant", bad, "Easy")
-    assert interview_routes.interview_for("quant", ["fraud"], "Easy").source is None  # the classic interview, alone
     assert interview_routes.topic_label("quant", ["Counting", "Probability"]) == "Counting, Probability"
     assert interview_routes.topic_label("quant", ["Counting", "Probability", "Statistics"]) == "All topics"
     assert interview_routes.topic_label("quant", None) == "All topics"

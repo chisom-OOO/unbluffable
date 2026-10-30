@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
       $("verdict").innerHTML =
         `<p class="verdict ${L.cls}">${svg(L.icon)}<span>${L.text}</span></p>` +
         (e.label === "misconception" && e.misconception
-          ? `<p class="misconception-name">${escapeHtml(e.misconception)}: ${escapeHtml(e.misconception_note || "reading “fraud gets flagged” as “a flag is fraud”.")}</p>` : "");
+          ? `<p class="misconception-name">${escapeHtml(e.misconception)}: ${escapeHtml(e.misconception_note || "a known wrong method for this question.")}</p>` : "");
       $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}. Scored on where you end up, discounted by the help it took.`;
     }
 
