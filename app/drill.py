@@ -9,12 +9,12 @@ Drill answers are not scored by the engine and do not change any interview label
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from fractions import Fraction
 
 from app import exam_text as say
-from app.interview_session import GUIDE_SECONDS, ExamSession, QuestionLog, SessionClosed, _DECLINE
-from engine.bank import ForgePuzzle, ForgeTemplate, aimed_puzzle, drill_plan
+from app.interview_session import GUIDE_SECONDS, ExamSession, QuestionLog, SessionClosed, _DECLINE, coarse
+from engine.bank import ForgePuzzle, ForgeTemplate, aimed_puzzle, drill_plan, same_mistake
 from engine.coding import Observation, Outcome
 from engine.interview import Question
 from voice.endpointing import cues
@@ -41,8 +41,8 @@ def drill_targets(session: ExamSession, templates: dict[str, ForgeTemplate]) -> 
             continue
         for answer in q.answers:
             name = answer.misconception
-            if not name or name in targets:
-                continue
+            if not name or any(same_mistake(name, seen) for seen in targets):
+                continue  # several names for one wrong value are one mistake
             template_id = q.puzzle.template_id
             used = frozenset(p.puzzle.instance for p in session.questions if p.puzzle.template_id == template_id)
             if drill_plan(templates[template_id], name, set(used))[1] is not None:
@@ -128,13 +128,13 @@ class DrillSession(ExamSession):
         await self.send({"type": "question", "number": q.number, "kind": "check", "template": puzzle.template_id,
                          "text": puzzle.text, "topic": puzzle.topic or None, "difficulty": puzzle.difficulty or None,
                          "guide_seconds": CHECK_GUIDE_SECONDS})
-        await self.line("question", f"{say.DRILL_CHECK_INTRO} {puzzle.text}")
+        await self.say_question(puzzle, say.DRILL_CHECK_INTRO)
         while True:
             text = await self.listen()
             q.said.append(text)
             cue = cues(text)
             if cue is not None and cue.kind == "question":
-                await self.line("question", f"{say.REPEAT_INTRO} {puzzle.text}")
+                await self.say_question(puzzle, say.REPEAT_INTRO)
                 continue
             if cue is not None and cue.kind == "help":
                 await self.line("prompt", say.DRILL_NO_HELP)
@@ -146,6 +146,11 @@ class DrillSession(ExamSession):
             analysis = await self.analyzer.analyse(puzzle, text, self.send)
             await self.send({"type": "analysis_complete"})
             answer = self._answer(puzzle, text, analysis)
+            if not q.asked_digit and coarse(puzzle, analysis):
+                q.asked_digit = True
+                q.answers.append(replace(answer, outcome=None))
+                await self.line("prompt", say.ONE_MORE_DIGIT)
+                continue
             q.answers.append(answer)
             obs = analysis.observation
             if obs is None or obs.outcome is Outcome.ABSTAIN:

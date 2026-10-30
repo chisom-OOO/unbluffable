@@ -15,7 +15,7 @@ restated given, a hypothetical, or after a hedge.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from fractions import Fraction
 from typing import Literal
 
@@ -28,6 +28,9 @@ Form = Literal["fraction", "percent", "decimal"]
 class StatedNumber:
     value: Fraction
     form: Form
+    # The figure as said, in the form's unit ("15" for 15%, "0.975"), when known: its
+    # precision decides how a spoken percent or decimal is rounded (engine.checker).
+    written: str | None = field(default=None, compare=False)
 
 
 def matches(stated: StatedNumber, target: Fraction) -> bool:

@@ -11,13 +11,14 @@ from __future__ import annotations
 import asyncio
 import re
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from fractions import Fraction
 from typing import Awaitable, Callable
 
 from app import exam_text as say
-from app import receipts
+from app import follow_up, receipts
 from engine.answers import StatedNumber, matches, normalise_numbers, parse_number
+from engine import mathtext
 from engine.bank import ForgePuzzle
 from engine.checker import parse_value, values_in
 from engine.coding import Observation, Outcome, code_answer
@@ -223,6 +224,16 @@ class Answer:
     receipt: dict | None = None  # words beside the exact computation (app.receipts)
 
 
+def coarse(puzzle: Puzzle, analysis: Analysis) -> bool:
+    """A rounded answer coded Correct that also rounds from a known wrong value or the
+    previous answer: the stated precision cannot tell the methods apart."""
+    obs, stated = analysis.observation, analysis.stated
+    if obs is None or obs.outcome is not Outcome.CORRECT or stated is None or stated.value == puzzle.answer:
+        return False
+    others = [nv.value for nv in puzzle.named_values] + ([puzzle.recited] if puzzle.recited is not None else [])
+    return any(puzzle.accepts(stated, v) for v in others if v != puzzle.answer)
+
+
 @dataclass
 class Part2Log:
     """A follow-up part, asked only after a correct answer (decision log 15). It is
@@ -231,6 +242,7 @@ class Part2Log:
     text: str
     answers: list[Answer] = field(default_factory=list)
     outcome: str | None = None
+    asked_digit: bool = False
 
 
 @dataclass
@@ -256,6 +268,8 @@ class QuestionLog:
     recovered: bool | None = None
     seconds: float | None = None
     part2: Part2Log | None = None
+    follow_up: follow_up.FollowUpLog | None = None
+    asked_digit: bool = False  # asked once for one more decimal place (`coarse`)
 
     @property
     def position(self) -> int:
@@ -289,15 +303,27 @@ class ExamSession:
         self.finished = False
         self._acks = 0
         self._scored: list[QuestionLog] = []
+        self._followed: set[str] = set()  # templates whose follow-up was asked
 
     # --- events ---
-    async def line(self, kind: str, text: str, target: int | None = None, receipt: dict | None = None) -> None:
+    async def line(self, kind: str, text: str, target: int | None = None, receipt: dict | None = None,
+                   speech: str | None = None) -> None:
         """`receipt`: the computation behind a judgement (decision log 16); redacted while
-        the question is open."""
+        the question is open. `speech`: what is said aloud when it differs from the text
+        shown (a forge instance's spoken_text, or its LaTeX read as words)."""
         if self.questions and kind in {"challenge", "nudge", "hint"}:
             self.questions[-1].help_lines.append((kind, text))
-        await self.send({"type": "interviewer_line", "kind": kind, "text": text, "target_step": target,
-                         "counts": self._counts(), "receipt": receipt})
+        event = {"type": "interviewer_line", "kind": kind, "text": text, "target_step": target,
+                 "counts": self._counts(), "receipt": receipt}
+        if speech and speech != text:
+            event["speech"] = speech
+        await self.send(event)
+
+    async def say_question(self, puzzle: Puzzle, before: str = "", after: str = "") -> None:
+        """A question line: the text shown, and its spoken form said aloud."""
+        shown = say.puzzle_text(puzzle)
+        join = lambda body: " ".join(part for part in (before, body, after) if part)
+        await self.line("question", join(shown), speech=join(getattr(puzzle, "speech", "") or shown))
 
     def _counts(self) -> dict:
         q = self.questions[-1] if self.questions else None
@@ -338,14 +364,13 @@ class ExamSession:
                              "difficulty": getattr(question.puzzle, "difficulty", None) or None,
                              "guide_seconds": GUIDE_SECONDS[question.kind]})
         if repeat:
-            spoken = f"{say.REPEAT_INTRO} {text}"
+            await self.say_question(question.puzzle, say.REPEAT_INTRO)
         elif question.kind in {"twin", "drill"}:
-            spoken = f"{say.TWIN_INTRO} {text}"
+            await self.say_question(question.puzzle, say.TWIN_INTRO)
         elif question.number > 1:
-            spoken = f"{say.NEW_PUZZLE_INTRO} {text}"
+            await self.say_question(question.puzzle, say.NEW_PUZZLE_INTRO)
         else:
-            spoken = f"{text} {say.OPENING}"
-        await self.line("question", spoken)
+            await self.say_question(question.puzzle, after=say.OPENING)
 
     async def question_loop(self, q: QuestionLog) -> None:
         question = self.interview.next_question()
@@ -371,6 +396,11 @@ class ExamSession:
             await self.send({"type": "analysis_complete"})
             obs = analysis.observation
             answer = self._answer(q.puzzle, text, analysis)
+            if not q.asked_digit and coarse(q.puzzle, analysis):
+                q.asked_digit = True
+                q.answers.append(replace(answer, outcome=None))  # not coded: it fits two methods
+                await self.line("prompt", say.ONE_MORE_DIGIT)
+                continue
             q.answers.append(answer)
             if obs is None or obs.outcome is Outcome.ABSTAIN:
                 await self.line("prompt", say.UNCHECKED)
@@ -384,6 +414,7 @@ class ExamSession:
                 else:
                     await self.line("close", f"{say.CORRECT_CLOSE} {say.PART2_INTRO}", receipt=answer.receipt)
                     await self.ask_part2(q, part2)
+                await self.ask_follow_up(q)
                 return
             if q.first_wrong is None:
                 q.first_wrong = (obs, analysis.span)
@@ -406,12 +437,12 @@ class ExamSession:
         gets the plain step prompt. Not scored, so it costs nothing (decision log 15)."""
         q.part2 = Part2Log(puzzle, puzzle.text)
         await self.send({"type": "part2", "number": q.number, "text": puzzle.text})
-        await self.line("question", puzzle.text)
+        await self.say_question(puzzle)
         while True:
             text = await self.listen()
             cue = cues(text)
             if cue is not None and cue.kind == "question":
-                await self.line("question", f"{say.REPEAT_INTRO} {puzzle.text}")
+                await self.say_question(puzzle, say.REPEAT_INTRO)
                 continue
             if cue is not None and cue.kind == "help":
                 steps = puzzle.steps
@@ -424,6 +455,11 @@ class ExamSession:
             analysis = await self.analyzer.analyse(puzzle, text, self.send)
             await self.send({"type": "analysis_complete"})
             answer = self._answer(puzzle, text, analysis)
+            if not q.part2.asked_digit and coarse(puzzle, analysis):
+                q.part2.asked_digit = True
+                q.part2.answers.append(replace(answer, outcome=None))
+                await self.line("prompt", say.ONE_MORE_DIGIT)
+                continue
             q.part2.answers.append(answer)
             obs = analysis.observation
             if obs is None or obs.outcome is Outcome.ABSTAIN:
@@ -432,6 +468,37 @@ class ExamSession:
             q.part2.outcome = obs.outcome.value
             await self.line("close", say.CORRECT_CLOSE if obs.outcome is Outcome.CORRECT else say.PART2_CLOSE,
                             receipt=answer.receipt)
+            return
+
+    async def ask_follow_up(self, q: QuestionLog) -> None:
+        """The template's conceptual follow-up, once per template: asked aloud, one reply
+        judged by the model (app.follow_up). Model-matched and never scored."""
+        spec = getattr(q.puzzle, "follow_up", None)
+        if spec is None or q.puzzle.template_id in self._followed:
+            return
+        self._followed.add(q.puzzle.template_id)
+        shown, spoken = mathtext.display(spec.question), mathtext.spoken(spec.question)
+        log = q.follow_up = follow_up.FollowUpLog(shown, spec.reference)
+        await self.send({"type": "follow_up", "number": q.number, "text": shown})
+        ask = lambda intro: self.line("question", f"{intro} {shown}", speech=f"{intro} {spoken}")
+        await ask(say.FOLLOW_UP_INTRO)
+        while True:
+            text = await self.listen()
+            cue = cues(text)
+            if cue is not None and cue.kind == "question":
+                await ask(say.REPEAT_INTRO)
+                continue
+            if cue is not None and cue.kind == "help":
+                await self.line("prompt", say.FOLLOW_UP_NO_HINT)
+                continue
+            await self.send({"type": "answer_complete", "transcript": text, "acknowledgement": self._ack()})
+            await self.state("checking")
+            log.reply = text
+            log.verdict, log.quote, log.note, log.model = await follow_up.judge(
+                self.analyzer.provider, shown, spec.reference, text, self.send)
+            await self.send({"type": "analysis_complete"})
+            log.receipt = receipts.follow_up_receipt(log)
+            await self.line("close", say.FOLLOW_UP_CLOSE, receipt=log.receipt)
             return
 
     @staticmethod

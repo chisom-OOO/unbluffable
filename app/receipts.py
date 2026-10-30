@@ -11,6 +11,7 @@ from __future__ import annotations
 from fractions import Fraction
 
 from app.exam_text import value
+from engine import checker
 from engine.answers import PERCENTAGE_POINT, StatedNumber
 from engine.bank import ForgePuzzle
 from engine.coding import Observation, Outcome
@@ -48,8 +49,16 @@ def check_text(puzzle: Puzzle, stated: StatedNumber, target: Fraction) -> str:
     gap = abs(stated.value - target)
     allowed = tolerance(puzzle)
     article = "An" if stated.form[0] in "aeiou" else "A"
-    return (f"{article} {stated.form} may be within {float(allowed):g} of the exact value: "
-            f"it is {float(gap):.4g} away, so it {'matches' if same else 'does not match'}.")
+    verdict = f"it is {float(gap):.4g} away, so it {'matches' if same else 'does not match'}."
+    figures = checker.precision(stated) if isinstance(puzzle, ForgePuzzle) else None
+    if figures is not None:
+        places = len(stated.written.partition(".")[2])
+        unit = f"{Fraction(1, 10 ** places):f}".rstrip("0").rstrip(".") if places else "1"
+        unit += "%" if stated.form == "percent" else ""
+        return (f"{article} {stated.form} counts when it is the exact value rounded to the nearest {unit} "
+                f"(as you said it), with at least {checker.MIN_FIGURES} significant figures, "
+                f"or within {float(allowed):g}: {verdict}")
+    return f"{article} {stated.form} may be within {float(allowed):g} of the exact value: {verdict}"
 
 
 def build(puzzle: Puzzle, transcript: str, span: str | None, stated: StatedNumber | None,
@@ -99,6 +108,23 @@ def weight_receipt(words: str, help_load: int, recovered: bool, weight: Fraction
     else:
         rows.append({"key": "weight", "label": "Scored", "text": "The opening wrong or vague answer, at full weight."})
     return {"words": words, "span": None, "rows": rows}
+
+
+def follow_up_receipt(log) -> dict:
+    """A follow-up reply (app.follow_up): model-matched against the reference, never an
+    exact check and never scored."""
+    rows = [{"key": "question", "label": "Follow-up", "text": log.question},
+            {"key": "reference", "label": "Reference answer", "text": log.reference},
+            {"key": "verdict", "label": "Judgement", "text": log.label}]
+    if log.quote:
+        rows.append({"key": "quote", "label": "Words it matched", "text": f"“{log.quote}”"})
+    rows.append({"key": "rule", "label": "How it was judged",
+                 "text": "One model call compared your words with the reference answer. Model-matched, "
+                         "not an exact check, and never scored."})
+    receipt = {"words": log.reply, "span": log.quote, "rows": rows}
+    if log.note:
+        receipt["note"] = log.note
+    return receipt
 
 
 def why_receipt(diagnostic, words: str | None, previous: Fraction | None) -> dict:

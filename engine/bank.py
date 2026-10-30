@@ -12,6 +12,16 @@ down one after a wrong one.
 
 Twins are diagnostic (decision log 16): the twin instance is the one whose numbers
 best separate the right answer from the suspected misconception's value.
+
+Instances flagged `interview_friendly` are preferred for questions, twins and drills;
+the others are used only when none qualify. An instance's `spoken_text` is what the
+interviewer says; without it, simple LaTeX in the text is read out as words
+(engine.mathtext) and shown as plain Unicode. A wrong value may carry several
+misconception names; they are one mistake, named "a / b".
+
+A template may carry a conceptual `follow_up` ({"question", "reference"}); the Exam
+Room asks it after a correct answer and judges the reply with the model. The engine
+never scores it.
 """
 
 from __future__ import annotations
@@ -23,7 +33,7 @@ from dataclasses import dataclass, field, replace
 from fractions import Fraction
 from pathlib import Path
 
-from engine import checker
+from engine import checker, mathtext
 from engine.answers import StatedNumber
 from engine.coding import Outcome
 from engine.templates import NamedValue, Puzzle
@@ -37,6 +47,7 @@ MIXED = "Mixed"
 MIN_INSTANCES = 8
 WRONG_OUTCOMES = (Outcome.NAMED_WRONG, Outcome.OTHER_WRONG, Outcome.RECITED)
 PREVIOUS_ANSWER = "repeats the previous question's answer"  # Recited, as a wrong method
+NAME_SEPARATOR = " / "  # several misconception names for one wrong value
 
 
 class ForgeError(ValueError):
@@ -59,6 +70,14 @@ class Instance:
     wrong: tuple[NamedValue, ...]
     steps: tuple[Step, ...]
     part2: Instance | None = None
+    spoken_text: str | None = None
+    interview_friendly: bool = False
+
+
+@dataclass(frozen=True)
+class FollowUp:
+    question: str
+    reference: str
 
 
 @dataclass(frozen=True)
@@ -70,6 +89,7 @@ class ForgeTemplate:
     models: object
     verification: object
     instances: tuple[Instance, ...]
+    follow_up: FollowUp | None = None
 
 
 @dataclass(frozen=True)
@@ -94,6 +114,8 @@ class ForgePuzzle(Puzzle):
     difficulty: str = ""
     instance: int = -1
     diagnostic: Diagnostic | None = None  # twins only
+    speech: str = ""  # what the interviewer says for `text`
+    follow_up: FollowUp | None = None  # the template's conceptual follow-up, if any
 
     def accepts(self, stated: StatedNumber, target: Fraction) -> bool:
         return checker.accepts(stated, target, self.tolerance)
@@ -129,7 +151,7 @@ def parse_instance(raw: dict, where: str, part2_allowed: bool = True) -> Instanc
     wrong = []
     for i, row in enumerate(_need(raw, "wrong", list, where)):
         here = f"{where}.wrong[{i}]"
-        misconception = _need(row, "misconception", str, here).strip()
+        misconception = NAME_SEPARATOR.join(_names(row, here))
         wrong.append(NamedValue(f"wrong_{i + 1}", _exact(_need(row, "value", (str, int, float), here), here),
                                 misconception, misconception))
     steps = []
@@ -141,8 +163,32 @@ def parse_instance(raw: dict, where: str, part2_allowed: bool = True) -> Instanc
         if not part2_allowed:
             raise ForgeError(f"{where}.part2: a part 2 has no part 2")
         part2 = parse_instance(raw["part2"], f"{where}.part2", part2_allowed=False)
+    spoken_text = raw.get("spoken_text")
+    if spoken_text is not None and (not isinstance(spoken_text, str) or not spoken_text.strip()):
+        raise ForgeError(f"{where}.spoken_text: must be non-empty text")
+    friendly = raw.get("interview_friendly", False)
+    if not isinstance(friendly, bool):
+        raise ForgeError(f"{where}.interview_friendly: must be true or false")
     return Instance(text, _need(raw, "params", dict, where), answer_text,
-                    _exact(answer_text, f"{where}.answer"), tolerance, tuple(wrong), tuple(steps), part2)
+                    _exact(answer_text, f"{where}.answer"), tolerance, tuple(wrong), tuple(steps), part2,
+                    spoken_text.strip() if spoken_text else None, friendly)
+
+
+def _names(row: dict, where: str) -> list[str]:
+    """A wrong entry's misconception names: "misconception" as text or a list, or
+    "misconceptions" as a list."""
+    if not isinstance(row, dict):
+        raise ForgeError(f"{where}: missing misconception")
+    raw = row.get("misconception", row.get("misconceptions"))
+    names = [raw] if isinstance(raw, str) else raw
+    if not isinstance(names, list) or not names or not all(isinstance(n, str) and n.strip() for n in names):
+        raise ForgeError(f"{where}: missing misconception")
+    return list(dict.fromkeys(n.strip() for n in names))
+
+
+def same_mistake(a: str | None, b: str | None) -> bool:
+    """Two misconception labels name the same mistake: they share a name."""
+    return bool(a and b and set(a.split(NAME_SEPARATOR)) & set(b.split(NAME_SEPARATOR)))
 
 
 def parse_template(raw: dict, where: str = "template") -> ForgeTemplate:
@@ -159,8 +205,18 @@ def parse_template(raw: dict, where: str = "template") -> ForgeTemplate:
     if len(raw_instances) < MIN_INSTANCES:
         raise ForgeError(f"{where}.instances: needs at least {MIN_INSTANCES}")
     instances = tuple(parse_instance(row, f"{where}.instances[{i}]") for i, row in enumerate(raw_instances))
-    return ForgeTemplate(template_id, _need(raw, "topic", str, where).strip(), tuple(topics), difficulty,
-                         raw.get("models"), raw.get("verification"), instances)
+    topic = next((t.strip() for t in (raw.get("topic"), raw.get("source_topic"))
+                  if isinstance(t, str) and t.strip()), None)
+    if topic is None:
+        raise ForgeError(f"{where}: missing topic")
+    follow_up = None
+    if raw.get("follow_up") is not None:
+        here = f"{where}.follow_up"
+        follow_up = FollowUp(*(_need(raw["follow_up"], key, str, here).strip() for key in ("question", "reference")))
+        if not follow_up.question or not follow_up.reference:
+            raise ForgeError(f"{here}: question and reference must be non-empty")
+    return ForgeTemplate(template_id, topic, tuple(topics), difficulty,
+                         raw.get("models"), raw.get("verification"), instances, follow_up)
 
 
 @dataclass
@@ -204,6 +260,7 @@ def instance_puzzle(template: ForgeTemplate, instance: Instance, index: int,
     part2 = None
     if instance.part2 is not None:
         part2 = instance_puzzle(template, instance.part2, index, template_id=f"{template.template_id}.part2")
+    text = mathtext.display(instance.text)
     return ForgePuzzle(
         template_id=template_id or template.template_id,
         params=dict(instance.params),
@@ -212,8 +269,8 @@ def instance_puzzle(template: ForgeTemplate, instance: Instance, index: int,
         named_values=instance.wrong,
         counts={},
         recited=original.answer if original is not None else None,
-        givens=checker.given_values(instance.text),
-        text=instance.text,
+        givens=tuple(dict.fromkeys(checker.given_values(text) + checker.given_values(instance.text))),
+        text=text,
         answer_text=instance.answer_text,
         tolerance=instance.tolerance,
         steps=instance.steps,
@@ -222,6 +279,8 @@ def instance_puzzle(template: ForgeTemplate, instance: Instance, index: int,
         difficulty=template.difficulty,
         instance=index,
         diagnostic=diagnostic,
+        speech=instance.spoken_text or mathtext.spoken(instance.text),
+        follow_up=template.follow_up if template_id is None else None,
     )
 
 
@@ -232,8 +291,13 @@ def _wrong_methods(instance: Instance, previous: Fraction) -> list[tuple[str, Fr
 def _nearest(instance: Instance, previous: Fraction, skip: str | None = None) -> tuple[Fraction, str, Fraction] | None:
     """(gap, misconception, value) of the wrong method closest to the right answer."""
     gaps = [(abs(instance.answer - value), name, value)
-            for name, value in _wrong_methods(instance, previous) if name != skip]
+            for name, value in _wrong_methods(instance, previous) if not same_mistake(name, skip)]
     return min(gaps, key=lambda g: g[0]) if gaps else None
+
+
+def friendly(template: ForgeTemplate, indices: list[int]) -> list[int]:
+    """The interview-friendly instances among `indices`, or all of them if none are."""
+    return [i for i in indices if template.instances[i].interview_friendly] or indices
 
 
 def twin_choice(template: ForgeTemplate, original: int, rng: random.Random,
@@ -245,13 +309,14 @@ def twin_choice(template: ForgeTemplate, original: int, rng: random.Random,
     other wrong method. Otherwise: the largest gap to the nearest wrong method. Repeating
     the original's answer counts as a wrong method. Remaining ties are drawn at random."""
     first = template.instances[original]
-    others = [i for i in range(len(template.instances)) if i != original]
+    others = friendly(template, [i for i in range(len(template.instances)) if i != original])
     pool = [i for i in others if template.instances[i].answer != first.answer] or others
-    aimed = [i for i in pool if suspect and any(nv.misconception == suspect for nv in template.instances[i].wrong)]
+    aimed = [i for i in pool if any(same_mistake(nv.misconception, suspect) for nv in template.instances[i].wrong)]
 
     def aimed_key(i: int):
         inst = template.instances[i]
-        gap, value = min((abs(inst.answer - nv.value), nv.value) for nv in inst.wrong if nv.misconception == suspect)
+        gap, value = min((abs(inst.answer - nv.value), nv.value) for nv in inst.wrong
+                         if same_mistake(nv.misconception, suspect))
         rest = _nearest(inst, first.answer, skip=suspect)
         return (gap, rest[0] if rest else float("inf")), Diagnostic(suspect, inst.answer, value, True)
 
@@ -278,13 +343,13 @@ def drill_plan(template: ForgeTemplate, suspect: str, used: set[int],
     that name the misconception and whose right answer differs from it qualify."""
     def key(i: int):
         inst = template.instances[i]
-        gap = min(abs(inst.answer - nv.value) for nv in inst.wrong if nv.misconception == suspect)
-        rest = [abs(inst.answer - nv.value) for nv in inst.wrong if nv.misconception != suspect]
+        gap = min(abs(inst.answer - nv.value) for nv in inst.wrong if same_mistake(nv.misconception, suspect))
+        rest = [abs(inst.answer - nv.value) for nv in inst.wrong if not same_mistake(nv.misconception, suspect)]
         return (-gap, -min(rest) if rest else float("-inf"), i)
 
     aimed = [i for i, inst in enumerate(template.instances) if i not in used
-             and any(nv.misconception == suspect and nv.value != inst.answer for nv in inst.wrong)]
-    ranked = sorted(aimed, key=key)
+             and any(same_mistake(nv.misconception, suspect) and nv.value != inst.answer for nv in inst.wrong)]
+    ranked = sorted(friendly(template, aimed), key=key)
     if not ranked:
         return [], None
     return ranked[1:1 + rounds], ranked[0]
@@ -292,12 +357,13 @@ def drill_plan(template: ForgeTemplate, suspect: str, used: set[int],
 
 def aimed_puzzle(template: ForgeTemplate, index: int, suspect: str, original: Puzzle | None = None) -> ForgePuzzle:
     """An instance as a drill question, with its "Why these numbers?" diagnostic and no
-    part 2 (a drill asks only about the one mistake)."""
+    part 2 or follow-up (a drill asks only about the one mistake)."""
     inst = template.instances[index]
-    wrong = min((nv.value for nv in inst.wrong if nv.misconception == suspect), key=lambda v: abs(inst.answer - v))
+    wrong = min((nv.value for nv in inst.wrong if same_mistake(nv.misconception, suspect)),
+                key=lambda v: abs(inst.answer - v))
     puzzle = instance_puzzle(template, inst, index, original=original,
                              diagnostic=Diagnostic(suspect, inst.answer, wrong, True))
-    return replace(puzzle, part2=None)
+    return replace(puzzle, part2=None, follow_up=None)
 
 
 class BankSource:
@@ -337,7 +403,7 @@ class BankSource:
 
     def new(self, template_id: str) -> ForgePuzzle:
         template = self.templates[template_id]
-        index = self.rng.randrange(len(template.instances))
+        index = self.rng.choice(friendly(template, list(range(len(template.instances)))))
         self.unused.discard(template_id)
         self.levels.append(template.difficulty)
         return instance_puzzle(template, template.instances[index], index)

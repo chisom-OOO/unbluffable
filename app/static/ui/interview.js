@@ -104,7 +104,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const reveals = new Set();
   function finishReveals() { for (const r of [...reveals]) r.finish(); }
 
-  function revealer(target, text) {
+  // `spokenLength`: when the words said differ from the text shown (spoken maths), speech
+  // boundaries reveal the shown text in proportion.
+  function revealer(target, text, spokenLength = text.length) {
     const words = text.split(" ");
     let shown = 0, timer = null, watchdog = null, byBoundary = false;
     const show = (n) => { shown = Math.min(words.length, Math.max(shown, n)); target.textContent = words.slice(0, shown).join(" "); };
@@ -114,7 +116,12 @@ document.addEventListener("DOMContentLoaded", () => {
         show(1);
         timer = setInterval(() => { if (!byBoundary) { show(shown + 1); if (shown >= words.length) clearInterval(timer); } }, WORD_MS);
       },
-      boundary(charIndex) { if (reveals.has(r)) { byBoundary = true; show(text.slice(0, charIndex).split(" ").length); } },
+      boundary(charIndex) {
+        if (!reveals.has(r)) return;
+        byBoundary = true;
+        const at = spokenLength === text.length ? charIndex : Math.round(charIndex * text.length / spokenLength);
+        show(text.slice(0, at).split(" ").length);
+      },
       // If speech never starts (nothing speaking or queued), show the line rather than leave it blank.
       watch(started) {
         if (!reveals.has(r)) return;
@@ -135,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- Transcript log ----------
   // Adds a line and speaks it. Muted, reduced motion or no speech voice: the line shows at once.
-  function addInterviewer(text, kind, receipt) {
+  function addInterviewer(text, kind, receipt, speech) {
     const el = document.createElement("div");
     const tag = KIND_TAG[kind];
     el.className = "utterance interviewer" + (tag ? ` is-${kind}` : "");
@@ -144,9 +151,10 @@ document.addEventListener("DOMContentLoaded", () => {
       receiptHtml(receipt);
     log.appendChild(el);
     scrollTo(el);
-    const reveal = revealer(el.querySelector(".typed"), text);
+    const said = speech || text;
+    const reveal = revealer(el.querySelector(".typed"), text, said.length);
     if (reduced || muted() || !window.speechSynthesis) reveal.finish();
-    speak(text, reveal);
+    speak(said, reveal);
   }
 
   function addCandidate(text) {
@@ -236,8 +244,16 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle-kind").textContent = "Part 2 · not scored";
         finishReveals();
         break;
+      case "follow_up":
+        $("puzzle").textContent = event.text;
+        $("puzzle-kind").textContent = "Follow-up · model-matched, not scored";
+        finishReveals();
+        break;
+      case "follow_up_result":
+        modelRow(event.model);
+        break;
       case "interviewer_line":
-        addInterviewer(event.text, event.kind, event.receipt);
+        addInterviewer(event.text, event.kind, event.receipt, event.speech);
         if (event.counts) counts(event.counts);
         break;
       case "state":
