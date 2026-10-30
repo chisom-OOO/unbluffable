@@ -20,7 +20,7 @@ You answer out loud. It checks the maths, not the confidence.
 ---
 
 > [!NOTE]
-> **Status, 29 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring and the end-of-interview report work end to end. In progress this week: a verified question forge across topics and a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
+> **Status, 30 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode and the end-of-interview report work end to end in tests. In progress: loading a 7,575-question set across 19 topics, and a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
 
 ## Why
 
@@ -36,6 +36,10 @@ Unbluffable does the same, out loud, for anyone without access to a coach. I bui
 | **Exact checking** | The model extracts the answer you committed to and quotes your own words. Every number is checked with exact fractions in code, never by a model. |
 | **Socratic challenge** | A committed wrong answer gets a question that points at the step, not the solution. Nudges and hints are allowed, and the score counts the help it took. |
 | **Same puzzle, new numbers** | A second version with different numbers separates someone who worked it out from someone who remembered an answer. |
+| **Numbers chosen to expose your mistake** | When the interviewer suspects a specific mistake, it picks the new numbers where that mistake gives a clearly different answer from the right method, and says why these numbers. |
+| **Live evidence meter** | The Sound / Misconception / Gap estimate updates after every scored answer, with one line on what the next answer would change. |
+| **Receipts** | Every challenge and every report line opens to show your exact words beside the exact computation: the value read, the check, and the known wrong methods. |
+| **Drill this mistake** | From the report, a short drill aims new questions at a detected misconception, asks questions only, then checks with fresh numbers: *Cleared* or *Still showing*. |
 | **Evidence-based scoring** | A Bayesian engine weighs each final answer, discounted by the help used, and stops when the evidence is clear: *Evidence supports understanding*, *Misconception detected*, *Understanding not shown* or *More evidence needed*. |
 | **In-app report** | A headline label, one tab per question, your quoted words beside the exact value, the help taken and time against the guide. |
 | **Which model did what** | Every turn shows which model ran, for which job, with latency and cost. |
@@ -98,7 +102,7 @@ sequenceDiagram
 | --- | --- | --- |
 | **Muse Voice Transcribe** · `muse-voice-transcribe-1.0` | Meta Model API, realtime | Live speech-to-text for the hands-free interview |
 | **Muse Spark** · `muse-spark-1.3` | Meta Model API | Extracts the committed answer and verbatim quotes; judges whether an answer is finished |
-| **Muse Spark Open** · `muse-spark-open-1026` | Baseten (open weights) | The same reasoning jobs on the hosted app; author of the question forge (in progress) |
+| **Muse Spark Open** · `muse-spark-open-1026` | Baseten (open weights) | The same reasoning jobs on the hosted app; writes each question family's solver, wrong-method values and solution steps (in progress) |
 | **Exact maths** | Our code | Every number check and every score |
 
 ### Why open weights
@@ -126,7 +130,7 @@ Every change from the original plan is in the [decision log](spec/DECISION_LOG.m
 > [!IMPORTANT]
 > In progress. None of this is claimed as a result yet.
 
-- **Question forge across topics.** Muse Spark Open turns questions from a pre-existing bank of 5,921 interview and online-assessment questions into reworded templates with an exact solver, a separately written simulation and named wrong-method values. A template is accepted only if the solver reproduces the stored answer, the simulation agrees, and Muse Spark solves a new-number version blind and matches. The bank itself is not in this repository.
+- **7,575 questions across 19 topics.** 101 question families of 75 variants each: expectations, combinatorics, discrete, continuous and conditional probability, statistics, number theory, stochastic processes, linear algebra, optimisation, geometry and more, each with an exact answer. For every family, Muse Spark Open writes its own solver, the values that common wrong methods produce, and the solution steps. A family counts as cross-checked only if that independent solver reproduces the stored answer on all 75 variants.
 - **Careful-chatbot comparison.** A pre-registered test on frozen answers: plain Muse Spark, carefully prompted Muse Spark, carefully prompted Muse Spark given the answer key, and Unbluffable, all on the same model, three runs each.
 - **Real users** from a university quant society, with consent.
 
@@ -178,6 +182,7 @@ Open **http://localhost:8000/ui** and start an interview. Wear headphones if you
 ## Disclosures and limits
 
 - **Prior work.** The specification in `spec/` was written before kickoff as a plan. All code was written after kickoff on 26 Oct 2026, and the commit history shows it. Built with AI coding assistants (Claude Code, Codex, Muse Code).
+- **Question set.** The 7,575 questions were generated by the builder with ChatGPT during the hackathon (30 Oct 2026). Their answers are re-checked in code as described above; ChatGPT is not used by the running app.
 - **Probabilities are model estimates.** The engine's likelihoods are stated assumptions (`content/likelihoods.yaml`), not calibrated measurements.
 - **Turn-taking can wait too long.** When it does, the silence prompt or the Done button moves things on.
 - **Interview practice, not a tutor or a hiring tool.** It's built for candidates to practise.
