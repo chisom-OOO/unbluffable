@@ -1,3 +1,4 @@
+from forge_fakes import counts
 """Invented pilot regressions; no bank, content or recorded pilot reads."""
 import csv
 from dataclasses import replace
@@ -67,7 +68,7 @@ def setup(tmp_path):
 
 
 def run(pipeline):
-    return pipeline.run([question()], {"rows": 1, "kept": 1})
+    return pipeline.run([question()], counts())
 
 
 @pytest.mark.parametrize("reason", ["TypeError", "invalid_template_fields", "invalid_step_names", "forbidden_import", "timeout"])
@@ -265,8 +266,8 @@ def test_recorded_gate_repair_replays_keylessly_and_resumes_without_respending(t
         assert run(pipeline)["status"] == "budget_stop"
         assert next(iter(state.data["items"].values()))["repair"]["succeeded"] is False
     assert run(pipeline)["accepted_after_repair"] == 1
-    assert len(author.calls) + len(checker.calls) == 6
-    assert len(list((state.root / "calls").glob("*.json"))) == 6
+    assert len(author.calls) + len(checker.calls) == 7
+    assert len(list((state.root / "calls").glob("*.json"))) == 7
     cost = models.spent()
     before = next((tmp_path / "public").glob("*.json")).read_bytes()
     state.data["items"], state.data["mapping"] = {}, {}

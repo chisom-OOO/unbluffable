@@ -147,21 +147,46 @@ def execute(request):
             raise PermissionError("forbidden_capability")
     sys.addaudithook(audit)
     compiled = compile(tree, "<generated>", "exec")
-    params = {key: Fraction(str(value)) for key, value in request["params"].items()}
-    params = {key: int(value) if value.denominator == 1 else value for key, value in params.items()}
-    params = types.MappingProxyType(params)
+    def parameters(raw):
+        if request.get("structured_params"):
+            def freeze(value, depth=0):
+                if depth > 20:
+                    raise PolicyError("parameter_depth")
+                if isinstance(value, dict):
+                    return types.MappingProxyType({key: freeze(item, depth + 1) for key, item in value.items()})
+                if isinstance(value, list):
+                    return tuple(freeze(item, depth + 1) for item in value)
+                if isinstance(value, float):
+                    if not math.isfinite(value):
+                        raise PolicyError("invalid_parameter")
+                    return Fraction(str(value))
+                if value is None or isinstance(value, (str, int, bool)):
+                    return value
+                raise PolicyError("invalid_parameter")
+            if not isinstance(raw, dict):
+                raise PolicyError("invalid_parameter")
+            return freeze(raw)
+        values = {key: Fraction(str(value)) for key, value in raw.items()}
+        return types.MappingProxyType({key: int(value) if value.denominator == 1 else value for key, value in values.items()})
     if mode == "solve":
-        exec(compiled, scope)
-        raw = scope["solve"](params)
-        if draws[0]:
-            raise PolicyError("random_solver")
-        if isinstance(raw, dict):
-            answer, steps = raw["answer"], raw.get("steps", {})
-        else:
-            answer, steps = raw, {}
-        if not isinstance(steps, dict) or len(steps) > 64:
-            raise PolicyError("invalid_steps")
-        return {"answer": exact(answer), "steps": [{"name": str(k), "value": exact(v)} for k, v in steps.items()]}
+        def solve_one(raw_params):
+            # Fresh generated globals at every point; no cross-variant state.
+            local_scope = {"__builtins__": safe_builtins}
+            exec(compiled, local_scope)
+            raw = local_scope["solve"](parameters(raw_params))
+            if draws[0]:
+                raise PolicyError("random_solver")
+            if isinstance(raw, dict):
+                answer, steps = raw["answer"], raw.get("steps", {})
+            else:
+                answer, steps = raw, {}
+            if not isinstance(steps, dict) or len(steps) > 64:
+                raise PolicyError("invalid_steps")
+            return {"answer": exact(answer), "steps": [{"name": str(k), "value": exact(v)} for k, v in steps.items()]}
+        if "batch_params" in request:
+            return {"results": [solve_one(params) for params in request["batch_params"]]}
+        return solve_one(request["params"])
+    params = parameters(request["params"])
     samples = request["trials"]
     total, squares = Fraction(0), Fraction(0)
     for _ in range(samples):

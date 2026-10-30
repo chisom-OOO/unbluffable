@@ -60,10 +60,10 @@ def test_cli_fake_pilot_resume_and_no_bank_text_in_public_output(tmp_path, monke
     assert len(artifact["instances"]) >= 20
     assert all("separation" in row and len(row["wrong"]) == 2 for row in artifact["instances"])
     assert report["configuration"]["minimum_instances"] == 20
-    assert report["billing_per_topic"]["probability"]["calls"] == 5
+    assert report["billing_per_topic"]["probability"]["calls"] == 6
     assert report["billing_per_stage"]["author"]["calls"] == 1
     paid = len(author.calls) + len(checker.calls)
-    assert paid == 5
+    assert paid == 6
     assert run.main(args) == 0
     assert len(author.calls) + len(checker.calls) == paid
 
@@ -127,3 +127,25 @@ def test_cli_invalid_quotas_fail_before_bank_access(tmp_path, monkeypatch, quota
     monkeypatch.setattr(run, "load_csv", lambda path: pytest.fail("Invalid quotas opened a CSV"))
     with pytest.raises(SystemExit):
         run.main(["--csv", str(tmp_path / "invented.csv"), "--per-topic", quotas])
+
+
+def test_scale_split_selects_five_hundred_with_twenty_dollar_configuration(tmp_path, monkeypatch, capsys):
+    from forge.selection import SCALE_QUOTAS, parse_quotas
+    split = {"probability": 150, "expected value": 120, "combinations and permutations": 100, "statistics": 80, "games": 50}
+    assert parse_quotas(SCALE_QUOTAS) == split and sum(split.values()) == 500
+    args, author, checker = configure(tmp_path, monkeypatch)
+    csv_path = tmp_path / "data" / "bank" / "invented.csv"
+    with csv_path.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=["question_id", "statement", "solution", "topics"])
+        writer.writeheader()
+        for topic, count in split.items():
+            for i in range(count):
+                writer.writerow({"question_id": topic + str(i), "statement": "Invented item " + topic + str(i),
+                                 "solution": question().solution, "topics": str([topic])})
+    # Zero spend tests selection and the budget boundary without processing 500 model jobs.
+    assert run.main([*args, "--limit", "500", "--per-topic", SCALE_QUOTAS, "--budget-usd", "0"]) == 2
+    report = json.loads(capsys.readouterr().out)
+    assert report["sampling"]["selected"] == split
+    assert not any(report["sampling"]["shortfalls"].values())
+    assert not author.calls and not checker.calls
+    assert report["configuration"]["minimum_friendly_instances"] == 10

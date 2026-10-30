@@ -5,7 +5,7 @@ from fractions import Fraction
 import re
 from types import SimpleNamespace
 
-from forge.data import Question
+from forge.data import Question, LoadCounts
 from forge.models import State
 
 SOLVER = """from fractions import Fraction
@@ -63,6 +63,8 @@ def draft(part2=False):
 
 
 def response_for(stage, payload, blueprint=None):
+    if stage == "topic_classification":
+        return {"topic": "expected value" if "expected value" in payload["vocabulary"] else payload["vocabulary"][0]}
     if stage == "answer_pass":
         return {"class": "numeric_single", "answer": "2", "quote": SOLUTION, "tolerance": "0", "tolerance_quote": "none"}
     if stage in {"author", "author_repair"}:
@@ -120,3 +122,7 @@ class FakeSandbox:
         if code in {WRONG_TWO, PART_WRONG_TWO}:
             return {"answer": str(n * k / 3), "steps": []}
         raise AssertionError("Unknown synthetic code")
+
+
+def counts(rows=1, kept=1):
+    return LoadCounts({"rows": rows, "kept": kept}, {}, {"probability": 5, "expected value": 5, "statistics": 5})

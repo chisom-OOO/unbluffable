@@ -1,6 +1,8 @@
 """Deterministic topic quotas: each source item occupies at most one slot."""
 from collections import Counter
 
+SCALE_QUOTAS = "probability=150,expected value=120,combinations and permutations=100,statistics=80,games=50"
+
 
 def parse_quotas(value):
     quotas = {}

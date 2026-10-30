@@ -19,8 +19,21 @@ class Sandbox:
     def run(self, code, mode, params, trials=20000, seed=0):
         if mode not in {"solve", "sample"} or len(code) > 100000 or not 2 <= trials <= 1000000:
             raise Reject("sandbox", "invalid_request")
-        request = json.dumps({"code": code, "mode": mode, "params": params, "trials": trials,
+        return self._execute({"code": code, "mode": mode, "params": params, "trials": trials,
                               "seed": seed, "timeout_s": self.timeout_s, "memory_mb": self.memory_mb})
+
+    def run_batch(self, code, params):
+        if len(code) > 100000 or not 1 <= len(params) <= 75:
+            raise Reject("sandbox", "invalid_request")
+        result = self._execute({"code": code, "mode": "solve", "params": {}, "batch_params": params,
+            "structured_params": True, "trials": 20000, "seed": 0,
+            "timeout_s": self.timeout_s, "memory_mb": self.memory_mb})
+        if not isinstance(result, dict) or len(result.get("results", [])) != len(params):
+            raise Reject("sandbox", "invalid_batch_output")
+        return result["results"]
+
+    def _execute(self, request):
+        request = json.dumps(request)
         if len(request) > 150000:
             raise Reject("sandbox", "request_too_large")
         env = {k: os.environ[k] for k in ("SystemRoot", "WINDIR", "TEMP", "TMP") if k in os.environ}
