@@ -10,9 +10,11 @@ def test_health_endpoints(tmp_path, monkeypatch) -> None:
     client = TestClient(app)
 
     with client:
-        page = client.get("/")
-        assert page.status_code == 200
-        assert "Service is running" in page.text
+        # "/" and the old /practice page both open the landing page.
+        for path in ("/", "/practice"):
+            page = client.get(path, follow_redirects=False)
+            assert page.status_code == 307 and page.headers["location"] == "/ui"
+        assert "Sounding right" in client.get("/").text
 
         response = client.get("/health")
         assert response.status_code == 200
@@ -33,3 +35,10 @@ def test_event_log_initializes_and_appends(tmp_path) -> None:
             (event_id,),
         ).fetchone()
     assert row == ("session-1", "started", '{"source":"test"}')
+
+
+def test_nothing_links_the_old_practice_page() -> None:
+    from pathlib import Path
+    app_dir = Path(__file__).resolve().parents[1] / "app"
+    pages = list((app_dir / "templates").glob("*.html")) + list((app_dir / "static" / "ui").glob("*.js"))
+    assert pages and not [p.name for p in pages if "practice.html" in p.read_text(encoding="utf-8")]
