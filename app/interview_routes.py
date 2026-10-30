@@ -40,20 +40,21 @@ def bank() -> Bank:
 
 
 def topics() -> dict:
-    """Tracks (template packs) with accepted templates, each with Mixed and its topics.
-    The fraud alert sits under Quant; with no templates at all it is the only choice."""
-    tracks = []
-    for pack in bank().packs():
+    """Every track (template pack), each with Mixed and its topics. A track with no
+    accepted templates is listed as not available ("Being added"). The fraud alert sits
+    under Quant; with no templates at all it is the only choice."""
+    tracks, anything = [], bool(bank().templates)
+    for pack, name in PACKS.items():
         found = bank().topics(pack)
-        options = [{"id": MIXED, "name": MIXED, "count": sum(n for _, n in found)}]
-        options += [{"id": name, "name": name, "count": n} for name, n in found]
-        tracks.append({"id": pack, "name": PACKS[pack], "topics": options, "default": MIXED})
-    if not tracks:
-        tracks.append({"id": DEFAULT_PACK, "name": PACKS[DEFAULT_PACK], "topics": [], "default": FRAUD})
-    for track in tracks:
-        if track["id"] == DEFAULT_PACK:
-            track["topics"].append({"id": FRAUD, "name": "Fraud alert (classic)", "count": None})
-    default = DEFAULT_PACK if any(t["id"] == DEFAULT_PACK for t in tracks) else tracks[0]["id"]
+        count = sum(n for _, n in found)
+        options = [{"id": MIXED, "name": MIXED, "count": count}] if found else []
+        options += [{"id": topic, "name": topic, "count": n} for topic, n in found]
+        if pack == DEFAULT_PACK and (found or not anything):
+            options.append({"id": FRAUD, "name": "Fraud alert (classic)", "count": None})
+        tracks.append({"id": pack, "name": name, "count": count, "available": bool(options),
+                       "topics": options, "default": options[0]["id"] if options else None})
+    open_tracks = [t["id"] for t in tracks if t["available"]]
+    default = DEFAULT_PACK if DEFAULT_PACK in open_tracks else open_tracks[0]
     return {"tracks": tracks, "default_track": default, "levels": list(START_LEVELS),
             "default_level": START_LEVELS[0]}
 
@@ -61,13 +62,21 @@ def topics() -> dict:
 def interview_for(pack, topic, level) -> Interview:
     """The fraud alert is the fallback only when no forge template is accepted yet."""
     found = topics()
-    track = next((t for t in found["tracks"] if t["id"] == pack), None)         or next(t for t in found["tracks"] if t["id"] == found["default_track"])
+    track = next((t for t in found["tracks"] if t["id"] == pack and t["available"]), None)         or next(t for t in found["tracks"] if t["id"] == found["default_track"])
     topic = topic if topic in {option["id"] for option in track["topics"]} else track["default"]
     if topic == FRAUD:
         return Interview(demo=True)
     if level not in START_LEVELS:
         raise VoiceError("Choose a starting level: Easy or Medium.")
     return Interview(source=BankSource(bank(), topic, level, pack=track["id"]))
+
+
+def conditions(begin: dict, mode: str) -> str:
+    """Decision log 20: "exam" (camera and microphone checked before Start), "typed" (the
+    "Can't use a camera or mic?" practice mode, not exam conditions) or "replay"."""
+    if mode == "replay":
+        return "replay"
+    return "typed" if begin.get("typed_practice") is True else "exam"
 
 
 def keep(session: ExamSession) -> str:
@@ -169,6 +178,7 @@ async def interview_socket(socket: WebSocket):
         else:
             interview = interview_for(begin.get("pack"), begin.get("topic"), begin.get("level", START_LEVELS[0]))
             session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
+        session.conditions = conditions(begin, provider.mode)
         session_id = keep(session)
         await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,
                                 "session_seconds": SESSION_SECONDS,

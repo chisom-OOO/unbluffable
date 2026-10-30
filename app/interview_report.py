@@ -247,6 +247,14 @@ def sections(qs: list[QuestionLog], forge: bool) -> dict:
             "well": well[:3], "improve": improve[:3], "breakdown": breakdown}
 
 
+# Decision log 20: the report shows which mode was used.
+CONDITIONS = {
+    "exam": "Exam conditions: camera and microphone on",
+    "typed": "Typed practice: not exam conditions",
+    "replay": "Recorded replay: answers typed, model calls replayed",
+}
+
+
 def build(session: ExamSession, templates: dict | None = None) -> dict:
     iv = session.interview
     qs = [q for q in session.questions if q.scored is not None]
@@ -267,6 +275,7 @@ def build(session: ExamSession, templates: dict | None = None) -> dict:
     estimate_names = (("S", "Sound (S)"), ("M", "Misconception (M)"), ("G", "Gap (G)"))
     return {
         "sample": False,
+        "conditions": CONDITIONS[session.conditions],
         "label": LABEL_KEYS[label],
         "misconception": misconception_name(misconception),
         "misconception_note": MISCONCEPTIONS[misconception][1] if misconception in MISCONCEPTIONS else None,
@@ -306,6 +315,7 @@ def build_drill(session: DrillSession) -> dict:
         f"{name(q)}: {outcome_text(q).lower()}." for q in qs))
     return {
         "sample": False,
+        "conditions": CONDITIONS[session.conditions],
         "drill": {"misconception": session.target.misconception, "result": session.result,
                   "note": "From the final check, new numbers and no help: right with reasoning is Cleared."},
         "label": None,

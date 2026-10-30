@@ -476,8 +476,10 @@ def test_topics_list_forge_topics_mixed_and_fraud(monkeypatch, bank):
     monkeypatch.setattr(interview_routes, "_BANK", bank)
     data = TestClient(app).get("/api/interview/topics").json()
     assert data["default_track"] == "quant" and data["levels"] == ["Easy", "Medium"]
-    [track] = data["tracks"]  # the fixtures carry no pack, so all are Quant
-    assert (track["id"], track["name"], track["default"]) == ("quant", "Quant", "Mixed")
+    track, *rest = data["tracks"]  # the fixtures carry no pack, so all are Quant
+    assert (track["id"], track["name"], track["default"], track["available"]) == ("quant", "Quant", "Mixed", True)
+    assert [(t["id"], t["available"], t["topics"]) for t in rest] == [
+        ("ib", False, []), ("consulting", False, []), ("software", False, [])]
     assert [(t["id"], t["count"]) for t in track["topics"]] == [
         ("Mixed", 3), ("Percentages", 1), ("Probability", 1), ("Statistics", 1), ("fraud", None)]
 
@@ -485,8 +487,9 @@ def test_topics_list_forge_topics_mixed_and_fraud(monkeypatch, bank):
 def test_fraud_alert_is_the_default_only_without_templates(monkeypatch, tmp_path):
     monkeypatch.setattr(interview_routes, "_BANK", load_bank(tmp_path))
     data = TestClient(app).get("/api/interview/topics").json()
-    [track] = data["tracks"]
-    assert data["default_track"] == "quant" and track["default"] == "fraud"
+    track = data["tracks"][0]
+    assert data["default_track"] == "quant" and track["default"] == "fraud" and track["available"]
+    assert not any(t["available"] for t in data["tracks"][1:])
     assert [t["id"] for t in track["topics"]] == ["fraud"]
 
 
@@ -1177,23 +1180,26 @@ def test_bank_lists_packs_and_topics_per_pack():
         BankSource(bank, "Valuation", pack="quant")
 
 
-def test_topic_route_groups_topics_by_track_and_hides_empty_tracks(monkeypatch):
+def test_topic_route_groups_topics_by_track_and_marks_empty_tracks(monkeypatch):
     bank = _packed_bank(("a", None, "Probability"), ("b", "ib", "Valuation"), ("c", "consulting", "Market sizing"))
     monkeypatch.setattr(interview_routes, "_BANK", bank)
     data = TestClient(app).get("/api/interview/topics").json()
     assert data["default_track"] == "quant"
-    assert [(t["id"], t["name"]) for t in data["tracks"]] == [
-        ("quant", "Quant"), ("ib", "Investment banking"), ("consulting", "Consulting")]  # no software
+    assert [(t["id"], t["name"], t["count"], t["available"]) for t in data["tracks"]] == [
+        ("quant", "Quant", 1, True), ("ib", "Investment banking", 1, True), ("consulting", "Consulting", 1, True),
+        ("software", "Software engineering", 0, False)]  # no software templates: "Being added"
     topics = {t["id"]: [(o["id"], o["count"]) for o in t["topics"]] for t in data["tracks"]}
     assert topics == {"quant": [("Mixed", 1), ("Probability", 1), ("fraud", None)],
                       "ib": [("Mixed", 1), ("Valuation", 1)],
-                      "consulting": [("Mixed", 1), ("Market sizing", 1)]}
+                      "consulting": [("Mixed", 1), ("Market sizing", 1)], "software": []}
 
 
 def test_default_track_is_the_first_shown_when_quant_has_no_templates(monkeypatch):
     monkeypatch.setattr(interview_routes, "_BANK", _packed_bank(("b", "ib", "Valuation"), ("d", "software", "Complexity")))
     data = TestClient(app).get("/api/interview/topics").json()
-    assert data["default_track"] == "ib" and [t["id"] for t in data["tracks"]] == ["ib", "software"]
+    assert data["default_track"] == "ib"
+    assert [t["id"] for t in data["tracks"] if t["available"]] == ["ib", "software"]
+    assert data["tracks"][0]["topics"] == []  # Quant: no templates, so no fraud alert either
 
 
 def test_interview_uses_the_chosen_track_and_only_its_topics(monkeypatch):
@@ -1204,6 +1210,8 @@ def test_interview_uses_the_chosen_track_and_only_its_topics(monkeypatch):
     # A topic from another track falls back to the chosen track's Mixed.
     assert set(interview_routes.interview_for("ib", "fraud", "Easy").source.templates) == {"b", "c"}
     assert set(interview_routes.interview_for("software", "Valuation", "Easy").source.templates) == {"a"}
+    # A track being added can't be picked: the default track is used.
+    assert set(interview_routes.interview_for("consulting", "Mixed", "Easy").source.templates) == {"a"}
 
 
 def test_socket_serves_the_chosen_track(monkeypatch):
@@ -1216,3 +1224,25 @@ def test_socket_serves_the_chosen_track(monkeypatch):
             pass
         assert event["template"] == "b"
         socket.send_json({"type": "end"})
+
+
+# --- Decision log 20: the report shows which mode was used ----------------------------
+
+def test_report_shows_exam_typed_practice_or_replay(monkeypatch):
+    from app import interview_report
+    bank = _packed_bank(("a", None, "Probability"))
+    monkeypatch.setattr(interview_routes, "_BANK", bank)
+    monkeypatch.setattr(voice_routes, "provider", lambda: ScriptedProvider())
+    client = TestClient(app)
+    for begin, expected in (({}, "exam"), ({"typed_practice": True}, "typed")):
+        with client.websocket_connect("/api/interview/ws") as socket:
+            socket.send_json({"type": "begin", "consent": True, "pack": "quant", "level": "Easy", **begin})
+            while (event := socket.receive_json())["type"] != "session":
+                pass
+            session_id = event["id"]
+            socket.send_json({"type": "end"})
+        session = interview_routes.SESSIONS[session_id]
+        assert session.conditions == expected
+        assert interview_report.build(session)["conditions"] == interview_report.CONDITIONS[expected]
+    assert interview_routes.conditions({"typed_practice": True}, "replay") == "replay"
+    assert interview_report.CONDITIONS["typed"] == "Typed practice: not exam conditions"
