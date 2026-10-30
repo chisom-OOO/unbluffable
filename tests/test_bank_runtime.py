@@ -23,6 +23,7 @@ from engine.coding import Outcome, code_answer
 from engine.help import position
 from engine.interview import Interview
 from engine.labels import Label
+from voice.recording import VoiceError
 from voice.schemas import CONTEXT
 
 FIXTURES = Path(__file__).parent / "fixtures" / "forge"
@@ -1207,9 +1208,11 @@ def test_interview_uses_the_chosen_track_and_only_its_topics(monkeypatch):
     monkeypatch.setattr(interview_routes, "_BANK", bank)
     assert set(interview_routes.interview_for("ib", "Probability", "Easy").source.templates) == {"b"}
     assert set(interview_routes.interview_for(None, "Probability", "Easy").source.templates) == {"a"}  # default: Quant
-    # A topic from another track falls back to the chosen track's Mixed.
-    assert set(interview_routes.interview_for("ib", "fraud", "Easy").source.templates) == {"b", "c"}
-    assert set(interview_routes.interview_for("software", "Valuation", "Easy").source.templates) == {"a"}
+    # A topic from another track is rejected; an unavailable track falls back to the default.
+    for pack, topic in (("ib", "fraud"), ("software", "Valuation")):
+        with pytest.raises(VoiceError):
+            interview_routes.interview_for(pack, topic, "Easy")
+    assert set(interview_routes.interview_for("software", "Mixed", "Easy").source.templates) == {"a"}
     # A track being added can't be picked: the default track is used.
     assert set(interview_routes.interview_for("consulting", "Mixed", "Easy").source.templates) == {"a"}
 
@@ -1293,3 +1296,82 @@ def test_mic_failure_after_start_turns_exam_into_typed_practice(monkeypatch):
         session = interview_routes.SESSIONS[session_id]
         assert session.conditions == expected
         assert interview_report.build(session)["conditions"] == "Typed practice: not exam conditions"
+
+
+# --- Topic selection: several topics at once ------------------------------------------
+
+def _topic_bank(*specs):
+    """specs: (template_id, topic, difficulty), all Quant."""
+    from engine.bank import Bank
+    templates = [parse_template(_raw_bag(template_id=tid, topic=topic, difficulty=level)) for tid, topic, level in specs]
+    return Bank({t.template_id: t for t in templates})
+
+
+TOPIC_SPECS = (("p1", "Probability", "Easy"), ("p2", "Probability", "Medium"), ("p3", "Probability", "Hard"),
+               ("c1", "Counting", "Easy"), ("c2", "Counting", "Medium"), ("c3", "Counting", "Hard"),
+               ("s1", "Statistics", "Easy"), ("s2", "Statistics", "Medium"), ("s3", "Statistics", "Hard"))
+
+
+def test_multi_topic_draws_stay_inside_the_selection():
+    bank = _topic_bank(*TOPIC_SPECS)
+    assert {t.template_id for t in bank.pool(["Probability", "Counting"])} == {"p1", "p2", "p3", "c1", "c2", "c3"}
+    assert bank.pool(("Statistics",)) == bank.pool("Statistics")
+    for seed in range(30):
+        rng = random.Random(seed)
+        source = BankSource(bank, ["Probability", "Counting"], "Easy", rng=rng)
+        drawn = []
+        while source.candidates():
+            drawn.append(source.new(source.candidates()[0]).template_id)
+            source.step(rng.choice([Outcome.CORRECT, Outcome.NAMED_WRONG]))
+        assert sorted(drawn) == ["c1", "c2", "c3", "p1", "p2", "p3"]  # every one, and nothing from Statistics
+
+
+def test_ladder_uses_the_union_at_the_current_level_then_the_nearest_level():
+    bank = _topic_bank(*TOPIC_SPECS)
+    source = BankSource(bank, ["Probability", "Counting"], "Medium", rng=random.Random(1))
+    first = source.new(source.candidates()[0])
+    assert first.template_id in {"p2", "c2"}  # the level asked, from either selected topic
+    source.step(Outcome.CORRECT)
+    assert source.candidates()[0] in {"p3", "c3"}
+    # Only Hard questions selected, starting at Easy: the nearest level within the selection.
+    hard = _topic_bank(("p3", "Probability", "Hard"), ("c3", "Counting", "Hard"), ("s1", "Statistics", "Easy"))
+    source = BankSource(hard, ["Probability", "Counting"], "Easy", rng=random.Random(2))
+    assert source.candidates()[0] in {"p3", "c3"}  # never Statistics, though it has an Easy one
+    # Medium wanted, Easy and Hard selected: a tie goes to the easier level.
+    mixed = _topic_bank(("p1", "Probability", "Easy"), ("c3", "Counting", "Hard"))
+    assert BankSource(mixed, ["Probability", "Counting"], "Medium", rng=random.Random(3)).candidates() == ["p1"]
+
+
+def test_begin_takes_a_list_of_topics_a_single_topic_or_none(monkeypatch):
+    bank = _topic_bank(*TOPIC_SPECS)
+    monkeypatch.setattr(interview_routes, "_BANK", bank)
+    pool = lambda topic: set(interview_routes.interview_for("quant", topic, "Easy").source.templates)
+    assert pool(["Probability", "Counting"]) == {"p1", "p2", "p3", "c1", "c2", "c3"}
+    assert pool("Statistics") == {"s1", "s2", "s3"}
+    assert pool(None) == pool("Mixed") == {t for t, _, _ in TOPIC_SPECS}
+    for bad in (["Probability", "Valuation"], "Valuation", [], ["Probability", 3], ["fraud", "Probability"]):
+        with pytest.raises(VoiceError):
+            interview_routes.interview_for("quant", bad, "Easy")
+    assert interview_routes.interview_for("quant", ["fraud"], "Easy").source is None  # the classic interview, alone
+    assert interview_routes.topic_label("quant", ["Counting", "Probability"]) == "Counting, Probability"
+    assert interview_routes.topic_label("quant", ["Counting", "Probability", "Statistics"]) == "All topics"
+    assert interview_routes.topic_label("quant", None) == "All topics"
+
+
+def test_report_header_lists_the_selected_topics(monkeypatch):
+    bank = _topic_bank(*TOPIC_SPECS)
+    monkeypatch.setattr(interview_routes, "_BANK", bank)
+    monkeypatch.setattr(voice_routes, "provider", lambda: ScriptedProvider())
+    client = TestClient(app)
+    for topics, label in ((["Probability", "Counting"], "Probability, Counting"), (None, "All topics")):
+        with client.websocket_connect("/api/interview/ws") as socket:
+            socket.send_json({"type": "begin", "consent": True, "pack": "quant", "topics": topics, "level": "Easy"})
+            while (event := socket.receive_json())["type"] != "question":
+                if event["type"] == "session":
+                    session_id = event["id"]
+            assert event["topic"] in (topics or ["Probability", "Counting", "Statistics"])
+            socket.send_json({"type": "end"})
+        assert interview_report.build(interview_routes.SESSIONS[session_id])["topics"] == label
+    with client.websocket_connect("/api/interview/ws") as socket:
+        socket.send_json({"type": "begin", "consent": True, "pack": "quant", "topics": ["Valuation"], "level": "Easy"})
+        assert socket.receive_json() == {"type": "error", "message": "Choose topics from this track."}

@@ -59,16 +59,44 @@ def topics() -> dict:
             "default_level": START_LEVELS[0]}
 
 
-def interview_for(pack, topic, level) -> Interview:
-    """The fraud alert is the fallback only when no forge template is accepted yet."""
+def selection(pack, topic) -> tuple[dict, str | tuple[str, ...]]:
+    """The track (an unavailable one falls back to the default) and the chosen topics:
+    a list of the track's topics, one topic, or None / Mixed for all of them. The fraud
+    alert is chosen on its own. Unknown topics are rejected."""
     found = topics()
     track = next((t for t in found["tracks"] if t["id"] == pack and t["available"]), None)         or next(t for t in found["tracks"] if t["id"] == found["default_track"])
-    topic = topic if topic in {option["id"] for option in track["topics"]} else track["default"]
-    if topic == FRAUD:
+    known = {option["id"] for option in track["topics"]}
+    if topic is None:
+        return track, track["default"]
+    chosen = [topic] if isinstance(topic, str) else topic
+    if not isinstance(chosen, list) or not chosen:
+        raise VoiceError("Choose at least one topic.")
+    if not all(isinstance(t, str) and t in known for t in chosen):
+        raise VoiceError("Choose topics from this track.")
+    if FRAUD in chosen:
+        if len(chosen) > 1:
+            raise VoiceError("The fraud alert runs on its own; choose it without other topics.")
+        return track, FRAUD
+    forge = known - {MIXED, FRAUD}
+    if MIXED in chosen or set(chosen) == forge:
+        return track, MIXED
+    return track, tuple(dict.fromkeys(chosen))
+
+
+def topic_label(pack, topic) -> str:
+    """For the report header: the selected topics, or "All topics"."""
+    _, chosen = selection(pack, topic)
+    return {MIXED: "All topics", FRAUD: "Fraud alert (classic)"}.get(chosen) if isinstance(chosen, str) else ", ".join(chosen)
+
+
+def interview_for(pack, topic, level) -> Interview:
+    """The fraud alert is the fallback only when no forge template is accepted yet."""
+    track, chosen = selection(pack, topic)
+    if chosen == FRAUD:
         return Interview(demo=True)
     if level not in START_LEVELS:
         raise VoiceError("Choose a starting level: Easy or Medium.")
-    return Interview(source=BankSource(bank(), topic, level, pack=track["id"]))
+    return Interview(source=BankSource(bank(), chosen, level, pack=track["id"]))
 
 
 def conditions(begin: dict, mode: str) -> str:
@@ -180,8 +208,11 @@ async def interview_socket(socket: WebSocket):
         if begin.get("drill") is not None:
             session = drill_for(begin["drill"], socket.send_json, listen, VoiceAnalyzer(provider), deadline)
         else:
-            interview = interview_for(begin.get("pack"), begin.get("topic"), begin.get("level", START_LEVELS[0]))
+            # "topics" (a list) is what the page sends; a single "topic" or none (all) still works.
+            chosen = begin["topics"] if begin.get("topics") is not None else begin.get("topic")
+            interview = interview_for(begin.get("pack"), chosen, begin.get("level", START_LEVELS[0]))
             session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
+            session.topics = topic_label(begin.get("pack"), chosen)
         session.conditions = conditions(begin, provider.mode)
         session_id = keep(session)
         await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,

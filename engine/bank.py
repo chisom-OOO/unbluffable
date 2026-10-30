@@ -245,9 +245,12 @@ class Bank:
                 counts[t.topic] = counts.get(t.topic, 0) + 1
         return sorted(counts.items(), key=lambda kv: kv[0].lower())
 
-    def pool(self, topic: str, pack: str | None = None) -> list[ForgeTemplate]:
+    def pool(self, topic, pack: str | None = None) -> list[ForgeTemplate]:
+        """Templates in the pack for one topic, a selection of topics, or MIXED (all)."""
+        chosen = {topic} if isinstance(topic, str) else set(topic)
+        everything = MIXED in chosen
         return [t for t in self.templates.values()
-                if (pack is None or t.pack == pack) and (topic == MIXED or t.topic == topic)]
+                if (pack is None or t.pack == pack) and (everything or t.topic in chosen)]
 
 
 def load_bank(directory: Path | str | None = None) -> Bank:
@@ -384,7 +387,8 @@ def aimed_puzzle(template: ForgeTemplate, index: int, suspect: str, original: Pu
 
 class BankSource:
     """New questions for engine.Interview: one template per new question, chosen
-    from the topic at the ladder's level; twins come from the same template."""
+    from the topic (or the union of selected topics) at the ladder's level, else the
+    nearest level within it; twins come from the same template."""
 
     def __init__(self, bank: Bank, topic: str = MIXED, start: str = "Easy", rng: random.Random | None = None,
                  pack: str | None = None):

@@ -302,6 +302,7 @@ def build(session: ExamSession, templates: dict | None = None) -> dict:
     return {
         "sample": False,
         "conditions": CONDITIONS[session.conditions],
+        "topics": session.topics,
         "label": LABEL_KEYS[label],
         "misconception": misconception_name(misconception),
         "misconception_note": MISCONCEPTIONS[misconception][1] if misconception in MISCONCEPTIONS else None,

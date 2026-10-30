@@ -305,6 +305,7 @@ class ExamSession:
         self._scored: list[QuestionLog] = []
         self._followed: set[str] = set()  # templates whose follow-up was asked
         self.conditions = "exam"  # decision log 20: exam / typed / replay, set by the route
+        self.topics = None  # the selected topics for the report header, set by the route
 
     # --- events ---
     async def line(self, kind: str, text: str, target: int | None = None, receipt: dict | None = None,
