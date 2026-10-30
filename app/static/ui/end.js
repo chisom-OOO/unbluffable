@@ -64,7 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
       `<blockquote class="evidence"><p>“${q.challenge ? highlight(q.quote, q.challenge) : escapeHtml(q.quote)}”</p><footer>${escapeHtml(q.note)}</footer>${receiptHtml(q.receipt)}</blockquote>`).join("");
 
     $("check").innerHTML = e.checks.map((c) =>
-      `<div class="check-row">${escapeHtml(c.q)}, exact check: you said <span class="mono">${escapeHtml(c.said)}</span>; the answer is <span class="mono">${escapeHtml(c.exact)}</span>.${receiptHtml(c.receipt)}</div>`).join("");
+      `<div class="check-row">${escapeHtml(c.q)}, exact check: you said <span class="mono">${escapeHtml(c.said)}</span>; the answer is <span class="mono">${escapeHtml(c.exact)}</span>.${receiptHtml(c.receipt)}</div>`).join("") +
+      (e.follow_ups || []).map((f) =>
+      `<div class="check-row">${escapeHtml(f.q)}, follow-up: ${escapeHtml(f.verdict)}.${receiptHtml(f.receipt)}</div>`).join("");
 
     const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
     const levelBars = Array.from({ length: e.levels }, (_, i) => `<span class="${i < e.level ? "on" : ""}"></span>`).join("");

@@ -110,6 +110,23 @@ def weight_receipt(words: str, help_load: int, recovered: bool, weight: Fraction
     return {"words": words, "span": None, "rows": rows}
 
 
+def follow_up_receipt(log) -> dict:
+    """A follow-up reply (app.follow_up): model-matched against the reference, never an
+    exact check and never scored."""
+    rows = [{"key": "question", "label": "Follow-up", "text": log.question},
+            {"key": "reference", "label": "Reference answer", "text": log.reference},
+            {"key": "verdict", "label": "Judgement", "text": log.label}]
+    if log.quote:
+        rows.append({"key": "quote", "label": "Words it matched", "text": f"“{log.quote}”"})
+    rows.append({"key": "rule", "label": "How it was judged",
+                 "text": "One model call compared your words with the reference answer. Model-matched, "
+                         "not an exact check, and never scored."})
+    receipt = {"words": log.reply, "span": log.quote, "rows": rows}
+    if log.note:
+        receipt["note"] = log.note
+    return receipt
+
+
 def why_receipt(diagnostic, words: str | None, previous: Fraction | None) -> dict:
     """The gap behind a diagnostic twin's numbers (engine.bank.twin_choice)."""
     rows = [{"key": "exact", "label": "Right method", "text": value(diagnostic.correct)},

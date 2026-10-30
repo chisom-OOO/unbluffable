@@ -9,11 +9,11 @@ Drill answers are not scored by the engine and do not change any interview label
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from fractions import Fraction
 
 from app import exam_text as say
-from app.interview_session import GUIDE_SECONDS, ExamSession, QuestionLog, SessionClosed, _DECLINE
+from app.interview_session import GUIDE_SECONDS, ExamSession, QuestionLog, SessionClosed, _DECLINE, coarse
 from engine.bank import ForgePuzzle, ForgeTemplate, aimed_puzzle, drill_plan, same_mistake
 from engine.coding import Observation, Outcome
 from engine.interview import Question
@@ -146,6 +146,11 @@ class DrillSession(ExamSession):
             analysis = await self.analyzer.analyse(puzzle, text, self.send)
             await self.send({"type": "analysis_complete"})
             answer = self._answer(puzzle, text, analysis)
+            if not q.asked_digit and coarse(puzzle, analysis):
+                q.asked_digit = True
+                q.answers.append(replace(answer, outcome=None))
+                await self.line("prompt", say.ONE_MORE_DIGIT)
+                continue
             q.answers.append(answer)
             obs = analysis.observation
             if obs is None or obs.outcome is Outcome.ABSTAIN:

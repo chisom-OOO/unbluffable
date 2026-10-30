@@ -244,6 +244,14 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle-kind").textContent = "Part 2 · not scored";
         finishReveals();
         break;
+      case "follow_up":
+        $("puzzle").textContent = event.text;
+        $("puzzle-kind").textContent = "Follow-up · model-matched, not scored";
+        finishReveals();
+        break;
+      case "follow_up_result":
+        modelRow(event.model);
+        break;
       case "interviewer_line":
         addInterviewer(event.text, event.kind, event.receipt, event.speech);
         if (event.counts) counts(event.counts);

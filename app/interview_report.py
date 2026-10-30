@@ -156,6 +156,18 @@ def question_items(q: QuestionLog) -> list[dict]:
     return items + ([part2] if part2 else [])
 
 
+def follow_up_item(q: QuestionLog) -> dict | None:
+    """The conceptual follow-up: model-matched, reported beside the exact checks, never scored."""
+    f = q.follow_up
+    if f is None or f.reply is None:
+        return None
+    return {"title": f"Follow-up: {f.label[len('Model-matched: '):]} (model-matched)",
+            "text": "A question about the idea, after your correct answer. A model compared your reply with "
+                    "the reference answer; it is not an exact check and is not scored.",
+            "question": f.question, "quote": f.reply, "seen": [q.number], "verdict": f.label,
+            "receipt": f.receipt}
+
+
 def score_receipt(q: QuestionLog, words: str) -> dict:
     return receipts.weight_receipt(words, q.help_load, bool(q.recovered), q.weight, q.scored)
 
@@ -183,8 +195,11 @@ def why_item(q: QuestionLog, questions: list[QuestionLog]) -> dict | None:
 def sections(qs: list[QuestionLog], forge: bool) -> dict:
     """Report lines for scored questions: quotes, checks, times, outcomes, what went well,
     what to improve and the per-question breakdown. Each line carries its receipt."""
-    evidence, checks, hints, times, outcomes = [], [], [], [], []
+    evidence, checks, hints, times, outcomes, follow_ups = [], [], [], [], [], []
     for q in qs:
+        if q.follow_up is not None and q.follow_up.reply is not None:
+            follow_ups.append({"q": name(q), "question": q.follow_up.question, "verdict": q.follow_up.label,
+                               "quote": q.follow_up.quote, "receipt": q.follow_up.receipt})
         checked = [a for a in q.answers if a.outcome is not None]
         if checked:
             evidence.append({"quote": checked[0].transcript, "note": f"{name(q)}, opening answer" + (" (challenged)" if q.challenges else ""),
@@ -226,8 +241,9 @@ def sections(qs: list[QuestionLog], forge: bool) -> dict:
                   + (f"{q.puzzle.topic}, {q.puzzle.difficulty} · " if isinstance(q.puzzle, ForgePuzzle) else "")
                   + f"{round(q.seconds or 0) // 60}:{round(q.seconds or 0) % 60:02d} against a "
                   f"{q.guide_seconds // 60}:{q.guide_seconds % 60:02d} guide · {help_phrase(q)}",
-                  "items": question_items(q) + [w for w in [why_item(q, qs)] if w]} for q in qs]
-    return {"evidence": evidence, "checks": checks, "hints": hints, "times": times, "outcomes": outcomes,
+                  "items": question_items(q) + [w for w in [follow_up_item(q), why_item(q, qs)] if w]} for q in qs]
+    return {"evidence": evidence, "checks": checks, "follow_ups": follow_ups, "hints": hints, "times": times,
+            "outcomes": outcomes,
             "well": well[:3], "improve": improve[:3], "breakdown": breakdown}
 
 
@@ -257,6 +273,7 @@ def build(session: ExamSession, templates: dict | None = None) -> dict:
         "questions": n,
         "evidence": part["evidence"],
         "checks": part["checks"],
+        "follow_ups": part["follow_ups"],
         "hints": part["hints"],
         "challenges": sum(q.challenges for q in qs),
         "nudges": sum(q.nudges for q in qs),
@@ -296,6 +313,7 @@ def build_drill(session: DrillSession) -> dict:
         "questions": n,
         "evidence": part["evidence"],
         "checks": part["checks"],
+        "follow_ups": part["follow_ups"],
         "hints": part["hints"],
         "challenges": sum(q.challenges for q in qs),
         "nudges": sum(q.nudges for q in qs),

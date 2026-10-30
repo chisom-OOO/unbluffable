@@ -28,6 +28,11 @@ ASK_FOR_ANSWER = "What probability do you commit to?"
 ASK_FOR_VALUE = "What answer do you commit to?"  # forge templates: the answer need not be a probability
 PART2_INTRO = "Good. Here's a follow-up."
 PART2_CLOSE = "Thanks. Let's move on."
+FOLLOW_UP_INTRO = "One more on this, about the idea rather than the numbers."
+FOLLOW_UP_NO_HINT = "There's no hint for this one. Just say what you think."
+FOLLOW_UP_CLOSE = "Thanks. Let's move on."
+# A rounded answer that also rounds from a known wrong value: ask once for more precision.
+ONE_MORE_DIGIT = "That rounds from more than one method. Could you give it to one more decimal place?"
 ASK_WHY = "How did you get that?"
 HELP_ASK = "Sure, what are you stuck on?"
 OFFER_HELP = "Is there anything you're stuck on?"

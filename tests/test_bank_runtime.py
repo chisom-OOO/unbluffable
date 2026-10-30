@@ -330,6 +330,11 @@ class ScriptedProvider:
 
     async def structured(self, text, kind, effort, schema, prompt):
         self.prompts.append((kind, prompt))
+        if "verdict" in schema["properties"]:  # follow-up judge: "<verdict>: <quote>"
+            verdict, _, quote = text.partition(": ")
+            verdict = verdict.lower()
+            return {"verdict": verdict if verdict in ("yes", "partly", "no") else "no",
+                    "quote": quote or "none"}, {"model": "fake"}
         m = ANSWER.search(text)
         span = m.group(1) if m else "none"
         if kind == "minimal":
@@ -955,3 +960,184 @@ def test_topic_falls_back_to_source_topic():
     assert _bag_bank(_bag(topic=None, source_topic="Counting")).topics() == [("Counting", 1)]
     with pytest.raises(ForgeError):
         _bag(topic=None)
+
+
+# --- Conceptual follow-ups (model-matched, never scored) -----------------------------
+
+FOLLOW = {"question": "Why must the chance of red go up when you add a red ball?",
+          "reference": "Red grows faster than the total, so the share of red rises."}
+
+
+def _follow_session(replies, follow=FOLLOW, provider=None, first="right"):
+    """A bag session. `replies`: the candidate's follow-up replies in order."""
+    template = parse_template(_raw_bag(follow_up=follow))
+    replies = list(replies)
+    def policy(session, events):
+        q = session.questions[-1]
+        last = [e for e in events if e["type"] == "interviewer_line"][-1]
+        if last["text"].startswith((say.FOLLOW_UP_INTRO, say.REPEAT_INTRO + " Why", say.FOLLOW_UP_NO_HINT)):
+            return replies.pop(0)
+        if first == "wrong":
+            return "My answer is 11/13, because blue over all."
+        return f"My answer is {frac(q.puzzle.answer)}, because red over all balls."
+    events, provider = [], provider or ScriptedProvider()
+
+    async def send(event):
+        events.append(event)
+
+    async def listen():
+        return policy(session, events)
+
+    source = BankSource(_bag_bank(template), "Probability", "Easy", rng=random.Random(3))
+    session = ExamSession(send, listen, VoiceAnalyzer(provider), Interview(rng=random.Random(5), source=source))
+    asyncio.run(session.run())
+    return session, events, provider
+
+
+def test_follow_up_is_parsed_and_kept_out_of_drills_and_part2():
+    from engine.bank import FollowUp, aimed_puzzle
+    t = parse_template(_raw_bag(follow_up=FOLLOW))
+    assert t.follow_up == FollowUp(FOLLOW["question"], FOLLOW["reference"])
+    assert instance_puzzle(t, t.instances[0], 0).follow_up == t.follow_up
+    assert aimed_puzzle(t, 3, OTHER_COLOUR).follow_up is None
+    assert _bag().follow_up is None
+    for bad in ({"question": "Why?"}, {"question": "", "reference": "x"}, {"question": "Why?", "reference": 3}):
+        with pytest.raises(ForgeError):
+            parse_template(_raw_bag(follow_up=bad))
+
+
+def test_follow_up_asked_aloud_after_a_correct_answer_once_per_template_and_judged_by_one_call():
+    reply = "Yes: red grows faster than the total"
+    session, events, provider = _follow_session([reply])
+    asked = [e for e in events if e["type"] == "follow_up"]
+    assert len(asked) == 1 and asked[0]["text"] == FOLLOW["question"]  # the twin, same template: not asked again
+    lines = [e for e in events if e["type"] == "interviewer_line"]
+    question = next(e for e in lines if e["text"].startswith(say.FOLLOW_UP_INTRO))
+    assert question["kind"] == "question" and question["text"].endswith(FOLLOW["question"])
+    judged = [p for k, p in provider.prompts if FOLLOW["reference"] in p]
+    assert len(judged) == 1 and FOLLOW["question"] in judged[0]
+    result = next(e for e in events if e["type"] == "follow_up_result")
+    assert result["verdict"] == "yes" and result["quote"] == "red grows faster than the total"
+    q = session.questions[0]
+    assert q.follow_up.label == "Model-matched: makes the key point" and q.follow_up.reply == reply
+    close = lines[lines.index(question) + 1]
+    assert close["kind"] == "close" and close["receipt"]["words"] == reply
+    assert close["receipt"]["span"] == "red grows faster than the total"
+    rows = {r["key"]: r["text"] for r in close["receipt"]["rows"]}
+    assert rows["reference"] == FOLLOW["reference"] and rows["verdict"] == "Model-matched: makes the key point"
+    assert "Model-matched, not an exact check, and never scored" in rows["rule"]
+
+
+def test_follow_up_is_never_scored_by_the_engine():
+    with_follow, _, _ = _follow_session(["No: nothing"])
+    template = _bag()
+    def policy(session, events):
+        return f"My answer is {frac(session.questions[-1].puzzle.answer)}, because red over all balls."
+    without, _, _ = run(BankSource(_bag_bank(template), "Probability", "Easy", rng=random.Random(3)), policy)
+    assert with_follow.interview.posterior == without.interview.posterior
+    assert with_follow.interview.label == without.interview.label
+    assert [(q.scored, q.weight, q.help_load) for q in with_follow.questions] == \
+           [(q.scored, q.weight, q.help_load) for q in without.questions]
+
+
+def test_follow_up_shown_in_the_report_beside_the_exact_checks():
+    session, _, _ = _follow_session(["Partly: red grows"])
+    report = interview_report.build(session)
+    f = report["follow_ups"]
+    assert f == [{"q": "Question 1", "question": FOLLOW["question"], "verdict": "Model-matched: partly makes the key point",
+                  "quote": "red grows", "receipt": session.questions[0].follow_up.receipt}]
+    assert report["checks"]  # the exact checks are still there
+    items = report["report"]["breakdown"][0]["items"]
+    item = next(i for i in items if i["title"].startswith("Follow-up"))
+    assert item["title"] == "Follow-up: partly makes the key point (model-matched)"
+    assert item["verdict"] == "Model-matched: partly makes the key point" and item["receipt"]["rows"]
+    # "Keep doing this" stays on the exact answer, not the follow-up.
+    assert not any(i["title"].startswith("Follow-up") for i in report["report"]["well"])
+
+
+def test_follow_up_not_judged_without_a_verbatim_quote_or_on_a_model_error():
+    from voice.recording import VoiceError
+    session, _, _ = _follow_session(["Yes"])  # a "yes" with no quote
+    assert session.questions[0].follow_up.verdict is None
+    assert session.questions[0].follow_up.label == "Model-matched: not judged"
+    session, _, _ = _follow_session(["No: none of this"])  # quote "none of this" is verbatim
+    assert session.questions[0].follow_up.verdict == "no"
+
+    class Paraphrasing(ScriptedProvider):
+        async def structured(self, text, kind, effort, schema, prompt):
+            if "verdict" in schema["properties"]:
+                return {"verdict": "yes", "quote": "words the candidate never said"}, {"model": "fake"}
+            return await super().structured(text, kind, effort, schema, prompt)
+
+    session, _, _ = _follow_session(["Red rises."], provider=Paraphrasing())
+    log = session.questions[0].follow_up
+    assert log.verdict is None and "not in your words" in log.note and log.receipt["note"] == log.note
+
+    class Failing(ScriptedProvider):
+        async def structured(self, text, kind, effort, schema, prompt):
+            if "verdict" in schema["properties"]:
+                raise VoiceError("model down")
+            return await super().structured(text, kind, effort, schema, prompt)
+
+    session, events, _ = _follow_session(["Red rises."], provider=Failing())
+    assert session.questions[0].follow_up.verdict is None
+    assert any(e["type"] == "model_error" and e["job"] == "follow_up" for e in events)
+
+
+def test_follow_up_help_gets_no_hint_and_a_wrong_answer_gets_no_follow_up():
+    session, events, _ = _follow_session(["Can I have a hint?", "Yes: red grows faster than the total"])
+    texts = [e["text"] for e in events if e["type"] == "interviewer_line"]
+    assert say.FOLLOW_UP_NO_HINT in texts
+    assert session.questions[0].hints == 0 and session.questions[0].help_load == 0
+    assert session.questions[0].follow_up.verdict == "yes"
+    session, events, _ = _follow_session([], first="wrong")
+    assert not any(e["type"] == "follow_up" for e in events)
+
+
+# --- One more digit: a rounded answer that fits two methods ----------------------------
+
+def _close_bag():
+    """Each instance's first wrong value is 1/1000 above the answer: "15%" for 2/13 (15.38%)
+    rounds from both; "15.4%" from the answer only."""
+    raw = _raw_bag()
+    for row in raw["instances"]:
+        r = row["params"]["red"]
+        near = Fraction(r, r + 11) + Fraction(1, 1000)
+        row["wrong"][0]["value"] = f"{near.numerator}/{near.denominator}"
+    return parse_template(raw)
+
+
+def test_coarse_answers_are_detected():
+    from app.interview_session import Analysis, coarse
+    t = _close_bag()
+    q = instance_puzzle(t, t.instances[0], 0)
+    def analysis(said):
+        stated = parse_value(said)
+        return Analysis(code_answer(q, stated, "valid"), stated, said)
+    assert coarse(q, analysis("15%")) and coarse(q, analysis("0.15"))
+    assert not coarse(q, analysis("15.4%")) and not coarse(q, analysis("2/13")) and not coarse(q, analysis("85%"))
+    plain = _bag()
+    assert not coarse(instance_puzzle(plain, plain.instances[0], 0), analysis("15%"))
+
+
+def test_one_more_digit_is_asked_once_without_counting_as_help():
+    def policy(session, events):
+        q = session.questions[-1]
+        last = [e for e in events if e["type"] == "interviewer_line"][-1]
+        digits = 1 if last["text"] == say.ONE_MORE_DIGIT else 0
+        return f"My answer is {float(q.puzzle.answer) * 100:.{digits}f}%, because red over all balls."
+    session, events, _ = run(BankSource(_bag_bank(_close_bag()), "Probability", "Easy", rng=random.Random(2)), policy)
+    asks = [e for e in events if e["type"] == "interviewer_line" and e["text"] == say.ONE_MORE_DIGIT]
+    assert len(asks) == len(session.questions) >= 1
+    for q in session.questions:
+        assert q.scored == Outcome.CORRECT.value and q.asked_digit
+        assert (q.challenges, q.nudges, q.hints, q.help_load, q.recovered) == (0, 0, 0, 0, False)
+        assert q.answers[0].outcome is None and q.answers[1].outcome == Outcome.CORRECT.value
+
+    # Still coarse after the one ask: coded as before (the exact answer is checked first).
+    def stubborn(session, events):
+        return f"My answer is {float(session.questions[-1].puzzle.answer) * 100:.0f}%, because red over all balls."
+    session, events, _ = run(BankSource(_bag_bank(_close_bag()), "Probability", "Easy", rng=random.Random(2)), stubborn)
+    assert all(q.scored == Outcome.CORRECT.value for q in session.questions)
+    asks = [e for e in events if e["type"] == "interviewer_line" and e["text"] == say.ONE_MORE_DIGIT]
+    assert len(asks) == len(session.questions)

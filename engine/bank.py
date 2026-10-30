@@ -18,6 +18,10 @@ the others are used only when none qualify. An instance's `spoken_text` is what 
 interviewer says; without it, simple LaTeX in the text is read out as words
 (engine.mathtext) and shown as plain Unicode. A wrong value may carry several
 misconception names; they are one mistake, named "a / b".
+
+A template may carry a conceptual `follow_up` ({"question", "reference"}); the Exam
+Room asks it after a correct answer and judges the reply with the model. The engine
+never scores it.
 """
 
 from __future__ import annotations
@@ -71,6 +75,12 @@ class Instance:
 
 
 @dataclass(frozen=True)
+class FollowUp:
+    question: str
+    reference: str
+
+
+@dataclass(frozen=True)
 class ForgeTemplate:
     template_id: str
     topic: str
@@ -79,6 +89,7 @@ class ForgeTemplate:
     models: object
     verification: object
     instances: tuple[Instance, ...]
+    follow_up: FollowUp | None = None
 
 
 @dataclass(frozen=True)
@@ -104,6 +115,7 @@ class ForgePuzzle(Puzzle):
     instance: int = -1
     diagnostic: Diagnostic | None = None  # twins only
     speech: str = ""  # what the interviewer says for `text`
+    follow_up: FollowUp | None = None  # the template's conceptual follow-up, if any
 
     def accepts(self, stated: StatedNumber, target: Fraction) -> bool:
         return checker.accepts(stated, target, self.tolerance)
@@ -197,8 +209,14 @@ def parse_template(raw: dict, where: str = "template") -> ForgeTemplate:
                   if isinstance(t, str) and t.strip()), None)
     if topic is None:
         raise ForgeError(f"{where}: missing topic")
+    follow_up = None
+    if raw.get("follow_up") is not None:
+        here = f"{where}.follow_up"
+        follow_up = FollowUp(*(_need(raw["follow_up"], key, str, here).strip() for key in ("question", "reference")))
+        if not follow_up.question or not follow_up.reference:
+            raise ForgeError(f"{here}: question and reference must be non-empty")
     return ForgeTemplate(template_id, topic, tuple(topics), difficulty,
-                         raw.get("models"), raw.get("verification"), instances)
+                         raw.get("models"), raw.get("verification"), instances, follow_up)
 
 
 @dataclass
@@ -262,6 +280,7 @@ def instance_puzzle(template: ForgeTemplate, instance: Instance, index: int,
         instance=index,
         diagnostic=diagnostic,
         speech=instance.spoken_text or mathtext.spoken(instance.text),
+        follow_up=template.follow_up if template_id is None else None,
     )
 
 
@@ -338,13 +357,13 @@ def drill_plan(template: ForgeTemplate, suspect: str, used: set[int],
 
 def aimed_puzzle(template: ForgeTemplate, index: int, suspect: str, original: Puzzle | None = None) -> ForgePuzzle:
     """An instance as a drill question, with its "Why these numbers?" diagnostic and no
-    part 2 (a drill asks only about the one mistake)."""
+    part 2 or follow-up (a drill asks only about the one mistake)."""
     inst = template.instances[index]
     wrong = min((nv.value for nv in inst.wrong if same_mistake(nv.misconception, suspect)),
                 key=lambda v: abs(inst.answer - v))
     puzzle = instance_puzzle(template, inst, index, original=original,
                              diagnostic=Diagnostic(suspect, inst.answer, wrong, True))
-    return replace(puzzle, part2=None)
+    return replace(puzzle, part2=None, follow_up=None)
 
 
 class BankSource:
