@@ -277,3 +277,77 @@ Verification revision 4 / instance format 3 prevents an old finished checkpoint
 from skipping the new content gates. No generated content is committed before
 builder review. Four SE, simulator isolation, the blind twin and novelty gates
 are unchanged.
+
+## Verified family forge
+
+The family importer is a separate command in forge.family_run, implemented by
+forge.families. It retains all 75 variants per family from the supplied verified
+CSV; it does not reword questions, invent ranges or drop difficult instances.
+
+From the voice worktree, with BASETEN_API_KEY already exported:
+
+```powershell
+$env:LLM_BACKEND = "open_weights"
+.\.venv\Scripts\python.exe -m forge.family_run --mode live --csv "C:\Users\chiso\unbluffable\data\bank\quant_interview_7575.csv" --budget-usd 5 --work-dir data/forge/families1
+```
+
+Only Spark Open is called. MODEL_API_KEY is not needed for this workflow.
+Default mode is replay; matching recorded jobs replay without either key.
+Prices use the same configurable --price flags and durable usage/reservation
+ledger. The family budget defaults to and is capped at $5.
+
+The loader requires exactly 75 distinct variants per family and a passing source
+verification result. PASS_EXACT values have zero tolerance, including exact
+decimal literals; PASS_NUMERICAL uses the positive verification_tolerance from
+the CSV. Answers/tolerances are exported as canonical exact Fraction strings.
+Parameters, question text, topic and difficulty retain their CSV meanings;
+subtopic becomes source_topic. Source row IDs stay in ignored private mappings.
+
+For each family, two deterministic representative variants (question, parameters,
+solution, reasoning_focus) go to the author. It writes one solver, 2-4 named
+wrong-method solvers and named steps. All 75 values must match before solver
+verification passes. Every wrong method is checked on every variant. A wrong
+value equal to the answer or inside its recorded tolerance fails that family's
+misconception gate. Equal wrong values merge with all misconception names, and
+the existing separation metrics are exported.
+
+One complete draft repair is allowed after a code-gate failure, through the
+existing record/replay and budget ledger. Both calls are recorded. Schema-format
+repair remains bounded by the shared Models implementation. There is no live
+retry of a failed/uncertain billed request.
+
+A persistent failure still exports all 75 trusted CSV answers, with wrong=[] and
+verification.misconceptions_verified=false. Correct steps are retained only if a
+solver already passed all 75 checks; otherwise steps=[]. Verification records
+which checks passed and the safe failure class, never pretending the fallback
+passed a generated-code check. Finished successes/failures never spend again.
+A budget stop, missing replay or unresolved call exports CSV-only pending
+families too; these stay resumable and are not marked finished.
+
+Batched sandbox calls compile once per solver and run every variant with fresh
+generated globals, under the same capability, memory, CPU and wall-time limits.
+Structured parameters expose immutable tuples/mappings, preserve string labels,
+and use exact numeric values. Existing sandbox defaults remain unchanged.
+No generated code is included in public artifacts or executed at app runtime.
+
+Every instance includes interview_friendly and spoken_text from the shared
+helpers. All 75 instances are retained regardless of their friendliness score.
+Imported wording is preserved exactly in text, including existing coefficients;
+spoken conversion does not apply the twin-author wording rejection to this CSV.
+
+Template follow_up is the lowest-numbered variant's question/reference pair.
+Every instance also carries its own follow_up, preserving families whose
+follow-ups vary across variants. The report marks that variation.
+
+Outputs:
+- content/forge/family_<family_id>.json: precomputed data, pending builder review.
+- data/forge/families1/: source fingerprint, private code/call records, progress
+  and source-row mapping, plus the durable funnel.json.
+- forge/funnel.json: the latest family summary, also printed as aggregate JSON.
+
+The funnel separates exported families, verified misconceptions, terminal
+fallbacks, pending families, repairs, stages, per-topic totals, usage, cost and
+recorded latency. Run the same command to resume. Exit 0 means every family was
+processed (including honest fallbacks); exit 2 means pending work remains after
+a budget/replay/interruption stop. Source/configuration errors exit 1.
+Generated content remains uncommitted for the builder's audit.
