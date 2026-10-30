@@ -407,7 +407,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!gateOpen()) { openGateDialog(); return; }
     setStatus("");
     consent.disabled = true;
-    topicSelect.disabled = true;
+    lockTopics();
     document.querySelectorAll('input[name="level"]').forEach((r) => { r.disabled = true; });
     stopMeter();
     if (gateDialog.open) gateDialog.close();
@@ -426,7 +426,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const level = document.querySelector('input[name="level"]:checked')?.value || "Easy";
     socket.onopen = () => socket.send(JSON.stringify(drill
       ? { type: "begin", consent: true, headphones: headphones.checked, drill }
-      : { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, topic: topicSelect.value || null, level,
+      : { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, topics: topicsKnown ? [...chosenTopics] : null, level,
           typed_practice: typedPractice }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Start stays clickable, styled as not ready; pressed early it opens the dialog below.
   const gateDialog = $("gate-dialog");
   const problems = () => window.UBTurn.gateProblems({
-    exempt: typedPractice || replay, mic: micStatus, camera, connection, consent: consent.checked });
+    exempt: typedPractice || replay, mic: micStatus, camera, connection, consent: consent.checked, topics: topicCount() });
   const gateOpen = () => problems().length === 0;
   function updateGate() {
     const need = problems();
@@ -513,6 +513,7 @@ document.addEventListener("DOMContentLoaded", () => {
       failed: { title: "Server not connected", text: ["Check your connection and reload."], button: ["Reload", "reload"] },
       checking: { title: "Connecting to the server", text: ["This takes a moment. If it doesn't connect, check your connection and reload."] },
     },
+    topics: { none: { title: "No topic chosen", text: ["Choose at least one topic, or press Select all."], button: ["Select all", "topics-all"] } },
     consent: { unticked: { title: "Agreement not ticked", text: ["Tick the box agreeing that your answer text is kept for this practice session."], button: ["Go to the agreement", "consent"] } },
   };
   function renderGateDialog() {
@@ -548,6 +549,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (action === "mic") testMic($("mic-device").value || undefined);
     if (action === "camera") window.UBCamera?.start();
     if (action === "reload") location.reload();
+    if (action === "topics-all") { selectAllTopics(); focusAfterClose = topicBox.querySelector("button.topic-chip"); gateDialog.close(); }
     if (action === "consent") { focusAfterClose = consent; gateDialog.close(); }
   });
   $("dialog-typed").addEventListener("click", () => {
@@ -731,21 +733,58 @@ document.addEventListener("DOMContentLoaded", () => {
     $("puzzle-eyebrow").textContent = "Drill · up to 3 questions, then a check";
   }
 
-  // ---------- Track cards, then topic (template "pack"; tracks being added can't be picked) ----------
+  // ---------- Track cards, then topics (template "pack"; tracks being added can't be picked) ----------
+  // Topics are toggle chips, all selected by default; the last selection is remembered per
+  // track (this browser only). The fraud alert runs on its own, so choosing it clears the rest.
   const trackBox = $("track");
-  const topicSelect = $("topic");
-  let tracks = [], chosenTrack = null;
-  const showTopics = () => {
-    const track = tracks.find((t) => t.id === chosenTrack);
-    if (!track) return;
-    topicSelect.replaceChildren(...track.topics.map((o) => {
-      const option = document.createElement("option");
-      option.value = o.id;
-      option.textContent = o.name;
-      option.selected = o.id === track.default;
-      return option;
-    }));
-  };
+  const topicBox = $("topic");
+  const FRAUD_ID = "fraud";
+  let tracks = [], chosenTrack = null, chosenTopics = new Set(), topicsKnown = false, picking = true;
+  const trackTopics = () => (tracks.find((t) => t.id === chosenTrack)?.topics || []).filter((o) => o.id !== "Mixed");
+  const regularTopics = () => trackTopics().map((o) => o.id).filter((id) => id !== FRAUD_ID);
+  const defaultTopics = () => new Set(regularTopics().length ? regularTopics() : trackTopics().map((o) => o.id).slice(0, 1));
+  // Drills choose their own questions; a failed topic list falls back to all topics on the server.
+  function topicCount() { return drill || !topicsKnown ? 1 : chosenTopics.size; }
+  const topicKey = () => `ub-topics:${chosenTrack}`;
+  function loadTopics() {
+    let saved = null;
+    try { saved = JSON.parse(window.UB.store.get(topicKey()) || "null"); } catch { saved = null; }
+    const ids = trackTopics().map((o) => o.id);
+    const kept = Array.isArray(saved) ? saved.filter((id) => ids.includes(id)) : [];
+    return kept.length ? new Set(kept) : defaultTopics();
+  }
+  function saveTopics() { window.UB.store.set(topicKey(), JSON.stringify([...chosenTopics])); }
+  function syncTopics() {
+    topicBox.querySelectorAll("button.topic-chip").forEach((b) => b.setAttribute("aria-pressed", String(chosenTopics.has(b.dataset.topic))));
+    const n = chosenTopics.size, all = regularTopics().length;
+    $("topics-note").textContent = chosenTopics.has(FRAUD_ID) ? "The fraud alert runs on its own."
+      : n === 0 ? "Choose at least one topic." : n === all ? "All topics selected." : `${n} of ${all} topics selected.`;
+    $("topics-note").classList.toggle("bad", n === 0);
+    updateGate();
+  }
+  function showTopics() {
+    chosenTopics = loadTopics();
+    topicBox.innerHTML = trackTopics().map((o) =>
+      `<button type="button" class="topic-chip" aria-pressed="false" data-topic="${escapeHtml(o.id)}">${escapeHtml(o.name)}</button>`).join("");
+    syncTopics();
+  }
+  function setTopics(next) { if (!picking) return; chosenTopics = next; saveTopics(); syncTopics(); }
+  function selectAllTopics() { setTopics(defaultTopics()); }
+  function lockTopics() {
+    picking = false;
+    $("setup").querySelectorAll(".picker button").forEach((b) => { b.disabled = true; });
+  }
+  topicBox.addEventListener("click", (e) => {
+    const id = e.target.closest("button.topic-chip")?.dataset.topic;
+    if (!id) return;
+    const next = new Set(chosenTopics);
+    if (next.has(id)) next.delete(id);
+    else if (id === FRAUD_ID) { next.clear(); next.add(id); }
+    else { next.delete(FRAUD_ID); next.add(id); }
+    setTopics(next);
+  });
+  $("topics-all").addEventListener("click", selectAllTopics);
+  $("topics-clear").addEventListener("click", () => setTopics(new Set()));
   function pickTrack(id, focus) {
     chosenTrack = id;
     trackBox.querySelectorAll("button.track").forEach((b) => {
@@ -758,7 +797,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   trackBox.addEventListener("click", (e) => {
     const b = e.target.closest("button.track");
-    if (b && !topicSelect.disabled) pickTrack(b.dataset.track);
+    if (b && picking) pickTrack(b.dataset.track);
   });
   trackBox.addEventListener("keydown", (e) => {
     const open = [...trackBox.querySelectorAll("button.track")];
@@ -773,9 +812,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const asked = tracks.find((x) => x.id === query.get("track") && x.available);
     const first = asked ? asked.id : t.default_track;
     trackBox.innerHTML = tracks.map((x) => trackCard(x, { selected: x.id === first })).join("");
+    topicsKnown = true;
     pickTrack(first);
   }).catch(() => {
-    topicSelect.replaceChildren(new Option("Default", ""));
+    $("topics-note").textContent = "Topics couldn't load; the interview uses all topics.";
   });
 
   updateGate();

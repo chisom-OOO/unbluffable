@@ -68,5 +68,9 @@ for (const how of ["onerror", "cancel"]) {
     ["Check your connection and reload", "Tick the agreement"]);
   assert.deepEqual(gateProblems({ ...base, exempt: true }), [], "typed practice skips the devices");
   assert.deepEqual(gateProblems({ ...base, mic: "ok" }), []);
+  // An empty topic selection blocks Start, even in typed practice.
+  assert.deepEqual(gateProblems({ ...base, mic: "ok", topics: 0 }).map((p) => p.action), ["Choose at least one topic"]);
+  assert.deepEqual(gateProblems({ ...base, exempt: true, topics: 0 }).map((p) => p.key), ["topics"]);
+  assert.deepEqual(gateProblems({ ...base, mic: "ok", topics: 2 }), []);
 }
 console.log("speech guard and gate ok");

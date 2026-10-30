@@ -52,6 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
       $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}. Scored on where you end up, discounted by the help it took.`;
     }
 
+    $("topics-line").hidden = !e.topics;
+    $("topics-line").textContent = e.topics ? `Topics: ${e.topics}` : "";
+
     // Decision log 20: which mode was used.
     $("conditions").hidden = !e.conditions;
     $("conditions").textContent = e.conditions || "";

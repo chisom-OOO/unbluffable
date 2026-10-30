@@ -52,6 +52,7 @@
     if (!s.exempt && s.camera !== "ok") out.push({ key: "camera", state: s.camera, action: CAMERA[s.camera] || CAMERA.off });
     if (s.connection !== "ok") out.push({ key: "connection", state: s.connection,
       action: s.connection === "failed" ? "Check your connection and reload" : "Wait for the server to connect" });
+    if (s.topics === 0) out.push({ key: "topics", state: "none", action: "Choose at least one topic" });
     if (!s.consent) out.push({ key: "consent", state: "unticked", action: "Tick the agreement" });
     return out;
   }
