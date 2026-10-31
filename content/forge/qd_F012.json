@@ -1,0 +1,2996 @@
+{
+  "template_id": "qd_F012",
+  "pack": "quant_dev",
+  "topic": "Time series",
+  "topics": [
+    "Time series"
+  ],
+  "source_topic": "Longest strict up-run values",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "How should a repeated price affect the run?",
+    "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Prices are 92, 88, 87, 92, 95, 96, 96, 99, 95. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          92,
+          88,
+          87,
+          92,
+          95,
+          96,
+          96,
+          99,
+          95
+        ]
+      },
+      "answer": "[87,92,95,96]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are ninety-two, eighty-eight, eighty-seven, ninety-two, ninety-five, ninety-six, ninety-six, ninety-nine, ninety-five. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[87,92,95,96,96,99]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[88,92,95,96,99]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Prices are 76, 79, 82, 78, 81, 81, 84, 83, 80. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          76,
+          79,
+          82,
+          78,
+          81,
+          81,
+          84,
+          83,
+          80
+        ]
+      },
+      "answer": "[76,79,82]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are seventy-six, seventy-nine, eighty-two, seventy-eight, eighty-one, eighty-one, eighty-four, eighty-three, eighty. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[78,81,81,84]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[76,79,82,84]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Prices are 110, 115, 116, 121, 117, 122, 125, 125, 128. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          110,
+          115,
+          116,
+          121,
+          117,
+          122,
+          125,
+          125,
+          128
+        ]
+      },
+      "answer": "[110,115,116,121]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and ten, one hundred and fifteen, one hundred and sixteen, one hundred and twenty-one, one hundred and seventeen, one hundred and twenty-two, one hundred and twenty-five, one hundred and twenty-five, one hundred and twenty-eight. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[117,122,125,125,128]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[110,115,116,121,122,125,128]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Prices are 95, 92, 94, 94, 97, 94, 95, 100, 97. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          95,
+          92,
+          94,
+          94,
+          97,
+          94,
+          95,
+          100,
+          97
+        ]
+      },
+      "answer": "[94,95,100]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are ninety-five, ninety-two, ninety-four, ninety-four, ninety-seven, ninety-four, ninety-five, one hundred, ninety-seven. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[92,94,94,97]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[92,94,97,100]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Prices are 74, 75, 80, 77, 78, 78, 79, 84, 86. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          74,
+          75,
+          80,
+          77,
+          78,
+          78,
+          79,
+          84,
+          86
+        ]
+      },
+      "answer": "[78,79,84,86]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are seventy-four, seventy-five, eighty, seventy-seven, seventy-eight, seventy-eight, seventy-nine, eighty-four, eighty-six. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[77,78,78,79,84,86]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[74,75,77,78,79,84,86]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Prices are 129, 125, 126, 127, 128, 128, 129, 128, 133. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          129,
+          125,
+          126,
+          127,
+          128,
+          128,
+          129,
+          128,
+          133
+        ]
+      },
+      "answer": "[125,126,127,128]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and twenty-nine, one hundred and twenty-five, one hundred and twenty-six, one hundred and twenty-seven, one hundred and twenty-eight, one hundred and twenty-eight, one hundred and twenty-nine, one hundred and twenty-eight, one hundred and thirty-three. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[125,126,127,128,128,129]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[125,126,127,128,129,133]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Prices are 135, 137, 137, 142, 145, 146, 143, 142, 145. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          135,
+          137,
+          137,
+          142,
+          145,
+          146,
+          143,
+          142,
+          145
+        ]
+      },
+      "answer": "[137,142,145,146]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and thirty-five, one hundred and thirty-seven, one hundred and thirty-seven, one hundred and forty-two, one hundred and forty-five, one hundred and forty-six, one hundred and forty-three, one hundred and forty-two, one hundred and forty-five. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[135,137,137,142,145,146]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[135,137,142,145,146]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Prices are 69, 71, 74, 70, 70, 72, 72, 75, 75. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          69,
+          71,
+          74,
+          70,
+          70,
+          72,
+          72,
+          75,
+          75
+        ]
+      },
+      "answer": "[69,71,74]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are sixty-nine, seventy-one, seventy-four, seventy, seventy, seventy-two, seventy-two, seventy-five, seventy-five. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[70,70,72,72,75,75]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[69,71,74,75]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Prices are 68, 70, 67, 72, 71, 71, 73, 78, 79. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          68,
+          70,
+          67,
+          72,
+          71,
+          71,
+          73,
+          78,
+          79
+        ]
+      },
+      "answer": "[71,73,78,79]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are sixty-eight, seventy, sixty-seven, seventy-two, seventy-one, seventy-one, seventy-three, seventy-eight, seventy-nine. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[71,71,73,78,79]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[68,70,72,73,78,79]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Prices are 128, 127, 130, 126, 129, 126, 131, 136, 136. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          128,
+          127,
+          130,
+          126,
+          129,
+          126,
+          131,
+          136,
+          136
+        ]
+      },
+      "answer": "[126,131,136]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and twenty-eight, one hundred and twenty-seven, one hundred and thirty, one hundred and twenty-six, one hundred and twenty-nine, one hundred and twenty-six, one hundred and thirty-one, one hundred and thirty-six, one hundred and thirty-six. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[126,131,136,136]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[128,130,131,136]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Prices are 61, 60, 65, 68, 71, 71, 70, 69, 70. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          61,
+          60,
+          65,
+          68,
+          71,
+          71,
+          70,
+          69,
+          70
+        ]
+      },
+      "answer": "[60,65,68,71]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are sixty-one, sixty, sixty-five, sixty-eight, seventy-one, seventy-one, seventy, sixty-nine, seventy. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[60,65,68,71,71]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[61,65,68,69,70]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Prices are 118, 119, 121, 120, 122, 122, 122, 118, 121. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          118,
+          119,
+          121,
+          120,
+          122,
+          122,
+          122,
+          118,
+          121
+        ]
+      },
+      "answer": "[118,119,121]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and eighteen, one hundred and nineteen, one hundred and twenty-one, one hundred and twenty, one hundred and twenty-two, one hundred and twenty-two, one hundred and twenty-two, one hundred and eighteen, one hundred and twenty-one. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[120,122,122,122]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[118,119,121,122]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Prices are 106, 111, 116, 116, 118, 114, 111, 108, 110. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          106,
+          111,
+          116,
+          116,
+          118,
+          114,
+          111,
+          108,
+          110
+        ]
+      },
+      "answer": "[106,111,116]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and six, one hundred and eleven, one hundred and sixteen, one hundred and sixteen, one hundred and eighteen, one hundred and fourteen, one hundred and eleven, one hundred and eight, one hundred and ten. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[106,111,116,116,118]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[106,111,116,118]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Prices are 102, 101, 102, 102, 103, 106, 106, 102, 103. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          102,
+          101,
+          102,
+          102,
+          103,
+          106,
+          106,
+          102,
+          103
+        ]
+      },
+      "answer": "[102,103,106]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and two, one hundred and one, one hundred and two, one hundred and two, one hundred and three, one hundred and six, one hundred and six, one hundred and two, one hundred and three. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[101,102,102,103,106,106]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[101,102,103,106]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Prices are 81, 83, 86, 88, 88, 89, 89, 91, 87. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          81,
+          83,
+          86,
+          88,
+          88,
+          89,
+          89,
+          91,
+          87
+        ]
+      },
+      "answer": "[81,83,86,88]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are eighty-one, eighty-three, eighty-six, eighty-eight, eighty-eight, eighty-nine, eighty-nine, ninety-one, eighty-seven. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[81,83,86,88,88,89,89,91]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[81,83,86,88,89,91]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Prices are 125, 121, 124, 123, 125, 127, 132, 132, 128. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          125,
+          121,
+          124,
+          123,
+          125,
+          127,
+          132,
+          132,
+          128
+        ]
+      },
+      "answer": "[123,125,127,132]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and twenty-five, one hundred and twenty-one, one hundred and twenty-four, one hundred and twenty-three, one hundred and twenty-five, one hundred and twenty-seven, one hundred and thirty-two, one hundred and thirty-two, one hundred and twenty-eight. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[123,125,127,132,132]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[121,124,125,127,132]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Prices are 103, 99, 100, 97, 94, 99, 99, 104, 107. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          103,
+          99,
+          100,
+          97,
+          94,
+          99,
+          99,
+          104,
+          107
+        ]
+      },
+      "answer": "[99,104,107]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and three, ninety-nine, one hundred, ninety-seven, ninety-four, ninety-nine, ninety-nine, one hundred and four, one hundred and seven. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[94,99,99,104,107]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[99,100,104,107]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Prices are 62, 64, 66, 63, 68, 64, 64, 65, 67. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          62,
+          64,
+          66,
+          63,
+          68,
+          64,
+          64,
+          65,
+          67
+        ]
+      },
+      "answer": "[62,64,66]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are sixty-two, sixty-four, sixty-six, sixty-three, sixty-eight, sixty-four, sixty-four, sixty-five, sixty-seven. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[64,64,65,67]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[62,63,64,65,67]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Prices are 103, 100, 105, 110, 110, 106, 106, 108, 111. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          103,
+          100,
+          105,
+          110,
+          110,
+          106,
+          106,
+          108,
+          111
+        ]
+      },
+      "answer": "[100,105,110]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and three, one hundred, one hundred and five, one hundred and ten, one hundred and ten, one hundred and six, one hundred and six, one hundred and eight, one hundred and eleven. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[100,105,110,110]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[103,105,106,108,111]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Prices are 99, 100, 99, 96, 96, 97, 102, 102, 104. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          99,
+          100,
+          99,
+          96,
+          96,
+          97,
+          102,
+          102,
+          104
+        ]
+      },
+      "answer": "[96,97,102]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are ninety-nine, one hundred, ninety-nine, ninety-six, ninety-six, ninety-seven, one hundred and two, one hundred and two, one hundred and four. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[96,96,97,102,102,104]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[99,100,102,104]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Prices are 108, 107, 110, 115, 111, 113, 113, 115, 120. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          108,
+          107,
+          110,
+          115,
+          111,
+          113,
+          113,
+          115,
+          120
+        ]
+      },
+      "answer": "[107,110,115]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and eight, one hundred and seven, one hundred and ten, one hundred and fifteen, one hundred and eleven, one hundred and thirteen, one hundred and thirteen, one hundred and fifteen, one hundred and twenty. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[111,113,113,115,120]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[108,110,111,113,115,120]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Prices are 102, 105, 101, 98, 101, 104, 106, 106, 111. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          102,
+          105,
+          101,
+          98,
+          101,
+          104,
+          106,
+          106,
+          111
+        ]
+      },
+      "answer": "[98,101,104,106]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and two, one hundred and five, one hundred and one, ninety-eight, one hundred and one, one hundred and four, one hundred and six, one hundred and six, one hundred and eleven. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[98,101,104,106,106,111]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[98,101,104,106,111]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Prices are 117, 116, 115, 114, 111, 114, 114, 115, 118. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          117,
+          116,
+          115,
+          114,
+          111,
+          114,
+          114,
+          115,
+          118
+        ]
+      },
+      "answer": "[114,115,118]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and seventeen, one hundred and sixteen, one hundred and fifteen, one hundred and fourteen, one hundred and eleven, one hundred and fourteen, one hundred and fourteen, one hundred and fifteen, one hundred and eighteen. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[111,114,114,115,118]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[111,114,115,118]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Prices are 64, 60, 65, 65, 66, 68, 71, 71, 71. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          64,
+          60,
+          65,
+          65,
+          66,
+          68,
+          71,
+          71,
+          71
+        ]
+      },
+      "answer": "[65,66,68,71]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are sixty-four, sixty, sixty-five, sixty-five, sixty-six, sixty-eight, seventy-one, seventy-one, seventy-one. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[60,65,65,66,68,71,71,71]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[64,65,66,68,71]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Prices are 94, 93, 89, 90, 95, 95, 100, 102, 98. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          94,
+          93,
+          89,
+          90,
+          95,
+          95,
+          100,
+          102,
+          98
+        ]
+      },
+      "answer": "[89,90,95]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are ninety-four, ninety-three, eighty-nine, ninety, ninety-five, ninety-five, one hundred, one hundred and two, ninety-eight. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[89,90,95,95,100,102]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[89,90,95,100,102]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Prices are 68, 70, 73, 70, 73, 78, 83, 83, 83. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          68,
+          70,
+          73,
+          70,
+          73,
+          78,
+          83,
+          83,
+          83
+        ]
+      },
+      "answer": "[70,73,78,83]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are sixty-eight, seventy, seventy-three, seventy, seventy-three, seventy-eight, eighty-three, eighty-three, eighty-three. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[70,73,78,83,83,83]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[68,70,73,78,83]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Prices are 136, 141, 142, 145, 145, 150, 149, 146, 147. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          136,
+          141,
+          142,
+          145,
+          145,
+          150,
+          149,
+          146,
+          147
+        ]
+      },
+      "answer": "[136,141,142,145]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and thirty-six, one hundred and forty-one, one hundred and forty-two, one hundred and forty-five, one hundred and forty-five, one hundred and fifty, one hundred and forty-nine, one hundred and forty-six, one hundred and forty-seven. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[136,141,142,145,145,150]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[136,141,142,145,146,147]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Prices are 115, 120, 125, 122, 127, 132, 132, 134, 139. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          115,
+          120,
+          125,
+          122,
+          127,
+          132,
+          132,
+          134,
+          139
+        ]
+      },
+      "answer": "[115,120,125]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and fifteen, one hundred and twenty, one hundred and twenty-five, one hundred and twenty-two, one hundred and twenty-seven, one hundred and thirty-two, one hundred and thirty-two, one hundred and thirty-four, one hundred and thirty-nine. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[122,127,132,132,134,139]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[115,120,125,127,132,134,139]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Prices are 90, 90, 86, 85, 88, 89, 89, 90, 91. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          90,
+          90,
+          86,
+          85,
+          88,
+          89,
+          89,
+          90,
+          91
+        ]
+      },
+      "answer": "[85,88,89]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are ninety, ninety, eighty-six, eighty-five, eighty-eight, eighty-nine, eighty-nine, ninety, ninety-one. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[85,88,89,89,90,91]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[86,88,89,90,91]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Prices are 76, 76, 79, 79, 82, 84, 80, 83, 80. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          76,
+          76,
+          79,
+          79,
+          82,
+          84,
+          80,
+          83,
+          80
+        ]
+      },
+      "answer": "[79,82,84]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are seventy-six, seventy-six, seventy-nine, seventy-nine, eighty-two, eighty-four, eighty, eighty-three, eighty. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[76,76,79,79,82,84]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[76,79,82,84]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Prices are 130, 126, 125, 130, 135, 132, 135, 135, 135. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          130,
+          126,
+          125,
+          130,
+          135,
+          132,
+          135,
+          135,
+          135
+        ]
+      },
+      "answer": "[125,130,135]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and thirty, one hundred and twenty-six, one hundred and twenty-five, one hundred and thirty, one hundred and thirty-five, one hundred and thirty-two, one hundred and thirty-five, one hundred and thirty-five, one hundred and thirty-five. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[132,135,135,135]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[126,130,132,135]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Prices are 133, 138, 139, 139, 142, 138, 143, 145, 141. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          133,
+          138,
+          139,
+          139,
+          142,
+          138,
+          143,
+          145,
+          141
+        ]
+      },
+      "answer": "[133,138,139]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and thirty-three, one hundred and thirty-eight, one hundred and thirty-nine, one hundred and thirty-nine, one hundred and forty-two, one hundred and thirty-eight, one hundred and forty-three, one hundred and forty-five, one hundred and forty-one. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[133,138,139,139,142]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[133,138,139,142,143,145]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Prices are 81, 84, 84, 89, 90, 91, 93, 93, 92. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          81,
+          84,
+          84,
+          89,
+          90,
+          91,
+          93,
+          93,
+          92
+        ]
+      },
+      "answer": "[84,89,90,91,93]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are eighty-one, eighty-four, eighty-four, eighty-nine, ninety, ninety-one, ninety-three, ninety-three, ninety-two. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[81,84,84,89,90,91,93,93]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[81,84,89,90,91,93]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "5"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Prices are 104, 107, 112, 112, 108, 107, 109, 105, 107. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          104,
+          107,
+          112,
+          112,
+          108,
+          107,
+          109,
+          105,
+          107
+        ]
+      },
+      "answer": "[104,107,112]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and four, one hundred and seven, one hundred and twelve, one hundred and twelve, one hundred and eight, one hundred and seven, one hundred and nine, one hundred and five, one hundred and seven. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[104,107,112,112]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[104,107,108,109]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Prices are 108, 107, 109, 109, 112, 113, 115, 112, 112. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          108,
+          107,
+          109,
+          109,
+          112,
+          113,
+          115,
+          112,
+          112
+        ]
+      },
+      "answer": "[109,112,113,115]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and eight, one hundred and seven, one hundred and nine, one hundred and nine, one hundred and twelve, one hundred and thirteen, one hundred and fifteen, one hundred and twelve, one hundred and twelve. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[107,109,109,112,113,115]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[108,109,112,113,115]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Prices are 113, 114, 115, 118, 118, 117, 119, 122, 127. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          113,
+          114,
+          115,
+          118,
+          118,
+          117,
+          119,
+          122,
+          127
+        ]
+      },
+      "answer": "[113,114,115,118]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and thirteen, one hundred and fourteen, one hundred and fifteen, one hundred and eighteen, one hundred and eighteen, one hundred and seventeen, one hundred and nineteen, one hundred and twenty-two, one hundred and twenty-seven. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[113,114,115,118,118]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[113,114,115,118,119,122,127]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Prices are 131, 131, 133, 138, 139, 139, 140, 142, 139. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          131,
+          131,
+          133,
+          138,
+          139,
+          139,
+          140,
+          142,
+          139
+        ]
+      },
+      "answer": "[131,133,138,139]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and thirty-one, one hundred and thirty-one, one hundred and thirty-three, one hundred and thirty-eight, one hundred and thirty-nine, one hundred and thirty-nine, one hundred and forty, one hundred and forty-two, one hundred and thirty-nine. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[131,131,133,138,139,139,140,142]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[131,133,138,139,140,142]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Prices are 86, 86, 89, 94, 94, 91, 92, 94, 96. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          86,
+          86,
+          89,
+          94,
+          94,
+          91,
+          92,
+          94,
+          96
+        ]
+      },
+      "answer": "[91,92,94,96]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are eighty-six, eighty-six, eighty-nine, ninety-four, ninety-four, ninety-one, ninety-two, ninety-four, ninety-six. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[86,86,89,94,94]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[86,89,91,92,94,96]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Prices are 66, 66, 66, 67, 69, 69, 69, 70, 72. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          66,
+          66,
+          66,
+          67,
+          69,
+          69,
+          69,
+          70,
+          72
+        ]
+      },
+      "answer": "[66,67,69]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are sixty-six, sixty-six, sixty-six, sixty-seven, sixty-nine, sixty-nine, sixty-nine, seventy, seventy-two. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[66,66,66,67,69,69,69,70,72]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[66,67,69,70,72]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Prices are 134, 137, 142, 145, 150, 151, 151, 156, 157. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          134,
+          137,
+          142,
+          145,
+          150,
+          151,
+          151,
+          156,
+          157
+        ]
+      },
+      "answer": "[134,137,142,145,150,151]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and thirty-four, one hundred and thirty-seven, one hundred and forty-two, one hundred and forty-five, one hundred and fifty, one hundred and fifty-one, one hundred and fifty-one, one hundred and fifty-six, one hundred and fifty-seven. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[134,137,142,145,150,151,151,156,157]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[134,137,142,145,150,151,156,157]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "6"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Prices are 74, 74, 76, 78, 79, 79, 84, 86, 91. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          74,
+          74,
+          76,
+          78,
+          79,
+          79,
+          84,
+          86,
+          91
+        ]
+      },
+      "answer": "[74,76,78,79]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are seventy-four, seventy-four, seventy-six, seventy-eight, seventy-nine, seventy-nine, eighty-four, eighty-six, ninety-one. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[74,74,76,78,79,79,84,86,91]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[74,76,78,79,84,86,91]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Prices are 121, 122, 125, 125, 130, 131, 130, 130, 135. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          121,
+          122,
+          125,
+          125,
+          130,
+          131,
+          130,
+          130,
+          135
+        ]
+      },
+      "answer": "[121,122,125]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and twenty-one, one hundred and twenty-two, one hundred and twenty-five, one hundred and twenty-five, one hundred and thirty, one hundred and thirty-one, one hundred and thirty, one hundred and thirty, one hundred and thirty-five. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[121,122,125,125,130,131]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[121,122,125,130,131,135]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Prices are 72, 77, 73, 74, 75, 74, 76, 76, 78. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          72,
+          77,
+          73,
+          74,
+          75,
+          74,
+          76,
+          76,
+          78
+        ]
+      },
+      "answer": "[73,74,75]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are seventy-two, seventy-seven, seventy-three, seventy-four, seventy-five, seventy-four, seventy-six, seventy-six, seventy-eight. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[74,76,76,78]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[72,73,74,75,76,78]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Prices are 104, 100, 101, 104, 104, 109, 110, 109, 105. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          104,
+          100,
+          101,
+          104,
+          104,
+          109,
+          110,
+          109,
+          105
+        ]
+      },
+      "answer": "[100,101,104]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and four, one hundred, one hundred and one, one hundred and four, one hundred and four, one hundred and nine, one hundred and ten, one hundred and nine, one hundred and five. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[100,101,104,104,109,110]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[100,101,104,109,110]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Prices are 80, 85, 82, 82, 87, 88, 90, 93, 94. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          80,
+          85,
+          82,
+          82,
+          87,
+          88,
+          90,
+          93,
+          94
+        ]
+      },
+      "answer": "[82,87,88,90,93,94]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are eighty, eighty-five, eighty-two, eighty-two, eighty-seven, eighty-eight, ninety, ninety-three, ninety-four. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[82,82,87,88,90,93,94]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[80,85,87,88,90,93,94]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "6"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Prices are 103, 99, 95, 91, 94, 96, 97, 97, 102. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          103,
+          99,
+          95,
+          91,
+          94,
+          96,
+          97,
+          97,
+          102
+        ]
+      },
+      "answer": "[91,94,96,97]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and three, ninety-nine, ninety-five, ninety-one, ninety-four, ninety-six, ninety-seven, ninety-seven, one hundred and two. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[91,94,96,97,97,102]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[91,94,96,97,102]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Prices are 88, 84, 80, 83, 83, 88, 93, 90, 92. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          88,
+          84,
+          80,
+          83,
+          83,
+          88,
+          93,
+          90,
+          92
+        ]
+      },
+      "answer": "[83,88,93]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are eighty-eight, eighty-four, eighty, eighty-three, eighty-three, eighty-eight, ninety-three, ninety, ninety-two. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[80,83,83,88,93]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[80,83,88,90,92]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why keep the old answer when another run has equal length?",
+        "reference": "The problem selects the earliest starting run. Replacing on equality would silently change the tie rule."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Prices are 119, 124, 129, 129, 132, 137, 142, 138, 141. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          119,
+          124,
+          129,
+          129,
+          132,
+          137,
+          142,
+          138,
+          141
+        ]
+      },
+      "answer": "[129,132,137,142]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are one hundred and nineteen, one hundred and twenty-four, one hundred and twenty-nine, one hundred and twenty-nine, one hundred and thirty-two, one hundred and thirty-seven, one hundred and forty-two, one hundred and thirty-eight, one hundred and forty-one. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[119,124,129,129,132,137,142]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[119,124,129,132,137,138,141]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "4"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could a streaming implementation avoid repeatedly copying candidate runs?",
+        "reference": "Keep current and best start indices with their lengths. Materialize the winning slice once, or maintain only the required bounded output in a streaming interface."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Prices are 61, 58, 57, 58, 59, 59, 60, 57, 59. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          61,
+          58,
+          57,
+          58,
+          59,
+          59,
+          60,
+          57,
+          59
+        ]
+      },
+      "answer": "[57,58,59]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are sixty-one, fifty-eight, fifty-seven, fifty-eight, fifty-nine, fifty-nine, sixty, fifty-seven, fifty-nine. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[57,58,59,59,60]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[57,58,59,60]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should a repeated price affect the run?",
+        "reference": "A repeated value breaks a strictly rising run. It may extend a nondecreasing run, which is a different definition."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Prices are 70, 67, 66, 63, 65, 66, 66, 66, 68. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "params": {
+        "prices": [
+          70,
+          67,
+          66,
+          63,
+          65,
+          66,
+          66,
+          66,
+          68
+        ]
+      },
+      "answer": "[63,65,66]",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Longest strict up-run values",
+      "difficulty": "Medium",
+      "spoken_text": "Prices are seventy, sixty-seven, sixty-six, sixty-three, sixty-five, sixty-six, sixty-six, sixty-six, sixty-eight. What is the longest strictly rising contiguous price run? Return its values, breaking ties by earliest start.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[63,65,66,66,66,68]",
+          "misconceptions": [
+            "treats_equal_prices_as_up_moves"
+          ]
+        },
+        {
+          "value": "[63,65,66,68]",
+          "misconceptions": [
+            "uses_a_noncontiguous_increasing_subsequence"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "longest_run_length",
+          "value": "3"
+        },
+        {
+          "name": "longest_run_start_index",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does a longest increasing subsequence solve a different problem?",
+        "reference": "A subsequence may skip observations. This task requires every returned price to occupy a contiguous position in the original series."
+      }
+    }
+  ],
+  "answer_kind": "list",
+  "coding_only": true
+}

@@ -1,0 +1,3544 @@
+{
+  "template_id": "qd_F009",
+  "pack": "quant_dev",
+  "topic": "Time series",
+  "topics": [
+    "Time series"
+  ],
+  "source_topic": "Trailing rolling mean",
+  "difficulty": "Easy",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "What should happen before a full window of observations arrives?",
+    "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Prices are 58, 177, 74, 52, 120, 178, 54, 61. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          58,
+          177,
+          74,
+          52,
+          120,
+          178,
+          54,
+          61
+        ],
+        "window": 4
+      },
+      "answer": "413/4",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are fifty-eight, one hundred and seventy-seven, seventy-four, fifty-two, one hundred and twenty, one hundred and seventy-eight, fifty-four, sixty-one. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "361/4",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "93",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "413"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "13",
+            "relative_gap": "52/413"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "41/4",
+            "relative_gap": "41/413"
+          }
+        ],
+        "min_wrong_pair_gap": "11/4",
+        "min_distinct_wrong_pair_gap": "11/4"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Prices are 135, 169, 143, 78, 106, 179, 143, 102. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          135,
+          169,
+          143,
+          78,
+          106,
+          179,
+          143,
+          102
+        ],
+        "window": 5
+      },
+      "answer": "608/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and thirty-five, one hundred and sixty-nine, one hundred and forty-three, seventy-eight, one hundred and six, one hundred and seventy-nine, one hundred and forty-three, one hundred and two. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "631/5",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "751/6",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "608"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "23/5",
+            "relative_gap": "23/608"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "107/30",
+            "relative_gap": "107/3648"
+          }
+        ],
+        "min_wrong_pair_gap": "31/30",
+        "min_distinct_wrong_pair_gap": "31/30"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Prices are 166, 125, 62, 154, 134, 137, 79, 84. What is the mean of the last 6 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          166,
+          125,
+          62,
+          154,
+          134,
+          137,
+          79,
+          84
+        ],
+        "window": 6
+      },
+      "answer": "325/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and sixty-six, one hundred and twenty-five, sixty-two, one hundred and fifty-four, one hundred and thirty-four, one hundred and thirty-seven, seventy-nine, eighty-four. What is the mean of the last six observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "389/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "775/7",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "650"
+        },
+        {
+          "name": "window_size",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "64/3",
+            "relative_gap": "64/325"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "50/21",
+            "relative_gap": "2/91"
+          }
+        ],
+        "min_wrong_pair_gap": "398/21",
+        "min_distinct_wrong_pair_gap": "398/21"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Prices are 58, 129, 159, 73, 74, 90, 63, 104. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          58,
+          129,
+          159,
+          73,
+          74,
+          90,
+          63,
+          104
+        ],
+        "window": 3
+      },
+      "answer": "257/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are fifty-eight, one hundred and twenty-nine, one hundred and fifty-nine, seventy-three, seventy-four, ninety, sixty-three, one hundred and four. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "346/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "331/4",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "257"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "89/3",
+            "relative_gap": "89/257"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "35/12",
+            "relative_gap": "35/1028"
+          }
+        ],
+        "min_wrong_pair_gap": "391/12",
+        "min_distinct_wrong_pair_gap": "391/12"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Prices are 80, 133, 126, 114, 106, 58, 72, 73. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          80,
+          133,
+          126,
+          114,
+          106,
+          58,
+          72,
+          73
+        ],
+        "window": 3
+      },
+      "answer": "203/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are eighty, one hundred and thirty-three, one hundred and twenty-six, one hundred and fourteen, one hundred and six, fifty-eight, seventy-two, seventy-three. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "113",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "309/4",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "203"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "136/3",
+            "relative_gap": "136/203"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "115/12",
+            "relative_gap": "115/812"
+          }
+        ],
+        "min_wrong_pair_gap": "143/4",
+        "min_distinct_wrong_pair_gap": "143/4"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Prices are 96, 99, 71, 98, 68, 99, 117, 163. What is the mean of the last 6 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          96,
+          99,
+          71,
+          98,
+          68,
+          99,
+          117,
+          163
+        ],
+        "window": 6
+      },
+      "answer": "308/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are ninety-six, ninety-nine, seventy-one, ninety-eight, sixty-eight, ninety-nine, one hundred and seventeen, one hundred and sixty-three. What is the mean of the last six observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "177/2",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "715/7",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "616"
+        },
+        {
+          "name": "window_size",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "85/6",
+            "relative_gap": "85/616"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "11/21",
+            "relative_gap": "1/196"
+          }
+        ],
+        "min_wrong_pair_gap": "191/14",
+        "min_distinct_wrong_pair_gap": "191/14"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Prices are 124, 143, 60, 172, 98, 82, 80, 101. What is the mean of the last 6 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          124,
+          143,
+          60,
+          172,
+          98,
+          82,
+          80,
+          101
+        ],
+        "window": 6
+      },
+      "answer": "593/6",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and twenty-four, one hundred and forty-three, sixty, one hundred and seventy-two, ninety-eight, eighty-two, eighty, one hundred and one. What is the mean of the last six observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "679/6",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "736/7",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "593"
+        },
+        {
+          "name": "window_size",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "43/3",
+            "relative_gap": "86/593"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "265/42",
+            "relative_gap": "265/4151"
+          }
+        ],
+        "min_wrong_pair_gap": "337/42",
+        "min_distinct_wrong_pair_gap": "337/42"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Prices are 158, 112, 92, 103, 68, 90, 64, 51. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          158,
+          112,
+          92,
+          103,
+          68,
+          90,
+          64,
+          51
+        ],
+        "window": 5
+      },
+      "answer": "376/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and fifty-eight, one hundred and twelve, ninety-two, one hundred and three, sixty-eight, ninety, sixty-four, fifty-one. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "533/5",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "78",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "376"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "157/5",
+            "relative_gap": "157/376"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "14/5",
+            "relative_gap": "7/188"
+          }
+        ],
+        "min_wrong_pair_gap": "143/5",
+        "min_distinct_wrong_pair_gap": "143/5"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Prices are 70, 83, 65, 158, 106, 157, 150, 79. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          70,
+          83,
+          65,
+          158,
+          106,
+          157,
+          150,
+          79
+        ],
+        "window": 3
+      },
+      "answer": "386/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are seventy, eighty-three, sixty-five, one hundred and fifty-eight, one hundred and six, one hundred and fifty-seven, one hundred and fifty, seventy-nine. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "218/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "123",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "386"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "56",
+            "relative_gap": "84/193"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "17/3",
+            "relative_gap": "17/386"
+          }
+        ],
+        "min_wrong_pair_gap": "151/3",
+        "min_distinct_wrong_pair_gap": "151/3"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Prices are 140, 143, 166, 127, 129, 120, 148, 171. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          140,
+          143,
+          166,
+          127,
+          129,
+          120,
+          148,
+          171
+        ],
+        "window": 3
+      },
+      "answer": "439/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and forty, one hundred and forty-three, one hundred and sixty-six, one hundred and twenty-seven, one hundred and twenty-nine, one hundred and twenty, one hundred and forty-eight, one hundred and seventy-one. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "449/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "142",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "439"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "10/3",
+            "relative_gap": "10/439"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "13/3",
+            "relative_gap": "13/439"
+          }
+        ],
+        "min_wrong_pair_gap": "23/3",
+        "min_distinct_wrong_pair_gap": "23/3"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Prices are 134, 83, 166, 96, 161, 128, 180, 140. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          134,
+          83,
+          166,
+          96,
+          161,
+          128,
+          180,
+          140
+        ],
+        "window": 3
+      },
+      "answer": "448/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and thirty-four, eighty-three, one hundred and sixty-six, ninety-six, one hundred and sixty-one, one hundred and twenty-eight, one hundred and eighty, one hundred and forty. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "383/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "609/4",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "448"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "65/3",
+            "relative_gap": "65/448"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "35/12",
+            "relative_gap": "5/256"
+          }
+        ],
+        "min_wrong_pair_gap": "295/12",
+        "min_distinct_wrong_pair_gap": "295/12"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Prices are 179, 169, 135, 98, 56, 73, 55, 84. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          179,
+          169,
+          135,
+          98,
+          56,
+          73,
+          55,
+          84
+        ],
+        "window": 4
+      },
+      "answer": "67",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and seventy-nine, one hundred and sixty-nine, one hundred and thirty-five, ninety-eight, fifty-six, seventy-three, fifty-five, eighty-four. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "581/4",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "366/5",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "268"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "313/4",
+            "relative_gap": "313/268"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "31/5",
+            "relative_gap": "31/335"
+          }
+        ],
+        "min_wrong_pair_gap": "1441/20",
+        "min_distinct_wrong_pair_gap": "1441/20"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Prices are 111, 163, 130, 106, 157, 151, 149, 85. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          111,
+          163,
+          130,
+          106,
+          157,
+          151,
+          149,
+          85
+        ],
+        "window": 4
+      },
+      "answer": "271/2",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and eleven, one hundred and sixty-three, one hundred and thirty, one hundred and six, one hundred and fifty-seven, one hundred and fifty-one, one hundred and forty-nine, eighty-five. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "255/2",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "648/5",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "542"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "8",
+            "relative_gap": "16/271"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "59/10",
+            "relative_gap": "59/1355"
+          }
+        ],
+        "min_wrong_pair_gap": "21/10",
+        "min_distinct_wrong_pair_gap": "21/10"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Prices are 66, 118, 166, 83, 137, 114, 156, 93. What is the mean of the last 6 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          66,
+          118,
+          166,
+          83,
+          137,
+          114,
+          156,
+          93
+        ],
+        "window": 6
+      },
+      "answer": "749/6",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are sixty-six, one hundred and eighteen, one hundred and sixty-six, eighty-three, one hundred and thirty-seven, one hundred and fourteen, one hundred and fifty-six, ninety-three. What is the mean of the last six observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "114",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "867/7",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "749"
+        },
+        {
+          "name": "window_size",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "65/6",
+            "relative_gap": "65/749"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "41/42",
+            "relative_gap": "41/5243"
+          }
+        ],
+        "min_wrong_pair_gap": "69/7",
+        "min_distinct_wrong_pair_gap": "69/7"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Prices are 164, 130, 141, 83, 82, 177, 145, 176. What is the mean of the last 6 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          164,
+          130,
+          141,
+          83,
+          82,
+          177,
+          145,
+          176
+        ],
+        "window": 6
+      },
+      "answer": "134",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and sixty-four, one hundred and thirty, one hundred and forty-one, eighty-three, eighty-two, one hundred and seventy-seven, one hundred and forty-five, one hundred and seventy-six. What is the mean of the last six observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "259/2",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "934/7",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "804"
+        },
+        {
+          "name": "window_size",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "9/2",
+            "relative_gap": "9/268"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "4/7",
+            "relative_gap": "2/469"
+          }
+        ],
+        "min_wrong_pair_gap": "55/14",
+        "min_distinct_wrong_pair_gap": "55/14"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Prices are 164, 99, 83, 115, 55, 145, 78, 79. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          164,
+          99,
+          83,
+          115,
+          55,
+          145,
+          78,
+          79
+        ],
+        "window": 5
+      },
+      "answer": "472/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and sixty-four, ninety-nine, eighty-three, one hundred and fifteen, fifty-five, one hundred and forty-five, seventy-eight, seventy-nine. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "516/5",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "185/2",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "472"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "44/5",
+            "relative_gap": "11/118"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "19/10",
+            "relative_gap": "19/944"
+          }
+        ],
+        "min_wrong_pair_gap": "107/10",
+        "min_distinct_wrong_pair_gap": "107/10"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Prices are 134, 63, 123, 121, 167, 161, 96, 175. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          134,
+          63,
+          123,
+          121,
+          167,
+          161,
+          96,
+          175
+        ],
+        "window": 3
+      },
+      "answer": "144",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and thirty-four, sixty-three, one hundred and twenty-three, one hundred and twenty-one, one hundred and sixty-seven, one hundred and sixty-one, ninety-six, one hundred and seventy-five. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "320/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "599/4",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "432"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "112/3",
+            "relative_gap": "7/27"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "23/4",
+            "relative_gap": "23/576"
+          }
+        ],
+        "min_wrong_pair_gap": "517/12",
+        "min_distinct_wrong_pair_gap": "517/12"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Prices are 66, 139, 166, 57, 158, 125, 80, 56. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          66,
+          139,
+          166,
+          57,
+          158,
+          125,
+          80,
+          56
+        ],
+        "window": 3
+      },
+      "answer": "87",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are sixty-six, one hundred and thirty-nine, one hundred and sixty-six, fifty-seven, one hundred and fifty-eight, one hundred and twenty-five, eighty, fifty-six. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "371/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "419/4",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "261"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "110/3",
+            "relative_gap": "110/261"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "71/4",
+            "relative_gap": "71/348"
+          }
+        ],
+        "min_wrong_pair_gap": "227/12",
+        "min_distinct_wrong_pair_gap": "227/12"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Prices are 154, 160, 157, 176, 153, 170, 68, 75. What is the mean of the last 6 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          154,
+          160,
+          157,
+          176,
+          153,
+          170,
+          68,
+          75
+        ],
+        "window": 6
+      },
+      "answer": "799/6",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and fifty-four, one hundred and sixty, one hundred and fifty-seven, one hundred and seventy-six, one hundred and fifty-three, one hundred and seventy, sixty-eight, seventy-five. What is the mean of the last six observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "485/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "137",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "799"
+        },
+        {
+          "name": "window_size",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "57/2",
+            "relative_gap": "171/799"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "23/6",
+            "relative_gap": "23/799"
+          }
+        ],
+        "min_wrong_pair_gap": "74/3",
+        "min_distinct_wrong_pair_gap": "74/3"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Prices are 94, 82, 141, 65, 60, 68, 160, 163. What is the mean of the last 6 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          94,
+          82,
+          141,
+          65,
+          60,
+          68,
+          160,
+          163
+        ],
+        "window": 6
+      },
+      "answer": "219/2",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are ninety-four, eighty-two, one hundred and forty-one, sixty-five, sixty, sixty-eight, one hundred and sixty, one hundred and sixty-three. What is the mean of the last six observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "85",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "739/7",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "657"
+        },
+        {
+          "name": "window_size",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "49/2",
+            "relative_gap": "49/219"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "55/14",
+            "relative_gap": "55/1533"
+          }
+        ],
+        "min_wrong_pair_gap": "144/7",
+        "min_distinct_wrong_pair_gap": "144/7"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Prices are 91, 61, 168, 133, 67, 80, 79, 179. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          91,
+          61,
+          168,
+          133,
+          67,
+          80,
+          79,
+          179
+        ],
+        "window": 5
+      },
+      "answer": "538/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are ninety-one, sixty-one, one hundred and sixty-eight, one hundred and thirty-three, sixty-seven, eighty, seventy-nine, one hundred and seventy-nine. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "104",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "353/3",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "538"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "18/5",
+            "relative_gap": "9/269"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "151/15",
+            "relative_gap": "151/1614"
+          }
+        ],
+        "min_wrong_pair_gap": "41/3",
+        "min_distinct_wrong_pair_gap": "41/3"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Prices are 170, 79, 124, 61, 62, 120, 101, 75. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          170,
+          79,
+          124,
+          61,
+          62,
+          120,
+          101,
+          75
+        ],
+        "window": 4
+      },
+      "answer": "179/2",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and seventy, seventy-nine, one hundred and twenty-four, sixty-one, sixty-two, one hundred and twenty, one hundred and one, seventy-five. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "217/2",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "419/5",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "358"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "19",
+            "relative_gap": "38/179"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "57/10",
+            "relative_gap": "57/895"
+          }
+        ],
+        "min_wrong_pair_gap": "247/10",
+        "min_distinct_wrong_pair_gap": "247/10"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Prices are 111, 110, 71, 55, 52, 84, 157, 58. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          111,
+          110,
+          71,
+          55,
+          52,
+          84,
+          157,
+          58
+        ],
+        "window": 4
+      },
+      "answer": "351/4",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and eleven, one hundred and ten, seventy-one, fifty-five, fifty-two, eighty-four, one hundred and fifty-seven, fifty-eight. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "347/4",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "406/5",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "351"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "1",
+            "relative_gap": "4/351"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "131/20",
+            "relative_gap": "131/1755"
+          }
+        ],
+        "min_wrong_pair_gap": "111/20",
+        "min_distinct_wrong_pair_gap": "111/20"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Prices are 101, 87, 161, 74, 158, 135, 117, 89. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          101,
+          87,
+          161,
+          74,
+          158,
+          135,
+          117,
+          89
+        ],
+        "window": 5
+      },
+      "answer": "573/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and one, eighty-seven, one hundred and sixty-one, seventy-four, one hundred and fifty-eight, one hundred and thirty-five, one hundred and seventeen, eighty-nine. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "581/5",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "367/3",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "573"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "8/5",
+            "relative_gap": "8/573"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "116/15",
+            "relative_gap": "116/1719"
+          }
+        ],
+        "min_wrong_pair_gap": "92/15",
+        "min_distinct_wrong_pair_gap": "92/15"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Prices are 123, 98, 145, 54, 90, 77, 85, 145. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          123,
+          98,
+          145,
+          54,
+          90,
+          77,
+          85,
+          145
+        ],
+        "window": 4
+      },
+      "answer": "397/4",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and twenty-three, ninety-eight, one hundred and forty-five, fifty-four, ninety, seventy-seven, eighty-five, one hundred and forty-five. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "105",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "451/5",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "397"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "23/4",
+            "relative_gap": "23/397"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "181/20",
+            "relative_gap": "181/1985"
+          }
+        ],
+        "min_wrong_pair_gap": "74/5",
+        "min_distinct_wrong_pair_gap": "74/5"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Prices are 145, 176, 51, 87, 72, 150, 62, 77. What is the mean of the last 6 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          145,
+          176,
+          51,
+          87,
+          72,
+          150,
+          62,
+          77
+        ],
+        "window": 6
+      },
+      "answer": "499/6",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and forty-five, one hundred and seventy-six, fifty-one, eighty-seven, seventy-two, one hundred and fifty, sixty-two, seventy-seven. What is the mean of the last six observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "227/2",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "675/7",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "499"
+        },
+        {
+          "name": "window_size",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "91/3",
+            "relative_gap": "182/499"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "557/42",
+            "relative_gap": "557/3493"
+          }
+        ],
+        "min_wrong_pair_gap": "239/14",
+        "min_distinct_wrong_pair_gap": "239/14"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Prices are 106, 93, 179, 66, 161, 102, 95, 100. What is the mean of the last 6 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          106,
+          93,
+          179,
+          66,
+          161,
+          102,
+          95,
+          100
+        ],
+        "window": 6
+      },
+      "answer": "703/6",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and six, ninety-three, one hundred and seventy-nine, sixty-six, one hundred and sixty-one, one hundred and two, ninety-five, one hundred. What is the mean of the last six observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "707/6",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "796/7",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "703"
+        },
+        {
+          "name": "window_size",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "2/3",
+            "relative_gap": "4/703"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "145/42",
+            "relative_gap": "145/4921"
+          }
+        ],
+        "min_wrong_pair_gap": "173/42",
+        "min_distinct_wrong_pair_gap": "173/42"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Prices are 132, 79, 168, 164, 167, 143, 112, 95. What is the mean of the last 6 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          132,
+          79,
+          168,
+          164,
+          167,
+          143,
+          112,
+          95
+        ],
+        "window": 6
+      },
+      "answer": "283/2",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and thirty-two, seventy-nine, one hundred and sixty-eight, one hundred and sixty-four, one hundred and sixty-seven, one hundred and forty-three, one hundred and twelve, ninety-five. What is the mean of the last six observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "853/6",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "928/7",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "849"
+        },
+        {
+          "name": "window_size",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "2/3",
+            "relative_gap": "4/849"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "125/14",
+            "relative_gap": "125/1981"
+          }
+        ],
+        "min_wrong_pair_gap": "403/42",
+        "min_distinct_wrong_pair_gap": "403/42"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Prices are 90, 135, 111, 159, 119, 121, 104, 79. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          90,
+          135,
+          111,
+          159,
+          119,
+          121,
+          104,
+          79
+        ],
+        "window": 5
+      },
+      "answer": "582/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are ninety, one hundred and thirty-five, one hundred and eleven, one hundred and fifty-nine, one hundred and nineteen, one hundred and twenty-one, one hundred and four, seventy-nine. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "614/5",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "231/2",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "582"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "32/5",
+            "relative_gap": "16/291"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "9/10",
+            "relative_gap": "3/388"
+          }
+        ],
+        "min_wrong_pair_gap": "73/10",
+        "min_distinct_wrong_pair_gap": "73/10"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Prices are 53, 102, 164, 163, 86, 144, 63, 104. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          53,
+          102,
+          164,
+          163,
+          86,
+          144,
+          63,
+          104
+        ],
+        "window": 5
+      },
+      "answer": "112",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are fifty-three, one hundred and two, one hundred and sixty-four, one hundred and sixty-three, eighty-six, one hundred and forty-four, sixty-three, one hundred and four. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "568/5",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "362/3",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "560"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "8/5",
+            "relative_gap": "1/70"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "26/3",
+            "relative_gap": "13/168"
+          }
+        ],
+        "min_wrong_pair_gap": "106/15",
+        "min_distinct_wrong_pair_gap": "106/15"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Prices are 91, 170, 57, 73, 82, 69, 71, 178. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          91,
+          170,
+          57,
+          73,
+          82,
+          69,
+          71,
+          178
+        ],
+        "window": 4
+      },
+      "answer": "100",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are ninety-one, one hundred and seventy, fifty-seven, seventy-three, eighty-two, sixty-nine, seventy-one, one hundred and seventy-eight. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "391/4",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "473/5",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "400"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "9/4",
+            "relative_gap": "9/400"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "27/5",
+            "relative_gap": "27/500"
+          }
+        ],
+        "min_wrong_pair_gap": "63/20",
+        "min_distinct_wrong_pair_gap": "63/20"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Prices are 74, 72, 177, 102, 122, 176, 147, 105. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          74,
+          72,
+          177,
+          102,
+          122,
+          176,
+          147,
+          105
+        ],
+        "window": 5
+      },
+      "answer": "652/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are seventy-four, seventy-two, one hundred and seventy-seven, one hundred and two, one hundred and twenty-two, one hundred and seventy-six, one hundred and forty-seven, one hundred and five. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "547/5",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "829/6",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "652"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "21",
+            "relative_gap": "105/652"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "233/30",
+            "relative_gap": "233/3912"
+          }
+        ],
+        "min_wrong_pair_gap": "863/30",
+        "min_distinct_wrong_pair_gap": "863/30"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Prices are 141, 128, 74, 127, 158, 125, 125, 51. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          141,
+          128,
+          74,
+          127,
+          158,
+          125,
+          125,
+          51
+        ],
+        "window": 4
+      },
+      "answer": "459/4",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and forty-one, one hundred and twenty-eight, seventy-four, one hundred and twenty-seven, one hundred and fifty-eight, one hundred and twenty-five, one hundred and twenty-five, fifty-one. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "235/2",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "586/5",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "459"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "11/4",
+            "relative_gap": "11/459"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "49/20",
+            "relative_gap": "49/2295"
+          }
+        ],
+        "min_wrong_pair_gap": "3/10",
+        "min_distinct_wrong_pair_gap": "3/10"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Prices are 156, 145, 51, 128, 179, 129, 94, 143. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          156,
+          145,
+          51,
+          128,
+          179,
+          129,
+          94,
+          143
+        ],
+        "window": 3
+      },
+      "answer": "122",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and fifty-six, one hundred and forty-five, fifty-one, one hundred and twenty-eight, one hundred and seventy-nine, one hundred and twenty-nine, ninety-four, one hundred and forty-three. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "352/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "545/4",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "366"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "14/3",
+            "relative_gap": "7/183"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "57/4",
+            "relative_gap": "57/488"
+          }
+        ],
+        "min_wrong_pair_gap": "227/12",
+        "min_distinct_wrong_pair_gap": "227/12"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Prices are 109, 68, 176, 80, 165, 100, 69, 86. What is the mean of the last 6 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          109,
+          68,
+          176,
+          80,
+          165,
+          100,
+          69,
+          86
+        ],
+        "window": 6
+      },
+      "answer": "338/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and nine, sixty-eight, one hundred and seventy-six, eighty, one hundred and sixty-five, one hundred, sixty-nine, eighty-six. What is the mean of the last six observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "349/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "744/7",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "676"
+        },
+        {
+          "name": "window_size",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "11/3",
+            "relative_gap": "11/338"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "134/21",
+            "relative_gap": "67/1183"
+          }
+        ],
+        "min_wrong_pair_gap": "211/21",
+        "min_distinct_wrong_pair_gap": "211/21"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Prices are 151, 57, 101, 156, 138, 133, 59, 73. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          151,
+          57,
+          101,
+          156,
+          138,
+          133,
+          59,
+          73
+        ],
+        "window": 5
+      },
+      "answer": "559/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and fifty-one, fifty-seven, one hundred and one, one hundred and fifty-six, one hundred and thirty-eight, one hundred and thirty-three, fifty-nine, seventy-three. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "603/5",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "110",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "559"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "44/5",
+            "relative_gap": "44/559"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "9/5",
+            "relative_gap": "9/559"
+          }
+        ],
+        "min_wrong_pair_gap": "53/5",
+        "min_distinct_wrong_pair_gap": "53/5"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Prices are 142, 172, 91, 132, 91, 177, 50, 66. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          142,
+          172,
+          91,
+          132,
+          91,
+          177,
+          50,
+          66
+        ],
+        "window": 3
+      },
+      "answer": "293/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and forty-two, one hundred and seventy-two, ninety-one, one hundred and thirty-two, ninety-one, one hundred and seventy-seven, fifty, sixty-six. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "135",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "96",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "293"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "112/3",
+            "relative_gap": "112/293"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "5/3",
+            "relative_gap": "5/293"
+          }
+        ],
+        "min_wrong_pair_gap": "39",
+        "min_distinct_wrong_pair_gap": "39"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Prices are 165, 154, 159, 132, 145, 113, 129, 128. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          165,
+          154,
+          159,
+          132,
+          145,
+          113,
+          129,
+          128
+        ],
+        "window": 4
+      },
+      "answer": "515/4",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and sixty-five, one hundred and fifty-four, one hundred and fifty-nine, one hundred and thirty-two, one hundred and forty-five, one hundred and thirteen, one hundred and twenty-nine, one hundred and twenty-eight. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "305/2",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "647/5",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "515"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "95/4",
+            "relative_gap": "19/103"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "13/20",
+            "relative_gap": "13/2575"
+          }
+        ],
+        "min_wrong_pair_gap": "231/10",
+        "min_distinct_wrong_pair_gap": "231/10"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Prices are 122, 84, 94, 54, 76, 98, 162, 138. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          122,
+          84,
+          94,
+          54,
+          76,
+          98,
+          162,
+          138
+        ],
+        "window": 5
+      },
+      "answer": "528/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and twenty-two, eighty-four, ninety-four, fifty-four, seventy-six, ninety-eight, one hundred and sixty-two, one hundred and thirty-eight. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "86",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "311/3",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "528"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "98/5",
+            "relative_gap": "49/264"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "29/15",
+            "relative_gap": "29/1584"
+          }
+        ],
+        "min_wrong_pair_gap": "53/3",
+        "min_distinct_wrong_pair_gap": "53/3"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Prices are 149, 155, 139, 175, 174, 97, 71, 85. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          149,
+          155,
+          139,
+          175,
+          174,
+          97,
+          71,
+          85
+        ],
+        "window": 4
+      },
+      "answer": "427/4",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and forty-nine, one hundred and fifty-five, one hundred and thirty-nine, one hundred and seventy-five, one hundred and seventy-four, ninety-seven, seventy-one, eighty-five. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "309/2",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "602/5",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "427"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "191/4",
+            "relative_gap": "191/427"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "273/20",
+            "relative_gap": "39/305"
+          }
+        ],
+        "min_wrong_pair_gap": "341/10",
+        "min_distinct_wrong_pair_gap": "341/10"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Prices are 167, 68, 97, 66, 86, 84, 72, 123. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          167,
+          68,
+          97,
+          66,
+          86,
+          84,
+          72,
+          123
+        ],
+        "window": 4
+      },
+      "answer": "365/4",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and sixty-seven, sixty-eight, ninety-seven, sixty-six, eighty-six, eighty-four, seventy-two, one hundred and twenty-three. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "199/2",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "431/5",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "365"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "33/4",
+            "relative_gap": "33/365"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "101/20",
+            "relative_gap": "101/1825"
+          }
+        ],
+        "min_wrong_pair_gap": "133/10",
+        "min_distinct_wrong_pair_gap": "133/10"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Prices are 164, 127, 159, 127, 158, 68, 76, 75. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          164,
+          127,
+          159,
+          127,
+          158,
+          68,
+          76,
+          75
+        ],
+        "window": 3
+      },
+      "answer": "73",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and sixty-four, one hundred and twenty-seven, one hundred and fifty-nine, one hundred and twenty-seven, one hundred and fifty-eight, sixty-eight, seventy-six, seventy-five. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "150",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "377/4",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "219"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "77",
+            "relative_gap": "77/73"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "85/4",
+            "relative_gap": "85/292"
+          }
+        ],
+        "min_wrong_pair_gap": "223/4",
+        "min_distinct_wrong_pair_gap": "223/4"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Prices are 91, 125, 66, 119, 154, 150, 160, 101. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          91,
+          125,
+          66,
+          119,
+          154,
+          150,
+          160,
+          101
+        ],
+        "window": 5
+      },
+      "answer": "684/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are ninety-one, one hundred and twenty-five, sixty-six, one hundred and nineteen, one hundred and fifty-four, one hundred and fifty, one hundred and sixty, one hundred and one. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "111",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "125",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "684"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "129/5",
+            "relative_gap": "43/228"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "59/5",
+            "relative_gap": "59/684"
+          }
+        ],
+        "min_wrong_pair_gap": "14",
+        "min_distinct_wrong_pair_gap": "14"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Prices are 74, 55, 159, 91, 173, 168, 117, 83. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          74,
+          55,
+          159,
+          91,
+          173,
+          168,
+          117,
+          83
+        ],
+        "window": 5
+      },
+      "answer": "632/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are seventy-four, fifty-five, one hundred and fifty-nine, ninety-one, one hundred and seventy-three, one hundred and sixty-eight, one hundred and seventeen, eighty-three. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "552/5",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "791/6",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "632"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "16",
+            "relative_gap": "10/79"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "163/30",
+            "relative_gap": "163/3792"
+          }
+        ],
+        "min_wrong_pair_gap": "643/30",
+        "min_distinct_wrong_pair_gap": "643/30"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Prices are 102, 111, 146, 116, 169, 93, 53, 89. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          102,
+          111,
+          146,
+          116,
+          169,
+          93,
+          53,
+          89
+        ],
+        "window": 3
+      },
+      "answer": "235/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and two, one hundred and eleven, one hundred and forty-six, one hundred and sixteen, one hundred and sixty-nine, ninety-three, fifty-three, eighty-nine. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "359/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "101",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "235"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "124/3",
+            "relative_gap": "124/235"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "68/3",
+            "relative_gap": "68/235"
+          }
+        ],
+        "min_wrong_pair_gap": "56/3",
+        "min_distinct_wrong_pair_gap": "56/3"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Prices are 128, 51, 74, 169, 116, 81, 122, 168. What is the mean of the last 4 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          128,
+          51,
+          74,
+          169,
+          116,
+          81,
+          122,
+          168
+        ],
+        "window": 4
+      },
+      "answer": "487/4",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and twenty-eight, fifty-one, seventy-four, one hundred and sixty-nine, one hundred and sixteen, eighty-one, one hundred and twenty-two, one hundred and sixty-eight. What is the mean of the last four observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "211/2",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "656/5",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "487"
+        },
+        {
+          "name": "window_size",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "65/4",
+            "relative_gap": "65/487"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "189/20",
+            "relative_gap": "189/2435"
+          }
+        ],
+        "min_wrong_pair_gap": "257/10",
+        "min_distinct_wrong_pair_gap": "257/10"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Prices are 143, 133, 127, 113, 141, 87, 67, 140. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          143,
+          133,
+          127,
+          113,
+          141,
+          87,
+          67,
+          140
+        ],
+        "window": 5
+      },
+      "answer": "548/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are one hundred and forty-three, one hundred and thirty-three, one hundred and twenty-seven, one hundred and thirteen, one hundred and forty-one, eighty-seven, sixty-seven, one hundred and forty. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "657/5",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "225/2",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "548"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "109/5",
+            "relative_gap": "109/548"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "29/10",
+            "relative_gap": "29/1096"
+          }
+        ],
+        "min_wrong_pair_gap": "189/10",
+        "min_distinct_wrong_pair_gap": "189/10"
+      },
+      "follow_up": {
+        "question": "Can you maintain the mean without storing the window?",
+        "reference": "A running sum alone cannot identify which value must expire. Store the window or another structure that can retrieve the outgoing observation."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Prices are 51, 136, 79, 149, 162, 124, 106, 67. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          51,
+          136,
+          79,
+          149,
+          162,
+          124,
+          106,
+          67
+        ],
+        "window": 3
+      },
+      "answer": "99",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are fifty-one, one hundred and thirty-six, seventy-nine, one hundred and forty-nine, one hundred and sixty-two, one hundred and twenty-four, one hundred and six, sixty-seven. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "266/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "459/4",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "297"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "31/3",
+            "relative_gap": "31/297"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "63/4",
+            "relative_gap": "7/44"
+          }
+        ],
+        "min_wrong_pair_gap": "313/12",
+        "min_distinct_wrong_pair_gap": "313/12"
+      },
+      "follow_up": {
+        "question": "How would you support a long stream with a fixed-size window?",
+        "reference": "Use a ring buffer or deque plus a running sum. Add the new observation and subtract the expired one in constant work per update."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Prices are 97, 108, 74, 108, 144, 52, 154, 165. What is the mean of the last 5 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          97,
+          108,
+          74,
+          108,
+          144,
+          52,
+          154,
+          165
+        ],
+        "window": 5
+      },
+      "answer": "623/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are ninety-seven, one hundred and eight, seventy-four, one hundred and eight, one hundred and forty-four, fifty-two, one hundred and fifty-four, one hundred and sixty-five. What is the mean of the last five observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "531/5",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "697/6",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "623"
+        },
+        {
+          "name": "window_size",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "92/5",
+            "relative_gap": "92/623"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "253/30",
+            "relative_gap": "253/3738"
+          }
+        ],
+        "min_wrong_pair_gap": "299/30",
+        "min_distinct_wrong_pair_gap": "299/30"
+      },
+      "follow_up": {
+        "question": "What should happen before a full window of observations arrives?",
+        "reference": "Choose and document either a partial-window mean or an unavailable result. The current examples already contain enough observations for the requested full window."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Prices are 53, 120, 132, 171, 117, 85, 101, 59. What is the mean of the last 3 observations, as an exact fraction?",
+      "params": {
+        "prices": [
+          53,
+          120,
+          132,
+          171,
+          117,
+          85,
+          101,
+          59
+        ],
+        "window": 3
+      },
+      "answer": "245/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trailing rolling mean",
+      "difficulty": "Easy",
+      "spoken_text": "Prices are fifty-three, one hundred and twenty, one hundred and thirty-two, one hundred and seventy-one, one hundred and seventeen, eighty-five, one hundred and one, fifty-nine. What is the mean of the last three observations, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "305/3",
+          "misconceptions": [
+            "uses_the_first_window_instead_of_latest"
+          ]
+        },
+        {
+          "value": "181/2",
+          "misconceptions": [
+            "retains_one_expired_observation"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "final_window_sum",
+          "value": "245"
+        },
+        {
+          "name": "window_size",
+          "value": "3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_first_window_instead_of_latest",
+            "absolute_gap": "20",
+            "relative_gap": "12/49"
+          },
+          {
+            "misconception": "retains_one_expired_observation",
+            "absolute_gap": "53/6",
+            "relative_gap": "53/490"
+          }
+        ],
+        "min_wrong_pair_gap": "67/6",
+        "min_distinct_wrong_pair_gap": "67/6"
+      },
+      "follow_up": {
+        "question": "Why is an observation-count window different from a time-duration window?",
+        "reference": "Irregular timestamps can put different numbers of observations into the same elapsed period. A time window must expire observations by timestamp rather than only by count."
+      }
+    }
+  ]
+}
