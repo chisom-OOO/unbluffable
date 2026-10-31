@@ -123,6 +123,14 @@
     p.answers.forEach((a) => { counts[a.t] = (counts[a.t] || 0) + 1; });
     return Object.keys(counts).sort((a, b) => counts[b] - counts[a])[0] || null;
   }
+  // The candidate's photo, else their initials, else a plain person icon. Decorative: the
+  // name is said in the surrounding label.
+  const PERSON = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>';
+  function avatarHtml(p, cls = "avatar-small") {
+    if (p.photo && window.UBProfile.validPhoto(p.photo)) return `<img class="avatar-img ${cls}" src="${p.photo}" alt="">`;
+    const letters = window.UBProfile.initials(p.name);
+    return letters ? `<span class="avatar-initials ${cls}" aria-hidden="true">${escapeHtml(letters)}</span>` : PERSON;
+  }
   function initProfileLink() {
     const link = document.getElementById("profile-link");
     const S = profile();
@@ -132,9 +140,13 @@
     const span = link.querySelector(".profile-rating");
     span.hidden = !o;
     span.textContent = o ? String(window.UBProfile.shown(o.rating)) : "";
-    link.setAttribute("aria-label", o ? `Profile, rating estimate ${window.UBProfile.shown(o.rating)}` : "Profile");
+    const icon = link.querySelector(".icon, .avatar-img, .avatar-initials");
+    if (icon) icon.outerHTML = avatarHtml(p);
+    link.querySelector(".profile-word").textContent = p.name || "Profile";
+    link.setAttribute("aria-label", `${p.name ? `${p.name}'s profile` : "Profile"}${o ? `, rating estimate ${window.UBProfile.shown(o.rating)}` : ""}`);
   }
 
-  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack };
+  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
+                refreshProfileLink: initProfileLink };
   document.addEventListener("DOMContentLoaded", () => { initTheme(); initMute(); initProfileLink(); });
 })();

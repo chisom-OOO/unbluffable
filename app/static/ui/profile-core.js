@@ -13,7 +13,19 @@
   ];
 
   const empty = () => ({ version: 1, onboarded: null, roles: [], other_text: "", default_track: null,
-                         answers: [], history: [], placement: {} });
+                         name: "", photo: null, answers: [], history: [], placement: {} });
+
+  // Display name and photo: only in this browser. The photo is a 256 px JPEG data URL,
+  // kept under about 100 KB (PHOTO_MAX_CHARS of base64).
+  const NAME_MAX = 60;
+  const PHOTO_MAX_BYTES = 100 * 1024;
+  const PHOTO_MAX_CHARS = Math.ceil(PHOTO_MAX_BYTES / 3) * 4 + "data:image/jpeg;base64,".length;
+  const PHOTO = /^data:image\/jpeg;base64,[A-Za-z0-9+/]+={0,2}$/;
+  const validPhoto = (x) => typeof x === "string" && x.length <= PHOTO_MAX_CHARS && PHOTO.test(x);
+  function initials(name) {
+    const words = String(name || "").trim().split(/\s+/).filter(Boolean);
+    return words.slice(0, 2).map((w) => [...w][0].toUpperCase()).join("");
+  }
 
   // Accepts only a well-formed version 1 profile; anything else throws.
   function normalise(p) {
@@ -30,6 +42,8 @@
       roles: Array.isArray(p.roles) ? p.roles.filter((r) => ROLES.some((x) => x.id === r)) : [],
       other_text: str(p.other_text) ? p.other_text.slice(0, 200) : "",
       default_track: str(p.default_track) ? p.default_track : null,
+      name: str(p.name) ? p.name.trim().slice(0, NAME_MAX) : "",
+      photo: validPhoto(p.photo) ? p.photo : null,
       answers: answers.map((a) => ({ s: a.s, t: a.t, a: a.a, v: a.v, p: !!a.p, d: str(a.d) ? a.d : "" })),
       history,
       placement: p.placement && typeof p.placement === "object" ? p.placement : {},
@@ -164,7 +178,7 @@
     return { svg: `<svg class="radar" viewBox="-180 -135 360 270" role="img" aria-label="${esc(title)}">${parts.join("")}</svg>`, drawn, missing };
   }
 
-  const api = { KEY, WINDOW, ROLES, empty, normalise, store, exportJson, importJson, areaScores, overall,
+  const api = { KEY, WINDOW, ROLES, NAME_MAX, PHOTO_MAX_BYTES, validPhoto, initials, empty, normalise, store, exportJson, importJson, areaScores, overall,
                 shown, band, startLevel, defaultTrack, applyReport, radar, shortName };
   if (typeof module !== "undefined") module.exports = api;
   else window.UBProfile = api;

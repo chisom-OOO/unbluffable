@@ -125,4 +125,25 @@ assert.equal(P.defaultTrack([]), null);
   const few = P.radar(areas, [{ key: "now", name: "Now", values: { Probability: 50, Statistics: 70 } }], "t");
   assert.deepEqual([few.svg, few.drawn.length, few.missing.length], ["", 2, 3]);
 }
+// --- Display name and photo: validated, exported, imported and cleared with the rest ---
+{
+  const photo = "data:image/jpeg;base64," + "A".repeat(4000);
+  const p = { ...P.empty(), name: "  Ada Lovelace  ", photo };
+  const back = P.importJson(P.exportJson(P.normalise(p)));
+  assert.deepEqual([back.name, back.photo], ["Ada Lovelace", photo], "round trip keeps both");
+  assert.equal(P.normalise({ ...p, name: "x".repeat(200) }).name.length, P.NAME_MAX);
+  for (const bad of ["data:image/png;base64,AAAA", "javascript:alert(1)", "data:image/jpeg;base64,<svg>",
+                     "data:image/jpeg;base64," + "A".repeat(140000), 42]) {
+    assert.equal(P.normalise({ ...p, photo: bad }).photo, null, `refuses ${String(bad).slice(0, 30)}`);
+  }
+  assert.ok(P.validPhoto("data:image/jpeg;base64," + "A".repeat(136000)), "just under 100 KB");
+  assert.deepEqual([P.initials("Ada Lovelace"), P.initials("cher"), P.initials(" "), P.initials("Émile Zola Jr")], ["AL", "C", "", "ÉZ"]);
+  // Clear my data removes them.
+  const data = new Map();
+  const local = { getItem: (k) => (data.has(k) ? data.get(k) : null), setItem: (k, v) => data.set(k, String(v)), removeItem: (k) => data.delete(k) };
+  const s = P.store(local);
+  s.save(P.normalise(p));
+  s.clear();
+  assert.deepEqual([s.load().name, s.load().photo], ["", null]);
+}
 console.log("profile ok");

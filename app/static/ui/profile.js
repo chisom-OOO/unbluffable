@@ -84,7 +84,71 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function status(text) { $("data-status").textContent = text; $("data-status").hidden = !text; }
-  function refresh() { rolesLine(); if (current) renderTrack(); renderHistory(); }
+  function refresh() { rolesLine(); renderAbout(); if (current) renderTrack(); renderHistory(); window.UB.refreshProfileLink(); }
+
+  // ---------- About you: display name and photo, in this browser only ----------
+  function renderAbout() {
+    $("avatar").innerHTML = window.UB.avatarHtml(profile, "avatar-big");
+    if (document.activeElement !== $("display-name")) $("display-name").value = profile.name || "";
+    $("photo-remove").hidden = !profile.photo;
+  }
+  function photoStatus(text) { $("photo-status").textContent = text; $("photo-status").hidden = !text; }
+  let nameTimer = null;
+  $("display-name").addEventListener("input", () => {
+    clearTimeout(nameTimer);
+    nameTimer = setTimeout(() => {
+      profile.name = $("display-name").value.trim().slice(0, P.NAME_MAX);
+      S.save(profile);
+      renderAbout();
+      window.UB.refreshProfileLink();
+    }, 300);
+  });
+
+  // A square crop, 256 px, JPEG; quality steps down until it is under 100 KB.
+  async function resized(file) {
+    let source;
+    try { source = await createImageBitmap(file); } catch {
+      source = await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+    }
+    const w = source.width, h = source.height, side = Math.min(w, h);
+    const canvas = Object.assign(document.createElement("canvas"), { width: 256, height: 256 });
+    canvas.getContext("2d").drawImage(source, (w - side) / 2, (h - side) / 2, side, side, 0, 0, 256, 256);
+    for (const quality of [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3]) {
+      const url = canvas.toDataURL("image/jpeg", quality);
+      if (P.validPhoto(url)) return url;
+    }
+    throw new Error("too large");
+  }
+  $("photo-choose").addEventListener("click", () => $("photo-input").click());
+  $("photo-input").addEventListener("change", async () => {
+    const file = $("photo-input").files[0];
+    $("photo-input").value = "";
+    if (!file) return;
+    try {
+      profile.photo = await resized(file);
+    } catch {
+      photoStatus("That file isn't a picture this browser can read.");
+      return;
+    }
+    const saved = S.save(profile);
+    renderAbout();
+    window.UB.refreshProfileLink();
+    photoStatus(saved ? "Photo saved on this device." : "Photo kept for this visit only (storage is blocked).");
+    $("photo-choose").focus();
+  });
+  $("photo-remove").addEventListener("click", () => {
+    profile.photo = null;
+    S.save(profile);
+    renderAbout();
+    window.UB.refreshProfileLink();
+    photoStatus("Photo removed.");
+    $("photo-choose").focus();
+  });
 
   $("export").addEventListener("click", () => {
     const url = URL.createObjectURL(new Blob([P.exportJson(profile)], { type: "application/json" }));
@@ -117,6 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   rolesLine();
+  renderAbout();
   renderHistory();
   fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {
     tracks = t.tracks;
