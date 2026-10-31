@@ -235,8 +235,95 @@ document.addEventListener("DOMContentLoaded", () => {
   // "3/4" or "1" as a number (the scorecard's exact fractions).
   function fractionValue(f) { const [a, b] = String(f).split("/"); return Number(a) / (b ? Number(b) : 1); }
 
+  // Decision log 30: conversational questions (IB Conversational, Software Design concepts).
+  function conversationalCards(items) {
+    const quote = (q) => `<blockquote class="evidence"><p>“${escapeHtml(q)}”</p></blockquote>`;
+    const points = (list) => `<ul class="see-list">${list.map((p) => `<li><strong>${p.quote ? "Covered" : "Not heard"}:</strong> `
+      + `${escapeHtml(p.point)}${p.quote ? quote(p.quote) : ""}</li>`).join("")}</ul>`;
+    return items.map((c) => `<article class="qcard"><header><h3>${escapeHtml(c.q)}: ${escapeHtml(c.topic)}</h3>`
+      + `<span class="tag">model-judged, not exact</span></header>`
+      + `<p class="bq-question">${escapeHtml(c.question)}</p><h4>Your answer</h4>${quote(c.answer)}`
+      + `<h4>Key points</h4>${points(c.key_points)}`
+      + `<h4>Follow-up: ${escapeHtml(c.probe)}</h4>${quote(c.probe_answer)}`
+      + `<h4>Twist: ${escapeHtml(c.twist)}</h4>${quote(c.twist_answer)}${points(c.twist_points)}`
+      + (c.misconceptions.length ? `<h4>Misconceptions heard</h4><ul class="see-list">${c.misconceptions.map((m) =>
+          `<li>${escapeHtml(m.misconception)}${quote(m.quote)}</li>`).join("")}</ul>` : "")
+      + (c.capacity ? `<h4>Capacity check <span class="tag">exact</span></h4><p class="fine">${escapeHtml(c.capacity.question)}</p>`
+        + `<p class="check-line">${c.capacity.correct ? "Right" : "Not right"}: you said <span class="mono">${escapeHtml(c.capacity.said ?? "no number")}</span>; `
+        + `exact <span class="mono">${escapeHtml(c.capacity.exact)}</span>${c.capacity.unit ? ` ${escapeHtml(c.capacity.unit)}` : ""}.</p>`
+        + (c.capacity.working ? `<p class="fine">${escapeHtml(c.capacity.working)}</p>` : "") : "")
+      + (c.dropped_quotes ? `<p class="fine">${c.dropped_quotes} model quote${c.dropped_quotes === 1 ? "" : "s"} didn't match your words and ${c.dropped_quotes === 1 ? "was" : "were"} left out.</p>` : "")
+      + `</article>`).join("");
+  }
+  function renderConversational(e) {
+    $("end-eyebrow").textContent = `${e.topics} report`;
+    $("end-title").textContent = "How you talked it through";
+    $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}, each with a follow-up and a twist.`;
+    $("result-tag").textContent = "Model-judged";
+    $("conditions").hidden = !e.conditions;
+    $("conditions").textContent = e.conditions || "";
+    $("conditions").classList.toggle("warn", !!e.conditions && !/^Exam/.test(e.conditions));
+    $("topics-line").hidden = false;
+    $("topics-line").textContent = `Topics: ${e.topics}`;
+    document.querySelectorAll(".section, .end-verdict, #stats").forEach((el) => { el.hidden = true; });
+    $("conversational-title").textContent = `${e.topics} (model-judged, not exact)`;
+    $("conversational").innerHTML = conversationalCards(e.conversational);
+    $("conversational-section").hidden = false;
+  }
+
+  // Decision log 30: a full consulting case.
+  function renderCase(e) {
+    const c = e.case;
+    $("end-eyebrow").textContent = "Full case report";
+    $("end-title").textContent = c.title;
+    const calcs = c.stages.filter((s) => s.kind === "exhibit_calculation");
+    const right = calcs.filter((s) => (s.after_challenge || s.first).correct).length;
+    $("result-tag").textContent = `${right}/${calcs.length} calculations exact`;
+    $("end-sub").textContent = `${c.case_type[0].toUpperCase()}${c.case_type.slice(1)} case. Structure covered ${c.structure.buckets.filter((b) => b.quote).length} of ${c.structure.buckets.length} key buckets.`;
+    $("conditions").hidden = !e.conditions;
+    $("conditions").textContent = e.conditions || "";
+    $("conditions").classList.toggle("warn", !!e.conditions && !/^Exam/.test(e.conditions));
+    $("topics-line").hidden = false;
+    $("topics-line").textContent = e.topics;
+    document.querySelectorAll(".section:not(#progress), .end-verdict, #stats").forEach((el) => { el.hidden = true; });
+    const quote = (q) => `<blockquote class="evidence"><p>“${escapeHtml(q)}”</p></blockquote>`;
+    const tag = (t) => `<span class="tag">${escapeHtml(t)}</span>`;
+    const points = (list) => `<ul class="see-list">${list.map((p) => `<li><strong>${p.quote ? "Covered" : "Not heard"}:</strong> `
+      + `${escapeHtml(p.point)}${p.quote ? quote(p.quote) : ""}</li>`).join("")}</ul>`;
+    const table = (x) => `<table class="market-quotes exhibit"><caption>${escapeHtml(x.title)}</caption><thead><tr>`
+      + x.columns.map((h) => `<th scope="col">${escapeHtml(h)}</th>`).join("") + `</tr></thead><tbody>`
+      + x.rows.map((r) => `<tr>${r.map((v, i) => (i ? `<td class="mono">${escapeHtml(String(v))}</td>` : `<th scope="row">${escapeHtml(String(v))}</th>`)).join("")}</tr>`).join("")
+      + `</tbody></table>`;
+    const calcLine = (r) => `${r.correct ? "Right" : "Not right"}: you said <span class="mono">${escapeHtml(r.said ?? "no number")}</span>; `
+      + `exact <span class="mono">${escapeHtml(r.exact)}</span>.${r.mistake ? ` Matches a common mistake: ${escapeHtml(r.mistake)}` : ""}`;
+    const stage = (s) => s.kind === "exhibit_calculation"
+      ? `<article class="qcard"><header><h3>Calculation ${s.n}</h3>${tag("exact")}</header><p class="bq-question">${escapeHtml(s.question)}</p>`
+        + table(s.exhibit) + `<p class="check-line">${calcLine(s.first)}</p>`
+        + (s.after_challenge ? `<p class="check-line">After the challenge: ${calcLine(s.after_challenge)}</p>` : "")
+        + (s.working ? `<details class="receipt"><summary>Working</summary><p class="fine">${escapeHtml(s.working)}</p></details>` : "") + `</article>`
+      : `<article class="qcard"><header><h3>${s.kind === "insight" ? "Insight" : "Ideas"}</h3>${tag(s.label)}</header>`
+        + `<p class="bq-question">${escapeHtml(s.question)}</p>${quote(s.answer)}`
+        + (s.probe ? `<h4>${escapeHtml(s.probe)}</h4>${quote(s.probe_answer || "")}` : "") + points(s.points) + `</article>`;
+    $("case-report").innerHTML = `<article class="qcard"><header><h3>Structure</h3>${tag(c.structure.label)}</header>`
+      + `<p class="bq-question">${escapeHtml(c.prompt)}</p>`
+      + (c.clarifying.length ? `<h4>Your clarifying questions</h4><ul class="see-list">${c.clarifying.map((q) => `<li>${escapeHtml(q.question)}`
+          + `<span class="fine"> · ${q.facts.length ? `revealed: ${escapeHtml(q.facts.join(", "))}` : "no fact for that"}</span></li>`).join("")}</ul>` : "")
+      + `<h4>Your structure</h4>${quote(c.structure.answer)}${c.structure.probe_answer ? quote(c.structure.probe_answer) : ""}`
+      + `<h4>Key buckets</h4>${points(c.structure.buckets)}</article>`
+      + c.stages.map(stage).join("")
+      + (c.recommendation ? `<article class="qcard"><header><h3>Recommendation</h3>${tag(c.recommendation.label)}</header>${quote(c.recommendation.answer)}`
+        + `<h4>Key points</h4>${points(c.recommendation.key_points)}<h4>Risks and next steps</h4>${points(c.recommendation.risks)}</article>` : "")
+      + (c.twist ? `<article class="qcard"><header><h3>Follow-up twist</h3>${tag(c.twist.label)}</header><p class="bq-question">${escapeHtml(c.twist.new_fact)}</p>`
+        + `${quote(c.twist.answer)}${points(c.twist.points)}</article>` : "");
+    $("case-section").hidden = false;
+    const again = document.querySelector(".end-actions .btn:not(.secondary)");
+    if (again) { again.textContent = "Another case →"; again.href = "/ui/interview?track=consulting"; }
+  }
+
   function render(e) {
-    if (e.coding) { showProgress(e); renderCoding(e); return; }
+    if (e.case) { showProgress(e); renderCase(e); return; }
+    if (e.conversational) { renderConversational(e); return; }
+    if (e.coding) { showProgress(e); renderCoding(e); if (e.design?.length) { $("conversational-title").textContent = "Design concepts (model-judged, not exact)"; $("conversational").innerHTML = conversationalCards(e.design); $("conversational-section").hidden = false; } return; }
     if (e.market) { showProgress(e); renderMarket(e); return; }
     if (e.behavioural) { showProgress(e); renderBehavioural(e); return; }
 

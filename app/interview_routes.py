@@ -8,6 +8,7 @@ import asyncio
 import json
 import math
 import os
+import random
 import secrets
 import time
 from collections import OrderedDict
@@ -15,7 +16,7 @@ from contextlib import suppress
 
 from fastapi import APIRouter, HTTPException, Response, WebSocket, WebSocketDisconnect
 
-from app import behavioural, coding, interview_report, market, quant_dev, voice_routes
+from app import behavioural, coding, conversational, interview_report, market, quant_dev, roles, voice_routes
 from app.areas import AREAS
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
@@ -28,6 +29,7 @@ from voice.relay import realtime_answer
 router = APIRouter(prefix="/api/interview")
 
 MAX_SESSIONS = 200
+CASE_SECONDS = 30 * 60  # decision log 30: a full consulting case
 SESSIONS: OrderedDict[str, ExamSession] = OrderedDict()
 _BANK: Bank | None = None
 
@@ -69,10 +71,7 @@ def _build_topics() -> dict:
     all there is no default track and no interview can start."""
     tracks = []
     for pack, name in PACKS.items():
-        if pack == quant_dev.TRACK:  # an opener and a coding round: no topic picker
-            tracks.append({"id": pack, "name": name, "count": len(coding.specs(pack)), "available": quant_dev.available(bank()),
-                           "topics": [], "default": None, "areas": list(AREAS[pack]), "coding": True,
-                           "format": quant_dev.TOPICS_LABEL})
+        if pack == quant_dev.TRACK:  # setup redesign: Quantitative Development is a Quant role, not a track
             continue
         found = bank().topics(pack)
         count = sum(n for _, n in found)
@@ -81,13 +80,19 @@ def _build_topics() -> dict:
         asked = behavioural.rows_for(pack)  # decision log 24: IB and Consulting
         if asked:
             options.append({"id": behavioural.BEHAVIOURAL, "name": behavioural.BEHAVIOURAL, "count": len(asked)})
+        live = bool(options)  # Software stays coding-first: Design concepts only beside a live track
+        if pack in conversational.FILES and conversational.enabled() and conversational.load(pack) and (pack == "ib" or live):
+            # Decision log 30: IB "Conversational", Software "Design concepts"; each runs on its own.
+            options.append({"id": conversational.TOPIC[pack], "name": conversational.TOPIC[pack], "count": len(conversational.load(pack))})
         if pack == "quant" and found and market.enabled():  # decision log 28: runs on its own, exact
             options.append({"id": market.MARKET, "name": market.MARKET, "count": 8})
         tracks.append({"id": pack, "name": name, "count": count, "available": bool(options),
                        "topics": options, "default": options[0]["id"] if options else None,
                        "areas": list(AREAS[pack]),
                        # Decision log 27: with verified specs (content/coding/), the track is always a coding round.
-                       "coding": bool(coding.specs(pack))})
+                       "coding": bool(coding.specs(pack)),
+                       # Setup redesign: the track's target roles, each with its live topic chips by tier.
+                       "roles": [roles.view(bank(), r) for r in roles.roles_for(pack)]})
     open_tracks = [t["id"] for t in tracks if t["available"]]
     default = DEFAULT_PACK if DEFAULT_PACK in open_tracks else open_tracks[0] if open_tracks else None
     # Easy and Medium are chosen in setup; Hard is the start for a rating of 70+ (decision log 23).
@@ -112,16 +117,75 @@ def selection(pack, topic) -> tuple[dict, str | tuple[str, ...]]:
         raise VoiceError("Choose at least one topic.")
     if not all(isinstance(t, str) and t in known for t in chosen):
         raise VoiceError("Choose topics from this track.")
-    for solo in (behavioural.BEHAVIOURAL, market.MARKET):
+    for solo in (behavioural.BEHAVIOURAL, market.MARKET, *conversational.TOPIC.values()):
         if solo in chosen:
             if len(chosen) > 1:
                 raise VoiceError("Behavioural questions run on their own; choose them without other topics."
                                  if solo == behavioural.BEHAVIOURAL else f"{solo} runs on its own; choose it without other topics.")
             return track, solo
-    forge = known - {MIXED, behavioural.BEHAVIOURAL, market.MARKET}
+    forge = known - {MIXED, behavioural.BEHAVIOURAL, market.MARKET, *conversational.TOPIC.values()}
     if MIXED in chosen or set(chosen) == forge:
         return track, MIXED
     return track, tuple(dict.fromkeys(chosen))
+
+
+def role_session(begin, send, listen, next_event, provider, deadline, coding_round):
+    """A role-based start (setup redesign): the chosen chips, or none for the role-weighted mix
+    (about 70% Core, 25% Supporting, 5% Specialist). A special chip (market making, behavioural,
+    conversational, design concepts) runs on its own."""
+    role = roles.BY_ID.get(begin.get("role"))
+    track = selection(begin.get("pack"), None)[0]["id"]
+    if role is None or role.track != track:
+        raise VoiceError("Choose a role for this track.")
+    view = roles.view(bank(), role)
+    if not view["available"]:
+        raise VoiceError("Questions for this role are being added.")
+    live = {c["id"]: c for c in view["chips"]}
+    chosen = begin.get("topics") or []
+    if not isinstance(chosen, list) or any(c not in live for c in chosen):
+        raise VoiceError("Choose topics from this role.")
+    special = [live[c]["kind"] for c in chosen if live[c]["kind"] != "topic"]
+    label = (", ".join(chosen) if chosen else "Role-weighted mix") + f" ({role.name})"
+    level = begin.get("level", START_LEVELS[0])
+    if level not in DIFFICULTIES:
+        raise VoiceError("Choose a starting level: Easy, Medium or Hard.")
+    if role.coding:
+        deadline = time.monotonic() + coding.INTERVIEW_SECONDS  # a 45-minute coding interview (decision log 29)
+    if role.opener:  # Quantitative Development: the spoken opener, then the coding round
+        pack = quant_dev.TRACK if coding.specs(quant_dev.TRACK) else "software"
+        code_topics = sorted({t for c in chosen if c in roles.QD for t in roles.QD[c].topics}) or None
+        opener = sorted({t for c in chosen if c in roles.Q for t in roles.Q[c].topics}) or None
+        session = quant_dev.QuantDevSession(send, listen, next_event, provider, VoiceAnalyzer(provider), bank(),
+                                            coding_round(pack, code_topics, deadline), deadline=deadline,
+                                            track=track, opener_choice=opener)
+        session.opener.role = session.coding.role = role
+    elif special:
+        if len(chosen) != 1:
+            raise VoiceError(f"{chosen[0]} runs on its own; choose it without other topics.")
+        kind = special[0]
+        if kind == roles.MARKET:
+            session = market.MarketSession(send, listen, provider, deadline=deadline)
+        elif kind == roles.BEHAVIOURAL:
+            session = behavioural.BehaviouralSession(send, listen, provider, track, deadline=deadline)
+        elif kind in {roles.CONVERSATIONAL, roles.DESIGN}:
+            session = conversational.ConversationalSession(send, listen, provider, "ib" if kind == roles.CONVERSATIONAL else "software",
+                                                           deadline=deadline)
+        elif kind == roles.CASES:  # decision log 30: a full case, or one of a case type
+            from app import cases
+            chip = next(c for tier, cs in role.tiers() for c in cs if c.id == chosen[0])
+            session = cases.CaseSession(send, listen, provider, deadline=time.monotonic() + CASE_SECONDS, case_type=chip.case_type)
+        else:
+            raise VoiceError("That format isn't available yet.")
+    elif role.coding:  # Software: the chips filter coding problems; none = weighted by tier
+        topics = sorted({t for tier, c in roles.topic_chips(role, chosen) for t in c.topics}) if chosen else None
+        session = coding_round(track, topics, deadline, None if chosen else roles.weights(role, roles.live_topics(bank(), role)))
+    else:
+        source, _ = roles.weighted_source(bank(), role, level, random.Random(), chosen or None, pack=track)
+        session = ExamSession(send, listen, VoiceAnalyzer(provider), Interview(source=source), deadline=deadline)
+    session.track, session.role = track, role
+    if not role.opener and not special:
+        session.topics = label
+    return session
 
 
 def placement_for(pack) -> tuple[str, Interview]:
@@ -139,7 +203,7 @@ def topic_label(pack, topic) -> str:
 def interview_for(pack, topic, level) -> Interview:
     """A forge interview on the chosen track and topics."""
     track, chosen = selection(pack, topic)
-    if chosen in {behavioural.BEHAVIOURAL, market.MARKET}:
+    if chosen in {behavioural.BEHAVIOURAL, market.MARKET, *conversational.TOPIC.values()}:
         raise VoiceError(f"{chosen} is not a forge interview.")
     if level not in DIFFICULTIES:
         raise VoiceError("Choose a starting level: Easy, Medium or Hard.")
@@ -204,8 +268,13 @@ def report(session_id: str):
         return behavioural.report(session)
     if isinstance(session, market.MarketSession):
         return market.report(session)
+    if isinstance(session, conversational.ConversationalSession):
+        return conversational.report(session)
     if isinstance(session, quant_dev.QuantDevSession):
         return quant_dev.report(session, bank().templates)
+    from app import cases
+    if isinstance(session, cases.CaseSession):
+        return cases.report(session)
     return interview_report.build(session, bank().templates)
 
 
@@ -292,28 +361,39 @@ async def interview_socket(socket: WebSocket):
                     continue
                 # interviewer_speaking and other controls outside a capture: nothing to do
 
-        def coding_round(track, topics, deadline):
-            """A coding interview (decision log 29): up to three problems from the track's specs."""
+        def coding_round(track, topics, deadline, weights=None):
+            """A coding interview (decision log 29): up to three problems from the track's specs;
+            `weights`: a role-weighted mix over topics (setup redesign)."""
             def steps_for(spec):
                 family = bank().templates.get(spec["template_id"])
                 return [s.name for s in family.instances[0].steps] if family and family.instances else []
 
             def more():  # the next problem, never one already asked
-                spec = coding.pick(track, topics, exclude=[p.spec["template_id"] for p in round_.problems])
+                spec = coding.pick(track, topics, exclude=[p.spec["template_id"] for p in round_.problems], weights=weights)
                 return (spec, steps_for(spec)) if spec else None
 
-            spec = coding.pick(track, topics)
+            spec = coding.pick(track, topics, weights=weights)
             round_ = coding.CodingSession(socket.send_json, listen, next_event, provider, spec, track, deadline=deadline,
                                           steps=steps_for(spec), more=more)
+            if track == "software" and conversational.enabled() and conversational.load("software"):
+                round_.design = conversational.ConversationalSession(socket.send_json, listen, provider, "software", count=1)
+                round_.design.ends_session = False
             return round_
 
         deadline = time.monotonic() + SESSION_SECONDS
         if begin.get("drill") is not None:
             session = drill_for(begin["drill"], socket.send_json, listen, VoiceAnalyzer(provider), deadline)
+        elif begin.get("role") is not None and begin.get("placement") is not True:
+            session = role_session(begin, socket.send_json, listen, next_event, provider, deadline, coding_round)
         elif begin.get("placement") is True:
             track, interview = placement_for(begin.get("pack"))
             session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
             session.track, session.placement, session.topics = track, True, "Placement: one question per strength area"
+        elif selection(begin.get("pack"), begin["topics"] if begin.get("topics") is not None else begin.get("topic"))[1] \
+                in conversational.TOPIC.values():
+            # Decision log 30: conversational questions (the behavioural flow plus a twist), on their own.
+            track = selection(begin.get("pack"), None)[0]["id"]
+            session = conversational.ConversationalSession(socket.send_json, listen, provider, track, deadline=deadline)
         elif begin.get("pack") == quant_dev.TRACK and quant_dev.available(bank()):
             # A spoken opener (probability or expectations), then the coding round on quant_dev families.
             deadline = time.monotonic() + coding.INTERVIEW_SECONDS
@@ -342,8 +422,9 @@ async def interview_socket(socket: WebSocket):
         session.conditions = conditions(begin, provider.mode)
         session_id = keep(session)
         long = isinstance(session, (coding.CodingSession, quant_dev.QuantDevSession))
+        case = type(session).__name__ == "CaseSession"
         await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,
-                                "session_seconds": coding.INTERVIEW_SECONDS if long else SESSION_SECONDS,
+                                "session_seconds": coding.INTERVIEW_SECONDS if long else CASE_SECONDS if case else SESSION_SECONDS,
                                 "drill": session.target.misconception if isinstance(session, DrillSession) else None})
         await session.run()
     except (WebSocketDisconnect, SessionClosed):

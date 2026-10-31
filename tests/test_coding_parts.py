@@ -212,6 +212,7 @@ def test_a_coding_interview_over_the_socket_reaches_part_two(monkeypatch, tmp_pa
     from test_coding import FakeSpark
 
     monkeypatch.setenv("CODING_DIR", str(FIXTURE))
+    monkeypatch.setenv("CONVERSATIONAL", "0")  # no Design concepts segment after the coding round here
     monkeypatch.setenv("CODING_SCALE_DIR", str(FIXTURE.with_name("coding_scale")))
     monkeypatch.setenv("CODING_TWIST_DIR", str(tmp_path / "none"))
     coding._load.cache_clear()

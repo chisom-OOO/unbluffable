@@ -13,6 +13,7 @@ from fractions import Fraction
 from app import exam_text as say
 from app import receipts
 from app import provenance as forge_provenance
+from app import roles
 from app.areas import answer_value, area_for
 from app.drill import DrillSession, drill_targets
 from app.interview_session import ExamSession, QuestionLog
@@ -268,7 +269,9 @@ def rating_items(session: ExamSession, qs: list[QuestionLog]) -> list[dict]:
             continue
         topic = getattr(q.puzzle, "topic", None)
         value = answer_value(q.scored, q.weight, q.puzzle.difficulty)
-        out.append({"q": name(q), "topic": topic, "area": area_for(session.track or "", topic),
+        role = getattr(session, "role", None)  # setup redesign: the role's chips are the rating areas
+        area = (roles.area_for(role, topic) if role else None) or area_for(session.track or "", topic)
+        out.append({"q": name(q), "topic": topic, "area": area,
                     "difficulty": q.puzzle.difficulty, "outcome": q.scored, "weight": str(q.weight),
                     "value": str(value), "value_float": round(float(value), 4)})
     return out

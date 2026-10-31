@@ -47,7 +47,7 @@
       photo: validPhoto(p.photo) ? p.photo : null,
       identity_at: str(p.identity_at) ? p.identity_at : "",  // when the name or photo last changed
       roles_at: str(p.roles_at) ? p.roles_at : "",  // when the roles last changed
-      answers: answers.map((a) => ({ s: a.s, t: a.t, a: a.a, v: a.v, p: !!a.p, d: str(a.d) ? a.d : "" })),
+      answers: answers.map((a) => ({ s: a.s, t: a.t, a: a.a, v: a.v, p: !!a.p, d: str(a.d) ? a.d : "", ...(str(a.tp) ? { tp: a.tp } : {}) })),
       history,
       placement: p.placement && typeof p.placement === "object" ? p.placement : {},
     };
@@ -102,11 +102,14 @@
 
   // Area scores for a track: 100 x the mean of the last 10 answers. An area is assessed
   // once it has 2+ answers, or its placement answer (placement asks one per area).
-  function areaScores(p, track, areas) {
+  // `areaTopics` (setup redesign): a role's Core chips and their underlying topics; an answer
+  // counts toward a chip when its topic is one of the chip's, or its area has the chip's name.
+  function areaScores(p, track, areas, areaTopics = null) {
     const mine = p.answers.filter((a) => a.t === track);
     const names = areas && areas.length ? areas : [...new Set(mine.map((a) => a.a))];
     return names.map((area) => {
-      const all = mine.filter((a) => a.a === area);
+      const topics = areaTopics && areaTopics[area] ? new Set(areaTopics[area]) : null;
+      const all = mine.filter((a) => a.a === area || (topics && a.tp && topics.has(a.tp)));
       const recent = all.slice(-WINDOW);
       const assessed = all.length >= 2 || all.some((a) => a.p);
       const score = assessed ? (100 * recent.reduce((s, a) => s + a.v, 0)) / recent.length : null;
@@ -147,7 +150,8 @@
     const track = report.track;
     const before = areaScores(p, track, areas);
     const items = report.rating_items.filter((i) => i.area && !i.bonus);
-    const answer = (i) => ({ s: session, t: track, a: i.area, v: Number(i.value_float), p: !!report.placement, d: date });
+    const answer = (i) => ({ s: session, t: track, a: i.area, v: Number(i.value_float), p: !!report.placement, d: date,
+                             ...(i.topic ? { tp: i.topic } : {}) });
     for (const i of items) p.answers.push(answer(i));
     // Decision log 29: a bonus part can only raise the rating, so it counts only if it lifts its area.
     for (const i of report.rating_items.filter((x) => x.area && x.bonus)) {

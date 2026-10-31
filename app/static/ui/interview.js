@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const typePanel = $("type-panel"), typeAnswer = $("type-answer");
   const mute = $("mute"), consent = $("consent"), headphones = $("headphones"), status = $("status");
 
-  const KIND_TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint", trade: "Trade", reveal: "Reveal" };
+  const KIND_TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint", trade: "Trade", reveal: "Reveal", clarify: "Fact" };
   const reduced = reducedMotion();
   const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   // Pace for revealing an interviewer line when the voice sends no word boundaries.
@@ -220,9 +220,11 @@ document.addEventListener("DOMContentLoaded", () => {
     transcription_model: "Transcript of your answer", endpoint_decision: "Whether you had finished",
     challenge_result: "Your committed number", scoring_result: "Quoted reasoning", follow_up_result: "Follow-up (model-matched)",
     behavioural_judged: "Quotes for each step (model-judged)",
+    conversational_judged: "Quotes for each key point (model-judged)",
     coding_plan: "Your approach, quoted", coding_question: "A question about your code",
     coding_follow_up: "The follow-up question", coding_judge: "Your follow-up answer (model-judged)",
     market_quote: "Your bid and offer, read from your words", market_question: "Which question to ask about your logic",
+    case_quotes: "Quotes for each point (model-judged)", case_facts: "Which clarifying facts you asked about",
   };
   // Decision log 27: one row per model and job (count, median time, total cost); a live
   // transcription stream shows its audio seconds, not a latency.
@@ -342,14 +344,19 @@ document.addEventListener("DOMContentLoaded", () => {
         question = event;
         if (event.kind === "coding") {
           window.UBCoding.enter(event.coding, sendCode);
+        } else if (window.UBCoding.active) {
+          window.UBCoding.spoken(event);  // a spoken question after the coding round (Design concepts)
         }
         $("puzzle").textContent = event.text;
         $("provenance").innerHTML = window.UB.provenanceHtml(event.provenance_rows);
         $("market-panel").hidden = event.kind !== "market";
+        $("case-panel").hidden = event.kind !== "case";
         $("puzzle-eyebrow").textContent = (event.opener ? "Spoken opener · then a coding round"
           : event.kind === "check" ? "Drill check"
           : event.kind === "market" ? `Market ${event.number} of ${event.market.rounds}`
           : event.kind === "behavioural" ? `Behavioural question ${event.number} of 2`
+          : event.kind === "conversational" ? `${event.topic} question ${event.number} of ${event.conversational.of}`
+          : event.kind === "case" ? `Full case · ${event.case.title}`
           : event.kind === "coding" ? "Coding round"
           : event.kind === "drill" ? `Drill question ${event.number} of up to 3`
           : placement ? `Placement question ${event.number} of 5` : `Question ${event.number} of up to 4`)
@@ -357,6 +364,8 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle-kind").textContent = ({ twin: "Same puzzle, new numbers", drill: "Aimed at one mistake",
                                           check: "New numbers, no help", coding: "Python · code while you talk",
                                           market: "Market making · graded exactly",
+                                          conversational: `${event.conversational?.topic || ""} · model-judged, not exact`,
+                                          case: "Consulting case · calculations exact, the rest model-judged",
                                           behavioural: `${event.behavioural_type === "situational" ? "What would you do" : "Tell me about a time"} · model-judged, not exact` }[event.kind] || "New puzzle")
           + (event.difficulty ? ` · ${event.difficulty}` : "");
         finishReveals();
@@ -396,6 +405,25 @@ document.addEventListener("DOMContentLoaded", () => {
         $("market-revealed").insertAdjacentHTML("beforeend", `<p class="market-settle"><strong>Settled at ${escapeHtml(event.payoff)}</strong> (${escapeHtml(event.draws)})</p>`);
         break;
       case "market_model":
+        modelRow(event.model, event.job);
+        break;
+      // Decision log 30: a full case. Facts appear only once asked; an exhibit shows as a table.
+      case "case_fact":
+        $("case-facts").insertAdjacentHTML("beforeend", event.facts.map((f) =>
+          `<p class="case-fact"><strong>${escapeHtml(f.topic)}:</strong> ${escapeHtml(f.answer)}</p>`).join(""));
+        break;
+      case "case_stage":
+        $("case-stage").textContent = { exhibit_calculation: "Exhibit: calculate exactly", insight: "What the numbers tell you",
+          brainstorm: "Ideas", recommendation: "Your recommendation", follow_up_twist: "New information" }[event.kind] || "";
+        if (event.exhibit) {
+          const x = event.exhibit;
+          $("case-exhibit").innerHTML = `<table class="market-quotes exhibit"><caption>${escapeHtml(x.title)}</caption>`
+            + `<thead><tr>${x.columns.map((c) => `<th scope="col">${escapeHtml(c)}</th>`).join("")}</tr></thead>`
+            + `<tbody>${x.rows.map((r) => `<tr>${r.map((v, i) => (i === 0 ? `<th scope="row">${escapeHtml(String(v))}</th>`
+                : `<td class="mono">${escapeHtml(String(v))}</td>`)).join("")}</tr>`).join("")}</tbody></table>`;
+        }
+        break;
+      case "case_judged":
         modelRow(event.model, event.job);
         break;
       case "state":
@@ -445,6 +473,9 @@ document.addEventListener("DOMContentLoaded", () => {
         modelRow(event.model, event.type);
         break;
       case "transcription_model":
+        modelRow(event.model, event.type);
+        break;
+      case "conversational_judged":
         modelRow(event.model, event.type);
         break;
       case "behavioural_judged":
@@ -571,7 +602,7 @@ document.addEventListener("DOMContentLoaded", () => {
       : placement
         ? { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, placement: true, typed_practice: typedPractice }
         : { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, topics: sentTopics(), level,
-            typed_practice: typedPractice }));
+            typed_practice: typedPractice, ...(chosenRole ? { role: chosenRole } : {}) }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
       if (phase !== "finished") { phase = "finished"; voice.close(); setStatus("The connection closed. Reload to start again."); render(); }
@@ -689,7 +720,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (action === "mic") testMic($("mic-device").value || undefined);
     if (action === "camera") window.UBCamera?.start();
     if (action === "reload") location.reload();
-    if (action === "topics-all") { selectAllTopics(); focusAfterClose = topicBox.querySelector("button.topic-chip"); gateDialog.close(); }
     if (action === "consent") { focusAfterClose = consent; gateDialog.close(); }
   });
   $("dialog-typed").addEventListener("click", () => {
@@ -910,71 +940,151 @@ document.addEventListener("DOMContentLoaded", () => {
     $("puzzle-eyebrow").textContent = "Drill · up to 3 questions, then a check";
   }
 
-  // ---------- Track cards, then topics (template "pack"; tracks being added can't be picked) ----------
-  // Topics are toggle chips, all selected by default; the last selection is remembered per
-  // track (this browser only). A track with no topics hides the picker.
+  // ---------- Track cards, target role, then topics (setup redesign) ----------
+  // Each track has target roles; a role's chips are its live topics, Core and Supporting shown,
+  // Specialist under "More topics". No chip selected = a role-weighted mix (about 70% Core, 25%
+  // Supporting, 5% Specialist). The last role and selection are remembered per track (this browser).
   const trackBox = $("track");
   const topicBox = $("topic");
-  let tracks = [], chosenTrack = null, chosenTopics = new Set(), topicsKnown = false, picking = true;
-  const trackTopics = () => (tracks.find((t) => t.id === chosenTrack)?.topics || []).filter((o) => o.id !== "Mixed");
+  let tracks = [], chosenTrack = null, chosenRole = null, chosenTopics = new Set(), topicsKnown = false, picking = true;
   const BEHAVIOURAL = "Behavioural";  // decision log 24: runs on its own, model-judged
   const MARKET = "Market making";  // decision log 28: runs on its own, graded exactly
-  const SOLO = new Set([BEHAVIOURAL, MARKET]);
-  const forgeTopics = () => trackTopics().filter((o) => !SOLO.has(o.id)).map((o) => o.id);
-  const allTopics = () => new Set(forgeTopics().length ? forgeTopics() : trackTopics().map((o) => o.id));
-  // Topics sent with Start: null (the server's default) when the list failed or there are none.
-  const sentTopics = () => (topicsKnown && trackTopics().length ? [...chosenTopics] : null);
-  // Drills choose their own questions.
-  function topicCount() { return drill || placement || !sentTopics() ? 1 : chosenTopics.size; }
-  const topicKey = () => `ub-topics:${chosenTrack}`;
+  const trackOf = () => tracks.find((t) => t.id === chosenTrack);
+  const roleOf = () => (trackOf()?.roles || []).find((r) => r.id === chosenRole) || null;
+  const chips = () => roleOf()?.chips || [];
+  const isSolo = (id) => chips().some((c) => c.id === id && c.kind !== "topic");  // runs on its own
+  // Topics sent with Start: the chosen chips ([] = the role-weighted mix); null when topics failed to load.
+  const sentTopics = () => (topicsKnown ? [...chosenTopics] : null);
+  // A role needs no chip (none = the mix); drills and placement choose their own questions.
+  function topicCount() { return 1; }
+  const topicKey = () => `ub-topics:${chosenTrack}:${chosenRole}`;
   function loadTopics() {
     let saved = null;
     try { saved = JSON.parse(window.UB.store.get(topicKey()) || "null"); } catch { saved = null; }
-    const ids = new Set(trackTopics().map((o) => o.id));
+    const ids = new Set(chips().map((c) => c.id));
     const kept = Array.isArray(saved) ? saved.filter((id) => ids.has(id)) : [];
-    const solo = kept.find((id) => SOLO.has(id));
-    if (solo) return new Set([solo]);
-    return kept.length ? new Set(kept) : allTopics();
+    const solo = kept.find(isSolo);
+    return solo ? new Set([solo]) : new Set(kept);
   }
   function saveTopics() { window.UB.store.set(topicKey(), JSON.stringify([...chosenTopics])); }
+  const soloOn = () => [...chosenTopics].some(isSolo);
   function syncTopics() {
-    topicBox.querySelectorAll("button.topic-chip").forEach((b) => b.setAttribute("aria-pressed", String(chosenTopics.has(b.dataset.topic))));
-    const n = chosenTopics.size, all = forgeTopics().length;
+    document.querySelectorAll("#topic button.topic-chip, #topic-more button.topic-chip")
+      .forEach((b) => b.setAttribute("aria-pressed", String(chosenTopics.has(b.dataset.topic))));
+    const n = chosenTopics.size, role = roleOf();
     const behaviouralOn = chosenTopics.has(BEHAVIOURAL), marketOn = chosenTopics.has(MARKET);
-    $("topics-note").textContent = n === 0 ? "Choose at least one topic."
+    const talkOn = chips().some((c) => chosenTopics.has(c.id) && (c.kind === "conversational" || c.kind === "design"));
+    $("topics-note").textContent = n === 0 ? (role?.opener ? "No specific topics selected - a probability or expected-value opener, then a coding round."
+                                                           : "No specific topics selected - use a role-weighted mix.")
       : behaviouralOn ? "Behavioural: two questions, each with one follow-up. Model-judged, not exact; kept out of your rating."
       : marketOn ? "Market making: two games. Quote a bid and an offer; the interviewer trades against you. Graded exactly."
-      : n === all ? "All topics selected." : `${n} of ${all} topics selected.`;
-    $("topics-note").classList.toggle("bad", n === 0);
-    $("levels").hidden = placement || behaviouralOn || marketOn || codingChosen();  // no ladder for these rounds
+      : talkOn ? "Two conversational questions, each with a follow-up and a twist. Model-judged, not exact (a capacity number is checked exactly); kept out of your rating."
+      : `${n} topic${n === 1 ? "" : "s"} selected.`;
+    $("topics-note").classList.remove("bad");
+    syncFormat();
     updateGate();
   }
+  const chipHtml = (c) => `<button type="button" class="topic-chip" aria-pressed="false" data-topic="${escapeHtml(c.id)}" data-tier="${c.tier}">`
+    + `<span class="tick" aria-hidden="true"></span><span>${escapeHtml(c.name)}</span></button>`;
   function showTopics() {
     chosenTopics = loadTopics();
     topicBox.removeAttribute("aria-busy");
     trackBox.removeAttribute("aria-busy");
-    topicBox.innerHTML = trackTopics().map((o) =>
-      `<button type="button" class="topic-chip" aria-pressed="false" data-topic="${escapeHtml(o.id)}">${escapeHtml(o.name)}</button>`).join("");
-    topicBox.closest(".topics-field").hidden = placement || trackTopics().length === 0;
+    const main = chips().filter((c) => c.tier !== "specialist"), more = chips().filter((c) => c.tier === "specialist");
+    topicBox.innerHTML = main.map(chipHtml).join("");
+    $("topic-more").innerHTML = more.map(chipHtml).join("");
+    $("more-topics").hidden = more.length === 0;
+    $("more-topics").open = more.some((c) => chosenTopics.has(c.id));
+    topicBox.closest(".topics-field").hidden = placement || chips().length === 0;
     syncTopics();
   }
   function setTopics(next) { if (!picking) return; chosenTopics = next; saveTopics(); syncTopics(); }
-  function selectAllTopics() { setTopics(allTopics()); }
   function lockTopics() {
     picking = false;
     $("setup").querySelectorAll(".picker button").forEach((b) => { b.disabled = true; });
   }
-  topicBox.addEventListener("click", (e) => {
+  const chipClick = (e) => {
     const id = e.target.closest("button.topic-chip")?.dataset.topic;
     if (!id) return;
     let next = new Set(chosenTopics);
     if (next.has(id)) next.delete(id);
-    else if (SOLO.has(id)) next = new Set([id]);  // runs on its own
-    else { SOLO.forEach((s) => next.delete(s)); next.add(id); }
+    else if (isSolo(id)) next = new Set([id]);  // runs on its own
+    else { [...next].filter(isSolo).forEach((s) => next.delete(s)); next.add(id); }
     setTopics(next);
-  });
-  $("topics-all").addEventListener("click", selectAllTopics);
+  };
+  topicBox.addEventListener("click", chipClick);
+  $("topic-more").addEventListener("click", chipClick);
   $("topics-clear").addEventListener("click", () => setTopics(new Set()));
+
+  // The target role: a listbox with a checkmark on the chosen role.
+  const roleKey = () => `ub-role:${chosenTrack}`;
+  function renderRoles() {
+    const roles = trackOf()?.roles || [];
+    $("role-field").hidden = placement || !!drill || roles.length === 0;
+    $("role-list").innerHTML = roles.map((r) => `<li role="option" id="role-${escapeHtml(r.id)}" data-role="${escapeHtml(r.id)}"`
+      + ` aria-selected="${r.id === chosenRole}" aria-disabled="${!r.available}" class="role-option${r.available ? "" : " off"}">`
+      + `<span class="role-check" aria-hidden="true">${r.id === chosenRole ? "✓" : ""}</span><span>${escapeHtml(r.name)}</span>`
+      + `${r.available ? "" : '<span class="tag">Being added</span>'}</li>`).join("");
+    const role = roleOf();
+    $("role-name").textContent = role ? role.name : "Choose a role";
+    $("role-note").hidden = !role?.note;
+    $("role-note").textContent = role?.note || "";
+  }
+  function pickRole(id) {
+    const role = (trackOf()?.roles || []).find((r) => r.id === id && r.available);
+    if (!role) return;
+    chosenRole = id;
+    window.UB.store.set(roleKey(), id);
+    renderRoles();
+    showTopics();
+  }
+  function openRoles(open) {
+    $("role-list").hidden = !open;
+    $("role-button").setAttribute("aria-expanded", String(open));
+    if (open) {
+      const at = $("role-list").querySelector('[aria-selected="true"]') || $("role-list").querySelector('[aria-disabled="false"]');
+      $("role-list").focus();
+      if (at) $("role-list").setAttribute("aria-activedescendant", at.id);
+    }
+  }
+  $("role-button").addEventListener("click", () => { if (picking) openRoles($("role-list").hidden); });
+  $("role-list").addEventListener("click", (e) => {
+    const li = e.target.closest("li[data-role]");
+    if (!li || li.getAttribute("aria-disabled") === "true") return;
+    pickRole(li.dataset.role);
+    openRoles(false);
+    $("role-button").focus();
+  });
+  $("role-list").addEventListener("keydown", (e) => {
+    const options = [...$("role-list").querySelectorAll('li[aria-disabled="false"]')];
+    const current = $("role-list").getAttribute("aria-activedescendant");
+    let at = Math.max(0, options.findIndex((o) => o.id === current));
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      at = (at + (e.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+      $("role-list").setAttribute("aria-activedescendant", options[at].id);
+      options.forEach((o, i) => o.classList.toggle("active", i === at));
+    } else if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      if (options[at]) pickRole(options[at].dataset.role);
+      openRoles(false);
+      $("role-button").focus();
+    } else if (e.key === "Escape" || e.key === "Tab") {
+      openRoles(false);
+      if (e.key === "Escape") $("role-button").focus();
+    }
+  });
+  document.addEventListener("click", (e) => { if (!e.target.closest(".role-select")) openRoles(false); });
+
+  // A role from the profile's roles (welcome page), else the one last chosen here, else the first.
+  function startingRole() {
+    const roles = (trackOf()?.roles || []).filter((r) => r.available);
+    const asked = query.get("role");
+    let saved = null;
+    try { saved = window.UB.store.get(roleKey()); } catch { saved = null; }
+    const fromProfile = (window.UB.profile()?.load().roles || []).includes("quant_dev") && chosenTrack === "quant" ? "quant_dev" : null;
+    return (roles.find((r) => r.id === asked) || roles.find((r) => r.id === saved) || roles.find((r) => r.id === fromProfile) || roles[0])?.id || null;
+  }
   function pickTrack(id, focus) {
     chosenTrack = id;
     trackBox.querySelectorAll("button.track").forEach((b) => {
@@ -983,18 +1093,21 @@ document.addEventListener("DOMContentLoaded", () => {
       b.tabIndex = on ? 0 : -1;
       if (on && focus) b.focus();
     });
+    chosenRole = startingRole();
+    renderRoles();
     showTopics();
     levelFromProfile();
-    $("coding-note").hidden = !codingChosen();
-    const format = tracks.find((t) => t.id === id)?.format;  // Quant development: an opener, then the coding round
-    $("coding-note").textContent = format ? `${format}: one spoken probability or expectations question, then a coding round in Python `
-      + "(talk through your approach, code it while you explain, then run the tests)."
-      : "Software interviews are a coding round in Python: talk through your approach, code it in the editor while you explain, then run the tests.";
-    syncFormat();
   }
-  // Decision log 27: a track with coding specs (Software) is always a coding round.
-  const codingChosen = () => !placement && !drill && !!tracks.find((t) => t.id === chosenTrack)?.coding;
-  function syncFormat() { $("levels").hidden = placement || codingChosen() || [...SOLO].some((s) => chosenTopics.has?.(s)); }
+  // Software and Quantitative Development are coding rounds; special chips run on their own.
+  const codingChosen = () => !placement && !drill && !!roleOf()?.coding;
+  function syncFormat() {
+    const role = roleOf();
+    $("levels").hidden = placement || codingChosen() || soloOn();
+    $("coding-note").hidden = !codingChosen() || soloOn();
+    $("coding-note").textContent = role?.opener
+      ? "Quantitative development: one spoken probability or expected-value question, then a coding round in Python (talk through your approach, code it while you explain, then run the tests)."
+      : "Software interviews are a coding round in Python: talk through your approach, code it in the editor while you explain, then run the tests.";
+  }
 
   // Decision log 23: the start level follows this track's rating estimate (< 40 Easy,
   // 40-69 Medium, 70+ Hard); it can still be changed here.
@@ -1022,7 +1135,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {
     tracks = t.tracks;
-    const asked = tracks.find((x) => x.id === query.get("track") && x.available);
+    const asked = tracks.find((x) => x.id === (query.get("track") === "quant_dev" ? "quant" : query.get("track")) && x.available);
     const profileTrack = tracks.find((x) => x.id === window.UB.profile()?.load().default_track && x.available);
     const first = asked ? asked.id : profileTrack ? profileTrack.id : t.default_track;
     trackBox.innerHTML = tracks.map((x) => trackCard(x, { selected: x.id === first })).join("");

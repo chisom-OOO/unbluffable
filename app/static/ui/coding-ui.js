@@ -437,6 +437,17 @@
       const slowOnly = event.part === 2 && (event.verdict === "slow" || event.verdict === "stopped");
       status(all ? "All tests passed." : slowOnly ? "Right on the tests, but too slow." : "Not all tests passed.", all ? "ok" : "bad");
     },
+    // A spoken question after the coding round (decision log 30: Design concepts): the Problem tab
+    // shows it; the answer is spoken (or typed in the Conversation tab).
+    spoken(event) {
+      $("ws-ptitle").textContent = event.topic || "Question";
+      $("ws-chips").innerHTML = [event.conversational?.topic, "model-judged, not exact"].filter(Boolean)
+        .map((c) => `<span class="tag">${esc(c)}</span>`).join("");
+      $("ws-statement").innerHTML = `<p>${esc(event.text)}</p><p class="ws-signature">Answer out loud; there's no code for this one.</p>`;
+      $("ws-examples").innerHTML = "";
+      $("ws-provenance").hidden = true;
+      selectLeft($("tab-problem"));
+    },
     // The interviewer spoke: a dot on the Conversation tab and the line as a banner over the editor.
     interviewerSaid(text) {
       if (!spec) return;

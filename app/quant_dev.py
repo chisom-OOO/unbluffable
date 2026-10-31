@@ -43,10 +43,12 @@ class QuantDevSession:
     """The opener (an ExamSession that does not end the interview), then the coding session."""
 
     def __init__(self, send, listen, next_event, provider, analyzer, bank, coding_session: coding.CodingSession,
-                 deadline=None, rng: random.Random | None = None):
+                 deadline=None, rng: random.Random | None = None, track: str = TRACK, opener_choice=None):
         rng = rng or random.Random()
         self.send = send
-        source = BankSource(bank, opener_topics(bank), rng.choice(OPENER_LEVELS), rng=rng, pack="quant")
+        live = opener_topics(bank)
+        topics = tuple(t for t in (opener_choice or ()) if t in live) or live  # the chosen opener chips, else both
+        source = BankSource(bank, topics, rng.choice(OPENER_LEVELS), rng=rng, pack="quant")
 
         async def opener_send(event):
             if event.get("type") == "question":
@@ -55,10 +57,11 @@ class QuantDevSession:
 
         self.opener = ExamSession(opener_send, listen, analyzer, OpenerInterview(source=source), deadline=deadline)
         self.opener.ends_session = False
-        self.opener.track, self.opener.topics = TRACK, TOPICS_LABEL
+        # The setup redesign makes Quantitative Development a Quant role: its ratings go to the Quant profile.
+        self.opener.track, self.opener.topics = track, TOPICS_LABEL
         self.coding = coding_session
-        self.coding.track, self.coding.topics = TRACK, TOPICS_LABEL
-        self.track, self.topics, self.placement = TRACK, TOPICS_LABEL, False
+        self.coding.track, self.coding.topics = track, TOPICS_LABEL
+        self.track, self.topics, self.placement = track, TOPICS_LABEL, False
         self.active = self.opener
 
     @property
@@ -95,7 +98,7 @@ def report(session: QuantDevSession, templates: dict) -> dict:
     """The coding report, with the opener's card and rating item first."""
     out = coding.report(session.coding)
     opener = interview_report.build(session.opener, templates)
-    out.update(topics=TOPICS_LABEL, track=TRACK, quant_dev=True,
+    out.update(topics=TOPICS_LABEL, track=session.track, quant_dev=True,
                opener={"cards": opener["cards"], "outcomes": opener.get("outcomes", []), "conditions": opener["conditions"]},
                rating_items=opener["rating_items"] + out["rating_items"])
     return out

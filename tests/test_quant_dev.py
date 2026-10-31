@@ -38,6 +38,8 @@ def setup(monkeypatch, tmp_path, with_specs=True):
     if with_specs:
         qd = {**copy.deepcopy(SPEC), "template_id": "qd_F001", "pack": "quant_dev", "topic": "Simulation"}
         (specs / "qd_F001.json").write_text(json.dumps(qd), encoding="utf-8")
+    else:  # no quant-dev families yet: the role runs the opener and the software coding families
+        (specs / "sw_F001.json").write_text(json.dumps(SPEC), encoding="utf-8")
     monkeypatch.setenv("CODING_DIR", str(specs))
     monkeypatch.setenv("CODING_SCALE_DIR", str(tmp_path / "none"))
     monkeypatch.setenv("CODING_TWIST_DIR", str(tmp_path / "none"))
@@ -48,23 +50,27 @@ def setup(monkeypatch, tmp_path, with_specs=True):
     monkeypatch.setattr(voice_routes, "provider", lambda: Provider())
 
 
-def track(client):
-    return next(t for t in client.get("/api/interview/topics").json()["tracks"] if t["id"] == "quant_dev")
+def role(client):
+    quant = next(t for t in client.get("/api/interview/topics").json()["tracks"] if t["id"] == "quant")
+    return next(r for r in quant["roles"] if r["id"] == "quant_dev")
 
 
-def test_quant_development_is_being_added_until_its_coding_families_exist(monkeypatch, tmp_path):
+def test_quant_development_is_a_quant_role_whose_coding_questions_are_being_added(monkeypatch, tmp_path):
     setup(monkeypatch, tmp_path, with_specs=False)
-    t = track(TestClient(app))
-    assert (t["name"], t["available"], t["coding"], t["topics"]) == ("Quant development", False, True, [])
-    assert t["format"] == "Quant development: spoken opener + coding round"
+    client = TestClient(app)
+    assert "quant_dev" not in [t["id"] for t in client.get("/api/interview/topics").json()["tracks"]]
+    r = role(client)
+    # No quant-dev coding families yet: still offered (opener + software coding), marked as being added.
+    assert (r["name"], r["note"], r["opener"], r["coding"]) == ("Quantitative Development", "Coding questions being added", True, True)
+    assert r["chips"] == [] and r["available"]  # no chip has content here (the bag is "Probability", not a chip topic)
 
 
 def test_a_spoken_opener_then_the_coding_round(monkeypatch, tmp_path):
     setup(monkeypatch, tmp_path)
     client = TestClient(app)
-    assert track(client)["available"] is True
+    assert role(client)["available"] is True and role(client)["note"] is None
     with client.websocket_connect("/api/interview/ws") as socket:
-        socket.send_json({"type": "begin", "consent": True, "pack": "quant_dev", "typed_practice": True})
+        socket.send_json({"type": "begin", "consent": True, "pack": "quant", "role": "quant_dev", "topics": [], "typed_practice": True})
         events, puzzle = [], None
         while True:
             e = socket.receive_json()
@@ -94,6 +100,6 @@ def test_a_spoken_opener_then_the_coding_round(monkeypatch, tmp_path):
     assert order[0] != "coding" and order[-1] == "coding"
     report = client.get(f"/api/interview/{sid}/report").json()
     assert report["topics"] == "Quant development: spoken opener + coding round" and report["quant_dev"] is True
-    assert report["track"] == "quant_dev" and report["opener"]["cards"]
-    assert [i["area"] for i in report["rating_items"]] == ["Probability & expectations", "Coding"]
+    assert report["track"] == "quant" and report["opener"]["cards"]
+    assert [i["area"] for i in report["rating_items"]] == ["Probability", "Coding"]  # the opener's quant area; quant-dev coding
     assert report["problems"][0]["template_id"] == "qd_F001"

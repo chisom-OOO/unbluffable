@@ -157,7 +157,7 @@ def ib_routes(monkeypatch):
 def test_behavioural_is_a_topic_in_ib_and_consulting_only(ib_routes):
     data = TestClient(app).get("/api/interview/topics").json()
     topics = {t["id"]: [o["id"] for o in t["topics"]] for t in data["tracks"]}
-    assert topics["ib"] == ["Mixed", "Valuation", "Behavioural"]
+    assert topics["ib"] == ["Mixed", "Valuation", "Behavioural", "Conversational"]  # decision log 30
     assert topics["consulting"] == ["Behavioural"]  # behavioural questions open the track
     assert "Behavioural" not in topics["quant"] and topics["software"] == []
     assert interview_routes.topic_label("ib", ["Behavioural"]) == "Behavioural"

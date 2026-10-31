@@ -286,6 +286,7 @@ INTERVIEW_SECONDS = 45 * 60
 MAX_PROBLEMS = 3
 BONUS_MIN_LEFT = 12 * 60  # Part 3 only with at least 12 minutes left
 NEXT_MIN_LEFT = 15 * 60  # another problem only with at least 15 minutes left
+DESIGN_MIN_LEFT = 8 * 60  # decision log 30: a short Design concepts segment if this much is left
 PART2 = "Now n is up to {n:,}; make it fast."
 PART3 = "This one is harder. It's fine to take hints."
 
@@ -433,6 +434,12 @@ class CodingSession:
         self.deadline = deadline
         self.finished = self.timed_out = False
         self.author = "Muse Spark Open"
+        self.design = None  # a ConversationalSession (one question, ends_session False), set by the route
+        self.in_design = False
+
+    def turn_policy(self):
+        """Spoken Design concepts answers end on their own; coding speech uses the usual check."""
+        return self.design.turn_policy() if self.in_design and self.design is not None else None
 
     @property
     def log(self) -> CodingLog:
@@ -493,6 +500,10 @@ class CodingSession:
                 if nxt is None:
                     break
                 self.problems.append(CodingLog(nxt[0], list(nxt[1] or []), number=len(self.problems) + 1))
+            if self.design is not None and not self.timed_out and self.left() >= DESIGN_MIN_LEFT:
+                # Decision log 30: Software stays coding-first; one spoken Design concepts question if time remains.
+                self.in_design = True
+                await self.design.run()
             await self.line("close", say.TIME_CLOSE if self.timed_out else say.SESSION_CLOSE)
             self.finished = True
             await self.send({"type": "session_end", "label": None, "coding": True, "timed_out": self.timed_out})
@@ -659,7 +670,9 @@ def _items(session: CodingSession, log: CodingLog) -> list[dict]:
     """Rating items: Part 1 at the family's difficulty; Part 2 as Hard; the bonus Part 3 as
     Hard and only when right ("bonus": the profile counts it only if it raises the area)."""
     spec, out = log.spec, []
-    area = area_for(session.track, spec["topic"])
+    role = getattr(session, "role", None)  # setup redesign: the role's chips are the rating areas
+    from app import roles
+    area = (roles.area_for(role, spec["topic"]) if role else None) or area_for(session.track, spec["topic"])         or ("Coding" if role is not None and role.opener else None)  # a quant-dev coding topic outside the named chips
     for p in log.parts:
         result, weight = session.scored(log, p.part)
         if result is None or (p.part == 3 and not p.correct):
@@ -714,11 +727,29 @@ def report(session: CodingSession) -> dict:
         "sample": False, "label": None, "questions": len(problems), "track": session.track, "topics": session.topics,
         "placement": False, "conditions": CONDITIONS[session.conditions], "rating_items": items, "timed_out": session.timed_out,
         "coding": problems[0] if problems else None, "problems": problems,
+        "design": _design(session),
     }
 
 
-def pick(pack: str, topics, rng=None, exclude=()) -> dict | None:
-    """A coding problem from the chosen topics (or any), at random, never one already asked."""
+def _design(session: CodingSession) -> list:
+    if session.design is None:
+        return []
+    from app import conversational
+    return conversational.items(session.design)
+
+
+def pick(pack: str, topics, rng=None, exclude=(), weights=None) -> dict | None:
+    """A coding problem from the chosen topics (or any), at random, never one already asked.
+    `weights` (topic -> weight): the role-weighted mix, shared among each topic's problems."""
     pool = [s for s in specs(pack).values() if s["template_id"] not in set(exclude)]
     chosen = [s for s in pool if not topics or s["topic"] in topics] or pool
-    return (rng or random).choice(chosen) if chosen else None
+    if not chosen:
+        return None
+    if weights:
+        per = {}
+        for s in chosen:
+            per[s["topic"]] = per.get(s["topic"], 0) + 1
+        mass = [weights.get(s["topic"], 0.0) / per[s["topic"]] for s in chosen]
+        if sum(mass) > 0:
+            return (rng or random).choices(chosen, weights=mass)[0]
+    return (rng or random).choice(chosen)

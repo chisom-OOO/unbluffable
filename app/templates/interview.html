@@ -64,27 +64,43 @@
           <h2 id="choose-title">Interview selection</h2>
           <div class="picker">
             <div class="tracks" id="track" role="radiogroup" aria-label="Track" aria-busy="true"><span class="skeleton skeleton-card" aria-hidden="true"></span><span class="skeleton skeleton-card" aria-hidden="true"></span><span class="skeleton skeleton-card" aria-hidden="true"></span><span class="skeleton skeleton-card" aria-hidden="true"></span></div>
-            <div class="field topics-field">
-              <div class="topics-head">
-                <span class="field-label" id="topics-label">Topics</span>
-                <span class="topic-actions">
-                  <button type="button" class="linkbtn" id="topics-all">Select all</button>
-                  <button type="button" class="linkbtn" id="topics-clear">Clear</button>
-                </span>
+            <!-- Setup redesign: the target role decides the topic chips (Core / Supporting; Specialist under More topics). -->
+            <div class="field role-field" id="role-field" hidden>
+              <span class="field-label" id="role-label">Target role</span>
+              <div class="role-select">
+                <button type="button" class="role-button" id="role-button" aria-haspopup="listbox" aria-expanded="false"
+                        aria-labelledby="role-label role-name" aria-controls="role-list">
+                  <span id="role-name">Choose a role</span>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <ul class="role-list" id="role-list" role="listbox" aria-labelledby="role-label" tabindex="-1" hidden></ul>
               </div>
-              <div class="topic-chips" id="topic" role="group" aria-labelledby="topics-label" aria-describedby="topics-note" aria-busy="true"><span class="skeleton skeleton-chip" style="width:96px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:120px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:84px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:132px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:104px" aria-hidden="true"></span></div>
-              <p class="fine topics-note" id="topics-note" aria-live="polite"><span class="visually-hidden">Loading topics</span></p>
+              <p class="fine role-note" id="role-note" hidden></p>
             </div>
-            <p class="fine coding-note" id="coding-note" hidden>Software interviews are a coding round in Python: talk through
-              your approach, code it in the editor while you explain, then run the tests.</p>
             <fieldset class="levels" id="levels">
-              <legend>Start at</legend>
+              <legend>Starting difficulty</legend>
               <div class="seg">
                 <label><input type="radio" name="level" value="Easy" checked> Easy</label>
                 <label><input type="radio" name="level" value="Medium"> Medium</label>
                 <label><input type="radio" name="level" value="Hard"> Hard</label>
               </div>
             </fieldset>
+            <div class="field topics-field">
+              <div class="topics-head">
+                <span class="field-label" id="topics-label">Topics</span>
+                <span class="topic-actions">
+                  <button type="button" class="linkbtn" id="topics-clear">Clear</button>
+                </span>
+              </div>
+              <div class="topic-chips two-col" id="topic" role="group" aria-labelledby="topics-label" aria-describedby="topics-note" aria-busy="true"><span class="skeleton skeleton-chip" style="width:96px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:120px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:84px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:132px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:104px" aria-hidden="true"></span></div>
+              <details class="more-topics" id="more-topics" hidden>
+                <summary>More topics</summary>
+                <div class="topic-chips two-col" id="topic-more" role="group" aria-label="More topics"></div>
+              </details>
+              <p class="fine topics-note" id="topics-note" aria-live="polite"><span class="visually-hidden">Loading topics</span></p>
+            </div>
+            <p class="fine coding-note" id="coding-note" hidden>Software interviews are a coding round in Python: talk through
+              your approach, code it in the editor while you explain, then run the tests.</p>
             <p class="fine" id="topic-note">The level goes up after a right answer and down after a wrong one.</p>
             <p class="fine" id="level-note" hidden></p>
           </div>
@@ -161,6 +177,12 @@
         <p class="qtext puzzle" id="puzzle">The interviewer reads the first question when you start.</p>
         <p class="qhelp">Clarifying questions are free. Talk through your reasoning.</p>
         <div id="coding-examples"></div>
+        <section class="market-panel case-panel" id="case-panel" aria-labelledby="case-title" hidden>
+          <h3 id="case-title">Case notes</h3>
+          <p class="case-stage" id="case-stage">Ask clarifying questions, then give your structure.</p>
+          <div id="case-facts"></div>
+          <div class="case-exhibit" id="case-exhibit"></div>
+        </section>
         <section class="market-panel" id="market-panel" aria-labelledby="market-title" hidden>
           <h3 id="market-title">Your market</h3>
           <div class="market-revealed" id="market-revealed"></div>
