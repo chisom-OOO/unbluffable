@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tracks = $("tracks");
   tracks.setAttribute("role", "list");
   fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {
+    tracks.removeAttribute("aria-busy");
     tracks.innerHTML = t.tracks.map((track) =>
       trackCard(track, { href: `/ui/interview?track=${encodeURIComponent(track.id)}` })).join("");
   }).catch(() => { tracks.hidden = true; });

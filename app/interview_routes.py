@@ -13,7 +13,7 @@ import time
 from collections import OrderedDict
 from contextlib import suppress
 
-from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, HTTPException, Response, WebSocket, WebSocketDisconnect
 
 from app import behavioural, interview_report, voice_routes
 from app.areas import AREAS
@@ -40,7 +40,30 @@ def bank() -> Bank:
     return _BANK
 
 
+_TOPICS: tuple[Bank, dict, bytes] | None = None  # (bank it was built from, topics, JSON body)
+
+
+def warm() -> None:
+    """Load the bank and build the topics response once, at app startup (app.main lifespan),
+    so the first visitor doesn't wait for 28 MB of JSON to parse."""
+    cached_topics()
+
+
+def cached_topics() -> tuple[dict, bytes]:
+    """topics() and its JSON body, rebuilt only when the bank object changes (tests swap it)."""
+    global _TOPICS
+    current = bank()
+    if _TOPICS is None or _TOPICS[0] is not current:
+        built = _build_topics()
+        _TOPICS = (current, built, json.dumps(built, separators=(",", ":")).encode())
+    return _TOPICS[1], _TOPICS[2]
+
+
 def topics() -> dict:
+    return cached_topics()[0]
+
+
+def _build_topics() -> dict:
     """Every track (template pack), each with Mixed and its topics. A track with no
     accepted templates is listed as not available ("Being added"); with no templates at
     all there is no default track and no interview can start."""
@@ -137,8 +160,9 @@ def replay_speed() -> float:
 
 @router.get("/topics")
 def topic_list():
-    """Tracks with accepted templates; each lists Mixed and its topics with counts."""
-    return topics()
+    """Tracks with accepted templates; each lists Mixed and its topics with counts. Served
+    from the response built at startup; browsers may keep it for five minutes."""
+    return Response(cached_topics()[1], media_type="application/json", headers={"Cache-Control": "public, max-age=300"})
 
 
 @router.get("/{session_id}/report")

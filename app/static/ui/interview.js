@@ -780,6 +780,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function showTopics() {
     chosenTopics = loadTopics();
+    topicBox.removeAttribute("aria-busy");
+    trackBox.removeAttribute("aria-busy");
     topicBox.innerHTML = trackTopics().map((o) =>
       `<button type="button" class="topic-chip" aria-pressed="false" data-topic="${escapeHtml(o.id)}">${escapeHtml(o.name)}</button>`).join("");
     topicBox.closest(".topics-field").hidden = placement || trackTopics().length === 0;
@@ -847,6 +849,9 @@ document.addEventListener("DOMContentLoaded", () => {
     topicsKnown = true;
     pickTrack(first);
   }).catch(() => {
+    trackBox.innerHTML = "";
+    topicBox.innerHTML = "";
+    trackBox.removeAttribute("aria-busy"); topicBox.removeAttribute("aria-busy");
     $("topics-note").textContent = "Topics couldn't load; the interview uses all topics.";
   });
 

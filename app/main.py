@@ -1,5 +1,6 @@
 """Minimal HTTP application scaffold."""
 
+import asyncio
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -11,13 +12,15 @@ from app.database import initialize_database
 from app.model_diagnostics import log_startup_models
 from app.voice_routes import router as voice_router
 from app.interest import router as interest_router
-from app.interview_routes import router as interview_router
+from app.interview_routes import router as interview_router, warm
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     initialize_database()
     await log_startup_models()
+    # The question bank and the topics response are ready before the first request.
+    await asyncio.to_thread(warm)
     yield
 
 

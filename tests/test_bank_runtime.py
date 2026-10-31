@@ -1378,3 +1378,23 @@ def test_report_header_lists_the_selected_topics(monkeypatch):
     with client.websocket_connect("/api/interview/ws") as socket:
         socket.send_json({"type": "begin", "consent": True, "pack": "quant", "topics": ["Valuation"], "level": "Easy"})
         assert socket.receive_json() == {"type": "error", "message": "Choose topics from this track."}
+
+
+# --- Speed: the bank loads at startup and topics come from a cached response ---------
+
+def test_bank_and_topics_are_ready_before_the_first_request(monkeypatch):
+    monkeypatch.setattr(interview_routes, "_BANK", None)
+    monkeypatch.setattr(interview_routes, "_TOPICS", None)
+    with TestClient(app) as client:  # runs the lifespan
+        assert interview_routes._BANK is not None and interview_routes._TOPICS is not None
+        first = client.get("/api/interview/topics")
+        assert first.status_code == 200 and first.headers["cache-control"] == "public, max-age=300"
+        assert first.content == interview_routes._TOPICS[2]  # the bytes built at startup
+
+
+def test_cached_topics_follow_a_new_bank(monkeypatch):
+    monkeypatch.setattr(interview_routes, "_BANK", _packed_bank(("a", None, "Probability")))
+    one = interview_routes.topics()
+    assert interview_routes.topics() is one  # cached
+    monkeypatch.setattr(interview_routes, "_BANK", _packed_bank(("a", None, "Statistics")))
+    assert [o["id"] for o in interview_routes.topics()["tracks"][0]["topics"]] == ["Mixed", "Statistics"]
