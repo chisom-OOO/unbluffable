@@ -384,3 +384,19 @@ in both cached drafts remain explicit fallbacks.
 
 The same runtime revision also fixes permitted plain imports whose Python fromlist
 is None; the module/member allowlist and network restrictions remain unchanged.
+
+## Coding specs (decision log 26)
+
+`python -m forge.coding_specs` asks Muse Spark Open, once per software family, for a Python
+signature (typed parameters mapped to the instance params, return type) and a short
+statement. Code verifies each spec on every variant: parameter types, the forge's own
+verified solver called through the signature (it must reproduce every stored answer), and
+each wrong method (kept only when wrong on some test; its outputs per test are stored).
+One repair per family. Only verified specs are written, to `content/coding/`, with the
+solver and wrong-method source. Calls are recorded under the work directory; replay
+needs no key.
+
+```
+python -m forge.coding_specs --family-state ../unbluffable-voice/data/forge/sw2/state.json \
+    --work-dir data/forge/coding1 --mode live --budget-usd 1
+```

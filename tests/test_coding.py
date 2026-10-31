@@ -77,7 +77,8 @@ class FakeSpark:
             return {"plan_quotes": ["I keep a running sum and reset it when it drops below the next value", "made up"],
                     "complexity_claim": "one pass, so O(n)"}, {"model": "fake"}
         if kind == "coding_question":
-            return {"question": "What does cur hold after each step?"}, {"model": "fake"}
+            n = sum(1 for k in self.calls if k == "coding_question")
+            return {"question": "What does cur hold after each step?" if n % 2 else "Why start best at the first gain?"}, {"model": "fake"}
         if kind == "coding_follow_up":
             return {"question": "What happens if every gain is negative?", "focus": "edge_case"}, {"model": "fake"}
         if kind == "coding_judge":

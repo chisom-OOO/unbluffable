@@ -282,6 +282,8 @@ class CodingSession:
                 if len(log.questions) < MAX_QUESTIONS and str(event.get("code", "")).strip():
                     question, model = await code_question(self.provider, spec, event["code"], " ".join(log.transcript))
                     await self.model_row(model, "coding_question")
+                    if question in {q["question"] for q in log.questions}:
+                        continue  # never the same question twice
                     log.questions.append({"question": question, "code": event["code"],
                                           "trigger": "run" if kind == "code_run" else "pause"})
                     await self.line("probe", question)

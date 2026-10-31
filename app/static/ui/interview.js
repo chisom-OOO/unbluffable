@@ -191,6 +191,8 @@ document.addEventListener("DOMContentLoaded", () => {
     transcription_model: "Transcript of your answer", endpoint_decision: "Whether you had finished",
     challenge_result: "Your committed number", scoring_result: "Quoted reasoning", follow_up_result: "Follow-up (model-matched)",
     behavioural_judged: "Quotes for each step (model-judged)",
+    coding_plan: "Your approach, quoted", coding_question: "A question about your code",
+    coding_follow_up: "The follow-up question", coding_judge: "Your follow-up answer (model-judged)",
   };
   function modelRow(model, job) {
     if (!model || !model.model) return;
@@ -211,7 +213,11 @@ document.addEventListener("DOMContentLoaded", () => {
     phase = "listening";
     live.hidden = true;
     render();
-    if (typing) { tellMicFailure(); typeAnswer.focus({ preventScroll: true }); return; }
+    if (typing) {
+      tellMicFailure();
+      if (!window.UBCoding.editing) typeAnswer.focus({ preventScroll: true });  // never pull focus out of the code editor
+      return;
+    }
     try {
       await voice.open();
     } catch {
@@ -236,6 +242,23 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
     socket.send(JSON.stringify({ type: "typed", transcript: text }));
   }
+
+  // ---------- Coding rounds: a code message never interrupts an open capture ----------
+  // The relay only listens for "done" during a capture, so a run, pause or submit waits
+  // until the capture has closed and the server is listening again.
+  let pendingCode = null;
+  function sendCode(message) {
+    if (capturing || captureRequested) {
+      pendingCode = message;
+      if (capturing) voice.flush();
+      return;
+    }
+    socket.send(JSON.stringify(message));
+  }
+  $("drawer-toggle").addEventListener("click", () => {
+    const open = $("rail").classList.toggle("open");
+    $("drawer-toggle").setAttribute("aria-expanded", String(open));
+  });
 
   // ---------- A text-only timeline of this interview (exported only with consent) ----------
   const timeline = { started: null, events: [] };
@@ -273,15 +296,19 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "question":
         question = event;
+        if (event.kind === "coding") {
+          window.UBCoding.enter(event.coding, sendCode);
+        }
         $("puzzle").textContent = event.text;
         $("provenance").innerHTML = window.UB.provenanceHtml(event.provenance_rows);
         $("puzzle-eyebrow").textContent = (event.kind === "check" ? "Drill check"
           : event.kind === "behavioural" ? `Behavioural question ${event.number} of 2`
+          : event.kind === "coding" ? "Coding round"
           : event.kind === "drill" ? `Drill question ${event.number} of up to 3`
           : placement ? `Placement question ${event.number} of 5` : `Question ${event.number} of up to 4`)
           + ` · guide ${fmt(event.guide_seconds)}`;
         $("puzzle-kind").textContent = ({ twin: "Same puzzle, new numbers", drill: "Aimed at one mistake",
-                                          check: "New numbers, no help",
+                                          check: "New numbers, no help", coding: "Python · code while you talk",
                                           behavioural: `${event.behavioural_type === "situational" ? "What would you do" : "Tell me about a time"} · model-judged, not exact` }[event.kind] || "New puzzle")
           + (event.difficulty ? ` · ${event.difficulty}` : "");
         finishReveals();
@@ -313,6 +340,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (event.counts) counts(event.counts);
         break;
       case "state":
+        if (event.value === "listening" && pendingCode) {  // the code message waited for the capture to close
+          socket.send(JSON.stringify(pendingCode));
+          pendingCode = null;
+          break;
+        }
         if (event.value === "listening") openTurn();
         if (event.value === "checking") { phase = "checking"; render(); }
         break;
@@ -320,6 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
         capturing = true; captureRequested = false;
         voice.startStreaming(socket);
         speechChanged();
+        if (pendingCode) voice.flush();  // close this capture so the code message can go
         break;
       case "transcript":
         if (event.transcript && event.transcript.trim()) heard = true;
@@ -358,6 +391,21 @@ document.addEventListener("DOMContentLoaded", () => {
       case "behavioural_judged":
         modelRow(event.model, event.type);
         break;
+      case "coding_model":
+        modelRow(event.model, event.job);
+        break;
+      case "coding_open":
+        window.UBCoding.opened();
+        break;
+      case "coding_closed":
+        window.UBCoding.closed();
+        break;
+      case "coding_speech":
+        addCandidate(event.text);
+        break;
+      case "coding_result":
+        window.UBCoding.result(event);
+        break;
       case "endpoint_decision":
         modelRow(event.model, event.type);
         break;
@@ -367,7 +415,8 @@ document.addEventListener("DOMContentLoaded", () => {
       case "error":
         capturing = false; captureRequested = false;
         voice.stopStreaming();
-        setStatus(event.message);
+        // Coding rounds close captures to send code; an empty one is not worth a message.
+        if (!(window.UBCoding.active && /intelligible/i.test(event.message || ""))) setStatus(event.message);
         render();
         break;
       case "session_end":
@@ -460,7 +509,7 @@ document.addEventListener("DOMContentLoaded", () => {
       : placement
         ? { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, placement: true, typed_practice: typedPractice }
         : { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, topics: sentTopics(), level,
-            typed_practice: typedPractice }));
+            typed_practice: typedPractice, ...(codingChosen() ? { format: "coding" } : {}) }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
       if (phase !== "finished") { phase = "finished"; voice.close(); setStatus("The connection closed. Reload to start again."); render(); }
@@ -597,7 +646,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- Help offered at 60% of the per-question guide (shown in the question label) ----------
   function updateTimer() {
-    if (!question) return;
+    if (!question || window.UBCoding.active) return;  // a coding round offers no help prompt
     const elapsed = Math.floor((Date.now() - questionStart) / 1000);
     const guide = question.guide_seconds;
     const offer = window.UBTurn.shouldOfferHelp({
@@ -827,7 +876,7 @@ document.addEventListener("DOMContentLoaded", () => {
       : behaviouralOn ? "Behavioural: two questions, each with one follow-up. Model-judged, not exact; kept out of your rating."
       : n === all ? "All topics selected." : `${n} of ${all} topics selected.`;
     $("topics-note").classList.toggle("bad", n === 0);
-    $("levels").hidden = placement || behaviouralOn;  // no difficulty ladder for behavioural questions
+    $("levels").hidden = placement || behaviouralOn || codingChosen();  // no ladder for behavioural or coding rounds
     updateGate();
   }
   function showTopics() {
@@ -866,7 +915,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     showTopics();
     levelFromProfile();
+    const offersCoding = (tracks.find((t) => t.id === id)?.formats || []).includes("coding");
+    $("format-row").hidden = !offersCoding || placement || !!drill;
+    if (!offersCoding) document.querySelector('input[name="format"][value="spoken"]').checked = true;
+    syncFormat();
   }
+  const codingChosen = () => !$("format-row").hidden && document.querySelector('input[name="format"]:checked')?.value === "coding";
+  function syncFormat() { $("levels").hidden = placement || codingChosen() || chosenTopics.has?.("Behavioural"); }
+  document.querySelectorAll('input[name="format"]').forEach((r) => r.addEventListener("change", syncFormat));
 
   // Decision log 23: the start level follows this track's rating estimate (< 40 Easy,
   // 40-69 Medium, 70+ Hard); it can still be changed here.
