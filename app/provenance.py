@@ -42,8 +42,19 @@ def provenance(template: ForgeTemplate | None) -> dict | None:
         "exact": str(solver.get("max_absolute_error")) == "0",
         "wrong_methods_verified": verified,
         "wrong_methods": method_names(template) if verified else [],
-        "solver_source_stored": False,
+        "solver_source": _solver_source(template.template_id),
+        "solver_source_stored": _solver_source(template.template_id) is not None,
     }
+
+
+def _solver_source(template_id: str) -> str | None:
+    """Software families' solver code, exported with their coding specs (decision log 26)."""
+    from app import coding
+    return (coding.specs(coding_pack(template_id)).get(template_id) or {}).get("solver_source")
+
+
+def coding_pack(template_id: str) -> str:
+    return "software" if template_id.startswith("sw_") else "none"
 
 
 def rows(p: dict | None) -> list[dict]:
@@ -56,6 +67,7 @@ def rows(p: dict | None) -> list[dict]:
                and p["wrong_methods"] else "None verified for this family.")
     return [{"key": "solver", "label": "Solver", "text": solver},
             {"key": "wrong_methods", "label": "Wrong methods", "text": methods},
+            {"key": "solver_code", "label": "Solver code", "text": p["solver_source"]} if p.get("solver_source") else
             {"key": "source", "label": "Solver code", "text": "Not stored with the question bank; these figures come from its verification record."}]
 
 

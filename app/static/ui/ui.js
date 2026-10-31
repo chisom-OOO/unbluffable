@@ -179,7 +179,7 @@
   function provenanceHtml(rows) {
     if (!rows || !rows.length) return "";
     return `<details class="receipt provenance"><summary>Where this question came from</summary><div class="receipt-body solo"><div><dl>`
-      + rows.map((r) => `<div><dt>${escapeHtml(r.label)}</dt><dd>${escapeHtml(r.text)}</dd></div>`).join("")
+      + rows.map((r) => `<div><dt>${escapeHtml(r.label)}</dt><dd>${r.key === "solver_code" ? `<pre class="code-block mono">${escapeHtml(r.text)}</pre>` : escapeHtml(r.text)}</dd></div>`).join("")
       + `</dl><p class="receipt-note"><a href="/ui/forge">Every family in the question bank</a></p></div></div></details>`;
   }
 

@@ -169,3 +169,15 @@ def test_a_coding_round_end_to_end(coding_routes):
     from app.areas import CAPS
     assert (item["area"], item["outcome"], item["value"]) == ("Dynamic programming", "correct", str(Fraction(2, 3) * CAPS[SPEC["difficulty"]]))
     assert report["label"] is None and report["track"] == "software"
+
+
+def test_a_software_familys_provenance_shows_its_solver_code_once_exported(coding_routes):
+    from app import provenance
+    from engine.bank import parse_template
+    from test_bank_runtime import _raw_bag
+    t = parse_template(_raw_bag(template_id="sw_F001", pack="software", topic="Dynamic programming"))
+    p = provenance.provenance(t)
+    assert p["solver_source_stored"] and p["solver_source"].startswith("def solve(")
+    assert provenance.rows(p)[-1] == {"key": "solver_code", "label": "Solver code", "text": p["solver_source"]}
+    other = provenance.provenance(parse_template(_raw_bag(template_id="bag")))
+    assert not other["solver_source_stored"] and provenance.rows(other)[-1]["key"] == "source"
