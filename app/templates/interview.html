@@ -26,7 +26,12 @@
 <div class="shell">
   <header class="top">
     <a class="brand" href="/ui"><span class="brandmark" aria-hidden="true"><b></b><b></b><b></b></span>Unbluffable</a>
+    <span class="ws-title" id="ws-title" hidden>Software · Coding round (Python)</span>
     <div class="topright">
+      <span class="ws-pill" id="ws-pill" data-state="idle" role="status" aria-live="polite" hidden>Waiting</span>
+      <span class="ws-slot" id="ws-done-slot"></span>
+      <span class="ws-slot" id="ws-cam-slot"></span>
+      <button class="btn secondary btn-small" type="button" id="drawer-toggle" aria-expanded="false" aria-controls="rail" hidden>Evidence and models</button>
       <a class="profile-link" id="profile-link" href="/ui/profile">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
         <span class="profile-word">Profile</span><span class="profile-rating mono" hidden></span>
@@ -224,19 +229,65 @@
         </div>
       </section>
 
-      <section class="coding-pane" id="coding-pane" aria-labelledby="coding-title" hidden>
-        <div class="coding-head">
-          <h2 id="coding-title">Your code · Python</h2>
-          <span class="fine" id="py-status" aria-live="polite"></span>
-          <button class="btn secondary btn-small" type="button" id="drawer-toggle" aria-expanded="false" aria-controls="rail">Evidence and models</button>
+      <!-- Coding rounds (decision log 27): a full-viewport workspace, problem and conversation on
+           the left, the editor and console on the right, with a draggable splitter. -->
+      <section class="ws-left" id="ws-left" aria-label="Problem and conversation" hidden>
+        <div class="ws-tabs" role="tablist" aria-label="Problem or conversation">
+          <button type="button" role="tab" id="tab-problem" aria-selected="true" aria-controls="ws-problem">Problem</button>
+          <button type="button" role="tab" id="tab-conversation" aria-selected="false" aria-controls="ws-conversation" tabindex="-1">
+            Conversation<span class="ws-dot" id="ws-dot" hidden><span class="visually-hidden"> (new line)</span></span></button>
         </div>
-        <div class="editor-wrap"><textarea id="code-editor" spellcheck="false" aria-label="Your Python code"></textarea></div>
-        <div class="code-bar">
-          <button class="btn secondary" type="button" id="run-examples" disabled>Run examples</button>
-          <button class="btn" type="button" id="submit-code" disabled>Submit</button>
-          <span class="fine" id="submits-left"></span>
+        <div class="ws-panel" id="ws-problem" role="tabpanel" aria-labelledby="tab-problem" tabindex="0">
+          <h2 class="ws-ptitle" id="ws-ptitle"></h2>
+          <div class="ws-chips" id="ws-chips"></div>
+          <div class="ws-statement" id="ws-statement"></div>
+          <div class="ws-examples" id="ws-examples"></div>
+          <details class="ws-provenance" id="ws-provenance" hidden>
+            <summary>Where this question came from</summary>
+            <p id="ws-provenance-text"></p>
+          </details>
         </div>
-        <div class="code-results" id="code-results" aria-live="polite"></div>
+        <div class="ws-panel ws-conv" id="ws-conversation" role="tabpanel" aria-labelledby="tab-conversation" hidden></div>
+      </section>
+      <div class="ws-split" id="ws-split" role="separator" aria-orientation="vertical" aria-label="Resize the problem and editor panes"
+           aria-controls="ws-left" tabindex="0" aria-valuemin="25" aria-valuemax="65" aria-valuenow="40" hidden></div>
+
+      <section class="coding-pane" id="coding-pane" aria-label="Your Python code" hidden>
+        <div class="ws-toolbar">
+          <span class="ws-lang">Python 3</span>
+          <span class="ws-pystatus" id="py-status" aria-live="polite"></span>
+          <button class="btn secondary btn-small" type="button" id="reset-code">Reset code</button>
+          <span class="ws-font" role="group" aria-label="Editor font size">
+            <button class="btn secondary btn-small" type="button" id="font-down" aria-label="Smaller code font">A−</button>
+            <button class="btn secondary btn-small" type="button" id="font-up" aria-label="Larger code font">A+</button>
+          </span>
+          <span class="ws-actions">
+            <button class="btn secondary btn-small" type="button" id="run-examples" disabled aria-keyshortcuts="Control+'">Run <kbd>Ctrl+'</kbd></button>
+            <button class="btn btn-small" type="button" id="submit-code" disabled aria-keyshortcuts="Control+Enter">Submit <kbd>Ctrl+Enter</kbd></button>
+          </span>
+        </div>
+        <div class="ws-banner" id="ws-banner" hidden>
+          <span class="ws-banner-who">Interviewer</span>
+          <p id="ws-banner-text"></p>
+          <button class="icon-btn ws-banner-close" type="button" id="ws-banner-close" aria-label="Dismiss the interviewer's line">×</button>
+        </div>
+        <div class="editor-wrap" id="editor-wrap"><textarea id="code-editor" spellcheck="false" aria-label="Your Python code"></textarea></div>
+        <div class="ws-hsplit" id="ws-hsplit" role="separator" aria-orientation="horizontal" aria-label="Resize the console"
+             aria-controls="ws-console" tabindex="0" aria-valuemin="80" aria-valuemax="520" aria-valuenow="200"></div>
+        <section class="ws-console" id="ws-console" aria-label="Console">
+          <div class="ws-console-head">
+            <div class="ws-tabs small" role="tablist" aria-label="Console">
+              <button type="button" role="tab" id="tab-results" aria-selected="true" aria-controls="code-results">Test results</button>
+              <button type="button" role="tab" id="tab-output" aria-selected="false" aria-controls="code-output" tabindex="-1">Output</button>
+            </div>
+            <span class="fine" id="submits-left"></span>
+            <button class="btn secondary btn-small" type="button" id="console-toggle" aria-expanded="true" aria-controls="ws-console-body">Hide</button>
+          </div>
+          <div class="ws-console-body" id="ws-console-body">
+            <div class="code-results" id="code-results" role="tabpanel" aria-labelledby="tab-results" aria-live="polite"></div>
+            <pre class="code-output mono" id="code-output" role="tabpanel" aria-labelledby="tab-output" hidden>Nothing printed yet. print() output from Run and Submit shows here.</pre>
+          </div>
+        </section>
       </section>
 
       <aside class="rail" id="rail" aria-label="Evidence and models">

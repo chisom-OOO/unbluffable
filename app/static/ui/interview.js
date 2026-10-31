@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }[shown];
     mic.dataset.state = shown === "checking" ? "thinking" : (shown === "ready" || shown === "finished" ? "idle" : shown);
     micState.textContent = text;
+    window.UBCoding?.status(shown === "ready" ? "waiting" : shown);
     done.disabled = phase !== "listening" || (!typing && !capturing);
     $("mic-sub").textContent = typing ? "Type your answer, then Done or Ctrl+Enter" : "Speak naturally · hands-free";
     document.querySelector(".action-bar").classList.toggle("ready", phase === "ready");
@@ -355,6 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "interviewer_line":
         addInterviewer(event.text, event.kind, event.receipt, event.speech);
+        window.UBCoding.interviewerSaid(event.text);
         if (event.counts) counts(event.counts);
         break;
       case "market_state":

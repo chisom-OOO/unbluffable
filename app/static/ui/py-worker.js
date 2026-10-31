@@ -1,11 +1,14 @@
 // Coding rounds (decision log 26): the candidate's Python runs here, in a Web Worker with
 // Pyodide, never on the server. The page sends { id, code, fn, cases } and gets back each
 // case's return value as exact text (ints and fractions as written, floats as repr), or the
-// error. The page terminates this worker if a run takes too long.
+// error, and what the code printed (the console's Output tab). The page terminates this
+// worker if a run takes too long.
 importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js");
 
 const HARNESS = `
+import io
 import json
+import sys
 from fractions import Fraction
 
 def _ub_value(v):
@@ -20,21 +23,30 @@ def _ub_value(v):
     return repr(v)[:200]
 
 def _ub_run(code, fn, cases_json):
+    printed, real = io.StringIO(), sys.stdout
+    sys.stdout = printed
+    try:
+        return _ub_cases(code, fn, cases_json, printed)
+    finally:
+        sys.stdout = real
+
+def _ub_cases(code, fn, cases_json, printed):
+    shown = lambda: printed.getvalue()[-4000:]
     ns = {"__name__": "__candidate__"}
     try:
         exec(code, ns)
     except BaseException as e:
-        return json.dumps({"compile_error": type(e).__name__ + ": " + str(e)[:300]})
+        return json.dumps({"compile_error": type(e).__name__ + ": " + str(e)[:300], "stdout": shown()})
     f = ns.get(fn)
     if not callable(f):
-        return json.dumps({"compile_error": "Define " + fn + "(...) as in the signature."})
+        return json.dumps({"compile_error": "Define " + fn + "(...) as in the signature.", "stdout": shown()})
     out = []
     for args in json.loads(cases_json):
         try:
             out.append({"ok": True, "value": _ub_value(f(*args))})
         except BaseException as e:
             out.append({"ok": False, "error": type(e).__name__ + ": " + str(e)[:200]})
-    return json.dumps({"results": out})
+    return json.dumps({"results": out, "stdout": shown()})
 `;
 
 const ready = loadPyodide().then((py) => { py.runPython(HARNESS); return py; });

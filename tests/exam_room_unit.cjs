@@ -115,3 +115,15 @@ console.log("voice ranking ok");
   assert.equal(groupModelCalls([spark(1, 0), spark(4, 0)])[0].median, 2.5, "even count: the middle two");
 }
 console.log("model panel grouping ok");
+
+{
+  const { titleFromName, statementHtml, inputLine, changedLines } = require(path.resolve(__dirname, "../app/static/ui/coding-ui.js"));
+  assert.equal(titleFromName("minimise_largest_group_total"), "Minimise largest group total");
+  assert.equal(statementHtml("Split values into exactly groups nonempty consecutive parts.", ["values", "groups"]),
+    "<p>Split <code>values</code> into exactly <code>groups</code> non-empty consecutive parts.</p>");
+  assert.equal(statementHtml("Return `k` if a<b", ["a"]), "<p>Return <code>k</code> if <code>a</code>&lt;b</p>", "escaped, backticks kept");
+  assert.equal(statementHtml("Each groupsize counts.", ["groups"]), "<p>Each groupsize counts.</p>", "whole words only");
+  assert.equal(inputLine(["values", "groups"], [[26, 29, 23], 3]), "values = [26, 29, 23], groups = 3");
+  assert.equal(changedLines("def f(x):\n    pass\n", "def f(x):\n    a = 1\n    b = 2\n    return a\n"), 4);
+}
+console.log("coding workspace helpers ok");

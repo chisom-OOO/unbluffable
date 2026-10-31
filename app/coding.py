@@ -65,7 +65,11 @@ def public(spec: dict) -> dict:
             "parameters": [{"name": p["name"], "type": p["type"]} for p in spec["parameters"]],
             "return_type": spec["return_type"], "statement": spec["statement"],
             "examples": [{"args": spec["tests"][i], "expected": spec["expected"][i]} for i in spec["examples"]],
-            "tests": spec["tests"], "topic": spec["topic"], "difficulty": spec["difficulty"]}
+            "tests": spec["tests"], "topic": spec["topic"], "difficulty": spec["difficulty"],
+            # "Where this question came from", collapsed on the Problem tab: figures only, never the solver.
+            "provenance": {"author": "Muse Spark Open", "variants": spec["verification"]["variants"],
+                           "solver_reproduced": spec["verification"]["solver_reproduced"],
+                           "wrong_methods": len(spec.get("wrong_methods", []))}}
 
 
 # --- Exact judging -------------------------------------------------------------------
@@ -334,7 +338,8 @@ class CodingSession:
                     self.note_failing(event.get("outputs"), spec["tests"], result["failing"][0])
                 card = receipt(spec, result, self.author)
                 await self.send({"type": "coding_result", "passed": result["passed"], "total": result["total"],
-                                 "submit": len(log.submits), "submits_left": MAX_SUBMITS - len(log.submits), "receipt": card})
+                                 "submit": len(log.submits), "submits_left": MAX_SUBMITS - len(log.submits), "receipt": card,
+                                 "first_failing": result["failing"][0] if result["failing"] else None})
                 if result["passed"] == result["total"]:
                     await self.line("close", say.CORRECT_CLOSE)
                     return
