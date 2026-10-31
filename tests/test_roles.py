@@ -76,7 +76,7 @@ def test_quant_development_is_a_role_not_a_track():
     assert [r["name"] for t in data["tracks"] for r in t["roles"]] == [
         "Quantitative Trading", "Quantitative Research", "Quantitative Development", "Investment Banking Analyst",
         "M&A Analyst", "Capital Markets Analyst", "Strategy Consulting", "Management Consulting", "Operations Consulting",
-        "Software Engineer"]
+        "Software Engineer", "Backend Engineer"]
 
 
 def test_a_role_based_start_asks_from_the_chosen_chips_and_rates_by_the_roles_chips(monkeypatch):
@@ -131,3 +131,53 @@ def test_a_software_role_start_is_a_45_minute_coding_interview(monkeypatch, tmp_
         session = interview_routes.SESSIONS[first["id"]]
         assert session.deadline - time.monotonic() > 44 * 60  # not the 10-minute spoken session
     coding._load.cache_clear()
+
+
+
+def start(monkeypatch, begin):
+    """Begin an interview and return its session (no answers given)."""
+    from app import coding, voice_routes
+    from test_coding import FIXTURE, FakeSpark
+    monkeypatch.setenv("CODING_DIR", str(FIXTURE))
+    coding._load.cache_clear()
+    monkeypatch.setattr(interview_routes, "_TOPICS", None)
+    monkeypatch.setattr(voice_routes, "provider", lambda: FakeSpark())
+    with TestClient(app).websocket_connect("/api/interview/ws") as socket:
+        socket.send_json({"type": "begin", "consent": True, "typed_practice": True, **begin})
+        first = socket.receive_json()
+        while first["type"] != "session":
+            first = socket.receive_json()
+        session = interview_routes.SESSIONS[first["id"]]
+    coding._load.cache_clear()
+    return session
+
+
+def test_backend_engineer_is_coding_first_then_two_design_questions(monkeypatch):
+    from app import coding, conversational
+    backend = roles.BY_ID["backend"]
+    assert backend.track == "software" and backend.coding and backend.design_questions == 2
+    assert [c.name for c in backend.core] == ["Design concepts", "Hash maps & sets", "Arrays & strings", "Trees", "Graphs",
+                                              "Sorting & searching"]
+    assert roles.BY_ID["swe"].design_questions == 1  # Software Engineer unchanged
+    session = start(monkeypatch, {"pack": "software", "role": "backend", "topics": []})
+    assert isinstance(session, coding.CodingSession) and isinstance(session.design, conversational.ConversationalSession)
+    assert len(session.design.asked) == 2 and session.design.deadline == session.deadline and not session.design.ends_session
+    swe = start(monkeypatch, {"pack": "software", "role": "swe", "topics": []})
+    assert len(swe.design.asked) == 1
+
+
+def test_design_concepts_alone_runs_on_its_own(monkeypatch):
+    from app import conversational
+    session = start(monkeypatch, {"pack": "software", "role": "backend", "topics": ["Design concepts"]})
+    assert isinstance(session, conversational.ConversationalSession) and session.ends_session and len(session.asked) == 2
+
+
+def test_backend_chips_without_content_stay_hidden():
+    from engine.bank import Bank
+    view = roles.view(Bank({}), roles.BY_ID["backend"])
+    names = {c["name"] for c in view["chips"]}
+    live = roles.live_topics(Bank({}), roles.BY_ID["backend"])
+    for tier, chips in roles.BY_ID["backend"].tiers():
+        for chip in chips:
+            if chip.kind == "topic":
+                assert (chip.name in names) == any(t in live for t in chip.topics), chip.name

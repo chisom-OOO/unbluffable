@@ -128,6 +128,7 @@ class Role:
     specialist: tuple[Chip, ...] = ()
     coding: bool = False  # Software: a coding round; chips filter coding problems
     opener: bool = False  # Quant development: a spoken opener, then a coding round
+    design_questions: int = 1  # Design concepts questions after the coding round, if time remains
 
     def tiers(self):
         return (("core", self.core), ("supporting", self.supporting), ("specialist", self.specialist))
@@ -185,6 +186,12 @@ ROLES: tuple[Role, ...] = (
               "Sorting & searching", "Two pointers & sliding window", "Binary search", "Graphs", "Design concepts"),
          pick(S, "Heaps & greedy", "Intervals", "Dynamic programming", "Backtracking"),
          pick(S, "Tries", "Bit manipulation", "Monotonic stack"), coding=True),
+    # Coding first, then two Design concepts questions (probe and twist each) if time remains.
+    Role("backend", "software", "Backend Engineer",
+         pick(S, "Design concepts", "Hash maps & sets", "Arrays & strings", "Trees", "Graphs", "Sorting & searching"),
+         pick(S, "Heaps & greedy", "Intervals", "Two pointers & sliding window", "Binary search", "Stacks & queues", "Linked lists"),
+         pick(S, "Dynamic programming", "Backtracking", "Tries", "Bit manipulation", "Monotonic stack"),
+         coding=True, design_questions=2),
 )
 BY_ID = {r.id: r for r in ROLES}
 

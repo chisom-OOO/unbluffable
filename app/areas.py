@@ -43,8 +43,8 @@ AREAS: dict[str, dict[str, tuple[str, ...]]] = {
     "software": {
         "Dynamic programming": ("Dynamic programming",),
         "Graphs & union-find": ("Graphs", "Union-find"),
-        "Sliding window, two pointers & prefix sums": ("Sliding window", "Two pointers", "Prefix sums"),
-        "Binary search": ("Binary search on the answer", "Binary search"),
+        "Sliding window, two pointers & prefix sums": ("Sliding window", "Two pointers", "Prefix sums", "Hash maps and sets"),
+        "Binary search": ("Binary search on the answer", "Binary search", "Sorting and searching"),
         "Heaps & greedy": ("Heaps", "Greedy"),
         "Intervals & monotonic stack": ("Intervals", "Monotonic stack"),
         "Bit manipulation": ("Bit manipulation",),
