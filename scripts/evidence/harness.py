@@ -19,6 +19,12 @@ run refuses uncommitted prompt or harness changes and records the commit and has
 Calls go through voice.provider.MetaVoice, so live calls are recorded (git-ignored
 recordings/); replay is for tests only.
 
+A live run refuses to start unless every key its arms need is set (MODEL_API_KEY for
+meta_api, BASETEN_API_KEY for open_weights). Every failed model call is counted by type
+(missing_key, request_failed, incomplete_output, invalid_output, no_recording,
+not_verbatim, other); a run with any failed call is INVALID: its results list the
+failures and carry no headline and no p-values.
+
   python scripts/evidence/harness.py --items PATH [--backend meta_api|open_weights]
          [--runs 3] [--out eval/raw/evidence] [--concurrency 4] [--design run1|run2]
 """
@@ -29,6 +35,7 @@ import argparse
 import asyncio
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -41,6 +48,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import stats  # noqa: E402
 from app.interview_session import VoiceAnalyzer  # noqa: E402
+from voice.provider import IncompleteOutput  # noqa: E402
 from engine.bank import ForgeTemplate, instance_puzzle, parse_instance  # noqa: E402
 from engine.coding import Outcome  # noqa: E402
 from engine.interview import Interview  # noqa: E402
@@ -66,6 +74,29 @@ CLOSE_ITEMS = 2  # decision log 15: within 2 items of Unbluffable
 # (backend open_weights), reported separately; the four arms above and the headline rule are unchanged.
 OPEN_WEIGHTS_ARMS = {"careful_open_weights": "careful", "unbluffable_open_weights": "unbluffable"}
 FROZEN_PATHS = ("scripts/evidence/prompts", "scripts/evidence/harness.py", "scripts/evidence/stats.py")
+INVALID = "INVALID"
+# voice.provider's client-safe messages, by failure type (the message is all a VoiceError carries).
+FAILURE_TYPES = (("Live mode needs", "missing_key"), ("The server API key is empty", "missing_key"),
+                 ("The model request failed", "request_failed"), ("The model returned an invalid", "invalid_output"),
+                 ("No recorded result matches", "no_recording"), ("The committed number was not found", "not_verbatim"))
+
+
+def failure_type(error: Exception | str) -> str:
+    """A failed call's type, from the error (or the message a lane reported)."""
+    if isinstance(error, IncompleteOutput):
+        return "incomplete_output"
+    message = str(error)
+    if message.startswith("Incomplete or refused"):
+        return "incomplete_output"
+    return next((kind for prefix, kind in FAILURE_TYPES if message.startswith(prefix)), "other")
+
+
+def missing_keys(backend_names, environ=None) -> list[str]:
+    """The key variables the arms need that are not set (or empty). Never reads a value out."""
+    from llm import backends
+    environ = os.environ if environ is None else environ
+    needed = dict.fromkeys(backends.get_backend(name).key_variable for name in backend_names)
+    return [name for name in needed if not (environ.get(name) or "").strip()]
 
 
 class ItemError(ValueError):
@@ -147,11 +178,14 @@ def chatbot_message(item: dict, with_answers: bool, first_only: bool = False) ->
 # --- Arms ----------------------------------------------------------------------
 
 
-async def chatbot_verdict(provider, arm: str, prompt: str, item: dict) -> str:
+async def chatbot_verdict(provider, arm: str, prompt: str, item: dict, failed=None) -> str:
+    """`failed`: a list that gets one failure type per failed call."""
     message = chatbot_message(item, with_answers=arm in WITH_ANSWERS, first_only=arm in FIRST_ONLY)
     try:
         parsed, _ = await provider.structured(message, f"evidence_{arm}", CHATBOT_EFFORT, VERDICT, prompt)
-    except VoiceError:
+    except VoiceError as error:
+        if failed is not None:
+            failed.append(failure_type(error))
         return "error"
     return parsed["verdict"]
 
@@ -173,21 +207,24 @@ class _ItemSource:
         return self.twin_puzzle
 
 
-async def unbluffable_verdict(provider, item: dict) -> str:
+async def unbluffable_verdict(provider, item: dict, failed=None) -> str:
     """The Exam Room's analysis of each stored answer, scored by the engine. Stored
-    transcripts have no challenge or help, so each answer is scored as given."""
+    transcripts have no challenge or help, so each answer is scored as given. `failed`:
+    a list that gets one failure type per failed call, in either lane, even when the
+    other lane still produced a verdict."""
     original, twin = puzzles(item)
     analyzer = VoiceAnalyzer(provider)
     interview = Interview(source=_ItemSource(original, twin))
 
-    async def ignore(event):
-        return None
+    async def note(event):
+        if event.get("type") == "model_error" and failed is not None:
+            failed.append(failure_type(event.get("message") or ""))
 
     for part in ("original", "twin"):
         question = interview.next_question()
         if question is None:
             return "error"
-        analysis = await analyzer.analyse(question.puzzle, item[part]["transcript"], ignore)
+        analysis = await analyzer.analyse(question.puzzle, item[part]["transcript"], note)
         if analysis.observation is None or analysis.observation.outcome is Outcome.ABSTAIN:
             return "error"
         interview.record(analysis.observation)
@@ -195,26 +232,33 @@ async def unbluffable_verdict(provider, item: dict) -> str:
 
 
 async def evaluate(items: list[dict], provider, runs: int = 3, concurrency: int = 4,
-                   prompts: dict[str, str] | None = None, open_weights=None, design: str = "run1") -> dict[str, list[dict[str, str]]]:
+                   prompts: dict[str, str] | None = None, open_weights=None, design: str = "run1",
+                   failures: list | None = None) -> dict[str, list[dict[str, str]]]:
     """verdicts[arm][run][item id]. `open_weights`: a second provider on Muse Spark Open;
-    with it, the careful arm and Unbluffable also run there as separate arms."""
+    with it, the careful arm and Unbluffable also run there as separate arms. `failures`:
+    a list that gets {arm, run, item, type} for every failed model call."""
     prompts = prompts or load_prompts()
     gate = asyncio.Semaphore(concurrency)
     plan = {arm: (arm, provider) for arm in DESIGNS[design]}
     if open_weights is not None:
         plan.update({arm: (base, open_weights) for arm, base in OPEN_WEIGHTS_ARMS.items()})
 
-    async def one(arm, item):
+    async def one(arm, item, run):
         base, on = plan[arm]
+        failed = []
         async with gate:
             if base == "unbluffable":
-                return await unbluffable_verdict(on, item)
-            return await chatbot_verdict(on, base, prompts[PROMPT_OF.get(base, base)], item)
+                verdict = await unbluffable_verdict(on, item, failed)
+            else:
+                verdict = await chatbot_verdict(on, base, prompts[PROMPT_OF.get(base, base)], item, failed)
+        if failures is not None:
+            failures.extend({"arm": arm, "run": run, "item": item["id"], "type": kind} for kind in failed)
+        return verdict
 
     verdicts = {arm: [] for arm in plan}
-    for _ in range(runs):
+    for run in range(runs):
         for arm in plan:
-            results = await asyncio.gather(*(one(arm, item) for item in items))
+            results = await asyncio.gather(*(one(arm, item, run) for item in items))
             verdicts[arm].append({item["id"]: v for item, v in zip(items, results)})
     return verdicts
 
@@ -222,7 +266,18 @@ async def evaluate(items: list[dict], provider, runs: int = 3, concurrency: int 
 # --- Results -------------------------------------------------------------------
 
 
-def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], provenance: dict) -> dict:
+def failure_summary(failures: list[dict]) -> dict:
+    by_type: dict[str, int] = {}
+    for f in failures:
+        by_type[f["type"]] = by_type.get(f["type"], 0) + 1
+    return {"count": len(failures), "by_type": dict(sorted(by_type.items())),
+            "items": sorted({f["item"] for f in failures}), "calls": failures}
+
+
+def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], provenance: dict,
+              failures: list[dict] | None = None) -> dict:
+    """The results. With any failed call the run is INVALID: verdicts and accuracy are kept
+    for inspection, but there is no McNemar test, no p-value and no headline."""
     labels = {item["id"]: item["label"] for item in items}
     arms = {}
     for arm, runs in verdicts.items():
@@ -248,8 +303,23 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
                          labels, theirs["majority"]["verdicts"], arms["careful_open_weights"]["majority"]["verdicts"]),
                      "unbluffable_vs_unbluffable_open_weights": stats.compare(
                          labels, ours["majority"]["verdicts"], theirs["majority"]["verdicts"])}
+    failures = failures or []
+    if failures:
+        return {
+            **provenance,
+            "status": INVALID,
+            "call_failures": failure_summary(failures),
+            "n_items": len(labels),
+            "n_understands": sum(1 for v in labels.values() if v == stats.UNDERSTANDS),
+            "arms": arms,
+            "mcnemar_vs_unbluffable": None,
+            "open_weights": None,
+            "headline_rule": None,
+        }
     return {
         **provenance,
+        "status": "valid",
+        "call_failures": failure_summary([]),
         "n_items": len(labels),
         "n_understands": sum(1 for v in labels.values() if v == stats.UNDERSTANDS),
         "arms": arms,
@@ -289,6 +359,18 @@ def markdown(results: dict) -> str:
         per_run = ", ".join(pct(r["accuracy"]) for r in a["runs"])
         lines.append(f"| {names[arm]} | {a['majority']['correct']}/{n} | {per_run} | "
                      f"{pct(a['majority']['false_flag_rate'])} | {pct(a['flip_rate'])} | {a['majority']['errors']} |")
+    if results.get("status") == INVALID:
+        cf = results["call_failures"]
+        kinds = ", ".join(f"{kind} {n}" for kind, n in cf["by_type"].items())
+        lines[0] = "# Evidence run: INVALID"
+        lines += ["", f"**INVALID: {cf['count']} model call(s) failed ({kinds}) on items "
+                      f"{', '.join(cf['items'])}. No headline and no p-values are reported; fix the cause and run again.**",
+                  "", "## Provenance", "",
+                  f"- Commit: `{results['git_commit']}`",
+                  f"- Item file: `{results['items_file']}` (sha256 `{results['items_sha256']}`)"]
+        lines += [f"- Prompt `{arm}`: sha256 `{h_}`" for arm, h_ in results["prompt_sha256"].items()]
+        lines += [f"- Run at {results['created_at']}", ""]
+        return "\n".join(lines)
     lines += ["", "## Exact McNemar, Unbluffable against each arm (majority verdicts)", "",
               "b = Unbluffable right and the other arm wrong; c = the reverse.", "",
               "| Arm | b | c | p (two-sided) | p per run |", "|---|---|---|---|---|"]
@@ -364,6 +446,11 @@ def main(argv=None) -> int:
                         help="also run the careful arm and Unbluffable on Muse Spark Open (backend open_weights), as separate rows")
     args = parser.parse_args(argv)
 
+    needed = [args.backend or os.environ.get("LLM_BACKEND", "meta_api")] + (["open_weights"] if args.open_weights else [])
+    missing = missing_keys(needed)
+    if missing:
+        print("Refusing to start: these arms need " + ", ".join(missing) + " set in the environment.")
+        return 2
     dirty = git("status", "--porcelain", "--", *FROZEN_PATHS)
     if dirty:
         print("Commit the prompts and harness first; a run must be reproducible from its commit:\n" + dirty)
@@ -380,13 +467,15 @@ def main(argv=None) -> int:
     if args.open_weights:
         second = MetaVoice("live", str(args.record_dir))
         second.spark_backend = backends.get_backend("open_weights")
-    verdicts = asyncio.run(evaluate(items, provider, args.runs, args.concurrency, prompts, open_weights=second, design=args.design))
-    results = summarise(items, verdicts, provenance(args.items, items_sha, provider, args.runs, prompts, args.design))
+    failures = []
+    verdicts = asyncio.run(evaluate(items, provider, args.runs, args.concurrency, prompts, open_weights=second,
+                                    design=args.design, failures=failures))
+    results = summarise(items, verdicts, provenance(args.items, items_sha, provider, args.runs, prompts, args.design), failures)
     if second is not None:
         results["open_weights_model"] = second.spark_backend.model
     write_outputs(results, args.out)
     print(markdown(results))
-    return 0
+    return 3 if results["status"] == INVALID else 0
 
 
 if __name__ == "__main__":

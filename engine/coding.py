@@ -59,12 +59,14 @@ def code_answer(
         return Observation(Outcome.RECITED, stated)
     hits = [nv for nv in puzzle.named_values if puzzle.accepts(stated, nv.value)]
     if hits:
-        # Near-identical named values (e.g. f and P(+)) are reported together.
+        # Near-identical named values (e.g. f and P(+)) are reported together: the number
+        # cannot tell their mistakes apart, so every name is kept ("a / b").
+        names = [part for nv in hits if nv.misconception for part in nv.misconception.split(" / ")]
         return Observation(
             Outcome.NAMED_WRONG,
             stated,
             matched=tuple(nv.key for nv in hits),
-            misconception=hits[0].misconception,
+            misconception=" / ".join(dict.fromkeys(names)) if names else hits[0].misconception,
         )
     return Observation(Outcome.OTHER_WRONG, stated)
 

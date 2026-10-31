@@ -169,14 +169,19 @@ def test_diagnostic_twin_tie_break_is_the_gap_to_other_wrong_methods(bank):
     Gaps tie between instances; the tie-break keeps the other methods furthest away."""
     t = bank.templates["fx_mean_added"]
     old_count = "divides the new total by the old count"
-    gaps = {i: abs(inst.answer - inst.wrong[1].value) for i, inst in enumerate(t.instances) if i != 0}
+    averages = "averages the old mean with the new number"
+
+    def value_of(inst, name):  # the value carrying exactly this one name (None when it is shared)
+        return next((nv.value for nv in inst.wrong if nv.misconception == name), None)
+    own = {i: inst for i, inst in enumerate(t.instances) if i != 0 and value_of(inst, old_count) is not None}
+    gaps = {i: abs(inst.answer - value_of(inst, old_count)) for i, inst in own.items()}
     best = max(gaps.values())
     tied = [i for i, g in gaps.items() if g == best]
     i, why = twin_choice(t, 0, random.Random(1), old_count)
-    assert i in tied and why.suspected and why.wrong == t.instances[i].wrong[1].value
+    assert i in tied and why.suspected and why.wrong == value_of(t.instances[i], old_count)
     def rest(j):
         inst = t.instances[j]
-        return min(abs(inst.answer - inst.wrong[0].value), abs(inst.answer - t.instances[0].answer))
+        return min(abs(inst.answer - value_of(inst, averages)), abs(inst.answer - t.instances[0].answer))
     assert rest(i) == max(rest(j) for j in tied)
 
 
@@ -243,6 +248,7 @@ def test_session_twin_is_aimed_and_explained_after_it_is_answered(bank):
     """Q1 named wrong and not recovered: the twin is the instance furthest from that error,
     and "Why these numbers?" arrives only once the twin is scored."""
     averages = "averages the old mean with the new number"
+    divides = "divides the new total by the old count"
 
     def policy(session, events):
         q = session.questions[-1]
@@ -254,14 +260,20 @@ def test_session_twin_is_aimed_and_explained_after_it_is_answered(bank):
     session, events, _ = run(BankSource(bank, "Statistics", "Medium", rng=random.Random(4)), policy)
     q1, q2 = session.questions
     assert q1.scored == "named_wrong" and q2.kind == "twin"
+    # Q1's numbers give one value for both methods, so the answer names both mistakes.
+    assert q1.first_wrong[0].misconception == f"{averages} / {divides}"
     t = bank.templates["fx_mean_added"]
-    gap = lambda j: abs(t.instances[j].answer - t.instances[j].wrong[0].value)
-    assert gap(q2.puzzle.instance) == max(gap(j) for j in range(9) if j != q1.puzzle.instance
+    # A shared value can't tell the two apart: the twin is one where they split, furthest from both.
+    single = lambda j: [nv for nv in t.instances[j].wrong if " / " not in nv.misconception]
+    gap = lambda j: min(abs(t.instances[j].answer - nv.value) for nv in single(j))
+    assert gap(q2.puzzle.instance) == max(gap(j) for j in range(9) if j != q1.puzzle.instance and single(j)
                                           and t.instances[j].answer != q1.puzzle.answer)
-    assert q2.puzzle.diagnostic.suspected and q2.puzzle.diagnostic.misconception == averages
+    nearest = min(single(q2.puzzle.instance), key=lambda nv: abs(q2.puzzle.answer - nv.value))
+    why_twin = q2.puzzle.diagnostic
+    assert why_twin.suspected and (why_twin.misconception, why_twin.wrong) == (nearest.misconception, nearest.value)
     scored = [e for e in events if e["type"] == "scored"]
     assert [e["why"] is None for e in scored] == [True, False]
-    assert f"Suspected error ({averages})" in scored[1]["why"]
+    assert f"Suspected error ({nearest.misconception})" in scored[1]["why"]
     twin_question = next(i for i, e in enumerate(events) if e["type"] == "question" and e["kind"] == "twin")
     assert events.index(scored[1]) > twin_question
     assert not any("Suspected error" in str(e) for e in events[:events.index(scored[1])])
@@ -400,7 +412,9 @@ def test_statistics_session_part2_challenge_help_and_report(bank):
     assert q1.part2.outcome == "named_wrong"
     assert q1.part2.answers[-1].misconception == "gives the target mean instead of the number needed"
     # The twin: a named wrong answer, the challenge, a hint aimed at step 1, then recovered.
-    assert q2.first_wrong[0].misconception == "averages the old mean with the new number"
+    # In this twin both methods give the same number, so the answer names both mistakes.
+    assert q2.first_wrong[0].misconception == ("averages the old mean with the new number"
+                                               " / divides the new total by the old count")
     hint = [e for e in events if e["type"] == "interviewer_line" and e["kind"] == "hint"]
     assert hint[0]["text"] == say.forge_step_prompt("total of the four numbers") and hint[0]["target_step"] == 1
     assert (q2.scored, q2.help_load, q2.weight, q2.recovered) == ("correct", 1, Fraction(2, 4), True)
@@ -420,7 +434,8 @@ def test_statistics_session_part2_challenge_help_and_report(bank):
     assert q1_items[-1]["title"] == "Part 2: not the exact value"
     assert q1_items[-1]["misconception"] == "gives the target mean instead of the number needed"
     assert q1_items[-1]["question"] == q1.puzzle.part2.text
-    assert q2_items[0]["misconception"] == "averages the old mean with the new number"
+    assert q2_items[0]["misconception"] == ("averages the old mean with the new number"
+                                            " / divides the new total by the old count")
     assert q2_items[0]["quote"] in script
     assert q2_items[-2]["title"] == "Part 2: right"
     # Q1 was right first time: no suspect, so the twin keeps every wrong method far away.

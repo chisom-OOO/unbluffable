@@ -11,13 +11,16 @@ a difficulty ladder: start Easy or Medium, up one level after a correct answer,
 down one after a wrong one.
 
 Twins are diagnostic (decision log 16): the twin instance is the one whose numbers
-best separate the right answer from the suspected misconception's value.
+best separate the right answer from the suspected misconception's value, preferring
+instances where that value is the misconception's own (not shared with another one).
 
 Instances flagged `interview_friendly` are preferred for questions, twins and drills;
 the others are used only when none qualify. An instance's `spoken_text` is what the
 interviewer says; without it, simple LaTeX in the text is read out as words
 (engine.mathtext) and shown as plain Unicode. A wrong value may carry several
-misconception names; they are one mistake, named "a / b".
+misconception names; they are one mistake, named "a / b", and stored rows with the same
+value are merged into one. A sentinel wrong value (an "unreachable" stand-in such as
+10**18, engine.checker.is_sentinel) is dropped at load: it names no mistake.
 
 A template may carry a conceptual `follow_up` ({"question", "reference"}); the Exam
 Room asks it after a correct answer and judges the reply with the model. The engine
@@ -152,12 +155,19 @@ def parse_instance(raw: dict, where: str, part2_allowed: bool = True) -> Instanc
     tolerance = _exact(_need(raw, "tolerance", (str, int, float), where), f"{where}.tolerance")
     if tolerance < 0:
         raise ForgeError(f"{where}.tolerance: negative")
-    wrong = []
+    answer = _exact(answer_text, f"{where}.answer")
+    names_of: dict[Fraction, list[str]] = {}
     for i, row in enumerate(_need(raw, "wrong", list, where)):
         here = f"{where}.wrong[{i}]"
-        misconception = NAME_SEPARATOR.join(_names(row, here))
-        wrong.append(NamedValue(f"wrong_{i + 1}", _exact(_need(row, "value", (str, int, float), here), here),
-                                misconception, misconception))
+        names = _names(row, here)
+        value = _exact(_need(row, "value", (str, int, float), here), here)
+        if checker.is_sentinel(value, answer):
+            continue
+        names_of.setdefault(value, []).extend(names)  # one value, one mistake: keep every name
+    wrong = []
+    for i, (value, names) in enumerate(names_of.items()):
+        misconception = NAME_SEPARATOR.join(dict.fromkeys(names))
+        wrong.append(NamedValue(f"wrong_{i + 1}", value, misconception, misconception))
     steps = []
     for i, row in enumerate(_need(raw, "steps", list, where)):
         here = f"{where}.steps[{i}]"
@@ -174,7 +184,7 @@ def parse_instance(raw: dict, where: str, part2_allowed: bool = True) -> Instanc
     if not isinstance(friendly, bool):
         raise ForgeError(f"{where}.interview_friendly: must be true or false")
     return Instance(text, _need(raw, "params", dict, where), answer_text,
-                    _exact(answer_text, f"{where}.answer"), tolerance, tuple(wrong), tuple(steps), part2,
+                    answer, tolerance, tuple(wrong), tuple(steps), part2,
                     spoken_text.strip() if spoken_text else None, friendly)
 
 
@@ -193,6 +203,19 @@ def _names(row: dict, where: str) -> list[str]:
 def same_mistake(a: str | None, b: str | None) -> bool:
     """Two misconception labels name the same mistake: they share a name."""
     return bool(a and b and set(a.split(NAME_SEPARATOR)) & set(b.split(NAME_SEPARATOR)))
+
+
+def aimed_values(instance: Instance, suspect: str | None) -> list[NamedValue]:
+    """The wrong values that show the suspected mistake here. A value shared by two mistakes
+    ("a / b") cannot tell them apart, so it is not distinguishing: values carrying one name
+    are used when the instance has any, the shared ones only otherwise."""
+    rows = [nv for nv in instance.wrong if same_mistake(nv.misconception, suspect)]
+    return [nv for nv in rows if NAME_SEPARATOR not in nv.misconception] or rows
+
+
+def own_value(instance: Instance, suspect: str | None) -> bool:
+    """The suspected mistake has a value of its own here (not shared with another mistake)."""
+    return any(NAME_SEPARATOR not in nv.misconception for nv in aimed_values(instance, suspect))
 
 
 def parse_template(raw: dict, where: str = "template") -> ForgeTemplate:
@@ -334,13 +357,15 @@ def twin_choice(template: ForgeTemplate, original: int, rng: random.Random,
     others = friendly(template, [i for i in range(len(template.instances)) if i != original])
     pool = [i for i in others if template.instances[i].answer != first.answer] or others
     aimed = [i for i in pool if any(same_mistake(nv.misconception, suspect) for nv in template.instances[i].wrong)]
+    aimed = [i for i in aimed if own_value(template.instances[i], suspect)] or aimed
 
     def aimed_key(i: int):
         inst = template.instances[i]
-        gap, value = min((abs(inst.answer - nv.value), nv.value) for nv in inst.wrong
-                         if same_mistake(nv.misconception, suspect))
+        gap, value, name = min((abs(inst.answer - nv.value), nv.value, nv.misconception)
+                               for nv in aimed_values(inst, suspect))
         rest = _nearest(inst, first.answer, skip=suspect)
-        return (gap, rest[0] if rest else float("inf")), Diagnostic(suspect, inst.answer, value, True)
+        # Named by the value's own mistakes: a suspect "a / b" whose twin values split names only the one shown.
+        return (gap, rest[0] if rest else float("inf")), Diagnostic(name, inst.answer, value, True)
 
     def spread_key(i: int):
         gap, name, value = _nearest(template.instances[i], first.answer)
@@ -365,12 +390,13 @@ def drill_plan(template: ForgeTemplate, suspect: str, used: set[int],
     that name the misconception and whose right answer differs from it qualify."""
     def key(i: int):
         inst = template.instances[i]
-        gap = min(abs(inst.answer - nv.value) for nv in inst.wrong if same_mistake(nv.misconception, suspect))
+        gap = min(abs(inst.answer - nv.value) for nv in aimed_values(inst, suspect))
         rest = [abs(inst.answer - nv.value) for nv in inst.wrong if not same_mistake(nv.misconception, suspect)]
         return (-gap, -min(rest) if rest else float("-inf"), i)
 
     aimed = [i for i, inst in enumerate(template.instances) if i not in used
              and any(same_mistake(nv.misconception, suspect) and nv.value != inst.answer for nv in inst.wrong)]
+    aimed = [i for i in aimed if own_value(template.instances[i], suspect)] or aimed
     ranked = sorted(friendly(template, aimed), key=key)
     if not ranked:
         return [], None
@@ -381,10 +407,9 @@ def aimed_puzzle(template: ForgeTemplate, index: int, suspect: str, original: Pu
     """An instance as a drill question, with its "Why these numbers?" diagnostic and no
     part 2 or follow-up (a drill asks only about the one mistake)."""
     inst = template.instances[index]
-    wrong = min((nv.value for nv in inst.wrong if same_mistake(nv.misconception, suspect)),
-                key=lambda v: abs(inst.answer - v))
+    wrong = min(aimed_values(inst, suspect), key=lambda nv: abs(inst.answer - nv.value))
     puzzle = instance_puzzle(template, inst, index, original=original,
-                             diagnostic=Diagnostic(suspect, inst.answer, wrong, True))
+                             diagnostic=Diagnostic(wrong.misconception, inst.answer, wrong.value, True))
     return replace(puzzle, part2=None, follow_up=None)
 
 
