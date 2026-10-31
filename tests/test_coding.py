@@ -89,6 +89,7 @@ class FakeSpark:
 @pytest.fixture
 def coding_routes(monkeypatch, tmp_path):
     monkeypatch.setenv("CODING_DIR", str(FIXTURE))
+    monkeypatch.setenv("CONVERSATIONAL", "0")  # no Design concepts segment after the coding round here
     # Part 2 / Part 3 content comes from the tests that need it (decision log 29).
     monkeypatch.setenv("CODING_SCALE_DIR", str(tmp_path / "no_scale"))
     monkeypatch.setenv("CODING_TWIST_DIR", str(tmp_path / "no_twist"))

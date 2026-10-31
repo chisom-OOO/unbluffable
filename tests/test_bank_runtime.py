@@ -482,7 +482,7 @@ def test_topics_list_forge_topics_and_mixed(monkeypatch, bank):
     assert (track["id"], track["name"], track["default"], track["available"]) == ("quant", "Quant", "Mixed", True)
     # IB and Consulting have only their behavioural questions (decision log 24); Software has nothing.
     assert [(t["id"], t["available"], [o["id"] for o in t["topics"]]) for t in rest] == [
-        ("ib", True, ["Behavioural"]), ("consulting", True, ["Behavioural"]), ("software", False, []),
+        ("ib", True, ["Behavioural", "Conversational"]), ("consulting", True, ["Behavioural"]), ("software", False, []),
         ("quant_dev", False, [])]  # no quant_dev coding specs yet: "Being added"
     assert [(t["id"], t["count"]) for t in track["topics"]] == [
         ("Mixed", 3), ("Percentages", 1), ("Probability", 1), ("Statistics", 1), ("Market making", 8)]  # decision log 28
@@ -1197,7 +1197,7 @@ def test_topic_route_groups_topics_by_track_and_marks_empty_tracks(monkeypatch):
         ("quant_dev", "Quant development", 0, False)]
     topics = {t["id"]: [(o["id"], o["count"]) for o in t["topics"]] for t in data["tracks"]}
     assert topics == {"quant": [("Mixed", 1), ("Probability", 1), ("Market making", 8)],
-                      "ib": [("Mixed", 1), ("Valuation", 1), ("Behavioural", 25)],
+                      "ib": [("Mixed", 1), ("Valuation", 1), ("Behavioural", 25), ("Conversational", 40)],  # decision log 30
                       "consulting": [("Mixed", 1), ("Market sizing", 1), ("Behavioural", 25)], "software": [], "quant_dev": []}
 
 

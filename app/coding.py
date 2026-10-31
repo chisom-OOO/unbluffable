@@ -286,6 +286,7 @@ INTERVIEW_SECONDS = 45 * 60
 MAX_PROBLEMS = 3
 BONUS_MIN_LEFT = 12 * 60  # Part 3 only with at least 12 minutes left
 NEXT_MIN_LEFT = 15 * 60  # another problem only with at least 15 minutes left
+DESIGN_MIN_LEFT = 8 * 60  # decision log 30: a short Design concepts segment if this much is left
 PART2 = "Now n is up to {n:,}; make it fast."
 PART3 = "This one is harder. It's fine to take hints."
 
@@ -433,6 +434,12 @@ class CodingSession:
         self.deadline = deadline
         self.finished = self.timed_out = False
         self.author = "Muse Spark Open"
+        self.design = None  # a ConversationalSession (one question, ends_session False), set by the route
+        self.in_design = False
+
+    def turn_policy(self):
+        """Spoken Design concepts answers end on their own; coding speech uses the usual check."""
+        return self.design.turn_policy() if self.in_design and self.design is not None else None
 
     @property
     def log(self) -> CodingLog:
@@ -493,6 +500,10 @@ class CodingSession:
                 if nxt is None:
                     break
                 self.problems.append(CodingLog(nxt[0], list(nxt[1] or []), number=len(self.problems) + 1))
+            if self.design is not None and not self.timed_out and self.left() >= DESIGN_MIN_LEFT:
+                # Decision log 30: Software stays coding-first; one spoken Design concepts question if time remains.
+                self.in_design = True
+                await self.design.run()
             await self.line("close", say.TIME_CLOSE if self.timed_out else say.SESSION_CLOSE)
             self.finished = True
             await self.send({"type": "session_end", "label": None, "coding": True, "timed_out": self.timed_out})
@@ -714,7 +725,15 @@ def report(session: CodingSession) -> dict:
         "sample": False, "label": None, "questions": len(problems), "track": session.track, "topics": session.topics,
         "placement": False, "conditions": CONDITIONS[session.conditions], "rating_items": items, "timed_out": session.timed_out,
         "coding": problems[0] if problems else None, "problems": problems,
+        "design": _design(session),
     }
+
+
+def _design(session: CodingSession) -> list:
+    if session.design is None:
+        return []
+    from app import conversational
+    return conversational.items(session.design)
 
 
 def pick(pack: str, topics, rng=None, exclude=()) -> dict | None:

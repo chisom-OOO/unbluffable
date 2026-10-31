@@ -235,8 +235,45 @@ document.addEventListener("DOMContentLoaded", () => {
   // "3/4" or "1" as a number (the scorecard's exact fractions).
   function fractionValue(f) { const [a, b] = String(f).split("/"); return Number(a) / (b ? Number(b) : 1); }
 
+  // Decision log 30: conversational questions (IB Conversational, Software Design concepts).
+  function conversationalCards(items) {
+    const quote = (q) => `<blockquote class="evidence"><p>“${escapeHtml(q)}”</p></blockquote>`;
+    const points = (list) => `<ul class="see-list">${list.map((p) => `<li><strong>${p.quote ? "Covered" : "Not heard"}:</strong> `
+      + `${escapeHtml(p.point)}${p.quote ? quote(p.quote) : ""}</li>`).join("")}</ul>`;
+    return items.map((c) => `<article class="qcard"><header><h3>${escapeHtml(c.q)}: ${escapeHtml(c.topic)}</h3>`
+      + `<span class="tag">model-judged, not exact</span></header>`
+      + `<p class="bq-question">${escapeHtml(c.question)}</p><h4>Your answer</h4>${quote(c.answer)}`
+      + `<h4>Key points</h4>${points(c.key_points)}`
+      + `<h4>Follow-up: ${escapeHtml(c.probe)}</h4>${quote(c.probe_answer)}`
+      + `<h4>Twist: ${escapeHtml(c.twist)}</h4>${quote(c.twist_answer)}${points(c.twist_points)}`
+      + (c.misconceptions.length ? `<h4>Misconceptions heard</h4><ul class="see-list">${c.misconceptions.map((m) =>
+          `<li>${escapeHtml(m.misconception)}${quote(m.quote)}</li>`).join("")}</ul>` : "")
+      + (c.capacity ? `<h4>Capacity check <span class="tag">exact</span></h4><p class="fine">${escapeHtml(c.capacity.question)}</p>`
+        + `<p class="check-line">${c.capacity.correct ? "Right" : "Not right"}: you said <span class="mono">${escapeHtml(c.capacity.said ?? "no number")}</span>; `
+        + `exact <span class="mono">${escapeHtml(c.capacity.exact)}</span>${c.capacity.unit ? ` ${escapeHtml(c.capacity.unit)}` : ""}.</p>`
+        + (c.capacity.working ? `<p class="fine">${escapeHtml(c.capacity.working)}</p>` : "") : "")
+      + (c.dropped_quotes ? `<p class="fine">${c.dropped_quotes} model quote${c.dropped_quotes === 1 ? "" : "s"} didn't match your words and ${c.dropped_quotes === 1 ? "was" : "were"} left out.</p>` : "")
+      + `</article>`).join("");
+  }
+  function renderConversational(e) {
+    $("end-eyebrow").textContent = `${e.topics} report`;
+    $("end-title").textContent = "How you talked it through";
+    $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}, each with a follow-up and a twist.`;
+    $("result-tag").textContent = "Model-judged";
+    $("conditions").hidden = !e.conditions;
+    $("conditions").textContent = e.conditions || "";
+    $("conditions").classList.toggle("warn", !!e.conditions && !/^Exam/.test(e.conditions));
+    $("topics-line").hidden = false;
+    $("topics-line").textContent = `Topics: ${e.topics}`;
+    document.querySelectorAll(".section, .end-verdict, #stats").forEach((el) => { el.hidden = true; });
+    $("conversational-title").textContent = `${e.topics} (model-judged, not exact)`;
+    $("conversational").innerHTML = conversationalCards(e.conversational);
+    $("conversational-section").hidden = false;
+  }
+
   function render(e) {
-    if (e.coding) { showProgress(e); renderCoding(e); return; }
+    if (e.conversational) { renderConversational(e); return; }
+    if (e.coding) { showProgress(e); renderCoding(e); if (e.design?.length) { $("conversational-title").textContent = "Design concepts (model-judged, not exact)"; $("conversational").innerHTML = conversationalCards(e.design); $("conversational-section").hidden = false; } return; }
     if (e.market) { showProgress(e); renderMarket(e); return; }
     if (e.behavioural) { showProgress(e); renderBehavioural(e); return; }
 

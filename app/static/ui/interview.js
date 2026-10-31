@@ -220,6 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
     transcription_model: "Transcript of your answer", endpoint_decision: "Whether you had finished",
     challenge_result: "Your committed number", scoring_result: "Quoted reasoning", follow_up_result: "Follow-up (model-matched)",
     behavioural_judged: "Quotes for each step (model-judged)",
+    conversational_judged: "Quotes for each key point (model-judged)",
     coding_plan: "Your approach, quoted", coding_question: "A question about your code",
     coding_follow_up: "The follow-up question", coding_judge: "Your follow-up answer (model-judged)",
     market_quote: "Your bid and offer, read from your words", market_question: "Which question to ask about your logic",
@@ -342,6 +343,8 @@ document.addEventListener("DOMContentLoaded", () => {
         question = event;
         if (event.kind === "coding") {
           window.UBCoding.enter(event.coding, sendCode);
+        } else if (window.UBCoding.active) {
+          window.UBCoding.spoken(event);  // a spoken question after the coding round (Design concepts)
         }
         $("puzzle").textContent = event.text;
         $("provenance").innerHTML = window.UB.provenanceHtml(event.provenance_rows);
@@ -350,6 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
           : event.kind === "check" ? "Drill check"
           : event.kind === "market" ? `Market ${event.number} of ${event.market.rounds}`
           : event.kind === "behavioural" ? `Behavioural question ${event.number} of 2`
+          : event.kind === "conversational" ? `${event.topic} question ${event.number} of ${event.conversational.of}`
           : event.kind === "coding" ? "Coding round"
           : event.kind === "drill" ? `Drill question ${event.number} of up to 3`
           : placement ? `Placement question ${event.number} of 5` : `Question ${event.number} of up to 4`)
@@ -357,6 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle-kind").textContent = ({ twin: "Same puzzle, new numbers", drill: "Aimed at one mistake",
                                           check: "New numbers, no help", coding: "Python · code while you talk",
                                           market: "Market making · graded exactly",
+                                          conversational: `${event.conversational?.topic || ""} · model-judged, not exact`,
                                           behavioural: `${event.behavioural_type === "situational" ? "What would you do" : "Tell me about a time"} · model-judged, not exact` }[event.kind] || "New puzzle")
           + (event.difficulty ? ` · ${event.difficulty}` : "");
         finishReveals();
@@ -445,6 +450,9 @@ document.addEventListener("DOMContentLoaded", () => {
         modelRow(event.model, event.type);
         break;
       case "transcription_model":
+        modelRow(event.model, event.type);
+        break;
+      case "conversational_judged":
         modelRow(event.model, event.type);
         break;
       case "behavioural_judged":
@@ -919,7 +927,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const trackTopics = () => (tracks.find((t) => t.id === chosenTrack)?.topics || []).filter((o) => o.id !== "Mixed");
   const BEHAVIOURAL = "Behavioural";  // decision log 24: runs on its own, model-judged
   const MARKET = "Market making";  // decision log 28: runs on its own, graded exactly
-  const SOLO = new Set([BEHAVIOURAL, MARKET]);
+  const SOLO = new Set([BEHAVIOURAL, MARKET, "Conversational", "Design concepts"]);  // each runs on its own
   const forgeTopics = () => trackTopics().filter((o) => !SOLO.has(o.id)).map((o) => o.id);
   const allTopics = () => new Set(forgeTopics().length ? forgeTopics() : trackTopics().map((o) => o.id));
   // Topics sent with Start: null (the server's default) when the list failed or there are none.
@@ -944,9 +952,13 @@ document.addEventListener("DOMContentLoaded", () => {
     $("topics-note").textContent = n === 0 ? "Choose at least one topic."
       : behaviouralOn ? "Behavioural: two questions, each with one follow-up. Model-judged, not exact; kept out of your rating."
       : marketOn ? "Market making: two games. Quote a bid and an offer; the interviewer trades against you. Graded exactly."
+      : chosenTopics.has("Conversational") || chosenTopics.has("Design concepts")
+        ? "Two conversational questions, each with a follow-up and a twist. Model-judged, not exact (a capacity number is checked exactly); kept out of your rating."
       : n === all ? "All topics selected." : `${n} of ${all} topics selected.`;
     $("topics-note").classList.toggle("bad", n === 0);
-    $("levels").hidden = placement || behaviouralOn || marketOn || codingChosen();  // no ladder for these rounds
+    $("levels").hidden = placement || behaviouralOn || marketOn || codingChosen()
+      || chosenTopics.has("Conversational") || chosenTopics.has("Design concepts");  // no ladder for these rounds
+    $("coding-note").hidden = !codingChosen() || chosenTopics.has("Design concepts");
     updateGate();
   }
   function showTopics() {

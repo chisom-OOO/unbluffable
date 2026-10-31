@@ -15,7 +15,7 @@ from contextlib import suppress
 
 from fastapi import APIRouter, HTTPException, Response, WebSocket, WebSocketDisconnect
 
-from app import behavioural, coding, interview_report, market, quant_dev, voice_routes
+from app import behavioural, coding, conversational, interview_report, market, quant_dev, voice_routes
 from app.areas import AREAS
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
@@ -81,6 +81,10 @@ def _build_topics() -> dict:
         asked = behavioural.rows_for(pack)  # decision log 24: IB and Consulting
         if asked:
             options.append({"id": behavioural.BEHAVIOURAL, "name": behavioural.BEHAVIOURAL, "count": len(asked)})
+        live = bool(options)  # Software stays coding-first: Design concepts only beside a live track
+        if pack in conversational.FILES and conversational.enabled() and conversational.load(pack) and (pack == "ib" or live):
+            # Decision log 30: IB "Conversational", Software "Design concepts"; each runs on its own.
+            options.append({"id": conversational.TOPIC[pack], "name": conversational.TOPIC[pack], "count": len(conversational.load(pack))})
         if pack == "quant" and found and market.enabled():  # decision log 28: runs on its own, exact
             options.append({"id": market.MARKET, "name": market.MARKET, "count": 8})
         tracks.append({"id": pack, "name": name, "count": count, "available": bool(options),
@@ -112,13 +116,13 @@ def selection(pack, topic) -> tuple[dict, str | tuple[str, ...]]:
         raise VoiceError("Choose at least one topic.")
     if not all(isinstance(t, str) and t in known for t in chosen):
         raise VoiceError("Choose topics from this track.")
-    for solo in (behavioural.BEHAVIOURAL, market.MARKET):
+    for solo in (behavioural.BEHAVIOURAL, market.MARKET, *conversational.TOPIC.values()):
         if solo in chosen:
             if len(chosen) > 1:
                 raise VoiceError("Behavioural questions run on their own; choose them without other topics."
                                  if solo == behavioural.BEHAVIOURAL else f"{solo} runs on its own; choose it without other topics.")
             return track, solo
-    forge = known - {MIXED, behavioural.BEHAVIOURAL, market.MARKET}
+    forge = known - {MIXED, behavioural.BEHAVIOURAL, market.MARKET, *conversational.TOPIC.values()}
     if MIXED in chosen or set(chosen) == forge:
         return track, MIXED
     return track, tuple(dict.fromkeys(chosen))
@@ -139,7 +143,7 @@ def topic_label(pack, topic) -> str:
 def interview_for(pack, topic, level) -> Interview:
     """A forge interview on the chosen track and topics."""
     track, chosen = selection(pack, topic)
-    if chosen in {behavioural.BEHAVIOURAL, market.MARKET}:
+    if chosen in {behavioural.BEHAVIOURAL, market.MARKET, *conversational.TOPIC.values()}:
         raise VoiceError(f"{chosen} is not a forge interview.")
     if level not in DIFFICULTIES:
         raise VoiceError("Choose a starting level: Easy, Medium or Hard.")
@@ -204,6 +208,8 @@ def report(session_id: str):
         return behavioural.report(session)
     if isinstance(session, market.MarketSession):
         return market.report(session)
+    if isinstance(session, conversational.ConversationalSession):
+        return conversational.report(session)
     if isinstance(session, quant_dev.QuantDevSession):
         return quant_dev.report(session, bank().templates)
     return interview_report.build(session, bank().templates)
@@ -305,6 +311,9 @@ async def interview_socket(socket: WebSocket):
             spec = coding.pick(track, topics)
             round_ = coding.CodingSession(socket.send_json, listen, next_event, provider, spec, track, deadline=deadline,
                                           steps=steps_for(spec), more=more)
+            if track == "software" and conversational.enabled() and conversational.load("software"):
+                round_.design = conversational.ConversationalSession(socket.send_json, listen, provider, "software", count=1)
+                round_.design.ends_session = False
             return round_
 
         deadline = time.monotonic() + SESSION_SECONDS
@@ -314,6 +323,11 @@ async def interview_socket(socket: WebSocket):
             track, interview = placement_for(begin.get("pack"))
             session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
             session.track, session.placement, session.topics = track, True, "Placement: one question per strength area"
+        elif selection(begin.get("pack"), begin["topics"] if begin.get("topics") is not None else begin.get("topic"))[1] \
+                in conversational.TOPIC.values():
+            # Decision log 30: conversational questions (the behavioural flow plus a twist), on their own.
+            track = selection(begin.get("pack"), None)[0]["id"]
+            session = conversational.ConversationalSession(socket.send_json, listen, provider, track, deadline=deadline)
         elif begin.get("pack") == quant_dev.TRACK and quant_dev.available(bank()):
             # A spoken opener (probability or expectations), then the coding round on quant_dev families.
             deadline = time.monotonic() + coding.INTERVIEW_SECONDS
