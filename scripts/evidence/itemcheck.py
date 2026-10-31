@@ -38,6 +38,8 @@ SLIP_LABEL = "understands"  # right reasoning with an arithmetic slip; confirm b
 LABELS = {"correct": "understands", "memorised": "does_not_understand",
           "misconception": "does_not_understand", "slip": SLIP_LABEL}
 SOURCES = ("builder", "tester", "model-written")
+# Evidence run 2 (scripts/evidence/from_sessions.py): items from exported interviews.
+RUN2_LABELS = {"genuine": "understands", "bluff": "does_not_understand"}
 SEED = 15  # decision log 15
 
 
@@ -172,6 +174,13 @@ def check(item: dict, part: str, transcript: str) -> tuple[bool, str]:
     """Whether the transcript's committed number fits the item's category for this part."""
     if not transcript.strip():
         return False, "empty transcript"
+    if item.get("category") == "bluff":
+        return True, "a bluff: any answer"  # run 2: the label comes from the session, not the number
+    if item.get("category") == "genuine":
+        said = committed(transcript)
+        inst = _instance(item, part)
+        ok = said is not None and accepts(said, inst.answer, inst.tolerance)
+        return (True, "commits to the exact answer") if ok else (False, "a genuine item needs the exact answer on both parts")
     said = committed(transcript)
     if said is None:
         return False, "no number found; state the committed number (digits or words)"
@@ -201,10 +210,15 @@ def problems(items: list[dict]) -> list[str]:
     """Everything that stops a freeze: counts, labels, sources and every transcript's check."""
     out = []
     counts = Counter(i.get("category") for i in items)
-    if dict(counts) != dict(COUNTS):
+    run2 = bool(items) and set(counts) <= set(RUN2_LABELS)
+    labels = RUN2_LABELS if run2 else LABELS
+    if run2:  # evidence run 2: both kinds present, no fixed counts
+        if set(counts) != set(RUN2_LABELS):
+            out.append(f"run 2 needs both bluff and genuine items, not {dict(counts)}")
+    elif dict(counts) != dict(COUNTS):
         out.append(f"categories {dict(counts)} must be {dict(COUNTS)}")
     for item in items:
-        if item.get("label") != LABELS.get(item.get("category")):
+        if item.get("label") != labels.get(item.get("category")):
             out.append(f"{item['id']}: label {item.get('label')} does not match category {item.get('category')}")
         if item.get("source") not in SOURCES:
             out.append(f"{item['id']}: source must be one of {SOURCES}")

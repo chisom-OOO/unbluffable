@@ -6,6 +6,10 @@ Arms, all on the same configurable Spark backend (LLM_BACKEND or --backend):
   careful_answers careful Spark given the stored exact answers for original and twin
   unbluffable     the Exam Room's own extraction + exact checks + engine labels
 
+Evidence run 2 (--design run2): the careful and careful-with-answers chatbots see only the
+original question and its transcript ("careful_first_only", "careful_answers_first_only",
+the same prompts); Unbluffable runs as above, on the original and the twin.
+
 Each arm runs `--runs` times (3 by default). Outputs results.json and results.md:
 accuracy, false-flag rate on items labelled "understands", verdict flip rate across
 runs, and exact McNemar of Unbluffable against each chatbot arm.
@@ -16,7 +20,7 @@ Calls go through voice.provider.MetaVoice, so live calls are recorded (git-ignor
 recordings/); replay is for tests only.
 
   python scripts/evidence/harness.py --items PATH [--backend meta_api|open_weights]
-         [--runs 3] [--out eval/raw/evidence] [--concurrency 4]
+         [--runs 3] [--out eval/raw/evidence] [--concurrency 4] [--design run1|run2]
 """
 
 from __future__ import annotations
@@ -47,6 +51,11 @@ from voice.schemas import obj  # noqa: E402
 HERE = Path(__file__).resolve().parent
 PROMPTS = HERE / "prompts"
 ARMS = ("plain", "careful", "careful_answers", "unbluffable")
+# Evidence run 2: the chatbots see only the original question and transcript (same prompts).
+DESIGNS = {"run1": ARMS, "run2": ("careful_first_only", "careful_answers_first_only", "unbluffable")}
+PROMPT_OF = {"careful_first_only": "careful", "careful_answers_first_only": "careful_answers"}
+WITH_ANSWERS = {"careful_answers", "careful_answers_first_only"}
+FIRST_ONLY = {"careful_first_only", "careful_answers_first_only"}
 PROMPT_FILES = {"plain": "plain.txt", "careful": "careful.txt", "careful_answers": "careful_with_answers.txt"}
 CHATBOT_EFFORT = "low"  # the same for every chatbot arm
 VERDICT = obj({"verdict": {"type": "string", "enum": list(stats.LABELS)}})
@@ -124,12 +133,14 @@ def _answer_block(n: int, text: str, transcript: str) -> str:
             f"<answer>\n{safe}\n</answer>")
 
 
-def chatbot_message(item: dict, with_answers: bool) -> str:
-    parts = [_answer_block(1, item["original"]["question"]["text"], item["original"]["transcript"]),
-             _answer_block(2, item["twin"]["question"]["text"], item["twin"]["transcript"])]
+def chatbot_message(item: dict, with_answers: bool, first_only: bool = False) -> str:
+    """The question(s) and answer(s) the chatbot judges; `first_only`: the original alone (run 2)."""
+    parts = [_answer_block(1, item["original"]["question"]["text"], item["original"]["transcript"])]
+    if not first_only:
+        parts.append(_answer_block(2, item["twin"]["question"]["text"], item["twin"]["transcript"]))
     if with_answers:
-        parts.append(f"Verified exact answer to question 1: {item['original']['question']['answer']}\n"
-                     f"Verified exact answer to question 2: {item['twin']['question']['answer']}")
+        parts.append(f"Verified exact answer to question 1: {item['original']['question']['answer']}"
+                     + ("" if first_only else f"\nVerified exact answer to question 2: {item['twin']['question']['answer']}"))
     return "\n\n".join(parts)
 
 
@@ -137,7 +148,7 @@ def chatbot_message(item: dict, with_answers: bool) -> str:
 
 
 async def chatbot_verdict(provider, arm: str, prompt: str, item: dict) -> str:
-    message = chatbot_message(item, with_answers=arm == "careful_answers")
+    message = chatbot_message(item, with_answers=arm in WITH_ANSWERS, first_only=arm in FIRST_ONLY)
     try:
         parsed, _ = await provider.structured(message, f"evidence_{arm}", CHATBOT_EFFORT, VERDICT, prompt)
     except VoiceError:
@@ -184,12 +195,12 @@ async def unbluffable_verdict(provider, item: dict) -> str:
 
 
 async def evaluate(items: list[dict], provider, runs: int = 3, concurrency: int = 4,
-                   prompts: dict[str, str] | None = None, open_weights=None) -> dict[str, list[dict[str, str]]]:
+                   prompts: dict[str, str] | None = None, open_weights=None, design: str = "run1") -> dict[str, list[dict[str, str]]]:
     """verdicts[arm][run][item id]. `open_weights`: a second provider on Muse Spark Open;
     with it, the careful arm and Unbluffable also run there as separate arms."""
     prompts = prompts or load_prompts()
     gate = asyncio.Semaphore(concurrency)
-    plan = {arm: (arm, provider) for arm in ARMS}
+    plan = {arm: (arm, provider) for arm in DESIGNS[design]}
     if open_weights is not None:
         plan.update({arm: (base, open_weights) for arm, base in OPEN_WEIGHTS_ARMS.items()})
 
@@ -198,7 +209,7 @@ async def evaluate(items: list[dict], provider, runs: int = 3, concurrency: int 
         async with gate:
             if base == "unbluffable":
                 return await unbluffable_verdict(on, item)
-            return await chatbot_verdict(on, base, prompts[base], item)
+            return await chatbot_verdict(on, base, prompts[PROMPT_OF.get(base, base)], item)
 
     verdicts = {arm: [] for arm in plan}
     for _ in range(runs):
@@ -227,8 +238,9 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
     mcnemar = {arm: {"majority": stats.compare(labels, ours["majority"]["verdicts"], arms[arm]["majority"]["verdicts"]),
                      "by_run": [stats.compare(labels, o["verdicts"], t["verdicts"])
                                 for o, t in zip(ours["runs"], arms[arm]["runs"])]}
-               for arm in ARMS if arm != "unbluffable"}
-    gap = ours["majority"]["correct"] - arms["careful_answers"]["majority"]["correct"]
+               for arm in arms if arm != "unbluffable" and arm not in OPEN_WEIGHTS_ARMS}
+    key = "careful_answers" if "careful_answers" in arms else "careful_answers_first_only"
+    gap = ours["majority"]["correct"] - arms[key]["majority"]["correct"]
     open_rows = {}
     if all(arm in arms for arm in OPEN_WEIGHTS_ARMS):
         theirs = arms["unbluffable_open_weights"]
@@ -245,7 +257,8 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
         "open_weights": open_rows,
         "headline_rule": {
             "unbluffable_correct": ours["majority"]["correct"],
-            "careful_answers_correct": arms["careful_answers"]["majority"]["correct"],
+            "careful_answers_correct": arms[key]["majority"]["correct"],
+            "compared_with": key,
             "gap": gap,
             "within": CLOSE_ITEMS,
             "close": abs(gap) <= CLOSE_ITEMS,
@@ -257,6 +270,8 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
 def markdown(results: dict) -> str:
     pct = lambda x: f"{x * 100:.1f}%"
     names = {"plain": "Plain Spark", "careful": "Careful Spark", "careful_answers": "Careful Spark + stored answers",
+             "careful_first_only": "Careful Spark, original only",
+             "careful_answers_first_only": "Careful Spark + stored answer, original only",
              "unbluffable": "Unbluffable", "careful_open_weights": "Careful Muse Spark Open",
              "unbluffable_open_weights": "Unbluffable on Muse Spark Open"}
     n = results["n_items"]
@@ -269,7 +284,7 @@ def markdown(results: dict) -> str:
         "| Arm | Correct (majority) | Accuracy per run | False-flag rate (majority) | Verdict flip rate | Errors (majority) |",
         "|---|---|---|---|---|---|",
     ]
-    for arm in ARMS:
+    for arm in [a for a in results["arms"] if a not in OPEN_WEIGHTS_ARMS]:
         a = results["arms"][arm]
         per_run = ", ".join(pct(r["accuracy"]) for r in a["runs"])
         lines.append(f"| {names[arm]} | {a['majority']['correct']}/{n} | {per_run} | "
@@ -317,8 +332,9 @@ def git(*args: str) -> str:
     return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
 
 
-def provenance(items_path: Path, items_sha: str, provider, runs: int, prompts: dict[str, str]) -> dict:
+def provenance(items_path: Path, items_sha: str, provider, runs: int, prompts: dict[str, str], design: str = "run1") -> dict:
     return {
+        "design": design,
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "git_commit": git("rev-parse", "HEAD"),
         "backend": provider.spark_backend.name,
@@ -342,6 +358,8 @@ def main(argv=None) -> int:
     parser.add_argument("--out", type=Path, default=ROOT / "eval" / "raw" / "evidence")
     parser.add_argument("--record-dir", type=Path, default=ROOT / "recordings" / "evidence")
     parser.add_argument("--expect-items-sha256", default=None, help="refuse to run unless the item file has this hash")
+    parser.add_argument("--design", choices=tuple(DESIGNS), default="run1",
+                        help="run2: careful chatbots given only the original question and transcript")
     parser.add_argument("--open-weights", action="store_true",
                         help="also run the careful arm and Unbluffable on Muse Spark Open (backend open_weights), as separate rows")
     args = parser.parse_args(argv)
@@ -362,8 +380,8 @@ def main(argv=None) -> int:
     if args.open_weights:
         second = MetaVoice("live", str(args.record_dir))
         second.spark_backend = backends.get_backend("open_weights")
-    verdicts = asyncio.run(evaluate(items, provider, args.runs, args.concurrency, prompts, open_weights=second))
-    results = summarise(items, verdicts, provenance(args.items, items_sha, provider, args.runs, prompts))
+    verdicts = asyncio.run(evaluate(items, provider, args.runs, args.concurrency, prompts, open_weights=second, design=args.design))
+    results = summarise(items, verdicts, provenance(args.items, items_sha, provider, args.runs, prompts, args.design))
     if second is not None:
         results["open_weights_model"] = second.spark_backend.model
     write_outputs(results, args.out)
