@@ -78,7 +78,40 @@
   }
   const onlyRobotic = (voices) => { const ranked = rankVoices(voices); return ranked.length > 0 && ranked.every((v) => voiceTier(v) === 3); };
 
-  const api = { shouldOfferHelp, speechTimeoutMs, guardUtterance, gateProblems, rankVoices, voiceTier, onlyRobotic };
+  // Decision log 27: "Which model did what" groups calls by model and job: the count, the
+  // median time and the total cost. A live transcription stream reports its audio seconds
+  // (summed), never a latency.
+  function groupModelCalls(calls) {
+    const groups = new Map();
+    for (const c of calls) {
+      if (!c || !c.model) continue;
+      const key = `${c.model}|${c.job}`;
+      const g = groups.get(key) || { model: c.model, job: c.job, count: 0, times: [], cost: null, audio: null, recorded: false };
+      g.count += 1;
+      if (c.audio_s != null) g.audio = (g.audio || 0) + c.audio_s;
+      else if (c.latency_s != null) g.times.push(c.latency_s);
+      if (c.estimated_cost_usd != null) g.cost = (g.cost || 0) + c.estimated_cost_usd;
+      g.recorded = g.recorded || c.mode === "replay";
+      groups.set(key, g);
+    }
+    return [...groups.values()].map((g) => {
+      const t = [...g.times].sort((a, b) => a - b), mid = Math.floor(t.length / 2);
+      const median = t.length ? (t.length % 2 ? t[mid] : (t[mid - 1] + t[mid]) / 2) : null;
+      return { model: g.model, job: g.job, count: g.count, median, cost: g.cost, audio: g.audio, recorded: g.recorded };
+    });
+  }
+  function fmtSeconds(s) {
+    return s == null ? null : s >= 1 ? `${s.toFixed(1)} s` : s < 0.001 ? "under 1 ms" : `${Math.round(s * 1000)} ms`;
+  }
+  // The figures shown for a group: "3 calls · median 1.2 s · $0.0031" or "live stream, 62 s of audio".
+  function modelFigures(g) {
+    if (g.audio != null) return [`live stream, ${Math.round(g.audio)} s of audio`, g.count > 1 ? `${g.count} answers` : null].filter(Boolean);
+    return [`${g.count} call${g.count === 1 ? "" : "s"}`, g.median == null ? null : `median ${fmtSeconds(g.median)}`,
+            g.cost == null ? null : `$${g.cost.toFixed(4)}`].filter(Boolean);
+  }
+
+  const api = { shouldOfferHelp, speechTimeoutMs, guardUtterance, gateProblems, rankVoices, voiceTier, onlyRobotic,
+                groupModelCalls, modelFigures };
   if (typeof module !== "undefined") module.exports = api;
   else window.UBTurn = api;
 })();

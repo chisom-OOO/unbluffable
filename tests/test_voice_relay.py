@@ -148,3 +148,11 @@ def test_disconnect_and_upstream_error_are_recorded_safely(tmp_path, monkeypatch
     assert len(records) == 1
     saved = records[0].read_text(encoding="utf-8")
     assert '"status": "failed"' in saved and "synthetic-server-key" not in saved
+
+
+def test_live_transcription_reports_its_audio_seconds_not_a_latency():
+    from voice.provider import metadata
+    record = {"kind": "realtime", "request": {}, "run_id": "r", "recorded_at": "t", "latency_s": 70.0,
+              "events": [{"elapsed_s": 0, "event": {}}, {"elapsed_s": 61.84, "event": {}}]}
+    assert metadata(record, "live", "transcription")["audio_s"] == 61.8
+    assert "audio_s" not in metadata({**record, "kind": "minimal", "events": []}, "live", "minimal")

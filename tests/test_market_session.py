@@ -147,7 +147,7 @@ def test_a_market_making_interview_over_the_socket(monkeypatch):
                 assert e["kind"] == "market"
                 rounds += 1
             if e["type"] == "state" and e["value"] == "listening":
-                socket.send_json({"type": "typed", "transcript": "1 at 1000"})  # contains every EV; wide, then accepted
+                socket.send_json({"type": "typed", "transcript": "0 at 2000"})  # contains every EV (0 to 1728); wide, then accepted
             if e["type"] == "session_end":
                 assert e["market"] is True
                 break

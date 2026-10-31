@@ -195,18 +195,17 @@ document.addEventListener("DOMContentLoaded", () => {
     coding_follow_up: "The follow-up question", coding_judge: "Your follow-up answer (model-judged)",
     market_quote: "Your bid and offer, read from your words", market_question: "Which question to ask about your logic",
   };
+  // Decision log 27: one row per model and job (count, median time, total cost); a live
+  // transcription stream shows its audio seconds, not a latency.
+  const modelCalls = [];
   function modelRow(model, job) {
     if (!model || !model.model) return;
-    const rows = $("model-rows");
-    if (rows.dataset.empty !== "no") { rows.innerHTML = ""; rows.dataset.empty = "no"; }
-    const time = model.latency_s == null ? null : model.latency_s >= 1 ? `${model.latency_s.toFixed(1)} s` : model.latency_s < 0.001 ? "under 1 ms" : `${Math.round(model.latency_s * 1000)} ms`;
-    const cost = model.estimated_cost_usd == null ? null : `$${model.estimated_cost_usd.toFixed(4)}`;
-    const row = document.createElement("div");
-    row.className = "modelrow";
-    row.innerHTML = `<div><strong class="mono">${escapeHtml(model.model)}${model.mode === "replay" ? " (recorded)" : ""}</strong>` +
-      `<small>${escapeHtml(JOBS[job] || job)}</small></div>` +
-      `<div class="nums mono">${[time, cost].filter(Boolean).join("<br>")}</div>`;
-    rows.appendChild(row);
+    modelCalls.push({ ...model, job });
+    const groups = window.UBTurn.groupModelCalls(modelCalls);
+    $("model-rows").innerHTML = groups.map((g) => `<div class="modelrow"><div><strong class="mono">${escapeHtml(g.model)}${g.recorded ? " (recorded)" : ""}</strong>`
+      + `<small>${escapeHtml(JOBS[g.job] || g.job)}</small></div>`
+      + `<div class="nums mono">${window.UBTurn.modelFigures(g).map(escapeHtml).join("<br>")}</div></div>`).join("");
+    $("models-summary-count").textContent = ` · ${modelCalls.length} call${modelCalls.length === 1 ? "" : "s"}`;
   }
 
   // ---------- Market making (decision log 28): the market panel beside the transcript ----------

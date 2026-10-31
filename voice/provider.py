@@ -53,7 +53,10 @@ def metadata(data, mode, job):
     model = data["request"].get("model", SPARK) if spark else ASR
     if spark and model == SPARK and type(inputs) is int and type(outputs) is int:
         cost = (inputs * 1.25 + outputs * 4.25) / 1_000_000  # spec/03 assumed rates.
-    return {"model": model,
+    # Live transcription streams for as long as the candidate talks: its time is audio, not latency.
+    events = data.get("events") or []
+    audio = round(max((e.get("elapsed_s") or 0) for e in events), 1) if data["kind"] == "realtime" and events else None
+    return {"model": model, **({"audio_s": audio} if audio is not None else {}),
             "job": job, "effort": data["request"].get("reasoning_effort"),
             "latency_s": data.get("latency_s"), "estimated_cost_usd": cost,
             "mode": mode, "run_id": data["run_id"], "recorded_at": data["recorded_at"]}

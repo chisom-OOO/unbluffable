@@ -95,3 +95,23 @@ console.log("speech guard and gate ok");
   assert.equal(onlyRobotic([]), false);
 }
 console.log("voice ranking ok");
+
+{
+  const { groupModelCalls, modelFigures } = require(path.resolve(__dirname, "../app/static/ui/turn-logic.js"));
+  const spark = (t, c) => ({ model: "muse-spark-1.3", job: "scoring_result", latency_s: t, estimated_cost_usd: c, mode: "live" });
+  const groups = groupModelCalls([spark(1.0, 0.001), spark(3.0, 0.002), spark(2.0, 0.003),
+    { model: "muse-spark-1.3", job: "endpoint_decision", latency_s: 0.4, estimated_cost_usd: null },
+    { model: "muse-voice-transcribe", job: "transcription_model", latency_s: 40, audio_s: 40.2 },
+    { model: "muse-voice-transcribe", job: "transcription_model", latency_s: 22, audio_s: 21.6 }]);
+  assert.equal(groups.length, 3, "one row per model and job");
+  const scoring = groups.find((g) => g.job === "scoring_result");
+  assert.equal(scoring.count, 3);
+  assert.equal(scoring.median, 2.0);
+  assert.ok(Math.abs(scoring.cost - 0.006) < 1e-12);
+  assert.deepEqual(modelFigures(scoring), ["3 calls", "median 2.0 s", "$0.0060"]);
+  const asr = groups.find((g) => g.job === "transcription_model");
+  assert.deepEqual(modelFigures(asr), ["live stream, 62 s of audio", "2 answers"], "audio seconds, never a latency");
+  assert.deepEqual(modelFigures(groups.find((g) => g.job === "endpoint_decision")), ["1 call", "median 400 ms"]);
+  assert.equal(groupModelCalls([spark(1, 0), spark(4, 0)])[0].median, 2.5, "even count: the middle two");
+}
+console.log("model panel grouping ok");
