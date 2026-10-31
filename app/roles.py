@@ -329,4 +329,6 @@ def view(bank, role: Role) -> dict:
             "coding": role.coding, "opener": role.opener,
             "chips": [{"id": c.id, "name": c.name, "tier": tier, "kind": c.kind} for tier, c in chips],
             "areas": [c.name for tier, c in chips if tier == "core" and c.kind in {"topic", MARKET}]
-                     + (["Coding"] if role.opener else [])}
+                     + (["Coding"] if role.opener else []),
+            # The profile counts an answer toward a Core chip by its topic (placement answers too).
+            "area_topics": {c.name: list(c.topics) or [c.name] for tier, c in chips if tier == "core" and c.kind in {"topic", MARKET}}}

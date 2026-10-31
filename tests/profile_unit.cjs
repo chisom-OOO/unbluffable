@@ -163,3 +163,17 @@ console.log("profile ok");
   assert.equal(fresh.answers.length, 1, "an unassessed area keeps it (it cannot lower anything)");
 }
 console.log("bonus parts ok");
+
+// --- Setup redesign: the radar follows the role's Core chips, matching answers by topic ---
+{
+  const p = P.empty();
+  P.applyReport(p, { track: "quant", placement: true, rating_items: [
+    { area: "Probability", topic: "Discrete probability", value_float: 0.8 },
+    { area: "Expectations", topic: "Expectations", value_float: 0.6 }] }, "pl", "2026-11-01", null);
+  assert.equal(p.answers[0].tp, "Discrete probability", "an answer keeps its topic");
+  const scores = P.areaScores(p, "quant", ["Probability", "Expected value"],
+    { Probability: ["Discrete probability", "Continuous probability"], "Expected value": ["Expectations"] });
+  assert.deepEqual(scores.map((s) => [s.area, Math.round(s.score)]), [["Probability", 80], ["Expected value", 60]]);
+  assert.equal(P.normalise(JSON.parse(JSON.stringify(p))).answers[1].tp, "Expectations", "kept through export and import");
+}
+console.log("role radar ok");
