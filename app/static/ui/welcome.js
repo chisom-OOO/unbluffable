@@ -90,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => window.UBAccount.whenReady.t
     if ($("share").checked && roles.length) {
       fetch("/api/interest", { method: "POST", headers: { "Content-Type": "application/json" },
                                body: JSON.stringify({ roles, other_text: other }) }).catch(() => {});
+      window.UBAccount?.shareInterest(roles, other).catch(() => {});  // the log line always; Firestore only when enabled
     }
     // Then offer placement on the chosen track.
     fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {

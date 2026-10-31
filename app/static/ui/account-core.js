@@ -5,6 +5,8 @@
 (() => {
   const P = typeof module !== "undefined" ? require("./profile-core.js") : window.UBProfile;
   const COLLECTION = "users";
+  const INTEREST = "interest";
+  const INTEREST_ROLES = ["quant", "quant_dev", "ib", "consulting", "software", "other"];  // as firestore.rules
 
   function createAccount({ sdk, config, store, now = () => new Date().toISOString(), storage = null }) {
     const app = sdk.initializeApp(config);
@@ -109,10 +111,20 @@
         store.clear();
         emit();
       },
+      // "Share this": one write-only document in "interest", for guests too. No uid, no email,
+      // nothing else; firestore.rules allows exactly these fields and nobody may read them.
+      async shareInterest(roles, otherText) {
+        await db.collection(INTEREST).add(interestDoc(roles, otherText, sdk.firestore.FieldValue.serverTimestamp()));
+      },
     };
   }
 
-  const api = { createAccount, COLLECTION };
+  function interestDoc(roles, otherText, createdAt) {
+    return { roles: [...new Set(roles)].filter((r) => INTEREST_ROLES.includes(r)),
+             other_text: String(otherText || "").trim().slice(0, 200), created_at: createdAt };
+  }
+
+  const api = { createAccount, COLLECTION, INTEREST, INTEREST_ROLES, interestDoc };
   if (typeof module !== "undefined") module.exports = api;
   else window.UBAccountCore = api;
 })();

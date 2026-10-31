@@ -11,11 +11,13 @@ function fakeSdk(docs = new Map()) {
     calls, docs,
     initializeApp: (config) => { calls.push(["init", config.projectId]); return {}; },
     auth: Object.assign(() => auth, { GoogleAuthProvider: function GoogleAuthProvider() { this.id = "google"; } }),
-    firestore: () => ({ collection: (name) => ({ doc: (id) => ({
+    firestore: Object.assign(() => ({ collection: (name) => ({
+      async add(value) { calls.push(["add", name]); docs.set(`${name}/${docs.size}`, JSON.parse(JSON.stringify(value))); },
+      doc: (id) => ({
       async get() { const key = `${name}/${id}`; return { exists: docs.has(key), data: () => docs.get(key) }; },
       async set(value) { calls.push(["set", `${name}/${id}`]); docs.set(`${name}/${id}`, JSON.parse(JSON.stringify(value))); },
       async delete() { calls.push(["delete", `${name}/${id}`]); docs.delete(`${name}/${id}`); },
-    }) }) }),
+    }) }) }), { FieldValue: { serverTimestamp: () => "SERVER_TIME" } }),
     as(user) { current = user && { ...user, async delete() { calls.push(["deleteUser", user.uid]); if (user.stale && !user.reauthed) throw { code: "auth/requires-recent-login" }; },
                                     async reauthenticateWithPopup() { user.reauthed = true; calls.push(["reauth"]); } };
                return listener(current); },
@@ -131,3 +133,21 @@ const CONFIG = { apiKey: "public-id", authDomain: "x.firebaseapp.com", projectId
   }
   console.log("account ok");
 })().catch((e) => { console.error(e); process.exit(1); });
+
+// --- "Share this": a write-only interest document, for guests too (no uid, no email) ---
+{
+  const { INTEREST, INTEREST_ROLES, interestDoc } = require(path.resolve(__dirname, "../app/static/ui/account-core.js"));
+  const sdk = fakeSdk();
+  const store = { load: () => P.empty(), save: () => true, clear() {} };
+  const account = createAccount({ sdk, config: { projectId: "p" }, store });
+  sdk.as(null);  // a guest
+  (async () => {
+    await account.shareInterest(["quant_dev", "other", "nonsense", "other"], "  Risk desk tooling  ");
+    const [key, doc] = [...sdk.docs.entries()].find(([k]) => k.startsWith(INTEREST + "/"));
+    assert.deepEqual(Object.keys(doc).sort(), ["created_at", "other_text", "roles"]);
+    assert.deepEqual(doc, { roles: ["quant_dev", "other"], other_text: "Risk desk tooling", created_at: "SERVER_TIME" });
+    assert.equal(interestDoc(["quant"], "x".repeat(300), 1).other_text.length, 200);
+    assert.deepEqual(INTEREST_ROLES, P.ROLES.map((r) => r.id), "the same roles as the role presets");
+    console.log("interest ok");
+  })().catch((e) => { console.error(e); process.exit(1); });
+}
