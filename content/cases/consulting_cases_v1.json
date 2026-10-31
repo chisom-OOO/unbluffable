@@ -1,0 +1,2862 @@
+[
+  {
+    "id": "CC01",
+    "case_type": "profitability",
+    "difficulty": "medium",
+    "title": "More sales, less profit",
+    "prompt": "A regional meal-preparation business is selling well, but its owner is disappointed with profit. She wants to know what has changed and what to do next.",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Increase annual operating profit by at least one hundred thousand dollars within the next twelve months."
+      },
+      {
+        "question_topic": "Scope",
+        "answer": "Both meal ranges and all existing sites are in scope; no acquisition or extra site is planned."
+      },
+      {
+        "question_topic": "Revenue trend",
+        "answer": "Prices and meal volumes are unchanged versus the comparison year."
+      },
+      {
+        "question_topic": "Cost context",
+        "answer": "The fixed-cost base is unchanged; product-level variable costs are available in the first exhibit."
+      },
+      {
+        "question_topic": "Decision rules",
+        "answer": "Food safety and the current service standard cannot be compromised."
+      },
+      {
+        "question_topic": "Accounting and timing",
+        "answer": "All quoted improvements are full-year operating impacts; ignore tax, financing and costs not explicitly stated."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Revenue: price, volume and product mix",
+        "Variable cost per meal: ingredients, labor and waste",
+        "Fixed operating cost and existing capacity",
+        "Implementation: supplier reliability, food safety and service"
+      ],
+      "common_gaps": [
+        "Assuming strong sales imply strong profit",
+        "Using an unweighted cost average across unequal volumes",
+        "Counting a supplier saving without the cost of controlling quality"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Annual product economics; volumes and prices are unchanged. Quantities are thousands of meals.",
+          "columns": [
+            "Product",
+            "Annual meals, thousands",
+            "Price per meal, dollars",
+            "Old variable cost per meal, dollars",
+            "Current variable cost per meal, dollars"
+          ],
+          "rows": [
+            [
+              "Standard",
+              100,
+              10,
+              6,
+              7
+            ],
+            [
+              "Premium",
+              50,
+              16,
+              10,
+              12
+            ]
+          ]
+        },
+        "question": "How much annual contribution has been lost because of the higher unit costs, in thousands of dollars?",
+        "answer": 200,
+        "verification": {
+          "method": "Rebuild old and current product contribution separately, then subtract.",
+          "working": "Old contribution = 100 times (10 minus 6) plus 50 times (16 minus 10) = 700 thousand dollars. Current contribution = 100 times (10 minus 7) plus 50 times (16 minus 12) = 500 thousand dollars. Loss = 700 minus 500 = 200 thousand dollars.",
+          "recomputed_answer": 200,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Applies the unweighted average unit-cost increase to all meals.",
+            "wrong_answer": 225
+          },
+          {
+            "description": "Counts only the standard product and omits the premium cost increase.",
+            "wrong_answer": 100
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "What does the product analysis tell you about where to investigate first?",
+        "key_points": [
+          "Higher variable costs explain the contribution deterioration despite stable sales.",
+          "Premium meals lose more contribution per meal, but standard meals have the larger volume.",
+          "Investigate supplier input prices, portion control and waste before proposing a volume-led recovery."
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "What practical actions could recover profit without weakening the customer proposition?",
+        "strong_ideas": [
+          "Renegotiate ingredients using verified purchase volumes",
+          "Test equivalent approved ingredients through food-safety checks",
+          "Reduce preparation waste using batch-level tracking",
+          "Improve labor scheduling to match production demand",
+          "Simplify low-value product variations",
+          "Test selective price changes where customer willingness supports them"
+        ],
+        "probes": [
+          "Which action would you test first and why?",
+          "How would you distinguish an ingredient-price problem from excess waste?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Supplier recovery offer; unchanged annual volumes, full-year benefits, recurring quality costs included, no other incremental costs.",
+          "columns": [
+            "Product",
+            "Annual meals, thousands",
+            "Saving per meal, dollars",
+            "Extra annual quality cost, thousand dollars"
+          ],
+          "rows": [
+            [
+              "Standard",
+              100,
+              1,
+              10
+            ],
+            [
+              "Premium",
+              50,
+              1,
+              10
+            ]
+          ]
+        },
+        "question": "What annual operating profit improvement would this offer produce, in thousands of dollars?",
+        "answer": 130,
+        "verification": {
+          "method": "Build a gross procurement-saving ledger and deduct both recurring quality-cost lines.",
+          "working": "Gross saving = 100 times 1 plus 50 times 1 = 150 thousand dollars. Extra annual quality cost = 10 plus 10 = 20 thousand dollars. Net improvement = 130 thousand dollars.",
+          "recomputed_answer": 130,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Omits recurring quality-control costs.",
+            "wrong_answer": 150
+          },
+          {
+            "description": "Deducts only one of the two product-specific quality-cost lines.",
+            "wrong_answer": 140
+          }
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "What would you recommend to the owner, and what would you validate before committing?",
+      "key_points": [
+        "The supplier offer can exceed the stated profit-improvement target after recurring quality costs.",
+        "Pursue a controlled rollout only after validating ingredient equivalence and safety.",
+        "Use the cost bridge to track actual savings separately for standard and premium meals.",
+        "Do not describe the offer as recovering the entire historic contribution loss."
+      ],
+      "risks_and_next_steps": [
+        "Test allergens, quality and shelf life before approving substitutions",
+        "Confirm supplier capacity and enforceable pricing",
+        "Track actual waste and labor rather than assuming quoted savings arrive",
+        "Keep a fallback supplier during the pilot"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "The safety trial finds that the proposed ingredient substitute cannot meet mandatory allergen controls.",
+      "what_should_change": [
+        "Reject this supplier offer despite the attractive modeled savings.",
+        "Seek a compliant ingredient or a different cost lever.",
+        "The financial target cannot override the non-negotiable safety condition."
+      ]
+    }
+  },
+  {
+    "id": "CC02",
+    "case_type": "profitability",
+    "difficulty": "hard",
+    "title": "The busy courier",
+    "prompt": "A local courier is handling more deliveries, yet its owners say profit has gone backwards. They have asked you to find the cause and propose a practical response.",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Restore at least the prior year annual operating profit without reducing delivery quality."
+      },
+      {
+        "question_topic": "Scope",
+        "answer": "Standard and express deliveries are the only two services."
+      },
+      {
+        "question_topic": "Fixed costs",
+        "answer": "The central fixed-cost base is unchanged across years."
+      },
+      {
+        "question_topic": "Unit economics",
+        "answer": "Contribution is after all delivery-level variable costs; express has a higher contribution."
+      },
+      {
+        "question_topic": "Capacity",
+        "answer": "There is sufficient spare express capacity for the proposed campaign."
+      },
+      {
+        "question_topic": "Forecast convention",
+        "answer": "The campaign forecast represents genuinely shifted annual deliveries unless later evidence says otherwise; ignore tax and financing."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Revenue and delivery volumes by service",
+        "Contribution per delivery and mix",
+        "Central fixed costs and support costs",
+        "Commercial actions, capacity and execution"
+      ],
+      "common_gaps": [
+        "Treating volume growth as equivalent to profit growth",
+        "Failing to subtract standard contribution when customers upgrade",
+        "Confusing a campaign association with incremental customer behavior"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Courier annual contribution before unchanged central fixed costs; express share is the remainder after standard share.",
+          "columns": [
+            "Period",
+            "Deliveries, thousands",
+            "Standard share, percent",
+            "Standard contribution each, dollars",
+            "Express contribution each, dollars"
+          ],
+          "rows": [
+            [
+              "Before",
+              100,
+              80,
+              2,
+              8
+            ],
+            [
+              "Now",
+              120,
+              90,
+              2,
+              8
+            ]
+          ]
+        },
+        "question": "What is the signed change in annual contribution, in thousands of dollars?",
+        "answer": -8,
+        "verification": {
+          "method": "Recompute standard and express delivery counts, then sum the two category contribution changes.",
+          "working": "Before: 80 thousand standard deliveries times 2 plus 20 thousand express times 8 = 320 thousand dollars. Now: 108 thousand standard times 2 plus 12 thousand express times 8 = 312 thousand dollars. Signed change = -8 thousand dollars.",
+          "recomputed_answer": -8,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Keeps the old delivery mix when applying the larger current volume.",
+            "wrong_answer": 64
+          },
+          {
+            "description": "Compares standard-delivery contribution only and ignores the shrinking express category.",
+            "wrong_answer": 56
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "Why can total volume rise while contribution falls?",
+        "key_points": [
+          "The mix shifts toward the lower-contribution standard service.",
+          "Express delivery count falls even though total delivery count rises.",
+          "The service-level mix is a better immediate diagnostic than total volume alone."
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "How could the courier improve the mix without forcing customers into unsuitable services?",
+        "strong_ideas": [
+          "Target time-sensitive customers with a clear express proposition",
+          "Make service reliability and delivery windows visible at booking",
+          "Offer trials to customers with demonstrable urgency",
+          "Review which customer groups have shifted away from express",
+          "Train sales staff to match service to customer need",
+          "Use controlled experiments to measure actual upgrades"
+        ],
+        "probes": [
+          "How would you avoid discounting customers who would already buy express?",
+          "Which metric would distinguish profitable mix improvement from volume growth alone?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Annual express-upgrade campaign; the listed customers otherwise buy standard service. Benefits and support cost cover the same full year.",
+          "columns": [
+            "Input",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Customers shifted to express, thousands",
+              3
+            ],
+            [
+              "Standard contribution per delivery, dollars",
+              2
+            ],
+            [
+              "Express contribution per delivery, dollars",
+              8
+            ],
+            [
+              "Additional annual support cost, thousand dollars",
+              5
+            ]
+          ]
+        },
+        "question": "What is the incremental annual operating profit from the campaign, in thousands of dollars?",
+        "answer": 13,
+        "verification": {
+          "method": "Compare express contribution earned with standard contribution forgone and campaign support cash cost.",
+          "working": "New express contribution = 3 times 8 = 24 thousand dollars. Standard contribution forgone = 3 times 2 = 6 thousand dollars. Incremental profit = 24 minus 6 minus 5 = 13 thousand dollars.",
+          "recomputed_answer": 13,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Counts all express contribution without subtracting the standard business it replaces.",
+            "wrong_answer": 19
+          },
+          {
+            "description": "Ignores the additional annual campaign support cost.",
+            "wrong_answer": 18
+          }
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "Would you run the upgrade campaign, and how does it address the original problem?",
+      "key_points": [
+        "A genuinely incremental upgrade campaign can more than offset the contribution decline after support cost.",
+        "Pilot it with an untreated comparison group before scaling.",
+        "Protect the promised express service standard and verify that spare capacity is real.",
+        "Keep investigating why customers originally shifted toward standard service."
+      ],
+      "risks_and_next_steps": [
+        "Measure actual standard-to-express switching",
+        "Check whether support cost scales with demand",
+        "Monitor missed delivery windows and customer complaints",
+        "Do not count organic express customers as campaign wins"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "A controlled test shows that the customers credited to the campaign would have bought express even without it.",
+      "what_should_change": [
+        "Stop treating their express contribution as incremental.",
+        "Do not scale the paid campaign on the original business case.",
+        "Focus on genuine service-choice drivers and use the control group to redesign the offer."
+      ]
+    }
+  },
+  {
+    "id": "CC03",
+    "case_type": "market entry",
+    "difficulty": "medium",
+    "title": "Repairs across the county line",
+    "prompt": "An appliance-repair operator is considering serving a neighboring county. The owner thinks the area looks promising and wants your advice on whether to enter.",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Achieve positive first-year operating profit without exceeding one hundred thousand dollars of committed fixed launch and operating costs."
+      },
+      {
+        "question_topic": "Scope",
+        "answer": "Only paid household repairs for one appliance category are in scope."
+      },
+      {
+        "question_topic": "Demand timing",
+        "answer": "The funnel inputs apply to the first twelve months, not an eventual mature market."
+      },
+      {
+        "question_topic": "Resources",
+        "answer": "Qualified contractors can supply all modeled jobs at the stated variable cost."
+      },
+      {
+        "question_topic": "Funding and costs",
+        "answer": "No extra capital expenditure is needed; the quoted fixed cost includes every launch cost."
+      },
+      {
+        "question_topic": "Rules",
+        "answer": "Assume the business can legally operate in the county unless new information changes that assumption."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Addressable household need and achievable demand",
+        "Repair pricing and full entry costs",
+        "Contractor capacity and customer service",
+        "Legal access and entry execution"
+      ],
+      "common_gaps": [
+        "Sizing all households instead of relevant appliance owners",
+        "Treating total repair demand as attainable sales",
+        "Ignoring launch costs or first-year ramp timing"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "First-year local repair-demand funnel; each captured repair household books exactly one job.",
+          "columns": [
+            "Input",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Households, thousands",
+              80
+            ],
+            [
+              "Relevant appliance ownership, percent",
+              75
+            ],
+            [
+              "Owners buying a paid repair this year, percent",
+              20
+            ],
+            [
+              "Achievable share of those repairs, percent",
+              25
+            ],
+            [
+              "Jobs per captured household",
+              1
+            ]
+          ]
+        },
+        "question": "How many repair jobs should the business expect in its first year, as a whole number?",
+        "answer": 3000,
+        "verification": {
+          "method": "Build the eligible-household count, then apply paid demand and captured share sequentially.",
+          "working": "80,000 households times 75 percent = 60,000 appliance owners. One fifth buy repair, giving 12,000 jobs, and one quarter are captured. Forecast = 3000 jobs.",
+          "recomputed_answer": 3000,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Applies repair demand to all households and omits appliance ownership.",
+            "wrong_answer": 4000
+          },
+          {
+            "description": "Uses all repair demand rather than the share the entrant can capture.",
+            "wrong_answer": 12000
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "What does the funnel tell you about the most important assumption to validate?",
+        "key_points": [
+          "The entrant needs only a share of paid repair demand, not all appliance owners.",
+          "Ownership, paid repair incidence and achievable share each affect the forecast.",
+          "Capture share and contractor reliability should be validated locally before committing fixed spending."
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "How would you test demand and establish a credible launch?",
+        "strong_ideas": [
+          "Interview recent repair customers about provider choice",
+          "Check competitor lead times and service gaps",
+          "Run a small service-area advertising test",
+          "Prequalify contractors and audit repair quality",
+          "Pilot booking slots before committing permanent coverage",
+          "Build referral relationships with relevant appliance retailers"
+        ],
+        "probes": [
+          "What evidence would justify the assumed capture share?",
+          "How would you separate genuine demand from low-intent enquiries?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "First-year repair economics; all launch and annual fixed cash costs are included; no additional capex.",
+          "columns": [
+            "Annual jobs",
+            "Price per job, dollars",
+            "Variable cost per job, dollars",
+            "All first-year fixed costs, thousand dollars"
+          ],
+          "rows": [
+            [
+              3000,
+              120,
+              70,
+              100
+            ]
+          ]
+        },
+        "question": "What first-year operating profit would the entry produce, in thousands of dollars?",
+        "answer": 50,
+        "verification": {
+          "method": "Rebuild annual revenue, variable cash cost and fixed cash cost as separate dollar ledgers.",
+          "working": "Revenue = 3,000 times 120 = 360 thousand dollars. Variable cost = 3,000 times 70 = 210 thousand dollars. Profit = 360 minus 210 minus 100 = 50 thousand dollars.",
+          "recomputed_answer": 50,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Omits the first-year fixed costs.",
+            "wrong_answer": 150
+          },
+          {
+            "description": "Treats sales as contribution and ignores variable repair cost.",
+            "wrong_answer": 260
+          }
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "Would you enter the county on the current evidence, and under what conditions?",
+      "key_points": [
+        "The modeled first year is profitable and the fixed-cost commitment meets the stated limit.",
+        "Recommend a staged entry after confirming paid demand and contractor quality.",
+        "Make continued spending conditional on actual bookings, contribution and customer satisfaction.",
+        "Avoid presenting the forecast as proof that the market share will be achieved."
+      ],
+      "risks_and_next_steps": [
+        "Validate repair incidence and attainable share with a pilot",
+        "Confirm contractor availability at the quoted rate",
+        "Track first-time fix rates and warranty rework",
+        "Check local operating requirements before launch"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "The county introduces an exclusive operating franchise, and this business is not eligible for it.",
+      "what_should_change": [
+        "Do not proceed with the direct-entry plan.",
+        "Investigate a lawful partnership with the franchise holder or choose another area.",
+        "Commercial attractiveness does not remove the new market-access barrier."
+      ]
+    }
+  },
+  {
+    "id": "CC04",
+    "case_type": "market entry",
+    "difficulty": "hard",
+    "title": "Own the hub or use a partner",
+    "prompt": "An industrial tool-service business sees an opportunity in a nearby industrial park. Management is debating whether to build a local hub or use a service partner. How would you advise them?",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Enter only if first-year operating profit is positive; prefer the better economic route if service quality is equal."
+      },
+      {
+        "question_topic": "Scope",
+        "answer": "The three listed industrial segments cover the whole target area."
+      },
+      {
+        "question_topic": "Demand",
+        "answer": "A captured tool needs exactly one service visit during the first year."
+      },
+      {
+        "question_topic": "Capacity",
+        "answer": "Either operating route can handle up to one thousand annual visits at the quoted costs."
+      },
+      {
+        "question_topic": "Costs",
+        "answer": "Quoted fixed costs include all first-year setup; prices and variable unit costs remain valid throughout that capacity range."
+      },
+      {
+        "question_topic": "Other considerations",
+        "answer": "Ignore tax and financing; contract reliability and customer control matter even when profit differs."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Addressable tools, service frequency and attainable demand",
+        "Route-specific revenue and variable delivery cost",
+        "Setup and fixed operating cost",
+        "Capacity, partner control and delivery execution"
+      ],
+      "common_gaps": [
+        "Averaging segment tool counts without firm weights",
+        "Choosing the cheaper unit cost without fixed costs",
+        "Assuming a partner is always the best route at larger volumes"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "First-year industrial tool-service demand; each captured tool requires one paid service visit.",
+          "columns": [
+            "Segment",
+            "Customer firms",
+            "Tools per firm",
+            "Visits per tool per year",
+            "Attainable share, percent"
+          ],
+          "rows": [
+            [
+              "Operators",
+              30,
+              10,
+              1,
+              50
+            ],
+            [
+              "Workshops",
+              20,
+              15,
+              1,
+              50
+            ],
+            [
+              "Warehouses",
+              10,
+              20,
+              1,
+              50
+            ]
+          ]
+        },
+        "question": "What annual service-visit volume can the entrant capture, as a whole number?",
+        "answer": 400,
+        "verification": {
+          "method": "Enumerate customer firms within each segment and add their captured tool visits.",
+          "working": "Operators contribute 30 times 10 times one half = 150 visits. Workshops contribute 20 times 15 times one half = 150. Warehouses contribute 10 times 20 times one half = 100. Total = 400 visits.",
+          "recomputed_answer": 400,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Uses the unweighted average tools per firm for all firms.",
+            "wrong_answer": 450
+          },
+          {
+            "description": "Omits attainable share and captures the entire market.",
+            "wrong_answer": 800
+          }
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "What would you investigate before trusting the partner operating route?",
+        "strong_ideas": [
+          "Audit service quality using test jobs",
+          "Check turnaround commitments and remedies",
+          "Verify qualified technician capacity",
+          "Agree ownership of customer relationships and data",
+          "Review escalation and warranty responsibilities",
+          "Negotiate pricing and termination rights for different volumes"
+        ],
+        "probes": [
+          "Which issue could outweigh a small profit advantage?",
+          "How would you protect customers if the partner failed?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "First-year options at the captured volume; both meet service standards and have sufficient capacity. Fixed costs include setup.",
+          "columns": [
+            "Option",
+            "Annual visits",
+            "Price per visit, dollars",
+            "Variable cost per visit, dollars",
+            "First-year fixed cost, thousand dollars"
+          ],
+          "rows": [
+            [
+              "Own hub",
+              400,
+              200,
+              80,
+              40
+            ],
+            [
+              "Service partner",
+              400,
+              200,
+              140,
+              10
+            ]
+          ]
+        },
+        "question": "How much higher is first-year operating profit with the partner than with the owned hub, in thousands of dollars?",
+        "answer": 6,
+        "verification": {
+          "method": "Compare the fixed-cost saving with the partner variable-cost disadvantage in a separate profit bridge.",
+          "working": "Owned hub profit = 400 times (200 minus 80), divided by 1,000, minus 40 = 8 thousand dollars. Partner profit = 400 times (200 minus 140), divided by 1,000, minus 10 = 14 thousand dollars. Partner advantage = 6 thousand dollars.",
+          "recomputed_answer": 6,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Compares unit contribution only and ignores the different fixed costs.",
+            "wrong_answer": -24
+          },
+          {
+            "description": "Counts the fixed-cost saving but ignores the more expensive partner delivery.",
+            "wrong_answer": 30
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "What does the economics suggest about choosing a route as volume changes?",
+        "key_points": [
+          "The partner is more profitable at the modeled first-year volume.",
+          "Its lower fixed cost is offset partly by a higher unit delivery cost.",
+          "Higher sustained volume could favor the owned hub, so the choice should not be treated as permanent."
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "Which route would you recommend now, and what evidence could change your answer?",
+      "key_points": [
+        "Use the partner for an initial entry, conditional on verified service standards and a workable contract.",
+        "The partner has higher first-year operating profit at the captured demand forecast.",
+        "Keep the owned-hub option available if contracted volume materially increases.",
+        "Track service outcomes and demand rather than committing solely on a cost spreadsheet."
+      ],
+      "risks_and_next_steps": [
+        "Validate attainable customer share",
+        "Confirm quoted costs over the relevant volume range",
+        "Negotiate service-level and customer-data protection",
+        "Review route economics as firm demand develops"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "A signed take-or-pay contract now guarantees eight hundred service visits each year; all unit costs, fixed costs and capacity limits stay unchanged.",
+      "what_should_change": [
+        "Recalculate both routes at the higher committed volume.",
+        "The owned hub now has the stronger operating economics because its lower unit cost outweighs the extra fixed cost.",
+        "Reconsider the owned hub if setup and delivery execution can meet the contract."
+      ]
+    }
+  },
+  {
+    "id": "CC05",
+    "case_type": "growth strategy",
+    "difficulty": "medium",
+    "title": "Acquiring customers without growing",
+    "prompt": "A small business-software provider is spending on customer acquisition, but its chief executive says the customer base feels stuck. The team wants a growth plan that improves economics as well as headline sign-ups.",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Add at least fifty active customers over the next renewal year without reducing annual operating profit."
+      },
+      {
+        "question_topic": "Product and scope",
+        "answer": "There is one annual subscription product, and the opening customer cohort renews once during the modeled year."
+      },
+      {
+        "question_topic": "Churn convention",
+        "answer": "The quoted churn applies only to the opening cohort; newly acquired customers do not churn within the period."
+      },
+      {
+        "question_topic": "Contribution",
+        "answer": "Annual customer contribution is after all incremental service costs and excludes the separate retention program cost."
+      },
+      {
+        "question_topic": "Capacity",
+        "answer": "The team can serve the modeled retained and new customers without extra fixed costs."
+      },
+      {
+        "question_topic": "Other changes",
+        "answer": "Assume acquisitions remain unchanged when testing the retention program; ignore tax and financing."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Customer acquisition by channel and cost",
+        "Renewal, churn causes and customer experience",
+        "Contribution per customer and program economics",
+        "Delivery capability and measurement"
+      ],
+      "common_gaps": [
+        "Equating sign-ups with net customer growth",
+        "Applying cohort churn to newly acquired customers",
+        "Confusing a percentage-point change with a relative percentage change"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Annual customer bridge; churn applies only to the opening cohort. Newly acquired customers remain active at year-end.",
+          "columns": [
+            "Input",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Opening customers",
+              1000
+            ],
+            [
+              "Opening-cohort churn, percent",
+              20
+            ],
+            [
+              "New customers acquired",
+              200
+            ]
+          ]
+        },
+        "question": "What is the net change in active customers at year-end, as a whole number?",
+        "answer": 0,
+        "verification": {
+          "method": "Rebuild closing retained and new customer counts, then compare with the opening base.",
+          "working": "Opening-cohort losses = 1,000 times 20 percent = 200 customers. New customers = 200. Net change = 0 customers.",
+          "recomputed_answer": 0,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Counts new acquisitions but ignores churn.",
+            "wrong_answer": 200
+          },
+          {
+            "description": "Applies the opening-cohort churn rate to opening plus newly acquired customers.",
+            "wrong_answer": -40
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "What would you tell the chief executive about the current growth engine?",
+        "key_points": [
+          "New acquisitions are being offset by losses from the opening cohort.",
+          "Increasing acquisition spending alone could leave the underlying retention issue unresolved.",
+          "The diagnosis should separate avoidable churn from customers who no longer need the product."
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "What retention actions would you test before offering blanket discounts?",
+        "strong_ideas": [
+          "Identify churn reasons through exit interviews",
+          "Fix onboarding failures in the first usage period",
+          "Provide targeted training for low-adoption accounts",
+          "Resolve recurring product reliability problems",
+          "Use renewal reminders and early account-health signals",
+          "Offer service tiers that better fit customer needs"
+        ],
+        "probes": [
+          "How would you test whether an action really reduces churn?",
+          "Why might a discount improve renewal counts but weaken economics?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Retention program for the same renewal cohort; contribution is earned for a full renewed annual contract. No effect on new acquisitions.",
+          "columns": [
+            "Input",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Opening cohort, customers",
+              1000
+            ],
+            [
+              "Baseline churn, percent",
+              20
+            ],
+            [
+              "Churn with program, percent",
+              15
+            ],
+            [
+              "Annual contribution per retained customer, dollars",
+              600
+            ],
+            [
+              "Annual program cost, thousand dollars",
+              20
+            ]
+          ]
+        },
+        "question": "What incremental annual operating profit would the retention program deliver, in thousands of dollars?",
+        "answer": 10,
+        "verification": {
+          "method": "Count retained customers separately under baseline and program renewal rates, then price the difference and deduct program cost.",
+          "working": "Retained customers increase from 800 to 850, a gain of 50. Added annual contribution = 50 times 600 = 30 thousand dollars. Incremental profit = 30 minus 20 = 10 thousand dollars.",
+          "recomputed_answer": 10,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Omits the annual program cost.",
+            "wrong_answer": 30
+          },
+          {
+            "description": "Treats the five-percentage-point churn reduction as a five-percent relative reduction in baseline churn.",
+            "wrong_answer": -14
+          }
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "What growth action would you prioritize based on these results?",
+      "key_points": [
+        "Pilot the targeted retention program while maintaining the current acquisition base.",
+        "The modeled renewal improvement meets the active-customer growth objective and has positive incremental annual profit.",
+        "Use a comparison group to measure causal renewal improvement.",
+        "Continue fixing the product and service issues that created avoidable churn."
+      ],
+      "risks_and_next_steps": [
+        "Validate the forecast churn reduction",
+        "Check that contribution is not reduced by hidden discounts",
+        "Track incremental service demands",
+        "Separate renewal-cohort outcomes from new customer activity"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "A controlled pilot finds no improvement in renewal rates relative to untreated customers.",
+      "what_should_change": [
+        "Do not roll out the paid retention program on the original business case.",
+        "Treat the observed benefit as unsupported and investigate why the intervention failed.",
+        "Redirect spending toward measured product fixes or other acquisition and retention options."
+      ]
+    }
+  },
+  {
+    "id": "CC06",
+    "case_type": "growth strategy",
+    "difficulty": "hard",
+    "title": "The tempting partner channel",
+    "prompt": "A household-goods seller has been offered access to a large marketplace. The commercial team expects many more orders, but the finance team is unconvinced. Should the business pursue the partnership?",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Increase first-year operating profit rather than maximize orders or gross sales."
+      },
+      {
+        "question_topic": "Channel scope",
+        "answer": "Direct and partner orders are the only channels in the model."
+      },
+      {
+        "question_topic": "Demand linkage",
+        "answer": "Some marketplace orders are expected to replace orders customers would otherwise place directly."
+      },
+      {
+        "question_topic": "Cost definitions",
+        "answer": "Per-order contribution already includes shipping and channel-variable fees; platform and brand commitments are additional fixed costs."
+      },
+      {
+        "question_topic": "Capacity",
+        "answer": "Fulfillment capacity is sufficient, and no extra capex is required."
+      },
+      {
+        "question_topic": "Timing",
+        "answer": "All annual forecasts and fees refer to the same first year; ignore tax and financing."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Total customer demand and direct-channel displacement",
+        "Contribution economics by channel",
+        "Additional fixed fees and commercial commitments",
+        "Customer ownership, brand control and execution"
+      ],
+      "common_gaps": [
+        "Calling all marketplace sales incremental",
+        "Applying the direct margin to partner orders",
+        "Counting a positive contribution bridge as final profit before new fixed fees"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Annual channel forecast; contribution per order is after all channel-variable costs. Orders are thousands.",
+          "columns": [
+            "Channel",
+            "Orders without partner, thousands",
+            "Orders with partner, thousands",
+            "Contribution per order, dollars"
+          ],
+          "rows": [
+            [
+              "Direct",
+              100,
+              70,
+              5
+            ],
+            [
+              "Partner",
+              0,
+              80,
+              3
+            ]
+          ]
+        },
+        "question": "What incremental annual contribution would the partner channel create, in thousands of dollars?",
+        "answer": 90,
+        "verification": {
+          "method": "Build total contribution with and without the partner and subtract the two channel portfolios.",
+          "working": "Without partner: 100 times 5 = 500 thousand dollars. With partner: 70 times 5 plus 80 times 3 = 590 thousand dollars. Incremental contribution = 90 thousand dollars.",
+          "recomputed_answer": 90,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Counts partner contribution without the direct contribution that is lost.",
+            "wrong_answer": 240
+          },
+          {
+            "description": "Values every partner order at the higher direct-channel contribution.",
+            "wrong_answer": 250
+          }
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "How could the business make the partnership more valuable or less risky?",
+        "strong_ideas": [
+          "Negotiate a lower platform commitment",
+          "Restrict listings to products with little direct overlap",
+          "Use unique bundles to reduce direct-channel substitution",
+          "Test a limited geography before a full rollout",
+          "Secure customer and performance data where feasible",
+          "Negotiate a shorter trial and clear exit rights"
+        ],
+        "probes": [
+          "Which proposal addresses cannibalization most directly?",
+          "What would you measure to distinguish new customers from displaced direct buyers?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "First-year partner economics; lost direct contribution is a real displaced sale. All fees are additional and cover the same year.",
+          "columns": [
+            "Input",
+            "Thousand dollars"
+          ],
+          "rows": [
+            [
+              "Gross partner contribution",
+              240
+            ],
+            [
+              "Direct contribution forgone",
+              150
+            ],
+            [
+              "Annual platform fee",
+              60
+            ],
+            [
+              "Required annual brand spending",
+              40
+            ]
+          ]
+        },
+        "question": "What is the signed first-year operating profit impact of the partner plan, in thousands of dollars?",
+        "answer": -10,
+        "verification": {
+          "method": "Compare partner contribution after its new fixed commitments with the direct contribution it displaces.",
+          "working": "Partner contribution after platform fee and brand spending = 240 minus 60 minus 40 = 140 thousand dollars. Deduct 150 thousand dollars of displaced direct contribution. Profit impact = -10 thousand dollars.",
+          "recomputed_answer": -10,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Treats the channel as wholly incremental and omits lost direct contribution.",
+            "wrong_answer": 140
+          },
+          {
+            "description": "Omits the required brand-spending commitment.",
+            "wrong_answer": 30
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "How should the team interpret more orders alongside a negative profit impact?",
+        "key_points": [
+          "Order growth does not prove incremental value.",
+          "Direct contribution lost and required channel spending exceed the retained benefit in the current plan.",
+          "A partner test is useful only if it can change or validate the economics rather than assume away the shortfall."
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "Would you sign the proposed partnership, and what would need to change?",
+      "key_points": [
+        "Do not sign the full annual commitment on the current forecast.",
+        "Renegotiate terms or redesign the offer to reduce direct-channel displacement.",
+        "Use a controlled, limited test if it can avoid the full fixed commitment.",
+        "Require evidence of incremental operating profit rather than relying on gross order volume."
+      ],
+      "risks_and_next_steps": [
+        "Validate direct-channel displacement",
+        "Check whether fees are cancellable or volume-linked",
+        "Review brand control and customer access",
+        "Track contribution after all required spending"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "An audited test finds no direct-channel cannibalization; partner order volume, contribution per order and all fees stay unchanged.",
+      "what_should_change": [
+        "Rebuild the case without the direct contribution loss.",
+        "The unchanged partner business now has positive incremental profit after the stated fees.",
+        "A phased rollout becomes attractive if the zero-cannibalization finding and operational capacity hold."
+      ]
+    }
+  },
+  {
+    "id": "CC07",
+    "case_type": "cost reduction",
+    "difficulty": "medium",
+    "title": "A cheaper protective package",
+    "prompt": "A homewares distributor wants to reduce packaging spending. A supplier says a lighter package could save money, but the operations team worries about returns. How would you assess the proposal?",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Deliver at least one hundred thousand dollars of recurring annual cash savings and recover setup cash within six months."
+      },
+      {
+        "question_topic": "Scope",
+        "answer": "The package changes only for the existing shipment volume."
+      },
+      {
+        "question_topic": "Non-negotiables",
+        "answer": "Product protection and customer service must remain at the current accepted standard."
+      },
+      {
+        "question_topic": "Costs",
+        "answer": "Quality-control costs and setup are separate; the exhibits include every stated incremental cash cost."
+      },
+      {
+        "question_topic": "Timing",
+        "answer": "Assume an immediate full rollout for the economics, evenly earned monthly savings, and no working-capital or tax effects."
+      },
+      {
+        "question_topic": "Capacity",
+        "answer": "The supplier can handle the existing shipment volume without a volume penalty."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Packaging material and handling cost",
+        "Damage, returns and customer experience",
+        "Setup cash, recurring cost and payback",
+        "Supplier capacity and controlled implementation"
+      ],
+      "common_gaps": [
+        "Comparing package prices without damage and quality effects",
+        "Treating recurring quality-control cost as a one-off",
+        "Confusing annual savings with monthly savings in payback"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Packaging proposal; annual shipment volume is unchanged and all quality-control costs are recurring.",
+          "columns": [
+            "Input",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Annual shipments, thousands",
+              240
+            ],
+            [
+              "Current package cost each, dollars",
+              3
+            ],
+            [
+              "Proposed package cost each, dollars",
+              2
+            ],
+            [
+              "Extra annual quality-control cost, thousand dollars",
+              60
+            ]
+          ]
+        },
+        "question": "What recurring annual cash saving does the proposal produce, in thousands of dollars?",
+        "answer": 180,
+        "verification": {
+          "method": "Compare the old full-year packaging ledger with the new packaging and quality-control ledger.",
+          "working": "Current packaging costs 240 times 3 = 720 thousand dollars. Proposed packaging and quality control cost 240 times 2 plus 60 = 540 thousand dollars. Recurring saving = 180 thousand dollars.",
+          "recomputed_answer": 180,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Omits the recurring quality-control cost.",
+            "wrong_answer": 240
+          },
+          {
+            "description": "Treats the new package cost as the unit saving rather than subtracting it from the old cost.",
+            "wrong_answer": 420
+          }
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "What would you test before replacing the current package?",
+        "strong_ideas": [
+          "Run transit tests for the most fragile products",
+          "Measure actual damage and return rates",
+          "Test customer unboxing and usability",
+          "Check warehouse packing speed and rework",
+          "Validate supplier consistency across batches",
+          "Keep a limited fallback stock of the existing package"
+        ],
+        "probes": [
+          "What result would make you reject the proposal despite the savings?",
+          "How would you avoid a trial that understates transport damage?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Simple cash payback; setup is paid immediately, recurring savings are received evenly at each month-end, and discounting is ignored.",
+          "columns": [
+            "Input",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Gross annual packaging saving, thousand dollars",
+              240
+            ],
+            [
+              "Extra annual quality-control cost, thousand dollars",
+              60
+            ],
+            [
+              "One-time setup cash cost, thousand dollars",
+              60
+            ],
+            [
+              "Months in the operating year",
+              12
+            ]
+          ]
+        },
+        "question": "After how many complete months are the setup costs recovered, as a whole number?",
+        "answer": 4,
+        "verification": {
+          "method": "Simulate each month-end net cash saving until cumulative cash exactly recovers the upfront setup payment.",
+          "working": "Net annual saving = 240 minus 60 = 180 thousand dollars. Monthly saving = 180 divided by 12 = 15 thousand dollars. Setup recovery = 60 divided by 15 = 4 complete months.",
+          "recomputed_answer": 4,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Uses gross packaging savings and ignores recurring quality-control cost.",
+            "wrong_answer": 3
+          },
+          {
+            "description": "Uses the annual saving as if it were a monthly saving, then rounds to a whole recovery month.",
+            "wrong_answer": 1
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "What does meeting the savings and payback targets tell you, and what does it not tell you?",
+        "key_points": [
+          "The modeled proposal clears both financial gates.",
+          "Those gates do not establish that the lighter package protects products adequately.",
+          "A staged trial should confirm the commercial and service assumptions before rollout."
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "Would you recommend the package change?",
+      "key_points": [
+        "Proceed only after a representative damage and service trial passes.",
+        "The modeled recurring savings and setup payback satisfy the financial criteria.",
+        "Roll out in stages and compare damage-adjusted savings against a control group.",
+        "Retain the old package for products or routes that do not meet the required protection level."
+      ],
+      "risks_and_next_steps": [
+        "Measure returns and replacement shipping costs",
+        "Confirm supplier consistency and capacity",
+        "Validate that packing labor does not increase",
+        "Track realized cash savings and setup spending"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "The transit trial shows that the lighter package fails the required protection test for the products in scope.",
+      "what_should_change": [
+        "Do not roll out this package as proposed.",
+        "Redesign or limit the change to products that can pass the required protection standard.",
+        "Rebuild the economic case after including the compliant design and any extra handling."
+      ]
+    }
+  },
+  {
+    "id": "CC08",
+    "case_type": "cost reduction",
+    "difficulty": "medium",
+    "title": "Automation that saves time",
+    "prompt": "A customer-support center is considering automating routine tickets. The vendor emphasizes hours saved, while the finance team wants a credible cost reduction. Should the center invest?",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Approve only a project with nonnegative first-year net cash benefit while maintaining current service quality."
+      },
+      {
+        "question_topic": "Scope",
+        "answer": "Only the routine tickets in the exhibit are automated."
+      },
+      {
+        "question_topic": "Labor flexibility",
+        "answer": "Paid temporary roles can be removed when their work disappears; no severance or extra redeployment cost applies."
+      },
+      {
+        "question_topic": "Capacity assumption",
+        "answer": "Saved productive hours translate into whole removable roles at the stated hours per role."
+      },
+      {
+        "question_topic": "Cash treatment",
+        "answer": "Licenses, quality audits and setup are cash outflows; ignore tax, depreciation and working-capital changes."
+      },
+      {
+        "question_topic": "Timing",
+        "answer": "The first year contains twelve full months of labor savings and recurring software costs."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Workload and time truly removed",
+        "Conversion of time into avoidable paid staffing",
+        "Technology, quality and setup cash costs",
+        "Service performance and rollout risk"
+      ],
+      "common_gaps": [
+        "Calling time saved a cash saving when staffing cannot change",
+        "Forgetting the minutes-to-hours conversion",
+        "Approving on recurring savings while ignoring the first-year setup payment"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Annual ticket automation; released work can be removed from paid temporary roles with no severance or service impact.",
+          "columns": [
+            "Input",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Annual tickets, thousands",
+              120
+            ],
+            [
+              "Minutes per ticket before automation",
+              5
+            ],
+            [
+              "Minutes per ticket after automation",
+              3
+            ],
+            [
+              "Annual productive hours per paid role",
+              2000
+            ],
+            [
+              "Annual cash cost per paid role, thousand dollars",
+              50
+            ]
+          ]
+        },
+        "question": "What annual paid labor cost can be avoided, in thousands of dollars?",
+        "answer": 100,
+        "verification": {
+          "method": "Rebuild paid-role requirements before and after automation, then price the whole-role difference.",
+          "working": "Released time = 120,000 times (5 minus 3) = 240,000 minutes, or 4,000 hours. That removes 4,000 divided by 2,000 = 2 paid roles. Annual avoided cost = 2 times 50 = 100 thousand dollars.",
+          "recomputed_answer": 100,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Fails to convert saved minutes to hours before calculating paid roles.",
+            "wrong_answer": 6000
+          },
+          {
+            "description": "Assumes all current ticket-handling labor cost disappears.",
+            "wrong_answer": 250
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "What assumption makes the labor saving a real cash benefit here?",
+        "key_points": [
+          "The released work corresponds to removable paid temporary roles.",
+          "An efficiency gain would not automatically save payroll if staffing and hours stayed fixed.",
+          "The whole-role and no-severance assumptions should be checked before the project is approved."
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "How would you design an automation trial that protects service quality?",
+        "strong_ideas": [
+          "Limit the trial to clearly defined routine ticket categories",
+          "Route uncertain cases to human agents",
+          "Measure resolution quality as well as handling time",
+          "Audit failed or repeated contacts",
+          "Track actual paid staffing reductions separately from theoretical hours",
+          "Compare outcomes with a similar untreated ticket group"
+        ],
+        "probes": [
+          "What would reveal that the tool merely shifts work to another team?",
+          "Which error would be a rollout stop condition?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "First-year cash business case; labor avoidance is realizable, all fees are additional and there are no other cash impacts.",
+          "columns": [
+            "Input",
+            "Thousand dollars"
+          ],
+          "rows": [
+            [
+              "Annual avoided paid labor cost",
+              100
+            ],
+            [
+              "Annual software license",
+              45
+            ],
+            [
+              "Annual quality audit",
+              20
+            ],
+            [
+              "One-time setup payment at launch",
+              60
+            ]
+          ]
+        },
+        "question": "What is the signed first-year net cash benefit of automation, in thousands of dollars?",
+        "answer": -25,
+        "verification": {
+          "method": "Separate recurring net savings from the upfront setup payment and reconcile their first-year cash effect.",
+          "working": "Recurring net cash saving = 100 minus 45 minus 20 = 35 thousand dollars. First-year net cash benefit = 35 minus 60 = -25 thousand dollars.",
+          "recomputed_answer": -25,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Excludes the setup payment from the first-year cash decision.",
+            "wrong_answer": 35
+          },
+          {
+            "description": "Omits the recurring quality-audit requirement.",
+            "wrong_answer": -5
+          }
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "Would you approve the proposed automation under the stated decision rule?",
+      "key_points": [
+        "Do not approve the full project on the current first-year cash terms.",
+        "Real labor avoidance is positive, but setup and recurring costs create a first-year cash shortfall.",
+        "Negotiate setup terms or test a smaller design rather than treating hours saved as sufficient evidence.",
+        "Keep service quality and the staffing-removal assumption as approval conditions."
+      ],
+      "risks_and_next_steps": [
+        "Confirm actual removable paid roles",
+        "Check license and audit obligations",
+        "Validate first-year timing and implementation effort",
+        "Use a controlled service-quality pilot"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "The vendor waives the entire one-time setup payment in a binding contract; all other assumptions remain unchanged.",
+      "what_should_change": [
+        "The first-year cash gate is now met by the positive recurring net saving.",
+        "Reconsider a phased investment if service quality and paid-role removal are validated.",
+        "Keep monitoring recurring license and quality costs rather than assuming the waiver fixes every risk."
+      ]
+    }
+  },
+  {
+    "id": "CC09",
+    "case_type": "pricing",
+    "difficulty": "medium",
+    "title": "A price rise with fewer orders",
+    "prompt": "A maker of specialist storage products wants to raise prices after leaving them unchanged for years. Sales expects some customers to leave. How would you decide whether the increase is sensible?",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Improve annual operating profit without changing product quality or fixed operating cost."
+      },
+      {
+        "question_topic": "Scope",
+        "answer": "One product and one proposed price change are in scope."
+      },
+      {
+        "question_topic": "Demand forecast",
+        "answer": "The sales forecasts represent annual customer response at each quoted price."
+      },
+      {
+        "question_topic": "Costs",
+        "answer": "Variable cost per item is unchanged; no extra marketing or implementation cost applies in the quantified comparison."
+      },
+      {
+        "question_topic": "Service",
+        "answer": "Capacity is sufficient for either volume, so there is no rationing effect."
+      },
+      {
+        "question_topic": "Decision status",
+        "answer": "The forecasts are estimates and should be validated by a controlled price test."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Willingness to pay and customer volume response",
+        "Unit contribution at each price",
+        "Portfolio and competitive effects outside the single-product model",
+        "Testing, communication and implementation"
+      ],
+      "common_gaps": [
+        "Using revenue growth as the profit test",
+        "Assuming volume is unchanged after a price rise",
+        "Dividing a contribution target by price rather than margin"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Annual price test; the forecast is for a full year. Variable cost per unit and fixed costs are unchanged.",
+          "columns": [
+            "Input",
+            "Current",
+            "Proposed"
+          ],
+          "rows": [
+            [
+              "Price per unit, dollars",
+              10,
+              12
+            ],
+            [
+              "Annual units, thousands",
+              100,
+              85
+            ],
+            [
+              "Variable cost per unit, dollars",
+              4,
+              4
+            ]
+          ]
+        },
+        "question": "What would be the change in annual contribution, in thousands of dollars?",
+        "answer": 80,
+        "verification": {
+          "method": "Reconcile the change in revenue and the change in variable cost as separate dollar effects.",
+          "working": "Current contribution = 100 times (10 minus 4) = 600 thousand dollars. Proposed contribution = 85 times (12 minus 4) = 680 thousand dollars. Change = 80 thousand dollars.",
+          "recomputed_answer": 80,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Uses the change in revenue instead of contribution.",
+            "wrong_answer": 20
+          },
+          {
+            "description": "Applies the higher price to all current volume and ignores the demand reduction.",
+            "wrong_answer": 200
+          }
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "What would you test or communicate before rolling out the new price?",
+        "strong_ideas": [
+          "Test by comparable customer cohorts where commercially feasible",
+          "Interview lost customers about their alternatives",
+          "Explain product value rather than only higher costs",
+          "Review contract notice periods and renewal timing",
+          "Monitor competitor response and cross-product switching",
+          "Predefine a contribution and retention decision rule"
+        ],
+        "probes": [
+          "Which metric would tell you the test is succeeding?",
+          "How would you avoid confusing seasonality with price response?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Contribution-preserving volume floor; fixed costs are unchanged. Units are whole items and all contribution figures cover one year.",
+          "columns": [
+            "Input",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Current annual contribution, thousand dollars",
+              600
+            ],
+            [
+              "Proposed selling price per unit, dollars",
+              12
+            ],
+            [
+              "Variable cost per unit, dollars",
+              4
+            ],
+            [
+              "Current contribution per unit, dollars",
+              6
+            ]
+          ]
+        },
+        "question": "What minimum annual sales volume preserves the current contribution at the proposed price, as a whole number of units?",
+        "answer": 75000,
+        "verification": {
+          "method": "Accumulate per-unit contribution one unit at a time until it first reaches the current contribution target.",
+          "working": "New unit contribution = 12 minus 4 = 8 dollars. Required volume = 600,000 divided by 8 = 75000 units. One fewer unit falls short by 8 dollars.",
+          "recomputed_answer": 75000,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Divides the contribution target by selling price rather than unit contribution.",
+            "wrong_answer": 50000
+          },
+          {
+            "description": "Uses the old unit contribution of six dollars instead of the proposed unit contribution.",
+            "wrong_answer": 100000
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "How does the break-even volume help you interpret the proposed demand forecast?",
+        "key_points": [
+          "The forecast volume is above the contribution-preserving floor.",
+          "There is room for some demand loss, but not unlimited loss.",
+          "The contribution threshold offers a clearer rollout gate than revenue or customer count alone."
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "What would you recommend on price, and how would you control the risk?",
+      "key_points": [
+        "Run a controlled increase rather than assuming the forecast is certain.",
+        "The modeled price and volume combination improves contribution with unchanged fixed costs.",
+        "Use the verified contribution-preserving volume as a practical test threshold.",
+        "Monitor customer mix, complaints and competitive response before wider rollout."
+      ],
+      "risks_and_next_steps": [
+        "Validate actual annualized volume response",
+        "Check that unit cost remains unchanged",
+        "Watch for spillovers to other products",
+        "Avoid assuming an initially favorable response persists indefinitely"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "The pilot now indicates annual sales of only seventy thousand units at the higher price, with the same unit cost.",
+      "what_should_change": [
+        "Do not roll out the price increase on this evidence.",
+        "The revised volume is below the verified contribution-preserving floor.",
+        "Retest price levels, customer groups or value communication before accepting the loss."
+      ]
+    }
+  },
+  {
+    "id": "CC10",
+    "case_type": "pricing",
+    "difficulty": "medium",
+    "title": "Quiet hours at the climbing center",
+    "prompt": "A climbing center is crowded in the evening and quiet during the day. Management proposes a daytime discount to fill the space. They want your view before changing the price list.",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Increase annual operating contribution using existing capacity while protecting the customer experience."
+      },
+      {
+        "question_topic": "Time windows",
+        "answer": "Peak and off-peak capacity are separate; unused daytime capacity cannot relieve the evening limit."
+      },
+      {
+        "question_topic": "Demand",
+        "answer": "The discount forecast adds the stated visits without shifting peak demand."
+      },
+      {
+        "question_topic": "Offer design",
+        "answer": "The initial proposal discounts all off-peak visits, including customers who would otherwise pay full price."
+      },
+      {
+        "question_topic": "Cost convention",
+        "answer": "Variable visit cost is unchanged, and all other operating costs are fixed for this comparison."
+      },
+      {
+        "question_topic": "Evidence",
+        "answer": "Demand response is a forecast to validate, not a proven effect of the discount."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Capacity and demand by time window",
+        "Price response from genuinely additional visits",
+        "Price reduction on existing customer demand",
+        "Offer eligibility, customer experience and testing"
+      ],
+      "common_gaps": [
+        "Applying average utilization to every time window",
+        "Assuming spare capacity guarantees profitable demand",
+        "Ignoring the discount given to customers who already buy"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Annual capacity and paid visits by time window; visits are thousands and capacity cannot be shifted between windows.",
+          "columns": [
+            "Window",
+            "Paid visits, thousands",
+            "Visit capacity, thousands"
+          ],
+          "rows": [
+            [
+              "Peak",
+              80,
+              80
+            ],
+            [
+              "Off-peak",
+              40,
+              100
+            ]
+          ]
+        },
+        "question": "How many additional off-peak visits could fit within current capacity, as a whole number?",
+        "answer": 60000,
+        "verification": {
+          "method": "Enumerate the unused off-peak visit slots between occupied volume and the off-peak limit.",
+          "working": "Off-peak capacity is 100 thousand visits and paid visits are 40 thousand. Spare off-peak capacity = (100 minus 40) times 1,000 = 60000 visits.",
+          "recomputed_answer": 60000,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Treats the whole off-peak capacity as available instead of subtracting existing visits.",
+            "wrong_answer": 100000
+          },
+          {
+            "description": "Applies overall average utilization to off-peak and rounds down to whole visits.",
+            "wrong_answer": 33333
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "Does spare daytime capacity by itself justify a blanket discount?",
+        "key_points": [
+          "Spare capacity makes additional visits operationally possible.",
+          "It does not establish willingness to pay or the incremental profit of the offer.",
+          "The economics must include any discount applied to existing customers."
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "How could the center attract profitable daytime use without broadly cutting existing prices?",
+        "strong_ideas": [
+          "Target first-time daytime customers with eligibility checks",
+          "Offer limited corporate or school daytime sessions",
+          "Create off-peak introductory courses",
+          "Use advance bookings for otherwise empty slots",
+          "Test bundles that add value instead of only cutting price",
+          "Prevent discounted access from spilling into peak hours"
+        ],
+        "probes": [
+          "Which idea best protects existing full-price demand?",
+          "How would you test whether discounted visitors are truly incremental?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Proposed off-peak offer; the lower price applies to every existing and new off-peak visit. No change to peak visits or other costs.",
+          "columns": [
+            "Input",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Existing off-peak visits, thousands",
+              40
+            ],
+            [
+              "Additional off-peak visits, thousands",
+              10
+            ],
+            [
+              "Current off-peak price, dollars",
+              20
+            ],
+            [
+              "Proposed off-peak price, dollars",
+              12
+            ],
+            [
+              "Variable cost per off-peak visit, dollars",
+              4
+            ]
+          ]
+        },
+        "question": "What is the signed annual contribution change from the blanket off-peak discount, in thousands of dollars?",
+        "answer": -240,
+        "verification": {
+          "method": "Value contribution from the new visits, then subtract the price reduction on all existing off-peak visits.",
+          "working": "New-visit contribution = 10 times (12 minus 4) = 80 thousand dollars. Price reduction on existing visits = 40 times (20 minus 12) = 320 thousand dollars. Change = -240 thousand dollars.",
+          "recomputed_answer": -240,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Counts new visitors but ignores the price cut for existing customers.",
+            "wrong_answer": 80
+          },
+          {
+            "description": "Reports the revenue change without subtracting variable costs on additional visits.",
+            "wrong_answer": -200
+          }
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "Would you recommend the blanket discount, and what alternative would you pursue?",
+      "key_points": [
+        "Reject the blanket off-peak discount on the current contribution forecast.",
+        "The price cut for existing visitors outweighs contribution from added visits.",
+        "Test a tightly fenced offer or a different off-peak proposition.",
+        "Measure incremental contribution and customer switching rather than occupancy alone."
+      ],
+      "risks_and_next_steps": [
+        "Validate forecast new demand",
+        "Audit discount eligibility and misuse",
+        "Track peak-to-off-peak shifting if it occurs",
+        "Include any new staffing or marketing cost before scaling"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "Booking technology can restrict the discounted offer to verified new off-peak customers, with no price or volume change for existing customers and no extra system cost.",
+      "what_should_change": [
+        "Rebuild the offer without discounting existing demand.",
+        "A targeted test now has positive incremental contribution under the unchanged new-visit forecast.",
+        "Prioritize eligibility controls and causal demand measurement before scaling."
+      ]
+    }
+  },
+  {
+    "id": "CC11",
+    "case_type": "new product launch",
+    "difficulty": "hard",
+    "title": "A promising thermal jug",
+    "prompt": "A reusable-drinkware producer is considering a thermal jug. Customer research is encouraging, and the commercial team wants to launch quickly. The chief executive wants an independent recommendation.",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Launch only if the first full year has positive incremental operating profit after all capacity and launch costs."
+      },
+      {
+        "question_topic": "Portfolio",
+        "answer": "Some jug buyers would otherwise buy an existing product; both use the same production line."
+      },
+      {
+        "question_topic": "Contribution definition",
+        "answer": "Unit contribution excludes shared fixed launch spending and any extra capacity cost."
+      },
+      {
+        "question_topic": "Capacity convention",
+        "answer": "The capacity exhibit already includes minutes freed by the displaced existing products; do not add them again."
+      },
+      {
+        "question_topic": "Timing and cost",
+        "answer": "Demand, contribution and capacity estimates refer to the same first full year; ignore tax, depreciation and financing."
+      },
+      {
+        "question_topic": "Quality",
+        "answer": "Any production partner must meet the current quality and delivery standard."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Customer need, willingness to pay and attainable demand",
+        "Portfolio contribution and product substitution",
+        "Launch spending and shared capacity economics",
+        "Quality, execution and commercial validation"
+      ],
+      "common_gaps": [
+        "Counting all new sales as incremental",
+        "Adding freed line minutes twice",
+        "Approving the product before pricing the bottleneck capacity"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "First-year new-product forecast; contribution is after unit-variable cost. Fixed launch costs exclude any extra capacity cost.",
+          "columns": [
+            "Input",
+            "Value"
+          ],
+          "rows": [
+            [
+              "New product units, thousands",
+              40
+            ],
+            [
+              "New product contribution per unit, dollars",
+              8
+            ],
+            [
+              "Existing product units displaced, thousands",
+              10
+            ],
+            [
+              "Existing product contribution per unit, dollars",
+              5
+            ],
+            [
+              "First-year fixed launch cost, thousand dollars",
+              200
+            ]
+          ]
+        },
+        "question": "Before additional capacity costs, what is the first-year launch operating profit impact, in thousands of dollars?",
+        "answer": 70,
+        "verification": {
+          "method": "Compare new-product contribution after launch spending with the existing-product contribution it displaces.",
+          "working": "New contribution = 40 times 8 = 320 thousand dollars. Lost existing contribution = 10 times 5 = 50 thousand dollars. Profit impact before capacity = 320 minus 50 minus 200 = 70 thousand dollars.",
+          "recomputed_answer": 70,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Ignores cannibalized existing-product contribution.",
+            "wrong_answer": 120
+          },
+          {
+            "description": "Ignores fixed launch spending.",
+            "wrong_answer": 270
+          }
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "What would you test before committing to a full launch?",
+        "strong_ideas": [
+          "Use a limited customer pre-order test",
+          "Measure substitution from existing products",
+          "Validate willingness to pay at the planned price",
+          "Run line trials to confirm production minutes",
+          "Get comparable quotes for qualified overflow capacity",
+          "Test product quality and delivery lead times"
+        ],
+        "probes": [
+          "Which test could most change the economics?",
+          "How would you distinguish a genuinely new buyer from a buyer switching products?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Shared-line capacity correction; free minutes include minutes released by displaced existing products. Overtime is available without other costs.",
+          "columns": [
+            "Input",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Launch profit before extra capacity, thousand dollars",
+              70
+            ],
+            [
+              "New product output, thousands of units",
+              40
+            ],
+            [
+              "Line minutes required per new unit",
+              2
+            ],
+            [
+              "Total free line minutes, thousands",
+              60
+            ],
+            [
+              "Cash cost per overtime line minute, dollars",
+              4
+            ]
+          ]
+        },
+        "question": "After paying for required overtime capacity, what is the signed first-year launch profit impact, in thousands of dollars?",
+        "answer": -10,
+        "verification": {
+          "method": "Allocate free line minutes first, price only the uncovered minutes and deduct that cash cost from the pre-capacity profit.",
+          "working": "Required line time = 40 times 2 = 80 thousand minutes. Free time covers 60 thousand, leaving 20 thousand overtime minutes. Overtime costs 20 times 4 = 80 thousand dollars. Adjusted profit = 70 minus 80 = -10 thousand dollars.",
+          "recomputed_answer": -10,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Treats a positive product business case as final and ignores extra capacity cost.",
+            "wrong_answer": 70
+          },
+          {
+            "description": "Charges overtime for every new line minute instead of using available free capacity.",
+            "wrong_answer": -250
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "How does the capacity correction change the launch decision?",
+        "key_points": [
+          "The attractive pre-capacity result does not survive the required overtime cost.",
+          "Shared-line minutes have a real opportunity or cash cost.",
+          "The decision should compare a smaller launch, lower capacity cost or a revised product design rather than ignore the constraint."
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "Would you approve the launch at the proposed scale?",
+      "key_points": [
+        "Do not approve the full launch under the current overtime economics.",
+        "A positive pre-capacity case is insufficient when the bottleneck correction makes the total impact negative.",
+        "Explore qualified lower-cost capacity, product redesign or a smaller pilot.",
+        "Revalidate cannibalization and customer demand before fixing the launch scale."
+      ],
+      "risks_and_next_steps": [
+        "Confirm true line minutes and available capacity",
+        "Avoid counting freed minutes twice",
+        "Validate partner quality and delivery",
+        "Check fixed launch commitments before reducing scale"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "An approved production partner offers all required overflow time at one dollar per line minute, with no setup cost or quality change; every other assumption is unchanged.",
+      "what_should_change": [
+        "Rebuild the case using the lower cost for only the uncovered production minutes.",
+        "The launch now has positive incremental profit under the stated demand assumptions.",
+        "Reconsider a phased launch while confirming the partner can deliver the quoted capacity."
+      ]
+    }
+  },
+  {
+    "id": "CC12",
+    "case_type": "M&A / commercial due diligence",
+    "difficulty": "hard",
+    "title": "A waste-services acquisition",
+    "prompt": "A regional waste-services operator is considering buying a smaller competitor. The seller highlights strong earnings and route overlap. The buyer wants to know whether the commercial case supports the proposed price.",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Proceed only at no more than six times verified recurring post-action EBITDA and with acceptable customer and execution risk."
+      },
+      {
+        "question_topic": "Valuation scope",
+        "answer": "The offered amount is enterprise value; do not add a separate net-debt adjustment to this multiple."
+      },
+      {
+        "question_topic": "Accounting",
+        "answer": "Normalize only the disclosed items; replacement-manager compensation is necessary and recurring."
+      },
+      {
+        "question_topic": "Customer development",
+        "answer": "A significant customer has terminated its contract; the lost contribution is a separate change after the standalone normalization."
+      },
+      {
+        "question_topic": "Synergies",
+        "answer": "The stated route-cost synergy is already net of recurring delivery costs and is fully achievable from the first forecast year."
+      },
+      {
+        "question_topic": "Decision rule limits",
+        "answer": "The multiple is an explicit buyer screening rule, not a claim that every asset is fairly valued at that multiple."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Recurring standalone earnings quality",
+        "Customer demand, retention and concentration",
+        "Incremental integration benefits and costs",
+        "Purchase terms, valuation limits and execution risk"
+      ],
+      "common_gaps": [
+        "Adding one-off gains to recurring earnings",
+        "Missing a necessary replacement management cost",
+        "Counting synergies while ignoring customer losses"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Target earnings normalization; all figures are in millions of dollars. Reported EBITDA includes the legal expense and disposal gain, but excludes the required replacement compensation.",
+          "columns": [
+            "Input",
+            "Million dollars"
+          ],
+          "rows": [
+            [
+              "Reported annual EBITDA",
+              2
+            ],
+            [
+              "Genuinely one-off legal expense",
+              0.2
+            ],
+            [
+              "One-off asset-disposal gain",
+              0.1
+            ],
+            [
+              "Additional recurring replacement-manager compensation",
+              0.15
+            ]
+          ]
+        },
+        "question": "What is normalized annual EBITDA, in millions of dollars?",
+        "answer": "39/20",
+        "verification": {
+          "method": "Rebuild normalized earnings in integer dollars, reversing the expense and gain and inserting the missing recurring pay.",
+          "working": "Normalized EBITDA = 2 plus 0.2 minus 0.1 minus 0.15 = 39/20 million dollars, equal to 1.95 million dollars.",
+          "recomputed_answer": "39/20",
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Omits the missing recurring replacement compensation.",
+            "wrong_answer": "21/10"
+          },
+          {
+            "description": "Adds the disposal gain instead of removing it.",
+            "wrong_answer": "43/20"
+          }
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "What commercial diligence would you prioritize before signing?",
+        "strong_ideas": [
+          "Review contract renewals and termination rights",
+          "Interview major customers about service and switching risk",
+          "Map route overlap against actual customer locations",
+          "Audit the cost baseline behind proposed synergies",
+          "Assess service capacity after integration",
+          "Test customer concentration under a downside forecast"
+        ],
+        "probes": [
+          "Which finding could invalidate the earnings base?",
+          "How would you avoid counting the same route saving twice?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Acquisition economics; all figures are in millions of dollars. Lost customer contribution is not already removed from normalized EBITDA, and verified cost synergies are fully recurring.",
+          "columns": [
+            "Input",
+            "Million dollars"
+          ],
+          "rows": [
+            [
+              "Enterprise purchase price",
+              12
+            ],
+            [
+              "Normalized standalone annual EBITDA",
+              1.95
+            ],
+            [
+              "Annual verified cost synergies",
+              0.3
+            ],
+            [
+              "Annual contribution lost from a terminated customer",
+              0.45
+            ]
+          ]
+        },
+        "question": "What enterprise-value-to-EBITDA multiple is paid after the customer loss and synergies, as an exact multiple?",
+        "answer": "20/3",
+        "verification": {
+          "method": "Recompute post-action earnings and purchase price in integer dollars, then reduce their ratio exactly.",
+          "working": "Post-loss, post-synergy EBITDA = 1.95 plus 0.3 minus 0.45 = 1.8 million dollars. Paid multiple = 12 divided by 1.8 = 20/3 times.",
+          "recomputed_answer": "20/3",
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Counts synergies but ignores the terminated customer.",
+            "wrong_answer": "16/3"
+          },
+          {
+            "description": "Deducts customer loss but omits the verified recurring cost synergies.",
+            "wrong_answer": 8
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "How does the revised multiple affect the buyer screening decision?",
+        "key_points": [
+          "The current price exceeds the earnings multiple permitted by the buyer after the disclosed customer loss.",
+          "The seller headline earnings are not the right recurring denominator.",
+          "A cheaper price, contingent consideration or stronger verified earnings would be needed to reopen the case."
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "Would you recommend buying at the stated price?",
+      "key_points": [
+        "Do not approve the acquisition at the current price under the stated buyer screening rule.",
+        "Negotiate price or contingent terms linked to verified recurring customer earnings.",
+        "Continue diligence on customer concentration and route synergies.",
+        "Keep valuation discipline separate from the strategic appeal of geographic overlap."
+      ],
+      "risks_and_next_steps": [
+        "Validate customer termination and replacement prospects",
+        "Confirm replacement management pay",
+        "Prove route savings without service deterioration",
+        "Review integration costs and contractual liabilities outside this earnings screen"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "A signed replacement customer contract fully restores the lost annual contribution, without changing the price, synergies or other costs.",
+      "what_should_change": [
+        "Recompute the paid multiple on the restored recurring earnings.",
+        "The transaction now passes the stated multiple screen.",
+        "Reopen the acquisition recommendation subject to contract quality, concentration and integration diligence."
+      ]
+    }
+  },
+  {
+    "id": "CC13",
+    "case_type": "operations",
+    "difficulty": "medium",
+    "title": "Where the production line stalls",
+    "prompt": "A small workshop is missing orders despite spare time in parts of the factory. Management is considering new equipment. They want help deciding where to focus and whether spending would pay off.",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Increase fulfilled demand and approve an improvement only if its first-year incremental net cash benefit is positive."
+      },
+      {
+        "question_topic": "Process",
+        "answer": "Every item passes through cutting, assembly and packing in that order."
+      },
+      {
+        "question_topic": "Operating model",
+        "answer": "Use deterministic steady-state capacity with sufficient work in progress, no scrap and no other downtime."
+      },
+      {
+        "question_topic": "Demand",
+        "answer": "The upgrade exhibit shows firm paid demand rather than a market-size aspiration."
+      },
+      {
+        "question_topic": "Costs",
+        "answer": "Unit contribution is after all variable operating costs; the upgrade cash cost is the only added fixed commitment."
+      },
+      {
+        "question_topic": "Timing",
+        "answer": "The upgrade is available for the full first operating year; ignore taxes and working-capital changes."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Demand and service gap",
+        "Capacity and bottlenecks at each serial step",
+        "Improvement cost and realizable sales contribution",
+        "Implementation, quality and sustained throughput"
+      ],
+      "common_gaps": [
+        "Adding or averaging serial step capacities",
+        "Upgrading a non-bottleneck without changing total throughput",
+        "Assuming capacity automatically becomes paid sales"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Serial production steps; no scrap, downtime, buffers or other constraints. Each finished unit visits every step and there is enough work in progress to run at steady state.",
+          "columns": [
+            "Step",
+            "Productive hours per day",
+            "Minutes required per unit"
+          ],
+          "rows": [
+            [
+              "Cutting",
+              8,
+              4
+            ],
+            [
+              "Assembly",
+              8,
+              6
+            ],
+            [
+              "Packing",
+              8,
+              3
+            ]
+          ]
+        },
+        "question": "What is the maximum steady-state output, as a whole number of finished units per day?",
+        "answer": 80,
+        "verification": {
+          "method": "Enumerate whole daily output levels and require that every serial step has enough productive minutes.",
+          "working": "Cutting capacity = 8 times 60 divided by 4 = 120 units per day. Assembly = 480 divided by 6 = 80; packing = 480 divided by 3 = 160. The slowest step limits finished output to 80 units per day.",
+          "recomputed_answer": 80,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Averages the separate step capacities instead of using the bottleneck.",
+            "wrong_answer": 120
+          },
+          {
+            "description": "Uses the fastest step as the finished-output limit.",
+            "wrong_answer": 160
+          }
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "What would you try before approving a major equipment purchase?",
+        "strong_ideas": [
+          "Observe assembly work to identify avoidable waits",
+          "Reduce changeover time at the bottleneck",
+          "Balance tasks across qualified operators",
+          "Check whether rework creates hidden load",
+          "Pilot a modest assembly process improvement",
+          "Confirm paid demand and delivery priorities"
+        ],
+        "probes": [
+          "Why might faster packing not improve finished output?",
+          "How would you verify that the bottleneck shifted after an improvement?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Assembly upgrade reduces its minutes per unit to four; current and upgraded finished-output limits are shown. All added output is sold up to firm demand; no other costs, taxes or working-capital changes.",
+          "columns": [
+            "Input",
+            "Current",
+            "With upgrade"
+          ],
+          "rows": [
+            [
+              "Finished capacity, units per day",
+              80,
+              120
+            ],
+            [
+              "Firm paid demand, units per day",
+              100,
+              100
+            ],
+            [
+              "Contribution per additional unit, dollars",
+              25,
+              25
+            ],
+            [
+              "Operating days in first year",
+              200,
+              200
+            ],
+            [
+              "One-time upgrade cash cost, thousand dollars",
+              0,
+              40
+            ]
+          ]
+        },
+        "question": "What is the incremental first-year net cash benefit of the upgrade, in thousands of dollars?",
+        "answer": 60,
+        "verification": {
+          "method": "Build baseline and upgraded cash contribution separately, cap sales at demand, then compare after setup cash.",
+          "working": "Extra sales = minimum of 120 and 100, minus minimum of 80 and 100 = 20 units per day. Annual extra contribution = 20 times 25 times 200 = 100 thousand dollars. Net first-year benefit = 100 minus 40 = 60 thousand dollars.",
+          "recomputed_answer": 60,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Sells every unit of extra capacity despite the demand ceiling.",
+            "wrong_answer": 160
+          },
+          {
+            "description": "Ignores the one-time upgrade cash cost.",
+            "wrong_answer": 100
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "What limits the value of the upgraded line now?",
+        "key_points": [
+          "The upgrade removes assembly as the sole old constraint.",
+          "Cutting and upgraded assembly set a higher process limit, but firm demand is lower than that limit.",
+          "The business should evaluate paid output, not value every technically available slot as a sale."
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "Would you recommend the upgrade, and where should management focus?",
+      "key_points": [
+        "Prioritize the assembly upgrade after a practical throughput trial.",
+        "The demand-capped first-year cash benefit is positive after the stated setup payment.",
+        "Verify cutting and packing can sustain the modeled upgraded flow.",
+        "Keep monitoring paid demand rather than building more capacity automatically."
+      ],
+      "risks_and_next_steps": [
+        "Confirm productive minutes through observation",
+        "Check actual customer order commitments",
+        "Validate upgrade timing and quality",
+        "Measure throughput at the finished-goods boundary"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "Confirmed paid demand falls to seventy units per day, with all capacities and upgrade costs unchanged.",
+      "what_should_change": [
+        "Defer the upgrade at the revised demand level.",
+        "Existing capacity already covers the confirmed orders, so the purchase does not unlock extra sales.",
+        "Shift attention to demand generation or another operational problem rather than unused capacity."
+      ]
+    }
+  },
+  {
+    "id": "CC14",
+    "case_type": "operations",
+    "difficulty": "medium",
+    "title": "Covering the afternoon peak",
+    "prompt": "A service desk receives complaints about long afternoon waits even though mornings seem quiet. The manager wants to improve coverage without unnecessarily increasing staffing cost.",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Meet the stated deterministic workload and minimum coverage rules at the lowest extra daily cash cost."
+      },
+      {
+        "question_topic": "Model convention",
+        "answer": "Arrival and service rates are fixed for this exercise; ignore queueing variability, breaks and backlog."
+      },
+      {
+        "question_topic": "Skills",
+        "answer": "All people in the staffing options are qualified for the same calls."
+      },
+      {
+        "question_topic": "Morning floor",
+        "answer": "A minimum of seven people must remain in the morning, including the required backup coverage."
+      },
+      {
+        "question_topic": "Flexibility",
+        "answer": "The listed redeployment and temporary staffing options are available each day without other costs."
+      },
+      {
+        "question_topic": "Scope",
+        "answer": "All plans in the second exhibit cover the afternoon requirement; the remaining decision is morning feasibility and cost."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Demand and workload by time window",
+        "Productive staffing and service capacity",
+        "Redeployment constraints and minimum coverage",
+        "Feasible staffing costs and implementation"
+      ],
+      "common_gaps": [
+        "Using an average hour instead of covering the peak",
+        "Reporting total staff rather than extra staff",
+        "Choosing free redeployment while violating another coverage rule"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Calls and service are deterministic for this staffing exercise; no backlog, breaks or additional queueing buffer is required.",
+          "columns": [
+            "Period",
+            "Calls arriving per hour",
+            "Calls handled per staff-hour",
+            "Current staff"
+          ],
+          "rows": [
+            [
+              "Morning",
+              36,
+              6,
+              8
+            ],
+            [
+              "Afternoon",
+              60,
+              6,
+              8
+            ]
+          ]
+        },
+        "question": "What minimum additional afternoon staffing is needed to handle the hourly demand, as a whole number of people?",
+        "answer": 2,
+        "verification": {
+          "method": "Enumerate additional staffing levels and stop at the first that covers the stated deterministic afternoon demand.",
+          "working": "Afternoon staffing needed = 60 divided by 6 = 10 people. Existing afternoon staff = 8. Additional people = 2. One fewer added person would leave capacity below demand.",
+          "recomputed_answer": 2,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Uses average morning and afternoon demand instead of covering the peak.",
+            "wrong_answer": 0
+          },
+          {
+            "description": "Reports total required staff rather than additional staff.",
+            "wrong_answer": 10
+          }
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "What operational changes would you investigate beyond simply adding permanent headcount?",
+        "strong_ideas": [
+          "Adjust shift start and end times",
+          "Redeploy qualified people between time windows",
+          "Move discretionary administration out of the peak",
+          "Improve routing to avoid repeat transfers",
+          "Review predictable sources of afternoon demand",
+          "Measure resolution time and repeat contacts by call category"
+        ],
+        "probes": [
+          "Which action can be tested without changing total paid hours?",
+          "What extra analysis would real-world variable arrivals require?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "All three plans provide the required two extra afternoon people. Staff are equally qualified, costs are daily, and the morning coverage floor is binding.",
+          "columns": [
+            "Plan",
+            "Morning staff remaining",
+            "Minimum morning staff",
+            "Extra daily cash cost, dollars"
+          ],
+          "rows": [
+            [
+              "Redeploy two",
+              6,
+              7,
+              0
+            ],
+            [
+              "Hire two temporary staff",
+              8,
+              7,
+              200
+            ],
+            [
+              "Redeploy one and hire one",
+              7,
+              7,
+              100
+            ]
+          ]
+        },
+        "question": "What is the lowest extra daily cash cost that meets both coverage requirements, in dollars?",
+        "answer": 100,
+        "verification": {
+          "method": "Check plans in increasing cost order and reject each plan that fails the minimum morning coverage.",
+          "working": "Redeploying two costs zero but leaves only six morning staff, below seven, so it is infeasible. Hiring two costs 200 dollars. The hybrid leaves seven morning staff and costs 100 dollars, making it the least-cost feasible plan.",
+          "recomputed_answer": 100,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Picks the cheapest plan without enforcing the morning coverage floor.",
+            "wrong_answer": 0
+          },
+          {
+            "description": "Considers only hiring both extra people and ignores feasible redeployment.",
+            "wrong_answer": 200
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "Why is the cheapest quoted staffing option not necessarily the right option?",
+        "key_points": [
+          "A plan must satisfy both afternoon demand and morning minimum coverage.",
+          "Redeploying both people solves one problem by violating another condition.",
+          "The hybrid is the least-cost feasible plan under the given rules, not simply the lowest listed cost."
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "Which staffing plan would you use, and what would you monitor?",
+      "key_points": [
+        "Use one redeployed person and one temporary afternoon person.",
+        "This covers the peak while preserving the minimum morning staffing.",
+        "Check actual call patterns and service outcomes before making the arrangement permanent.",
+        "Use a queueing and variability assessment if applying this deterministic exercise to a real service target."
+      ],
+      "risks_and_next_steps": [
+        "Confirm staff qualifications and availability",
+        "Watch morning service after redeployment",
+        "Check temporary-staff reliability",
+        "Update demand and service-time estimates"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "The required morning coverage floor increases to eight people; afternoon workload and all option costs stay unchanged.",
+      "what_should_change": [
+        "The hybrid redeployment plan is no longer feasible.",
+        "Use the fully temporary afternoon plan among the listed options.",
+        "Reconfirm the extra budget and review whether another compliant shift design exists."
+      ]
+    }
+  },
+  {
+    "id": "CC15",
+    "case_type": "customer segmentation",
+    "difficulty": "hard",
+    "title": "The largest accounts are not the best accounts",
+    "prompt": "A training provider has been pursuing large corporate accounts, but delivery teams feel stretched and the founder questions whether growth is profitable. Which customers should the business prioritize?",
+    "clarifying_facts": [
+      {
+        "question_topic": "Objective",
+        "answer": "Maximize first-year incremental net contribution within the available delivery hours."
+      },
+      {
+        "question_topic": "Customer economics",
+        "answer": "Use one full year of customer revenue and service cost, and charge acquisition cost once per new customer."
+      },
+      {
+        "question_topic": "Scope",
+        "answer": "Corporate economics are a diagnostic; the quantified next campaign can choose only the listed willing Solo and Family prospects."
+      },
+      {
+        "question_topic": "Capacity",
+        "answer": "The campaign has one shared service-hour pool; the repeated capacity figure is not separate capacity for each segment."
+      },
+      {
+        "question_topic": "Constraints",
+        "answer": "Customers are indivisible, willing-customer limits are binding, and no additional cross-selling or longer-term value is assumed."
+      },
+      {
+        "question_topic": "Other costs",
+        "answer": "All acquisition and variable delivery costs are in the quoted net margins; fixed overhead is unchanged."
+      }
+    ],
+    "structure": {
+      "key_buckets": [
+        "Segment demand and acquisition effort",
+        "First-year contribution after service and acquisition cost",
+        "Scarce delivery-hour use and feasible customer mix",
+        "Segment proposition, execution and longer-term risks"
+      ],
+      "common_gaps": [
+        "Ranking segments by revenue per customer alone",
+        "Applying acquisition cost once to an entire cohort",
+        "Optimizing contribution without the shared service-capacity constraint"
+      ]
+    },
+    "stages": [
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "New customer cohort; every customer receives one full year of service. Acquisition cost is incurred once per new customer and all other costs are unchanged.",
+          "columns": [
+            "Segment",
+            "New customers",
+            "Annual revenue per customer, dollars",
+            "Annual service cost per customer, dollars",
+            "Acquisition cost per customer, dollars"
+          ],
+          "rows": [
+            [
+              "Solo",
+              100,
+              120,
+              60,
+              40
+            ],
+            [
+              "Family",
+              50,
+              300,
+              180,
+              50
+            ],
+            [
+              "Corporate",
+              20,
+              600,
+              450,
+              200
+            ]
+          ]
+        },
+        "question": "What total first-year net contribution does the corporate cohort generate, in dollars?",
+        "answer": -1000,
+        "verification": {
+          "method": "Build corporate revenue, service cost and acquisition cost as three separate cohort cash ledgers.",
+          "working": "Corporate revenue = 20 times 600 = 12,000 dollars. Service cost = 20 times 450 = 9,000 dollars. Acquisition cost = 20 times 200 = 4,000 dollars. Net contribution = -1000 dollars.",
+          "recomputed_answer": -1000,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Ignores acquisition cost when comparing first-year customer economics.",
+            "wrong_answer": 3000
+          },
+          {
+            "description": "Charges acquisition cost once for the whole cohort rather than for each new customer.",
+            "wrong_answer": 2800
+          }
+        ]
+      },
+      {
+        "type": "brainstorm",
+        "question": "What could explain the corporate segment economics, and how might management improve them?",
+        "strong_ideas": [
+          "Check acquisition effort and sales-cycle cost",
+          "Separate standard from bespoke delivery work",
+          "Review pricing for high-service requests",
+          "Standardize content where customers accept it",
+          "Measure renewal and repeat-sales evidence before assigning lifetime value",
+          "Consider contract minimums or paid customization"
+        ],
+        "probes": [
+          "When could a first-year loss still be commercially justified?",
+          "How would you avoid imposing an unsupported lifetime-value assumption?"
+        ]
+      },
+      {
+        "type": "exhibit_calculation",
+        "exhibit": {
+          "title": "Incremental next-year campaign using only Solo and Family prospects; net margins include one-off acquisition costs and all service costs. Whole customers, no other constraints, and one shared pool of hours.",
+          "columns": [
+            "Input",
+            "Family",
+            "Solo"
+          ],
+          "rows": [
+            [
+              "First-year net margin per new customer, dollars",
+              70,
+              20
+            ],
+            [
+              "Service hours per new customer",
+              6,
+              2
+            ],
+            [
+              "Maximum willing new customers",
+              30,
+              100
+            ],
+            [
+              "Shared available service hours, not additive",
+              240,
+              240
+            ]
+          ]
+        },
+        "question": "What is the maximum first-year net contribution the campaign can generate within the shared service capacity, in dollars?",
+        "answer": 2700,
+        "verification": {
+          "method": "Enumerate every integer Family and Solo customer combination within the shared hours and demand limits.",
+          "working": "Family earns 70 dollars for six hours; Solo earns 20 for two. Serve 30 Family customers using 180 hours and earning 2,100 dollars, then 30 Solo using 60 hours and earning 600 dollars. Total = 2700 dollars. Exhaustive integer enumeration confirms this is optimal.",
+          "recomputed_answer": 2700,
+          "result": "PASS_EXACT"
+        },
+        "common_mistakes": [
+          {
+            "description": "Fills Solo demand first because each customer uses fewer hours.",
+            "wrong_answer": 2420
+          },
+          {
+            "description": "Accepts all willing customers and ignores the shared hours limit.",
+            "wrong_answer": 4100
+          }
+        ]
+      },
+      {
+        "type": "insight",
+        "question": "What is the right basis for choosing customers when delivery time is scarce?",
+        "key_points": [
+          "Revenue per customer and margin per customer are incomplete decision rules.",
+          "Compare net contribution per scarce hour while respecting demand limits and whole-customer feasibility.",
+          "The verified feasible mix prioritizes Family prospects, then uses remaining hours for Solo prospects.",
+          "Integer choices should be checked because a ratio ranking is not a universal proof of optimality."
+        ]
+      }
+    ],
+    "recommendation": {
+      "question": "What customer mix and commercial focus would you recommend?",
+      "key_points": [
+        "Prioritize the verified Family and Solo mix for the capacity-constrained campaign.",
+        "Do not keep expanding Corporate accounts solely because their revenue per account is higher.",
+        "Rework Corporate pricing, acquisition cost or service design before scaling that segment.",
+        "Track actual hours and net contribution by customer cohort and test longer-term value separately."
+      ],
+      "risks_and_next_steps": [
+        "Validate service hours and acquisition cost",
+        "Confirm willingness at the stated prices",
+        "Monitor delivery quality under the proposed mix",
+        "Review renewal evidence without counting it as guaranteed profit"
+      ]
+    },
+    "follow_up_twist": {
+      "new_fact": "Family customers now require twelve service hours each rather than six, with margins, demand limits and shared capacity unchanged.",
+      "what_should_change": [
+        "Recalculate the feasible mix rather than reusing the original allocation.",
+        "Solo now has the stronger contribution per scarce service hour, so prioritize it before fitting additional Family customers.",
+        "Keep whole-customer and shared-capacity constraints in the revised optimization."
+      ]
+    }
+  }
+]

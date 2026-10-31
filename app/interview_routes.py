@@ -29,6 +29,7 @@ from voice.relay import realtime_answer
 router = APIRouter(prefix="/api/interview")
 
 MAX_SESSIONS = 200
+CASE_SECONDS = 30 * 60  # decision log 30: a full consulting case
 SESSIONS: OrderedDict[str, ExamSession] = OrderedDict()
 _BANK: Bank | None = None
 
@@ -144,7 +145,7 @@ def role_session(begin, send, listen, next_event, provider, deadline, coding_rou
     if not isinstance(chosen, list) or any(c not in live for c in chosen):
         raise VoiceError("Choose topics from this role.")
     special = [live[c]["kind"] for c in chosen if live[c]["kind"] != "topic"]
-    label = f"{role.name}: " + (", ".join(chosen) if chosen else "role-weighted mix")
+    label = (", ".join(chosen) if chosen else "Role-weighted mix") + f" ({role.name})"
     level = begin.get("level", START_LEVELS[0])
     if level not in DIFFICULTIES:
         raise VoiceError("Choose a starting level: Easy, Medium or Hard.")
@@ -169,6 +170,10 @@ def role_session(begin, send, listen, next_event, provider, deadline, coding_rou
         elif kind in {roles.CONVERSATIONAL, roles.DESIGN}:
             session = conversational.ConversationalSession(send, listen, provider, "ib" if kind == roles.CONVERSATIONAL else "software",
                                                            deadline=deadline)
+        elif kind == roles.CASES:  # decision log 30: a full case, or one of a case type
+            from app import cases
+            chip = next(c for tier, cs in role.tiers() for c in cs if c.id == chosen[0])
+            session = cases.CaseSession(send, listen, provider, deadline=time.monotonic() + CASE_SECONDS, case_type=chip.case_type)
         else:
             raise VoiceError("That format isn't available yet.")
     elif role.coding:  # Software: the chips filter coding problems; none = weighted by tier
@@ -267,6 +272,9 @@ def report(session_id: str):
         return conversational.report(session)
     if isinstance(session, quant_dev.QuantDevSession):
         return quant_dev.report(session, bank().templates)
+    from app import cases
+    if isinstance(session, cases.CaseSession):
+        return cases.report(session)
     return interview_report.build(session, bank().templates)
 
 
@@ -414,8 +422,9 @@ async def interview_socket(socket: WebSocket):
         session.conditions = conditions(begin, provider.mode)
         session_id = keep(session)
         long = isinstance(session, (coding.CodingSession, quant_dev.QuantDevSession))
+        case = type(session).__name__ == "CaseSession"
         await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,
-                                "session_seconds": coding.INTERVIEW_SECONDS if long else SESSION_SECONDS,
+                                "session_seconds": coding.INTERVIEW_SECONDS if long else CASE_SECONDS if case else SESSION_SECONDS,
                                 "drill": session.target.misconception if isinstance(session, DrillSession) else None})
         await session.run()
     except (WebSocketDisconnect, SessionClosed):

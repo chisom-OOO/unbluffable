@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const typePanel = $("type-panel"), typeAnswer = $("type-answer");
   const mute = $("mute"), consent = $("consent"), headphones = $("headphones"), status = $("status");
 
-  const KIND_TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint", trade: "Trade", reveal: "Reveal" };
+  const KIND_TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint", trade: "Trade", reveal: "Reveal", clarify: "Fact" };
   const reduced = reducedMotion();
   const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   // Pace for revealing an interviewer line when the voice sends no word boundaries.
@@ -224,6 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
     coding_plan: "Your approach, quoted", coding_question: "A question about your code",
     coding_follow_up: "The follow-up question", coding_judge: "Your follow-up answer (model-judged)",
     market_quote: "Your bid and offer, read from your words", market_question: "Which question to ask about your logic",
+    case_quotes: "Quotes for each point (model-judged)", case_facts: "Which clarifying facts you asked about",
   };
   // Decision log 27: one row per model and job (count, median time, total cost); a live
   // transcription stream shows its audio seconds, not a latency.
@@ -349,11 +350,13 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle").textContent = event.text;
         $("provenance").innerHTML = window.UB.provenanceHtml(event.provenance_rows);
         $("market-panel").hidden = event.kind !== "market";
+        $("case-panel").hidden = event.kind !== "case";
         $("puzzle-eyebrow").textContent = (event.opener ? "Spoken opener · then a coding round"
           : event.kind === "check" ? "Drill check"
           : event.kind === "market" ? `Market ${event.number} of ${event.market.rounds}`
           : event.kind === "behavioural" ? `Behavioural question ${event.number} of 2`
           : event.kind === "conversational" ? `${event.topic} question ${event.number} of ${event.conversational.of}`
+          : event.kind === "case" ? `Full case · ${event.case.title}`
           : event.kind === "coding" ? "Coding round"
           : event.kind === "drill" ? `Drill question ${event.number} of up to 3`
           : placement ? `Placement question ${event.number} of 5` : `Question ${event.number} of up to 4`)
@@ -362,6 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                           check: "New numbers, no help", coding: "Python · code while you talk",
                                           market: "Market making · graded exactly",
                                           conversational: `${event.conversational?.topic || ""} · model-judged, not exact`,
+                                          case: "Consulting case · calculations exact, the rest model-judged",
                                           behavioural: `${event.behavioural_type === "situational" ? "What would you do" : "Tell me about a time"} · model-judged, not exact` }[event.kind] || "New puzzle")
           + (event.difficulty ? ` · ${event.difficulty}` : "");
         finishReveals();
@@ -401,6 +405,25 @@ document.addEventListener("DOMContentLoaded", () => {
         $("market-revealed").insertAdjacentHTML("beforeend", `<p class="market-settle"><strong>Settled at ${escapeHtml(event.payoff)}</strong> (${escapeHtml(event.draws)})</p>`);
         break;
       case "market_model":
+        modelRow(event.model, event.job);
+        break;
+      // Decision log 30: a full case. Facts appear only once asked; an exhibit shows as a table.
+      case "case_fact":
+        $("case-facts").insertAdjacentHTML("beforeend", event.facts.map((f) =>
+          `<p class="case-fact"><strong>${escapeHtml(f.topic)}:</strong> ${escapeHtml(f.answer)}</p>`).join(""));
+        break;
+      case "case_stage":
+        $("case-stage").textContent = { exhibit_calculation: "Exhibit: calculate exactly", insight: "What the numbers tell you",
+          brainstorm: "Ideas", recommendation: "Your recommendation", follow_up_twist: "New information" }[event.kind] || "";
+        if (event.exhibit) {
+          const x = event.exhibit;
+          $("case-exhibit").innerHTML = `<table class="market-quotes exhibit"><caption>${escapeHtml(x.title)}</caption>`
+            + `<thead><tr>${x.columns.map((c) => `<th scope="col">${escapeHtml(c)}</th>`).join("")}</tr></thead>`
+            + `<tbody>${x.rows.map((r) => `<tr>${r.map((v, i) => (i === 0 ? `<th scope="row">${escapeHtml(String(v))}</th>`
+                : `<td class="mono">${escapeHtml(String(v))}</td>`)).join("")}</tr>`).join("")}</tbody></table>`;
+        }
+        break;
+      case "case_judged":
         modelRow(event.model, event.job);
         break;
       case "state":

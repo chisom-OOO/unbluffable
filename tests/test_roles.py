@@ -106,7 +106,7 @@ def test_a_role_based_start_asks_from_the_chosen_chips_and_rates_by_the_roles_ch
                 break
     assert asked and set(asked) == {"Discrete probability"}
     report = client.get(f"/api/interview/{sid}/report").json()
-    assert report["topics"] == "Quantitative Trading: Probability"
+    assert report["topics"] == "Probability (Quantitative Trading)"
     assert {i["area"] for i in report["rating_items"]} == {"Probability"}
     with client.websocket_connect("/api/interview/ws") as socket:  # a chip from another role is refused
         socket.send_json({"type": "begin", "consent": True, "pack": "quant", "role": "quant_trading", "topics": ["DCF"]})
