@@ -23,6 +23,35 @@ A live run refuses uncommitted changes to the prompts, `harness.py` or `stats.py
 records the commit, the item file's sha256 and each prompt's sha256. Calls are recorded
 under `recordings/evidence/` (git-ignored). Tests use fakes and replay only.
 
+## Making the items (freeze Saturday 14:00)
+
+```
+python scripts/evidence/make_items.py      # eval/items_draft.json: 40 pairs, empty transcripts
+python scripts/evidence/fill_items.py      # type or paste transcripts; checked, saved after each item, resumable
+python scripts/evidence/freeze.py          # validates; prints the sha256 and the exact harness command
+python scripts/evidence/dry_run.py         # every arm on a fake model, plus a live cost estimate
+```
+
+`make_items.py` takes 40 Quant forge families with verified misconceptions (one item per
+family, spread across topics), an interview-friendly original instance, and the engine's
+own twin choice (`engine.bank.twin_choice`, aimed at the item's misconception for that
+category). Categories, checked exactly on the last number each transcript states:
+
+| Category | Count | Original | Twin | Label |
+|---|---|---|---|---|
+| memorised | 10 | exact answer | the original's answer again, or another wrong number | does_not_understand |
+| misconception | 10 | the item's named wrong value | the same mistake's value | does_not_understand |
+| slip | 5 | exact answer | a wrong number that is not a named error or the original's answer | understands |
+| correct | 15 | exact answer | exact answer | understands |
+
+Each item also records `category`, `source` (builder, tester or model-written), the
+family's `topic` and `difficulty`, and the instance indices. The slip label is a choice
+to confirm before the freeze (`SLIP_LABEL` in `itemcheck.py`).
+
+The dry run's cost basis: about 4 characters per input token, the forge budgeting prices
+(USD 1.25 / 4.25 per million input / output tokens), 500 output tokens per call, and an
+upper bound at the 4,000-token cap. For 4 arms x 3 runs x 40 items that is 840 calls.
+
 ## Item file
 
 ```json
