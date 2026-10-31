@@ -12,7 +12,33 @@ from llm.http_diagnostics import log_http_exception
 from voice.provider import ASR, KEYWORDS, REALTIME, api_key, metadata
 from voice.recording import VoiceError, redact
 from voice.turns import AnswerMerger
-from voice.endpointing import PROMPT, safe_classify
+from voice.endpointing import ANYTHING_TO_ADD, PROMPT, safe_classify
+
+
+async def wait_for_turn_policy(merger, browser, changed, now, policy):
+    """Behavioural answers (decision log 27): the policy decides from the words and the
+    silence alone; no Spark call and never the committed-number prompt."""
+    while True:
+        changed.clear()
+        wait = None
+        if not merger.paused and merger.transcript and merger.active is None:
+            decision = policy.decide(merger.transcript, now() - merger.last_activity)
+            if decision.action == "finish":
+                await browser.send_json({"type": "endpoint_decision", "finished": True, "kind": "answer",
+                                         "cue": decision.cue, "model": None})
+                merger.accepted_revision = merger.revision
+                return decision.cue
+            if decision.action == "ask":
+                await browser.send_json({"type": "listening_prompt", "message": ANYTHING_TO_ADD})
+                continue
+            wait = decision.wait
+        signal = asyncio.create_task(changed.wait())
+        try:
+            await asyncio.wait([signal], timeout=wait)
+        finally:
+            signal.cancel()
+            with suppress(asyncio.CancelledError):
+                await signal
 
 
 async def wait_for_endpoint(merger, provider, browser, changed, now, silence_check=None):
@@ -114,7 +140,8 @@ async def replay_realtime(browser, provider, start, silence_s, speed=1):
     return answer["transcript"], model
 
 
-async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=1, connect=None, silence_check=None):
+async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=1, connect=None, silence_check=None,
+                          turn_policy=None, keywords=()):
     if not math.isfinite(silence_s) or silence_s <= 0:
         raise VoiceError("Silence threshold must be finite and positive.")
     if provider.mode == "replay":
@@ -124,7 +151,8 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
     rate = start.get("sample_rate", 16000)
     key = api_key()
     settings = {"model": ASR, "audioEncoding": f"PCM_{rate // 1000}KHZ", "mode": "ENDPOINTING",
-                "partialMode": "CUMULATIVE", "keywords": KEYWORDS, "emitAudioProgress": False}
+                "partialMode": "CUMULATIVE", "keywords": list(dict.fromkeys([*KEYWORDS, *keywords])),
+                "emitAudioProgress": False}
     record = provider.store.create("realtime", {**settings, "silence_s": silence_s}, key)
     merger = AnswerMerger(silence_s)
     merger.paused = bool(start.get("interviewer_speaking")) and not start.get("headphones", False)
@@ -194,16 +222,19 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
 
             reader = asyncio.create_task(receive_provider())
             writer = asyncio.create_task(receive_browser())
-            timer = asyncio.create_task(wait_for_endpoint(merger, provider, browser, changed,
-                lambda: asyncio.get_running_loop().time() - audio_start, silence_check=silence_check))
+            def boundary():
+                clock = lambda: asyncio.get_running_loop().time() - audio_start  # noqa: E731
+                return asyncio.create_task(wait_for_turn_policy(merger, browser, changed, clock, turn_policy) if turn_policy
+                                           else wait_for_endpoint(merger, provider, browser, changed, clock, silence_check=silence_check))
+
+            timer = boundary()
             tasks = [reader, writer, timer]
             while True:
                 done, _ = await asyncio.wait([reader, writer, timer], return_when=asyncio.FIRST_COMPLETED)
                 if timer in done and writer not in done and reader not in done:
                     await timer
                     if merger.accepted_revision != merger.revision:
-                        timer = asyncio.create_task(wait_for_endpoint(merger, provider, browser, changed,
-                            lambda: asyncio.get_running_loop().time() - audio_start, silence_check=silence_check))
+                        timer = boundary()
                         tasks.append(timer)
                         continue
                 break
@@ -222,7 +253,7 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
                 await browser.send_json({"type": "capture_stopped"})
                 await upstream.send(json.dumps({"type": "endStream"}))
                 await asyncio.wait_for(reader, 30)
-                if reason != "done" and re.findall(r"\w+", decided_text.lower()) != re.findall(r"\w+", merger.transcript.lower()):
+                if reason != "done" and turn_policy is None and re.findall(r"\w+", decided_text.lower()) != re.findall(r"\w+", merger.transcript.lower()):
                     revised = await safe_classify(provider, merger.transcript)
                     if not revised.finished:
                         raise VoiceError("The final transcript changed during completion. Please review it or continue your answer.")

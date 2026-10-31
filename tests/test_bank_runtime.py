@@ -482,9 +482,10 @@ def test_topics_list_forge_topics_and_mixed(monkeypatch, bank):
     assert (track["id"], track["name"], track["default"], track["available"]) == ("quant", "Quant", "Mixed", True)
     # IB and Consulting have only their behavioural questions (decision log 24); Software has nothing.
     assert [(t["id"], t["available"], [o["id"] for o in t["topics"]]) for t in rest] == [
-        ("ib", True, ["Behavioural"]), ("consulting", True, ["Behavioural"]), ("software", False, [])]
+        ("ib", True, ["Behavioural"]), ("consulting", True, ["Behavioural"]), ("software", False, []),
+        ("quant_dev", False, [])]  # no quant_dev coding specs yet: "Being added"
     assert [(t["id"], t["count"]) for t in track["topics"]] == [
-        ("Mixed", 3), ("Percentages", 1), ("Probability", 1), ("Statistics", 1)]
+        ("Mixed", 3), ("Percentages", 1), ("Probability", 1), ("Statistics", 1), ("Market making", 8)]  # decision log 28
 
 
 def test_without_templates_only_behavioural_tracks_open_and_no_forge_interview_starts(monkeypatch, tmp_path):
@@ -1192,11 +1193,12 @@ def test_topic_route_groups_topics_by_track_and_marks_empty_tracks(monkeypatch):
     assert data["default_track"] == "quant"
     assert [(t["id"], t["name"], t["count"], t["available"]) for t in data["tracks"]] == [
         ("quant", "Quant", 1, True), ("ib", "Investment banking", 1, True), ("consulting", "Consulting", 1, True),
-        ("software", "Software engineering", 0, False)]  # no software templates: "Being added"
+        ("software", "Software engineering", 0, False),  # no software templates: "Being added"
+        ("quant_dev", "Quant development", 0, False)]
     topics = {t["id"]: [(o["id"], o["count"]) for o in t["topics"]] for t in data["tracks"]}
-    assert topics == {"quant": [("Mixed", 1), ("Probability", 1)],
+    assert topics == {"quant": [("Mixed", 1), ("Probability", 1), ("Market making", 8)],
                       "ib": [("Mixed", 1), ("Valuation", 1), ("Behavioural", 25)],
-                      "consulting": [("Mixed", 1), ("Market sizing", 1), ("Behavioural", 25)], "software": []}
+                      "consulting": [("Mixed", 1), ("Market sizing", 1), ("Behavioural", 25)], "software": [], "quant_dev": []}
 
 
 def test_default_track_is_the_first_shown_when_quant_has_no_templates(monkeypatch):
@@ -1397,4 +1399,4 @@ def test_cached_topics_follow_a_new_bank(monkeypatch):
     one = interview_routes.topics()
     assert interview_routes.topics() is one  # cached
     monkeypatch.setattr(interview_routes, "_BANK", _packed_bank(("a", None, "Statistics")))
-    assert [o["id"] for o in interview_routes.topics()["tracks"][0]["topics"]] == ["Mixed", "Statistics"]
+    assert [o["id"] for o in interview_routes.topics()["tracks"][0]["topics"]] == ["Mixed", "Statistics", "Market making"]

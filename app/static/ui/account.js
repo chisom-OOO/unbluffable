@@ -106,6 +106,8 @@
     state,
     openSignIn,
     signOut: () => account?.signOut(),
+    // With Firebase on: also write the shared roles to "interest" (no uid, no email). Off: nothing.
+    shareInterest: async (roles, otherText) => { await whenReady; if (account) await account.shareInterest(roles, otherText); },
     deleteAccount: () => account?.deleteAccount(),
   };
   document.addEventListener("DOMContentLoaded", start);

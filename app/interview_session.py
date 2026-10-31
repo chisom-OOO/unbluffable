@@ -17,7 +17,7 @@ from typing import Awaitable, Callable
 
 from app import exam_text as say
 from app import provenance as forge_provenance
-from app import follow_up, receipts
+from app import follow_up, hint_ladder, receipts
 from engine.answers import StatedNumber, matches, normalise_numbers, parse_number
 from engine import mathtext
 from engine.bank import ForgePuzzle
@@ -40,6 +40,8 @@ MAX_ROUNDS = 4
 SESSION_SECONDS = 600
 GUIDE_SECONDS = {"new": 120, "twin": 60, "drill": 60}  # drill: app.drill (decision log 16)
 _DECLINE = re.compile(r"^\s*(?:no|nope|not really|no thanks|no thank you|i'?m (?:fine|ok|okay|good))\W*$", re.I)
+_YES = re.compile(r"^\s*(?:yes|yeah|yep|yup|correct|right|that'?s right|that is right|exactly|i did)\b", re.I)
+_NO = re.compile(r"^\s*(?:no|nope|not quite|not exactly|that'?s not (?:it|right|what i said))\b[\s,.!]*", re.I)
 
 
 class SessionClosed(Exception):
@@ -86,6 +88,20 @@ class Analysis:
     stated: StatedNumber | None = None
     span: str | None = None
     quote: str | None = None  # first verbatim reasoning quote, for the report
+    confirm: bool = False  # the number may be misheard: confirm it before grading (decision log 27)
+
+
+def unclear(span: str | None, stated: StatedNumber | None) -> bool:
+    """True when the committed number isn't clearly what the span says: two or more numbers
+    in it ("5 7", "five seven") with no pair that forms the value ("five sevenths",
+    "18 out of 117")."""
+    if not span or stated is None:
+        return False
+    nums = numbers_in(span)
+    if len(nums) < 2:
+        return False
+    v = stated.value
+    return not any(b and (a / b == v or a / b == v * 100) for a, b in zip(nums, nums[1:]))
 
 
 class VoiceAnalyzer:
@@ -152,12 +168,39 @@ class VoiceAnalyzer:
 
         quick, scored = await asyncio.gather(fast(), full())
         if scored is not None:
-            return Analysis(*scored)
+            analysis = Analysis(*scored)
+            # Low confidence: the two lanes heard different numbers, or the span is unclear.
+            disagree = quick is not None and quick[0] is not None and analysis.stated is not None \
+                and quick[0].value != analysis.stated.value
+            analysis.confirm = disagree or unclear(analysis.span, analysis.stated)
+            return analysis
         if quick is not None:
             # No reasoning check: the number alone can show a wrong answer, never Correct.
             stated, span = quick
-            return Analysis(code_answer(puzzle, stated, "vague"), stated, span)
+            return Analysis(code_answer(puzzle, stated, "vague"), stated, span, confirm=unclear(span, stated))
         return Analysis(None)
+
+
+# --- Transcription keywords (decision log 27) ---------------------------------
+
+_STOP = set("""about above after again against because before being below between could does doing during
+each every from further having here itself just more most other over same should some such than that their
+them then there these they this those through under until very what when where which while with would your
+yours answer question probability expected value equal equals percent""".split())
+KEYWORD_LIMIT = 12
+
+
+def question_terms(puzzle: Puzzle) -> list[str]:
+    """Distinctive words from the question and its solution steps (at most 12), in order."""
+    out = []
+    for name in [s.name.replace("_", " ") for s in getattr(puzzle, "steps", ())]:
+        if name not in out and not re.search(r"\d", name):
+            out.append(name)
+    for word in re.findall(r"[A-Za-z][A-Za-z'-]{4,}", mathtext.spoken(puzzle.text)):
+        w = word.lower().strip("'-")
+        if w not in _STOP and w not in out:
+            out.append(w)
+    return out[:KEYWORD_LIMIT]
 
 
 # --- Numbers the candidate has said (for the solution-map position) --------
@@ -236,6 +279,8 @@ class Part2Log:
     answers: list[Answer] = field(default_factory=list)
     outcome: str | None = None
     asked_digit: bool = False
+    help_lines: list[str] = field(default_factory=list)  # hints given on this part (the ladder)
+    last_target: int | None = None
 
 
 @dataclass
@@ -250,10 +295,11 @@ class QuestionLog:
     challenges: int = 0
     nudges: int = 0
     hints: int = 0
-    help_load: int = 0
+    help_load: int | Fraction = 0  # a hint on a Hard question adds half its strength (decision log 29)
     numbers: list[Fraction] = field(default_factory=list)
     said: list[str] = field(default_factory=list)  # the candidate's own words, for written help
     help_lines: list[tuple[str, str]] = field(default_factory=list)  # (challenge|nudge|hint, text)
+    last_target: int | None = None  # the step the last nudge or hint went to (the ladder)
     population: int | None = None  # round population, once the candidate or a hint has one
     first_wrong: tuple[Observation, str | None] | None = None
     scored: str | None = None
@@ -299,6 +345,7 @@ class ExamSession:
         self.topics = None  # the selected topics for the report header, set by the route
         self.track = None  # the track (template pack), set by the route
         self.placement = False  # a placement interview (decision log 23)
+        self.ends_session = True  # False: a part of a longer interview (the quant_dev opener)
 
     # --- events ---
     async def line(self, kind: str, text: str, target: int | None = None, receipt: dict | None = None,
@@ -341,8 +388,10 @@ class ExamSession:
                 if self.deadline is not None and self.clock() >= self.deadline and not self.interview.finished:
                     self.timed_out = True
                     break
-            await self.line("close", say.TIME_CLOSE if self.timed_out else say.SESSION_CLOSE)
             self.finished = True
+            if not self.ends_session:
+                return
+            await self.line("close", say.TIME_CLOSE if self.timed_out else say.SESSION_CLOSE)
             await self.send({"type": "session_end", "label": self.interview.label.value,
                              "timed_out": self.timed_out})
         except SessionClosed:
@@ -372,8 +421,9 @@ class ExamSession:
         question = self.interview.next_question()
         rounds = 0
         challenged = False
+        pending = None  # a corrected answer given in reply to "did you say...?"
         while True:
-            text = await self.listen()
+            text, pending = (pending, None) if pending else (await self.listen(), None)
             q.said.append(text)
             q.numbers += numbers_in(text)
             self._note_population(q)
@@ -390,6 +440,14 @@ class ExamSession:
             await self.state("checking")
             analysis = await self.analyzer.analyse(q.puzzle, text, self.send)
             await self.send({"type": "analysis_complete"})
+            if analysis.confirm and analysis.stated is not None and self.conditions == "exam":
+                corrected = await self.confirm_number(analysis.stated)
+                if corrected is not None:
+                    q.said.pop()  # the misheard words are not the candidate's
+                    pending = corrected or None
+                    if not pending:
+                        await self.line("prompt", say.REOPEN)
+                    continue
             obs = analysis.observation
             answer = self._answer(q.puzzle, text, analysis)
             if not q.asked_digit and coarse(q.puzzle, analysis):
@@ -428,6 +486,24 @@ class ExamSession:
             else:
                 await self.nudge(q, obs)
 
+    async def confirm_number(self, stated: StatedNumber) -> str | None:
+        """Decision log 27: "Just to check, did you say five sevenths?" None when confirmed;
+        otherwise what to treat as the reopened answer ("" for a bare "no")."""
+        shown, spoken = say.number_said(stated)
+        await self.line("prompt", say.CONFIRM.format(number=shown), speech=say.CONFIRM.format(number=spoken))
+        reply = await self.listen()
+        if _YES.match(reply):
+            return None
+        no = _NO.match(reply)
+        if no is None and not numbers_in(reply):
+            return None  # neither a "no" nor a number: taken as a yes
+        return reply[no.end():].strip() if no else reply.strip()
+
+    def keywords(self) -> list[str]:
+        """The current question's terms, to bias live transcription (`keywords`, spec/03)."""
+        q = self.questions[-1] if self.questions else None
+        return question_terms(q.puzzle) if q else []
+
     async def ask_part2(self, q: QuestionLog, puzzle: Puzzle) -> None:
         """One checked answer to the follow-up; a clarifying question repeats it and help
         gets the plain step prompt. Not scored, so it costs nothing (decision log 15)."""
@@ -441,8 +517,12 @@ class ExamSession:
                 await self.say_question(puzzle, say.REPEAT_INTRO)
                 continue
             if cue is not None and cue.kind == "help":
-                steps = puzzle.steps
-                await self.line("hint", say.forge_step_prompt(steps[0].name) if steps else say.FORGE_NUDGE)
+                said = q.numbers + numbers_in(text)
+                target, hint = hint_ladder.next_help(puzzle, position(puzzle, said), q.part2.last_target, q.part2.help_lines,
+                                                     lambda t: leak(puzzle, t, said, None) is None)
+                q.part2.last_target, _ = target or q.part2.last_target, q.part2.help_lines.append(hint)
+                await self.send({"type": "interviewer_line", "kind": "hint", "text": hint, "target_step": target,
+                                 "counts": self._counts(), "receipt": None})
                 continue
             if _DECLINE.match(text):
                 continue
@@ -519,16 +599,6 @@ class ExamSession:
             return say.ASK_WHY
         return say.challenge(q.puzzle, analysis.stated, analysis.span, obs.misconception)
 
-    def _next_step(self, q: QuestionLog, at: int) -> tuple[int | None, str]:
-        """Plain step prompt for the step after `at` (spec/01: the fallback when no model text)."""
-        steps = q.puzzle.steps
-        if at >= len(steps):
-            return None, say.ASK_WHY
-        text = say.forge_step_prompt(steps[at].name)
-        if leak(q.puzzle, text, q.numbers, None) is not None:
-            return None, say.FORGE_NUDGE  # a step name that states a new number is not spoken
-        return at + 1, text
-
     async def nudge(self, q: QuestionLog, obs: Observation) -> None:
         """Rounds 2-4: aimed at the candidate's next step; its strength counts toward H."""
         q.nudges += 1
@@ -545,17 +615,24 @@ class ExamSession:
         await self.help(q, "hint")
 
     async def help(self, q: QuestionLog, kind: str, receipt: dict | None = None) -> None:
+        """The hint ladder (decision log 27): one step further than the last help, from the
+        furthest step the candidate has shown, never repeating an earlier line."""
         at = q.position
-        target, text = self._next_step(q, at)
+        earlier = [t for _, t in q.help_lines]
+        allowed = lambda t: leak(q.puzzle, t, q.numbers, q.population) is None  # noqa: E731
+        target, text = hint_ladder.next_help(q.puzzle, at, q.last_target, earlier, allowed)
         draft = await self.writer(q.puzzle, kind, list(q.said), at) if self.writer else None
         if draft is not None:
             drafted, step = draft
             last = len(q.puzzle.steps)
-            valid_step = step is None or 1 <= step <= last
-            if valid_step and drafted.strip() and leak(q.puzzle, drafted, q.numbers, q.population) is None:
+            valid_step = step is None if target is None else step is not None and target <= step <= last
+            if valid_step and drafted.strip() and allowed(drafted) and not hint_ladder.repeats(drafted, earlier):
                 target, text = step, drafted.strip()
         if target is not None:
-            q.help_load += strength(target, at)
+            # Decision log 29: help on a Hard question costs half.
+            cost = Fraction(strength(target, at))
+            q.help_load += cost / 2 if getattr(q.puzzle, "difficulty", "") == "Hard" else cost
+            q.last_target = target
         await self.line(kind, text, target, receipt)
 
     def _note_population(self, q: QuestionLog) -> None:

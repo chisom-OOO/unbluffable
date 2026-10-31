@@ -95,3 +95,74 @@ console.log("speech guard and gate ok");
   assert.equal(onlyRobotic([]), false);
 }
 console.log("voice ranking ok");
+
+{
+  const { groupModelCalls, modelFigures } = require(path.resolve(__dirname, "../app/static/ui/turn-logic.js"));
+  const spark = (t, c) => ({ model: "muse-spark-1.3", job: "scoring_result", latency_s: t, estimated_cost_usd: c, mode: "live" });
+  const groups = groupModelCalls([spark(1.0, 0.001), spark(3.0, 0.002), spark(2.0, 0.003),
+    { model: "muse-spark-1.3", job: "endpoint_decision", latency_s: 0.4, estimated_cost_usd: null },
+    { model: "muse-voice-transcribe", job: "transcription_model", latency_s: 40, audio_s: 40.2 },
+    { model: "muse-voice-transcribe", job: "transcription_model", latency_s: 22, audio_s: 21.6 }]);
+  assert.equal(groups.length, 3, "one row per model and job");
+  const scoring = groups.find((g) => g.job === "scoring_result");
+  assert.equal(scoring.count, 3);
+  assert.equal(scoring.median, 2.0);
+  assert.ok(Math.abs(scoring.cost - 0.006) < 1e-12);
+  assert.deepEqual(modelFigures(scoring), ["3 calls", "median 2.0 s", "$0.0060"]);
+  const asr = groups.find((g) => g.job === "transcription_model");
+  assert.deepEqual(modelFigures(asr), ["live stream, 62 s of audio", "2 answers"], "audio seconds, never a latency");
+  assert.deepEqual(modelFigures(groups.find((g) => g.job === "endpoint_decision")), ["1 call", "median 400 ms"]);
+  assert.equal(groupModelCalls([spark(1, 0), spark(4, 0)])[0].median, 2.5, "even count: the middle two");
+}
+console.log("model panel grouping ok");
+
+{
+  const { titleFromName, statementHtml, inputLine, changedLines } = require(path.resolve(__dirname, "../app/static/ui/coding-ui.js"));
+  assert.equal(titleFromName("minimise_largest_group_total"), "Minimise largest group total");
+  assert.equal(statementHtml("Split values into exactly groups nonempty consecutive parts.", ["values", "groups"]),
+    "<p>Split <code>values</code> into exactly <code>groups</code> non-empty consecutive parts.</p>");
+  assert.equal(statementHtml("Return `k` if a<b", ["a"]), "<p>Return <code>k</code> if <code>a</code>&lt;b</p>", "escaped, backticks kept");
+  assert.equal(statementHtml("Each groupsize counts.", ["groups"]), "<p>Each groupsize counts.</p>", "whole words only");
+  assert.equal(inputLine(["values", "groups"], [[26, 29, 23], 3]), "values = [26, 29, 23], groups = 3");
+  assert.equal(changedLines("def f(x):\n    pass\n", "def f(x):\n    a = 1\n    b = 2\n    return a\n"), 4);
+}
+console.log("coding workspace helpers ok");
+
+{
+  const T = require(path.resolve(__dirname, "../app/static/ui/turn-logic.js"));
+  // Numbers said naturally; never a symbol.
+  assert.equal(T.speakable("You said 2/3. Why?"), "You said two thirds. Why?");
+  assert.equal(T.speakable("About 15% of 3.2m users pay $5."), "About 15 percent of 3 point 2 million users pay 5 dollars.");
+  assert.equal(T.speakable("It costs $3.2bn"), "It costs 3 point 2 billion dollars");
+  assert.equal(T.speakable("Is 7 - 3 = 4?"), "Is 7 minus 3 equals 4?");
+  assert.equal(T.speakable("max_gain([-11, 16])"), "max gain minus 11, 16");
+  assert.equal(T.speakable("17/250 and 1/2"), "17 over 250 and one half");
+  assert.ok(!/[%$=+*_#/<>()[\]{}|`^]/.test(T.speakable("a*b + c/d = (e) [f] {g} <h> #i `j` |k| ^l 50% $3")), "no symbol is read");
+  // Sentence by sentence, but never at a decimal point or "e.g.".
+  assert.deepEqual(T.sentences("Good. Now 3.5 is close, e.g. near four. Next?"), ["Good.", "Now 3.5 is close, e.g. near four.", "Next?"]);
+  assert.equal(T.SPEECH_RATE >= 0.95 && T.SPEECH_RATE <= 1, true);
+  assert.equal(T.SENTENCE_PAUSE_MS, 250);
+  // Openers: rotated, never before a question or right after an acknowledgement, never twice in a row.
+  const st = {};
+  const a = T.withOpener("That is the end of the interview.", "close", st);
+  const b = T.withOpener("Go ahead and code it in Python.", "prompt", st);
+  const c = T.withOpener("The first die is 4. Update your market.", "reveal", st);
+  assert.ok(a !== "That is the end of the interview." && b === "Go ahead and code it in Python." && c !== "The first die is 4. Update your market.");
+  assert.notEqual(a.split(" ")[0], c.split(" ")[0], "rotated");
+  assert.equal(T.withOpener("What do you get for the posterior alpha?", "nudge", {}), "What do you get for the posterior alpha?");
+  assert.equal(T.withOpener("Now the long statement continues here.", "prompt", { justAcknowledged: true }), "Now the long statement continues here.");
+  assert.equal(T.withOpener("Is this a question about something?", "close", {}), "Is this a question about something?");
+  assert.equal(T.naturalVoice({ name: "Microsoft Libby Online (Natural) - English (United Kingdom)" }), true);
+  assert.equal(T.naturalVoice({ name: "Google UK English Female" }), false);
+}
+console.log("interviewer delivery ok");
+
+{
+  const { callsLine, listText, sameList } = require(path.resolve(__dirname, "../app/static/ui/coding-ui.js"));
+  assert.equal(callsLine("RecentMax", { init: [2], ops: [["push", [5]], ["max", []], ["full", []]] }), "RecentMax(2); push(5); max(); full()");
+  assert.equal(listText([null, "5", "True"]), "[None, 5, True]");
+  assert.equal(sameList([null, "5"], [null, "5"]), true);
+  assert.equal(sameList([null, "5"], ["0", "5"]), false, "a void call that returns something fails");
+  assert.equal(sameList([null, "5"], [null]), false);
+}
+console.log("class specs in the page ok");

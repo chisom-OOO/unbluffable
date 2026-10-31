@@ -34,6 +34,63 @@ ONE_MORE_DIGIT = "That rounds from more than one method. Could you give it to on
 ASK_WHY = "How did you get that?"
 HELP_ASK = "Sure, what are you stuck on?"
 OFFER_HELP = "Is there anything you're stuck on?"
+# Decision log 27: a number that may have been misheard is confirmed before it is graded.
+CONFIRM = "Just to check, did you say {number}?"
+REOPEN = "Sorry, I misheard. What's your answer?"
+
+_ONES = ("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen "
+         "sixteen seventeen eighteen nineteen").split()
+_TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()
+_ORDINALS = {1: "first", 2: "half", 3: "third", 4: "quarter", 5: "fifth", 6: "sixth", 7: "seventh", 8: "eighth",
+             9: "ninth", 10: "tenth", 11: "eleventh", 12: "twelfth", 20: "twentieth", 30: "thirtieth", 40: "fortieth",
+             50: "fiftieth", 60: "sixtieth", 70: "seventieth", 80: "eightieth", 90: "ninetieth", 100: "hundredth"}
+
+
+def words(n: int) -> str | None:
+    """0-999 in words, or None."""
+    if not 0 <= n < 1000:
+        return None
+    if n < 20:
+        return _ONES[n]
+    if n < 100:
+        return _TENS[n // 10] + ("" if n % 10 == 0 else "-" + _ONES[n % 10])
+    rest = n % 100
+    return _ONES[n // 100] + " hundred" + ("" if rest == 0 else " and " + words(rest))
+
+
+def _ordinal(n: int) -> str | None:
+    if n in _ORDINALS:
+        return _ORDINALS[n]
+    if 13 <= n <= 19:
+        return words(n) + "th"
+    if 20 < n < 100:
+        return _TENS[n // 10] + "-" + _ORDINALS[n % 10] if n % 10 != 2 else _TENS[n // 10] + "-second"
+    return None
+
+
+def number_said(stated: StatedNumber) -> tuple[str, str]:
+    """(shown, spoken) for the confirmation, in the form the candidate used where possible:
+    5/7 is "five sevenths", 15% is "15 percent"."""
+    v = Fraction(stated.value)
+    if stated.form == "percent":
+        shown = (stated.written or _decimal(v * 100)) + "%"
+        return shown, shown[:-1] + " percent"
+    if stated.form == "decimal" or (v.denominator != 1 and stated.written and "." in stated.written):
+        shown = stated.written or _decimal(v)
+        return shown, shown
+    if v.denominator == 1:
+        return str(v.numerator), words(v.numerator) or str(v.numerator)
+    num, den = words(v.numerator), _ordinal(v.denominator)
+    shown = f"{v.numerator}/{v.denominator}"
+    if num is None or den is None:
+        return shown, f"{v.numerator} over {v.denominator}"
+    plural = den if v.numerator == 1 else ("halves" if den == "half" else den + "s")
+    return shown, f"{num} {plural}"
+
+
+def _decimal(v: Fraction) -> str:
+    text = f"{float(v):.6g}"
+    return text
 
 
 def pct(x: Fraction) -> str:

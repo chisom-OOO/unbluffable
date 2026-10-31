@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const typePanel = $("type-panel"), typeAnswer = $("type-answer");
   const mute = $("mute"), consent = $("consent"), headphones = $("headphones"), status = $("status");
 
-  const KIND_TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint" };
+  const KIND_TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint", trade: "Trade", reveal: "Reveal" };
   const reduced = reducedMotion();
   const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   // Pace for revealing an interviewer line when the voice sends no word boundaries.
@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }[shown];
     mic.dataset.state = shown === "checking" ? "thinking" : (shown === "ready" || shown === "finished" ? "idle" : shown);
     micState.textContent = text;
+    window.UBCoding?.status(shown === "ready" ? "waiting" : shown);
     done.disabled = phase !== "listening" || (!typing && !capturing);
     $("mic-sub").textContent = typing ? "Type your answer, then Done or Ctrl+Enter" : "Speak naturally · hands-free";
     document.querySelector(".action-bar").classList.toggle("ready", phase === "ready");
@@ -75,33 +76,58 @@ document.addEventListener("DOMContentLoaded", () => {
   // estimated length plus 2 s, whichever comes first (UBTurn.guardUtterance).
   // `mutes: false` (the device check's test line) never mutes the microphone.
   const guards = new Set();
+  // A more human delivery: the line is said sentence by sentence (about 250 ms apart) at rate
+  // 0.97, with numbers as words and no symbols (UBTurn.speakable). The whole line counts as one
+  // spoken line: "Speaking" and the echo-safety mute hold through the pauses.
   function speak(text, reveal, { mutes = true } = {}) {
     if (muted() || !window.speechSynthesis) { reveal?.finish(); return; }
-    const u = new SpeechSynthesisUtterance(text);
-    u.voice = window.UB.pickVoice();
+    const T = window.UBTurn;
+    const parts = T.sentences(T.speakable(text));
+    const voice = window.UB.pickVoice();
     const gen = speechGen;
-    let counted = false;
-    const guard = window.UBTurn.guardUtterance(u, {
-      text, rate: u.rate,
-      onStart: () => {
-        if (gen !== speechGen) return;
-        counted = true; speaking++; if (mutes) muting++;
-        speechChanged();
-        reveal?.start();
-      },
-      onDone: () => {
-        guards.delete(guard);
-        reveal?.finish();
-        if (!counted || gen !== speechGen) return;
-        speaking = Math.max(0, speaking - 1);
-        if (mutes) muting = Math.max(0, muting - 1);
-        speechChanged();
-      },
-    });
-    guards.add(guard);
-    u.onboundary = (e) => { if (gen === speechGen && e.name === "word") reveal?.boundary(e.charIndex); };
-    speechSynthesis.speak(u);
-    reveal?.watch(() => guard.started);
+    let counted = false, finished = false, index = 0, offset = 0, current = null, pause = null;
+    const line = { started: false };
+    const end = () => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(pause);
+      guards.delete(line);
+      reveal?.finish();
+      if (!counted || gen !== speechGen) return;
+      speaking = Math.max(0, speaking - 1);
+      if (mutes) muting = Math.max(0, muting - 1);
+      speechChanged();
+    };
+    line.cancel = () => { current?.cancel(); end(); };
+    const next = () => {
+      if (finished || gen !== speechGen || index >= parts.length) { end(); return; }
+      const part = parts[index++], at = offset;
+      offset += part.length + 1;
+      const u = new SpeechSynthesisUtterance(part);
+      u.voice = voice;
+      u.rate = T.SPEECH_RATE;
+      current = T.guardUtterance(u, {
+        text: part, rate: u.rate,
+        onStart: () => {
+          if (gen !== speechGen) return;
+          line.started = true;
+          if (counted) return;
+          counted = true; speaking++; if (mutes) muting++;
+          speechChanged();
+          reveal?.start();
+        },
+        onDone: (reason) => {
+          current = null;
+          if (reason === "cancel" || gen !== speechGen) { end(); return; }
+          pause = setTimeout(next, index < parts.length ? T.SENTENCE_PAUSE_MS : 0);
+        },
+      });
+      u.onboundary = (e) => { if (gen === speechGen && e.name === "word") reveal?.boundary(at + e.charIndex); };
+      speechSynthesis.speak(u);
+    };
+    guards.add(line);
+    next();
+    reveal?.watch(() => line.started);
   }
 
   function cancelSpeech() {
@@ -166,11 +192,14 @@ document.addEventListener("DOMContentLoaded", () => {
       receiptHtml(receipt) + `</div>`;
     log.appendChild(el);
     scrollTo(el);
-    const said = speech || text;
-    const reveal = revealer(el.querySelector(".typed"), text, said.length);
+    // A short rotated opener before some statements (spoken only), never in a question.
+    const said = kind === "ack" ? (speech || text) : window.UBTurn.withOpener(speech || text, kind, openers);
+    openers.justAcknowledged = kind === "ack";
+    const reveal = revealer(el.querySelector(".typed"), text, window.UBTurn.speakable(said).length);
     if (reduced || muted() || !window.speechSynthesis) reveal.finish();
     speak(said, reveal);
   }
+  const openers = { n: 0, lastHadOpener: false, justAcknowledged: false };
 
   function addCandidate(text) {
     const el = document.createElement("div");
@@ -193,19 +222,34 @@ document.addEventListener("DOMContentLoaded", () => {
     behavioural_judged: "Quotes for each step (model-judged)",
     coding_plan: "Your approach, quoted", coding_question: "A question about your code",
     coding_follow_up: "The follow-up question", coding_judge: "Your follow-up answer (model-judged)",
+    market_quote: "Your bid and offer, read from your words", market_question: "Which question to ask about your logic",
   };
+  // Decision log 27: one row per model and job (count, median time, total cost); a live
+  // transcription stream shows its audio seconds, not a latency.
+  const modelCalls = [];
   function modelRow(model, job) {
     if (!model || !model.model) return;
-    const rows = $("model-rows");
-    if (rows.dataset.empty !== "no") { rows.innerHTML = ""; rows.dataset.empty = "no"; }
-    const time = model.latency_s == null ? null : model.latency_s >= 1 ? `${model.latency_s.toFixed(1)} s` : model.latency_s < 0.001 ? "under 1 ms" : `${Math.round(model.latency_s * 1000)} ms`;
-    const cost = model.estimated_cost_usd == null ? null : `$${model.estimated_cost_usd.toFixed(4)}`;
-    const row = document.createElement("div");
-    row.className = "modelrow";
-    row.innerHTML = `<div><strong class="mono">${escapeHtml(model.model)}${model.mode === "replay" ? " (recorded)" : ""}</strong>` +
-      `<small>${escapeHtml(JOBS[job] || job)}</small></div>` +
-      `<div class="nums mono">${[time, cost].filter(Boolean).join("<br>")}</div>`;
-    rows.appendChild(row);
+    modelCalls.push({ ...model, job });
+    const groups = window.UBTurn.groupModelCalls(modelCalls);
+    $("model-rows").innerHTML = groups.map((g) => `<div class="modelrow"><div><strong class="mono">${escapeHtml(g.model)}${g.recorded ? " (recorded)" : ""}</strong>`
+      + `<small>${escapeHtml(JOBS[g.job] || g.job)}</small></div>`
+      + `<div class="nums mono">${window.UBTurn.modelFigures(g).map(escapeHtml).join("<br>")}</div></div>`).join("");
+    $("models-summary-count").textContent = ` · ${modelCalls.length} call${modelCalls.length === 1 ? "" : "s"}`;
+  }
+
+  // ---------- Market making (decision log 28): the market panel beside the transcript ----------
+  // Fair value is never shown during a round; P&L appears at settlement.
+  const signed = (x) => (String(x).startsWith("-") ? `−${String(x).slice(1)}` : `+${x}`);
+  function marketState(e) {
+    $("market-revealed").innerHTML = e.revealed.length ? `<ul>${e.revealed.map((r) => `<li>${escapeHtml(r)}</li>`).join("")}</ul>`
+      : `<p class="fine">Nothing revealed yet.</p>`;
+    $("market-quotes").innerHTML = e.quotes.length ? e.quotes.map((q, i) =>
+      `<tr${i === e.quotes.length - 1 ? ' class="latest"' : ""}><td>${i > 0 && e.quotes[i - 1].stage === q.stage ? "Tightened" : q.stage === 0 ? "Opening" : `After reveal ${q.stage}`}</td>`
+      + `<td class="mono">${escapeHtml(q.bid)}</td><td class="mono">${escapeHtml(q.ask)}</td></tr>`).join("")
+      : `<tr><td colspan="3" class="empty">No quote yet.</td></tr>`;
+    $("market-trades").textContent = e.trades.length ? e.trades.map((t) => `${t.side > 0 ? "Bought" : "Sold"} at ${t.price}`).join(" · ") : "None yet";
+    $("market-position").textContent = e.position === 0 ? "Flat" : `${e.position > 0 ? "Long" : "Short"} ${Math.abs(e.position)}`;
+    $("market-pnl").textContent = "At settlement";
   }
 
   // ---------- Turns ----------
@@ -301,7 +345,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         $("puzzle").textContent = event.text;
         $("provenance").innerHTML = window.UB.provenanceHtml(event.provenance_rows);
-        $("puzzle-eyebrow").textContent = (event.kind === "check" ? "Drill check"
+        $("market-panel").hidden = event.kind !== "market";
+        $("puzzle-eyebrow").textContent = (event.opener ? "Spoken opener · then a coding round"
+          : event.kind === "check" ? "Drill check"
+          : event.kind === "market" ? `Market ${event.number} of ${event.market.rounds}`
           : event.kind === "behavioural" ? `Behavioural question ${event.number} of 2`
           : event.kind === "coding" ? "Coding round"
           : event.kind === "drill" ? `Drill question ${event.number} of up to 3`
@@ -309,6 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
           + ` · guide ${fmt(event.guide_seconds)}`;
         $("puzzle-kind").textContent = ({ twin: "Same puzzle, new numbers", drill: "Aimed at one mistake",
                                           check: "New numbers, no help", coding: "Python · code while you talk",
+                                          market: "Market making · graded exactly",
                                           behavioural: `${event.behavioural_type === "situational" ? "What would you do" : "Tell me about a time"} · model-judged, not exact` }[event.kind] || "New puzzle")
           + (event.difficulty ? ` · ${event.difficulty}` : "");
         finishReveals();
@@ -337,7 +385,18 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "interviewer_line":
         addInterviewer(event.text, event.kind, event.receipt, event.speech);
+        window.UBCoding.interviewerSaid(event.text);
         if (event.counts) counts(event.counts);
+        break;
+      case "market_state":
+        marketState(event);
+        break;
+      case "market_settle":
+        $("market-pnl").textContent = `${signed(event.realised_pnl)} realised · ${signed(event.expected_pnl)} expected`;
+        $("market-revealed").insertAdjacentHTML("beforeend", `<p class="market-settle"><strong>Settled at ${escapeHtml(event.payoff)}</strong> (${escapeHtml(event.draws)})</p>`);
+        break;
+      case "market_model":
+        modelRow(event.model, event.job);
         break;
       case "state":
         if (event.value === "listening" && pendingCode) {  // the code message waited for the capture to close
@@ -396,6 +455,9 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "coding_open":
         window.UBCoding.opened();
+        break;
+      case "coding_part":
+        window.UBCoding.part(event);
         break;
       case "coding_closed":
         window.UBCoding.closed();
@@ -509,7 +571,7 @@ document.addEventListener("DOMContentLoaded", () => {
       : placement
         ? { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, placement: true, typed_practice: typedPractice }
         : { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, topics: sentTopics(), level,
-            typed_practice: typedPractice, ...(codingChosen() ? { format: "coding" } : {}) }));
+            typed_practice: typedPractice }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
       if (phase !== "finished") { phase = "finished"; voice.close(); setStatus("The connection closed. Reload to start again."); render(); }
@@ -790,13 +852,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.UBTurn.onlyRobotic(window.speechSynthesis.getVoices())) {
       $("speaker-note").textContent = "This browser only has robotic-sounding voices. Edge or Chrome have more natural ones.";
     }
+    voiceTip();
   }
+  // One line when the chosen voice isn't a Natural/Online one.
+  function voiceTip() { $("voice-tip").hidden = window.UBTurn.naturalVoice(window.UB.pickVoice()); }
   if (window.speechSynthesis) {
     listVoices();
     speechSynthesis.addEventListener?.("voiceschanged", listVoices);
   }
   $("voice-select").addEventListener("change", () => {
     window.UB.store.set("ub-voice", $("voice-select").value);
+    voiceTip();
     $("speaker-test").click();  // hear it straight away
   });
 
@@ -852,7 +918,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let tracks = [], chosenTrack = null, chosenTopics = new Set(), topicsKnown = false, picking = true;
   const trackTopics = () => (tracks.find((t) => t.id === chosenTrack)?.topics || []).filter((o) => o.id !== "Mixed");
   const BEHAVIOURAL = "Behavioural";  // decision log 24: runs on its own, model-judged
-  const forgeTopics = () => trackTopics().filter((o) => o.id !== BEHAVIOURAL).map((o) => o.id);
+  const MARKET = "Market making";  // decision log 28: runs on its own, graded exactly
+  const SOLO = new Set([BEHAVIOURAL, MARKET]);
+  const forgeTopics = () => trackTopics().filter((o) => !SOLO.has(o.id)).map((o) => o.id);
   const allTopics = () => new Set(forgeTopics().length ? forgeTopics() : trackTopics().map((o) => o.id));
   // Topics sent with Start: null (the server's default) when the list failed or there are none.
   const sentTopics = () => (topicsKnown && trackTopics().length ? [...chosenTopics] : null);
@@ -864,19 +932,21 @@ document.addEventListener("DOMContentLoaded", () => {
     try { saved = JSON.parse(window.UB.store.get(topicKey()) || "null"); } catch { saved = null; }
     const ids = new Set(trackTopics().map((o) => o.id));
     const kept = Array.isArray(saved) ? saved.filter((id) => ids.has(id)) : [];
-    if (kept.includes(BEHAVIOURAL)) return new Set([BEHAVIOURAL]);
+    const solo = kept.find((id) => SOLO.has(id));
+    if (solo) return new Set([solo]);
     return kept.length ? new Set(kept) : allTopics();
   }
   function saveTopics() { window.UB.store.set(topicKey(), JSON.stringify([...chosenTopics])); }
   function syncTopics() {
     topicBox.querySelectorAll("button.topic-chip").forEach((b) => b.setAttribute("aria-pressed", String(chosenTopics.has(b.dataset.topic))));
     const n = chosenTopics.size, all = forgeTopics().length;
-    const behaviouralOn = chosenTopics.has(BEHAVIOURAL);
+    const behaviouralOn = chosenTopics.has(BEHAVIOURAL), marketOn = chosenTopics.has(MARKET);
     $("topics-note").textContent = n === 0 ? "Choose at least one topic."
       : behaviouralOn ? "Behavioural: two questions, each with one follow-up. Model-judged, not exact; kept out of your rating."
+      : marketOn ? "Market making: two games. Quote a bid and an offer; the interviewer trades against you. Graded exactly."
       : n === all ? "All topics selected." : `${n} of ${all} topics selected.`;
     $("topics-note").classList.toggle("bad", n === 0);
-    $("levels").hidden = placement || behaviouralOn || codingChosen();  // no ladder for behavioural or coding rounds
+    $("levels").hidden = placement || behaviouralOn || marketOn || codingChosen();  // no ladder for these rounds
     updateGate();
   }
   function showTopics() {
@@ -899,8 +969,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!id) return;
     let next = new Set(chosenTopics);
     if (next.has(id)) next.delete(id);
-    else if (id === BEHAVIOURAL) next = new Set([BEHAVIOURAL]);  // runs on its own
-    else { next.delete(BEHAVIOURAL); next.add(id); }
+    else if (SOLO.has(id)) next = new Set([id]);  // runs on its own
+    else { SOLO.forEach((s) => next.delete(s)); next.add(id); }
     setTopics(next);
   });
   $("topics-all").addEventListener("click", selectAllTopics);
@@ -915,14 +985,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     showTopics();
     levelFromProfile();
-    const offersCoding = (tracks.find((t) => t.id === id)?.formats || []).includes("coding");
-    $("format-row").hidden = !offersCoding || placement || !!drill;
-    if (!offersCoding) document.querySelector('input[name="format"][value="spoken"]').checked = true;
+    $("coding-note").hidden = !codingChosen();
+    const format = tracks.find((t) => t.id === id)?.format;  // Quant development: an opener, then the coding round
+    $("coding-note").textContent = format ? `${format}: one spoken probability or expectations question, then a coding round in Python `
+      + "(talk through your approach, code it while you explain, then run the tests)."
+      : "Software interviews are a coding round in Python: talk through your approach, code it in the editor while you explain, then run the tests.";
     syncFormat();
   }
-  const codingChosen = () => !$("format-row").hidden && document.querySelector('input[name="format"]:checked')?.value === "coding";
-  function syncFormat() { $("levels").hidden = placement || codingChosen() || chosenTopics.has?.("Behavioural"); }
-  document.querySelectorAll('input[name="format"]').forEach((r) => r.addEventListener("change", syncFormat));
+  // Decision log 27: a track with coding specs (Software) is always a coding round.
+  const codingChosen = () => !placement && !drill && !!tracks.find((t) => t.id === chosenTrack)?.coding;
+  function syncFormat() { $("levels").hidden = placement || codingChosen() || [...SOLO].some((s) => chosenTopics.has?.(s)); }
 
   // Decision log 23: the start level follows this track's rating estimate (< 40 Easy,
   // 40-69 Medium, 70+ Hard); it can still be changed here.

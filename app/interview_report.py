@@ -221,7 +221,7 @@ def sections(qs: list[QuestionLog], forge: bool) -> dict:
                                "receipt": committed[-1].receipt})
         hints += [{"text": t} for k, t in q.help_lines if k == "hint"]
         times.append({"q": name(q), "seconds": round(q.seconds or 0), "guide": q.guide_seconds})
-        outcomes.append({"q": name(q), "text": outcome_text(q), "help": help_phrase(q), "help_load": q.help_load,
+        outcomes.append({"q": name(q), "text": outcome_text(q), "help": help_phrase(q), "help_load": int(q.help_load) if Fraction(q.help_load).denominator == 1 else str(q.help_load),
                          "receipt": score_receipt(q, checked[-1].transcript if checked else "")})
 
     well, improve = [], []

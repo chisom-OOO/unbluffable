@@ -119,11 +119,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Decision log 26: the coding round. Tests are exact; the discussion is model-judged.
   function renderCoding(e) {
-    const c = e.coding;
-    $("end-eyebrow").textContent = "Coding round report";
-    $("end-title").textContent = "How your code did";
-    $("result-tag").textContent = c.outcome === "correct" ? "All tests passed" : c.tests ? "Not all tests passed" : "Not submitted";
-    $("end-sub").textContent = c.tests ? `${c.tests.passed}/${c.tests.total} tests passed on your final submit, compared exactly with the stored answers.`
+    const problems = e.problems && e.problems.length ? e.problems : [e.coding];
+    const c = problems[0];
+    $("end-eyebrow").textContent = "Coding interview report";
+    $("end-title").textContent = problems.length > 1 ? `How your code did on ${problems.length} problems` : "How your code did";
+    const reached = problems.map((p) => p.reached).join(" · ");
+    $("result-tag").textContent = c.outcome === "correct" ? `Reached ${reached}` : c.tests ? "Part 1 not passed" : "Not submitted";
+    $("end-sub").textContent = c.tests ? `Problem 1: ${c.tests.passed}/${c.tests.total} tests passed on your final Part 1 submit, compared exactly with the stored answers.`
       : "No code was submitted.";
     $("conditions").hidden = !e.conditions;
     $("conditions").textContent = e.conditions || "";
@@ -133,35 +135,109 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".section:not(#progress), .end-verdict, #stats").forEach((el) => { el.hidden = true; });
     const clock = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
     const quote = (q) => `<blockquote class="evidence"><p>“${escapeHtml(q)}”</p></blockquote>`;
-    const outcome = c.outcome === "correct" ? (c.challenged ? "Correct after the challenge" : "Correct")
-      : c.named ? `Named mistake: ${escapeHtml(c.named)}` : c.tests ? "Wrong" : "Not submitted";
-    const p = c.provenance;
-    $("coding-report").innerHTML = `<div class="qcard"><header><h3>${escapeHtml(outcome)}</h3>`
-      + `<span class="tag">${c.tests ? `${c.tests.passed}/${c.tests.total} tests` : "no submit"}</span></header>`
-      + `<p class="qcard-time">Time <span class="mono">${clock(c.seconds)}</span> · guide <span class="mono">${clock(c.guide)}</span>`
-      + ` · ${c.submits.length} submit${c.submits.length === 1 ? "" : "s"}${c.submits.length > 1 ? `: ${c.submits.map((s) => `${s.passed}/${s.total}`).join(", ")}` : ""}</p>`
-      + `<p class="bq-question">${escapeHtml(c.statement)}</p>`
-      + (c.receipt ? receiptHtml(c.receipt, { words: false }) : "")
-      + `<div class="code-side"><div><h4>Your approach</h4>`
-      + (c.plan_quotes.length ? c.plan_quotes.map(quote).join("") : `<p class="fine">No plan was quoted from your words.</p>`)
-      + `<h4>Complexity claim</h4>${c.complexity_claim ? quote(c.complexity_claim) : `<p class="fine">None stated.</p>`}</div>`
-      + `<div><h4>Your final code</h4><pre class="code-block mono">${escapeHtml(c.code || "")}</pre></div></div>`
-      + `<h4>Questions about your code <span class="tag">model-chosen</span></h4>`
-      + (c.questions.length ? `<ul class="see-list">${c.questions.map((q) => `<li>${escapeHtml(q)}</li>`).join("")}</ul>` : `<p class="fine">None asked.</p>`)
-      + (c.follow_up ? `<h4>Follow-up <span class="tag">model-judged, not exact</span></h4><p class="fine">${escapeHtml(c.follow_up.question)}</p>`
-        + quote(c.follow_up.answer) + (c.follow_up.verdict ? `<p class="check-line">Judged ${escapeHtml(c.follow_up.verdict)}${c.follow_up.quote ? `, from “${escapeHtml(c.follow_up.quote)}”` : ""}. Not scored.</p>` : "") : "")
-      + `<details class="receipt provenance"><summary>Where this problem came from</summary><div class="receipt-body solo"><div><dl>`
-      + `<div><dt>Solver</dt><dd>Written by ${escapeHtml(p.author)}; reproduced the verified answer on ${p.solver_reproduced}/${p.variants} variants through this signature.</dd></div>`
-      + `<div><dt>Wrong methods</dt><dd>${p.wrong_methods.length ? `${p.wrong_methods.length} verified in code: ${escapeHtml(p.wrong_methods.join(", "))}.` : "None verified."}</dd></div>`
-      + (p.solver_source ? `<div><dt>Solver code</dt><dd><pre class="code-block mono">${escapeHtml(p.solver_source)}</pre></dd></div>` : "")
-      + `</dl></div></div></details></div>`;
+    const partLine = (x) => {
+      const tests = x.tests ? `${x.tests.passed}/${x.tests.total} tests` : "not submitted";
+      const what = x.part === 2 ? `${escapeHtml(x.verdict_text)}${x.n ? ` at n = ${x.n.toLocaleString("en-GB")}` : ""}`
+          + (x.max_ms != null ? ` · slowest ${x.max_ms.toLocaleString("en-GB")} ms (limit ${x.limit_ms.toLocaleString("en-GB")} ms)` : "")
+        : x.outcome === "correct" ? (x.challenged ? "Correct after the challenge" : "Correct")
+        : x.named ? `Named mistake: ${escapeHtml(x.named)}` : x.tests ? "Wrong" : "Not submitted";
+      const help = x.hints.length ? ` · ${x.hints.length} hint${x.hints.length === 1 ? "" : "s"} (H ${escapeHtml(x.help_load)})` : "";
+      return `<li><strong>${escapeHtml(x.label)}</strong>${x.part === 3 ? ` <span class="tag">only raises your rating · hints cost half</span>` : ""}: `
+        + `${what} · ${tests}${help}${x.statement ? `<br><span class="fine">${escapeHtml(x.statement)}</span>` : ""}</li>`;
+    };
+    const card = (c) => {
+      const outcome = c.outcome === "correct" ? (c.challenged ? "Correct after the challenge" : "Correct")
+        : c.named ? `Named mistake: ${escapeHtml(c.named)}` : c.tests ? "Wrong" : "Not submitted";
+      const p = c.provenance;
+      return `<div class="qcard"><header><h3>${problems.length > 1 ? `Problem ${c.number}: ` : ""}${escapeHtml(outcome)}</h3>`
+        + `<span class="tag">${c.tests ? `${c.tests.passed}/${c.tests.total} tests` : "no submit"}</span></header>`
+        + `<p class="qcard-time">Reached <strong>${escapeHtml(c.reached || "Part 1")}</strong> · time <span class="mono">${clock(c.seconds)}</span>`
+        + ` · ${c.submits.length} Part 1 submit${c.submits.length === 1 ? "" : "s"}${c.submits.length > 1 ? `: ${c.submits.map((s) => `${s.passed}/${s.total}`).join(", ")}` : ""}</p>`
+        + `<p class="bq-question">${escapeHtml(c.statement)}</p>`
+        + (c.parts && c.parts.length ? `<h4>How far it got</h4><ul class="see-list parts-list">${c.parts.map(partLine).join("")}</ul>` : "")
+        + (c.receipt ? receiptHtml(c.receipt, { words: false }) : "")
+        + `<div class="code-side"><div><h4>Your approach</h4>`
+        + (c.plan_quotes.length ? c.plan_quotes.map(quote).join("") : `<p class="fine">No plan was quoted from your words.</p>`)
+        + `<h4>Complexity claim</h4>${c.complexity_claim ? quote(c.complexity_claim) : `<p class="fine">None stated.</p>`}</div>`
+        + `<div><h4>Your final code</h4><pre class="code-block mono">${escapeHtml(c.code || "")}</pre></div></div>`
+        + `<h4>Questions about your code <span class="tag">model-chosen</span></h4>`
+        + (c.questions.length ? `<ul class="see-list">${c.questions.map((q) => `<li>${escapeHtml(q)}</li>`).join("")}</ul>` : `<p class="fine">None asked.</p>`)
+        + (c.follow_up ? `<h4>Follow-up <span class="tag">model-judged, not exact</span></h4><p class="fine">${escapeHtml(c.follow_up.question)}</p>`
+          + quote(c.follow_up.answer) + (c.follow_up.verdict ? `<p class="check-line">Judged ${escapeHtml(c.follow_up.verdict)}${c.follow_up.quote ? `, from “${escapeHtml(c.follow_up.quote)}”` : ""}. Not scored.</p>` : "") : "")
+        + `<details class="receipt provenance"><summary>Where this problem came from</summary><div class="receipt-body solo"><div><dl>`
+        + `<div><dt>Solver</dt><dd>Written by ${escapeHtml(p.author)}; reproduced the verified answer on ${p.solver_reproduced}/${p.variants} variants through this signature.</dd></div>`
+        + `<div><dt>Wrong methods</dt><dd>${p.wrong_methods.length ? `${p.wrong_methods.length} verified in code: ${escapeHtml(p.wrong_methods.join(", "))}.` : "None verified."}</dd></div>`
+        + (p.solver_source ? `<div><dt>Solver code</dt><dd><pre class="code-block mono">${escapeHtml(p.solver_source)}</pre></dd></div>` : "")
+        + `</dl></div></div></details></div>`;
+    };
+    // Quant development: the spoken opener's card first.
+    const opener = (e.opener?.cards || []).map((o) => `<div class="qcard"><header><h3>Spoken opener: ${escapeHtml(o.outcome)}</h3>`
+      + `<span class="tag">graded exactly</span></header>`
+      + o.words.map((w) => `<h4>${escapeHtml(w.when)}</h4>${quote(w.text)}`).join("")
+      + (o.said ? `<p class="check-line">You said <span class="mono">${escapeHtml(o.said)}</span>; exact <span class="mono">${escapeHtml(o.exact || "")}</span>.</p>` : "")
+      + (o.receipt ? receiptHtml(o.receipt) : "") + `</div>`).join("");
+    $("coding-report").innerHTML = opener + problems.map(card).join("");
+    if (e.quant_dev) {
+      $("coding-report-title").textContent = "Quant development: spoken opener + coding round";
+      const again = document.querySelector(".end-actions .btn:not(.secondary)");
+      if (again) { again.textContent = "Another quant development interview →"; again.href = "/ui/interview?track=quant_dev"; }
+    }
     $("coding-section").hidden = false;
     const again = document.querySelector(".end-actions .btn:not(.secondary)");
-    if (again) { again.textContent = "Another coding round →"; again.href = "/ui/interview?track=software"; }
+    if (again && !e.quant_dev) { again.textContent = "Another coding interview →"; again.href = "/ui/interview?track=software"; }
   }
+
+  // Decision log 28: market making, one card per game.
+  function renderMarket(e) {
+    $("end-eyebrow").textContent = "Market making report";
+    $("end-title").textContent = "How your markets did";
+    const scores = e.market.map((r) => r.scorecard.score_float);
+    $("result-tag").textContent = e.market.length ? `Score ${Math.round(100 * scores.reduce((a, b) => a + b, 0) / scores.length)}/100` : "No market quoted";
+    $("end-sub").textContent = "Scored in code from your quotes: fair value inside your market, width against the spread, and the direction of each update.";
+    $("conditions").hidden = !e.conditions;
+    $("conditions").textContent = e.conditions || "";
+    $("conditions").classList.toggle("warn", !!e.conditions && !/^Exam/.test(e.conditions));
+    $("topics-line").hidden = false;
+    $("topics-line").textContent = e.topics;
+    document.querySelectorAll(".section:not(#progress), .end-verdict, #stats").forEach((el) => { el.hidden = true; });
+    const signed = (x) => (String(x).startsWith("-") ? `−${String(x).slice(1)}` : `+${x}`);
+    const pct = (f) => `${Math.round(100 * Number(fractionValue(f)))}%`;
+    $("market").innerHTML = e.market.map((r) => {
+      const quotes = r.quotes.map((q, i) => `<tr><td>${i > 0 && r.quotes[i - 1].stage === q.stage ? "Tightened" : q.stage === 0 ? "Opening" : `After reveal ${q.stage}`}</td>`
+        + `<td class="mono">${escapeHtml(q.bid)} at ${escapeHtml(q.ask)}</td><td class="mono">${escapeHtml(q.ev)}</td>`
+        + `<td class="mono">${q.sd}</td><td>${q.contains ? "Inside" : "Outside"}${q.wide ? " · wide" : ""}</td></tr>`).join("");
+      const updates = r.updates.map((u) => `<li>Reveal ${u.stage}: fair value moved <span class="mono">${signed(u.ev_change)}</span>,`
+        + ` your mid <span class="mono">${signed(u.mid_change)}</span> · ${u.direction_right ? "right direction" : "wrong direction"}`
+        + `${u.size_ratio == null ? "" : ` · ${u.size_ratio}× the change`}</li>`).join("");
+      const trades = r.trades.map((t) => `<li>${t.side > 0 ? "Bought" : "Sold"} at <span class="mono">${escapeHtml(t.price)}</span>`
+        + ` (fair <span class="mono">${escapeHtml(t.ev)}</span>${Number(fractionValue(t.edge_given)) > 0 ? `; gave away <span class="mono">${escapeHtml(t.edge_given)}</span>` : ""})</li>`).join("");
+      return `<article class="qcard"><header><h3>Market ${r.n}</h3><span class="tag">${escapeHtml(r.difficulty)} · score ${Math.round(100 * r.scorecard.score_float)}/100</span></header>`
+        + `<p class="bq-question">${escapeHtml(r.game)}</p>`
+        + (r.reveals.length ? `<p class="fine">${r.reveals.map(escapeHtml).join(" ")}</p>` : "")
+        + `<table class="market-quotes"><thead><tr><th scope="col">When</th><th scope="col">Your market</th><th scope="col">Fair value</th>`
+        + `<th scope="col">SD</th><th scope="col">Check</th></tr></thead><tbody>${quotes}</tbody></table>`
+        + `<p class="check-line">Fair value inside ${pct(r.scorecard.contains)} of your markets · not wider than 1.5 SD ${pct(r.scorecard.tight)}`
+        + ` · updates in the right direction ${pct(r.scorecard.direction)}</p>`
+        + (updates ? `<h4>Updates</h4><ul class="see-list">${updates}</ul>` : "")
+        + `<h4>Trades</h4>${trades ? `<ul class="see-list">${trades}</ul>` : `<p class="fine">No trades.</p>`}`
+        + `<dl class="market-book"><div><dt>Edge given away</dt><dd class="mono">${escapeHtml(r.edge_given)}</dd></div>`
+        + `<div><dt>Position</dt><dd>${r.position === 0 ? "Flat" : `${r.position > 0 ? "Long" : "Short"} ${Math.abs(r.position)}`}</dd></div>`
+        + `<div><dt>Settlement</dt><dd class="mono">${escapeHtml(r.settlement.payoff)}</dd></div>`
+        + `<div><dt>P&amp;L</dt><dd class="mono">${signed(r.realised_pnl)} realised · ${signed(r.expected_pnl)} expected</dd></div></dl>`
+        + (r.question ? `<h4>${escapeHtml(r.question.question)} <span class="tag">quoted, not scored</span></h4>`
+          + `<blockquote class="evidence"><p>“${escapeHtml(r.question.answer)}”</p></blockquote>` : "")
+        + `</article>`;
+    }).join("") || `<p class="fine">No market was quoted.</p>`;
+    $("market-section").hidden = false;
+    const again = document.querySelector(".end-actions .btn:not(.secondary)");
+    if (again) { again.textContent = "Make more markets →"; again.href = "/ui/interview?track=quant"; }
+  }
+  // "3/4" or "1" as a number (the scorecard's exact fractions).
+  function fractionValue(f) { const [a, b] = String(f).split("/"); return Number(a) / (b ? Number(b) : 1); }
 
   function render(e) {
     if (e.coding) { showProgress(e); renderCoding(e); return; }
+    if (e.market) { showProgress(e); renderMarket(e); return; }
     if (e.behavioural) { showProgress(e); renderBehavioural(e); return; }
 
     const ICON = {

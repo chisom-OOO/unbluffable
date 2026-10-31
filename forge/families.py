@@ -126,13 +126,15 @@ def separation(answer, wrong):
 
 
 class FamilyForge:
-    def __init__(self, models, *, output, funnel, sandbox=None, pack="quant"):
+    def __init__(self, models, *, output, funnel, sandbox=None, pack="quant", prefix=None):
         self.models, self.state = models, models.state
         self.pack = pack_name(pack)
+        self.prefix = prefix  # a new batch's own file prefix (forge.packs.output_prefix)
         self.output, self.funnel = Path(output), Path(funnel)
         self.sandbox = sandbox or Sandbox()
         settings = {"version": 2, "minimum_variants": MIN_VARIANTS, "exact_source_tolerance": 0,
-                    "repairs_per_family": 1, "typed_parameters": True, "pack": self.pack}
+                    "repairs_per_family": 1, "typed_parameters": True, "pack": self.pack,
+                    **({"prefix": prefix} if prefix else {})}
         legacy = {"version": 1, "variants_per_family": 75, "exact_source_tolerance": 0,
                   "repairs_per_family": 1, "typed_parameters": True}
         previous = self.state.data.get("family_forge_settings")
@@ -144,7 +146,7 @@ class FamilyForge:
             raise ValueError("Use a separate family-forge work directory for each pack")
 
     def template_id(self, family):
-        return pack_template_id(self.pack, family.family_id)
+        return pack_template_id(self.pack, family.family_id, self.prefix)
 
     def stage(self, item, name, passed=False):
         if name not in item.setdefault("attempted", []):
@@ -363,7 +365,8 @@ class FamilyForge:
             "per_topic": {topic: totals([items[self.template_id(family)] for family in families
                           if self.template_id(family) in items and family.variants[0].topic == topic]) for topic in sorted(topics)}}
         if getattr(self, "recheck_ids", ()):
-            selected = [items[pack_template_id(self.pack, family_id)] for family_id in self.recheck_ids if pack_template_id(self.pack, family_id) in items]
+            selected = [items[pack_template_id(self.pack, family_id, self.prefix)] for family_id in self.recheck_ids
+                        if pack_template_id(self.pack, family_id, self.prefix) in items]
             report["recheck"] = {"requested": list(self.recheck_ids), "parameter_revision": PARAMETER_REVISION,
                 "completed": sum(item.get("rechecked_parameter_revision") == PARAMETER_REVISION for item in selected),
                 "verified": sum(item["status"] == "verified" for item in selected),

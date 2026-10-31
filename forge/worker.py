@@ -9,6 +9,7 @@ import os
 import random
 import re
 import sys
+import time
 import types
 from fractions import Fraction
 
@@ -106,6 +107,13 @@ def execute(request):
     limits(request["memory_mb"], request["timeout_s"])
     mode = request["mode"]
     tree = inspect_code(request["code"], mode)
+    if request.get("generate"):
+        # Part 2 inputs (decision log 29): built here by the parent's own trusted generator
+        # (forge/scale_gen.py), never by generated code, so a large input stays out of the request.
+        spec = request["generate"]
+        trusted = {}
+        exec(compile(spec["code"], "<scale_gen>", "exec"), trusted)
+        request["batch_params"] = [trusted["generate"](spec["config"], seed, n) for seed, n in spec["points"]]
     draws = [0]
     def rng_object(seed):
         base = random.Random(seed)
@@ -196,6 +204,12 @@ def execute(request):
                 raise PolicyError("invalid_steps")
             return {"answer": exact(answer), "steps": [{"name": str(k), "value": exact(v)} for k, v in steps.items()]}
         if "batch_params" in request:
+            if request.get("generate"):  # timed: Part 2 sets its limit from the solver's own time
+                timed = []
+                for params in request["batch_params"]:
+                    began = time.perf_counter()
+                    timed.append({**solve_one(params), "ms": round((time.perf_counter() - began) * 1000, 1)})
+                return {"results": timed}
             return {"results": [solve_one(params) for params in request["batch_params"]]}
         return solve_one(request["params"])
     params = parameters(request["params"])

@@ -50,11 +50,12 @@ def test_every_topic_in_content_forge_has_an_area():
 
 
 def test_areas_are_the_listed_axes_at_most_eight_per_track():
-    assert all(1 <= len(areas) <= 8 for areas in AREAS.values())
+    # Decision log 28 adds Market making to quant as a ninth area (the builder's request).
+    assert all(1 <= len(areas) <= (9 if track == "quant" else 8) for track, areas in AREAS.items())
     assert list(AREAS["quant"]) == [
         "Probability", "Expectations", "Combinatorics", "Statistics", "Stochastic processes",
         "Linear algebra & calculus", "Optimisation, decisions & pricing maths",
-        "Number theory, sequences, geometry & arithmetic"]
+        "Number theory, sequences, geometry & arithmetic", "Market making"]
     assert list(AREAS["ib"]) == ["Accounting", "DCF", "LBO", "Valuation multiples", "WACC",
                                  "M&A & accretion/dilution", "EV bridge & share count"]
     assert list(AREAS["consulting"]) == ["Profitability", "Operations", "Mix & weighted averages", "Breakeven",
@@ -167,3 +168,22 @@ def test_interest_rejects_anything_else(body, caplog):
     with caplog.at_level(logging.INFO, logger="unbluffable.interest"):
         assert TestClient(app).post("/api/interest", json=body).status_code == 422
     assert not [r for r in caplog.records if r.name == "unbluffable.interest"]
+
+
+def test_interest_rules_allow_only_a_create_with_the_three_fields_and_known_roles():
+    """firestore.rules for "interest": create only, exactly roles / other_text / created_at, the
+    same roles as the log line and the role presets; no client read, update or delete."""
+    import re
+    from pathlib import Path
+
+    from app.interest import ROLES
+    root = Path(__file__).resolve().parents[1]
+    rules = (root / "firestore.rules").read_text(encoding="utf-8")
+    block = rules[rules.index("match /interest/{id}"):rules.index("match /{document=**}")]
+    assert "hasOnly(['roles', 'other_text', 'created_at'])" in block and "hasAll(['roles', 'other_text', 'created_at'])" in block
+    assert "other_text.size() <= 200" in block and "created_at == request.time" in block
+    assert "allow read, update, delete: if false;" in block and "request.auth" not in block  # guests too
+    listed = re.search(r"roles\.hasOnly\(\[([^\]]*)\]\)", block)[1]
+    assert [r.strip(" '") for r in listed.split(",")] == list(ROLES)
+    core = (root / "app" / "static" / "ui" / "account-core.js").read_text(encoding="utf-8")
+    assert re.search(r"INTEREST_ROLES = \[([^\]]*)\]", core)[1].replace('"', "").split(", ") == list(ROLES)

@@ -32,6 +32,18 @@ class Sandbox:
             raise Reject("sandbox", "invalid_batch_output")
         return result["results"]
 
+    def run_generated(self, code, generator, config, points):
+        """The solver on inputs the worker builds itself from (seed, n) with the trusted
+        generator (forge/scale_gen.py); each result carries its solve time in ms."""
+        if len(code) > 100000 or len(generator) > 20000 or not 1 <= len(points) <= 75:
+            raise Reject("sandbox", "invalid_request")
+        result = self._execute({"code": code, "mode": "solve", "params": {}, "structured_params": True,
+            "generate": {"code": generator, "config": config, "points": points},
+            "trials": 20000, "seed": 0, "timeout_s": self.timeout_s, "memory_mb": self.memory_mb})
+        if not isinstance(result, dict) or len(result.get("results", [])) != len(points):
+            raise Reject("sandbox", "invalid_batch_output")
+        return result["results"]
+
     def _execute(self, request):
         request = json.dumps(request)
         if len(request) > 150000:

@@ -18,6 +18,7 @@ AREAS: dict[str, dict[str, tuple[str, ...]]] = {
                                                     "Pricing-model mathematics"),
         "Number theory, sequences, geometry & arithmetic": ("Number theory", "Sequences and recurrences", "Geometry",
                                                             "Quantitative arithmetic", "Percentages"),
+        "Market making": ("Market making",),  # decision log 28: exact scorecard, outside the Bayesian label
     },
     "ib": {
         "Accounting": ("Accounting and three-statement linkages", "Accounting"),
@@ -49,6 +50,13 @@ AREAS: dict[str, dict[str, tuple[str, ...]]] = {
     },
 }
 
+# Quant development (the quant_dev track): the spoken opener's core quant topics, and every
+# coding family under one "Coding" area (its topics are whatever the quant_dev forge writes).
+AREAS["quant_dev"] = {
+    "Probability & expectations": AREAS["quant"]["Probability"] + AREAS["quant"]["Expectations"],
+    "Coding": (),
+}
+
 _BY_TOPIC = {(track, topic.casefold()): area for track, areas in AREAS.items()
              for area, topics in areas.items() for topic in topics}
 
@@ -57,7 +65,8 @@ CAPS = {"Easy": Fraction(3, 5), "Medium": Fraction(17, 20), "Hard": Fraction(1)}
 
 
 def area_for(track: str, topic: str | None) -> str | None:
-    return _BY_TOPIC.get((track, (topic or "").casefold()))
+    found = _BY_TOPIC.get((track, (topic or "").casefold()))
+    return found or ("Coding" if track == "quant_dev" and topic else None)
 
 
 def answer_value(scored: str | None, weight: Fraction, difficulty: str | None) -> Fraction:

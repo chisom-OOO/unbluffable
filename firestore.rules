@@ -19,6 +19,19 @@ service cloud.firestore {
         && request.resource.data.profile.get('answers', []).size() <= 5000
         && request.resource.data.profile.get('history', []).size() <= 1000;
     }
+    // "Share this" (welcome page): anyone, signed in or not, may create one document with exactly
+    // roles (known values), other_text (at most 200 characters) and created_at (the server's time).
+    // Nobody may read, update or delete them from a client; read them in the Firebase console.
+    match /interest/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['roles', 'other_text', 'created_at'])
+        && request.resource.data.keys().hasAll(['roles', 'other_text', 'created_at'])
+        && request.resource.data.roles is list
+        && request.resource.data.roles.size() >= 1 && request.resource.data.roles.size() <= 6
+        && request.resource.data.roles.hasOnly(['quant', 'quant_dev', 'ib', 'consulting', 'software', 'other'])
+        && request.resource.data.other_text is string && request.resource.data.other_text.size() <= 200
+        && request.resource.data.created_at == request.time;
+      allow read, update, delete: if false;
+    }
     match /{document=**} {
       allow read, write: if false;
     }

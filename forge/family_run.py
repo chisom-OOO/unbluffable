@@ -10,7 +10,7 @@ from pathlib import Path
 from forge.families import FamilyForge, load_families
 from forge.models import DEFAULT_PRICES, Models, State, atomic_json
 from forge.run import job_lock
-from forge.packs import PACK_PREFIXES
+from forge.packs import PACK_PREFIXES, output_prefix, pack_template_id
 from forge.sandbox import Sandbox
 from llm.backends import get_backend
 from llm.client import MissingKey, _key
@@ -22,6 +22,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--csv", type=Path, required=True)
     parser.add_argument("--pack", choices=tuple(PACK_PREFIXES), default="quant")
+    parser.add_argument("--prefix", default=None,
+                        help="this batch's own file prefix (e.g. swf, qx, ibx, qd, swc); default: the pack's own")
     parser.add_argument("--mode", choices=("live", "replay"), default="replay")
     parser.add_argument("--budget-usd", type=Decimal, default=Decimal(5))
     parser.add_argument("--work-dir", type=Path, default=ROOT / "data" / "forge" / "families1")
@@ -46,6 +48,10 @@ def main(argv=None):
     if not args.budget_usd.is_finite() or not 0 <= args.budget_usd <= 5:
         parser.error("Family budget must be between zero and five USD")
     try:
+        output_prefix(args.pack, args.prefix)
+    except ValueError:
+        parser.error("--prefix: 2-8 lowercase letters or digits, not \"family\" or another pack's prefix")
+    try:
         prices = dict(DEFAULT_PRICES)
         for flag in args.price:
             backend, values = flag.split("=", 1)
@@ -66,9 +72,16 @@ def main(argv=None):
             state = State(args.work_dir)
             if state.data.setdefault("csv_sha256", signature) != signature:
                 raise ValueError("Use a new work directory for a changed CSV")
+            # Never overwrite a family file this work directory did not make (a new batch takes its own --prefix).
+            clash = sorted(tid for tid in (pack_template_id(args.pack, f.family_id, args.prefix) for f in families)
+                           if (ROOT / "content" / "forge" / f"{tid}.json").exists() and tid not in state.data.get("items", {}))
+            if clash:
+                print(json.dumps({"status": "would_overwrite", "files": clash[:20], "count": len(clash),
+                                  "fix": "use a new --prefix for this batch"}))
+                return 1
             models = Models(state, mode=args.mode, budget_usd=args.budget_usd, prices=prices, author=author)
             forge = FamilyForge(models, output=ROOT / "content" / "forge", funnel=args.work_dir / "funnel.json",
-                                sandbox=Sandbox(args.timeout_s, args.memory_mb), pack=args.pack)
+                                sandbox=Sandbox(args.timeout_s, args.memory_mb), pack=args.pack, prefix=args.prefix)
             report = forge.run(families, recheck_families=recheck_ids, retry_families=retry_ids)
             if args.pack == "quant":
                 atomic_json(ROOT / "forge" / "funnel.json", report)
