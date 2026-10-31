@@ -191,9 +191,9 @@
   const desktopOnly = () => document.body?.dataset.desktopOnly === "true" && tooSmall();
   function initDesktopGate() {
     if (document.body.dataset.desktopOnly !== "true") return;
-    const blocked = tooSmall();
-    addEventListener("resize", () => { if (tooSmall() !== blocked) location.reload(); });
-    if (!blocked) return;
+    // Only a blocked page reloads, once it is wide enough; a running interview is never reloaded.
+    if (!tooSmall()) return;
+    addEventListener("resize", () => { if (!tooSmall()) location.reload(); });
     document.documentElement.classList.add("desktop-gated");
     const gate = document.createElement("main");
     gate.className = "desktop-gate";
