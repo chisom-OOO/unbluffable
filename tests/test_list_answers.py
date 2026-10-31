@@ -79,7 +79,7 @@ SPEC = {"function_name": "sum_and_product", "parameters": [{"name": "a", "type":
         "return_type": "list[int]", "statement": "Given two integers a and b, return a list of their sum and their product."}
 
 
-def test_a_list_family_is_forged_exactly_exported_coding_only_and_never_spoken(tmp_path):
+def forge_list_family(tmp_path):
     path = tmp_path / "swf.csv"
     write_rows(path, rows())
     families = load_families(path)
@@ -102,8 +102,12 @@ def test_a_list_family_is_forged_exactly_exported_coding_only_and_never_spoken(t
     return artifact
 
 
+def test_a_list_family_is_forged_exactly_exported_coding_only_and_never_spoken(tmp_path):
+    forge_list_family(tmp_path)
+
+
 def test_coding_specs_for_a_list_family_and_exact_judging(tmp_path):
-    artifact = test_a_list_family_is_forged_exactly_exported_coding_only_and_never_spoken(tmp_path)
+    artifact = forge_list_family(tmp_path)
     shipped = cs.verify(SPEC, artifact, SOLVER, [{"misconception": "repeats_the_sum", "code": WRONG}], Sandbox())
     assert shipped["return_type"] == "list[int]" and shipped["expected"][0] == "[5,4]"
     assert shipped["wrong_methods"][0]["outputs"][0] == "[5,5]"
