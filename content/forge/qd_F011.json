@@ -1,0 +1,3894 @@
+{
+  "template_id": "qd_F011",
+  "pack": "quant_dev",
+  "topic": "Time series",
+  "topics": [
+    "Time series"
+  ],
+  "source_topic": "Maximum fractional drawdown",
+  "difficulty": "Hard",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "What should maximum drawdown be for a nondecreasing price series?",
+    "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Prices in time order are 122, 48, 144, 105, 44, 81, 150, 147. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          122,
+          48,
+          144,
+          105,
+          44,
+          81,
+          150,
+          147
+        ]
+      },
+      "answer": "25/36",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and twenty-two, forty-eight, one hundred and forty-four, one hundred and five, forty-four, eighty-one, one hundred and fifty, one hundred and forty-seven. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "53/75",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "37/61",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "144"
+        },
+        {
+          "name": "trough_price",
+          "value": "44"
+        },
+        {
+          "name": "price_loss",
+          "value": "100"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "25/36"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "11/900",
+            "relative_gap": "11/625"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "193/2196",
+            "relative_gap": "193/1525"
+          }
+        ],
+        "min_wrong_pair_gap": "458/4575",
+        "min_distinct_wrong_pair_gap": "458/4575"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Prices in time order are 129, 88, 79, 140, 167, 124, 101, 80. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          129,
+          88,
+          79,
+          140,
+          167,
+          124,
+          101,
+          80
+        ]
+      },
+      "answer": "87/167",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and twenty-nine, eighty-eight, seventy-nine, one hundred and forty, one hundred and sixty-seven, one hundred and twenty-four, one hundred and one, eighty. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "88/167",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "41/129",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "167"
+        },
+        {
+          "name": "trough_price",
+          "value": "80"
+        },
+        {
+          "name": "price_loss",
+          "value": "87"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "87/167"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "1/167",
+            "relative_gap": "1/87"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "4376/21543",
+            "relative_gap": "4376/11223"
+          }
+        ],
+        "min_wrong_pair_gap": "4505/21543",
+        "min_distinct_wrong_pair_gap": "4505/21543"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Prices in time order are 151, 156, 158, 131, 79, 153, 135, 165. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          151,
+          156,
+          158,
+          131,
+          79,
+          153,
+          135,
+          165
+        ]
+      },
+      "answer": "1/2",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and fifty-one, one hundred and fifty-six, one hundred and fifty-eight, one hundred and thirty-one, seventy-nine, one hundred and fifty-three, one hundred and thirty-five, one hundred and sixty-five. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "86/165",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "52/131",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "158"
+        },
+        {
+          "name": "trough_price",
+          "value": "79"
+        },
+        {
+          "name": "price_loss",
+          "value": "79"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "1/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "7/330",
+            "relative_gap": "7/165"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "27/262",
+            "relative_gap": "27/131"
+          }
+        ],
+        "min_wrong_pair_gap": "2686/21615",
+        "min_distinct_wrong_pair_gap": "2686/21615"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Prices in time order are 66, 41, 171, 104, 64, 103, 174, 124. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          66,
+          41,
+          171,
+          104,
+          64,
+          103,
+          174,
+          124
+        ]
+      },
+      "answer": "107/171",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are sixty-six, forty-one, one hundred and seventy-one, one hundred and four, sixty-four, one hundred and three, one hundred and seventy-four, one hundred and twenty-four. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "133/174",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "67/171",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "171"
+        },
+        {
+          "name": "trough_price",
+          "value": "64"
+        },
+        {
+          "name": "price_loss",
+          "value": "107"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "107/171"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "1375/9918",
+            "relative_gap": "1375/6206"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "40/171",
+            "relative_gap": "40/107"
+          }
+        ],
+        "min_wrong_pair_gap": "3695/9918",
+        "min_distinct_wrong_pair_gap": "3695/9918"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Prices in time order are 120, 61, 145, 162, 99, 78, 140, 70. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          120,
+          61,
+          145,
+          162,
+          99,
+          78,
+          140,
+          70
+        ]
+      },
+      "answer": "46/81",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and twenty, sixty-one, one hundred and forty-five, one hundred and sixty-two, ninety-nine, seventy-eight, one hundred and forty, seventy. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "101/162",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "1/2",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "162"
+        },
+        {
+          "name": "trough_price",
+          "value": "70"
+        },
+        {
+          "name": "price_loss",
+          "value": "92"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "46/81"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "1/18",
+            "relative_gap": "9/92"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "11/162",
+            "relative_gap": "11/92"
+          }
+        ],
+        "min_wrong_pair_gap": "10/81",
+        "min_distinct_wrong_pair_gap": "10/81"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Prices in time order are 120, 82, 51, 120, 80, 52, 70, 162. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          120,
+          82,
+          51,
+          120,
+          80,
+          52,
+          70,
+          162
+        ]
+      },
+      "answer": "23/40",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and twenty, eighty-two, fifty-one, one hundred and twenty, eighty, fifty-two, seventy, one hundred and sixty-two. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "37/54",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "31/82",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "120"
+        },
+        {
+          "name": "trough_price",
+          "value": "51"
+        },
+        {
+          "name": "price_loss",
+          "value": "69"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "23/40"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "119/1080",
+            "relative_gap": "119/621"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "323/1640",
+            "relative_gap": "323/943"
+          }
+        ],
+        "min_wrong_pair_gap": "340/1107",
+        "min_distinct_wrong_pair_gap": "340/1107"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Prices in time order are 52, 102, 114, 169, 102, 68, 162, 63. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          52,
+          102,
+          114,
+          169,
+          102,
+          68,
+          162,
+          63
+        ]
+      },
+      "answer": "106/169",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are fifty-two, one hundred and two, one hundred and fourteen, one hundred and sixty-nine, one hundred and two, sixty-eight, one hundred and sixty-two, sixty-three. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "9/13",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "11/18",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "169"
+        },
+        {
+          "name": "trough_price",
+          "value": "63"
+        },
+        {
+          "name": "price_loss",
+          "value": "106"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "106/169"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "11/169",
+            "relative_gap": "11/106"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "49/3042",
+            "relative_gap": "49/1908"
+          }
+        ],
+        "min_wrong_pair_gap": "19/234",
+        "min_distinct_wrong_pair_gap": "19/234"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Prices in time order are 51, 68, 165, 106, 171, 141, 93, 166. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          51,
+          68,
+          165,
+          106,
+          171,
+          141,
+          93,
+          166
+        ]
+      },
+      "answer": "26/57",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are fifty-one, sixty-eight, one hundred and sixty-five, one hundred and six, one hundred and seventy-one, one hundred and forty-one, ninety-three, one hundred and sixty-six. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "40/57",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "59/165",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "171"
+        },
+        {
+          "name": "trough_price",
+          "value": "93"
+        },
+        {
+          "name": "price_loss",
+          "value": "78"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "26/57"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "14/57",
+            "relative_gap": "7/13"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "103/1045",
+            "relative_gap": "309/1430"
+          }
+        ],
+        "min_wrong_pair_gap": "1079/3135",
+        "min_distinct_wrong_pair_gap": "1079/3135"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Prices in time order are 48, 47, 159, 100, 142, 66, 156, 137. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          48,
+          47,
+          159,
+          100,
+          142,
+          66,
+          156,
+          137
+        ]
+      },
+      "answer": "31/53",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are forty-eight, forty-seven, one hundred and fifty-nine, one hundred, one hundred and forty-two, sixty-six, one hundred and fifty-six, one hundred and thirty-seven. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "112/159",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "38/71",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "159"
+        },
+        {
+          "name": "trough_price",
+          "value": "66"
+        },
+        {
+          "name": "price_loss",
+          "value": "93"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "31/53"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "19/159",
+            "relative_gap": "19/93"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "187/3763",
+            "relative_gap": "187/2201"
+          }
+        ],
+        "min_wrong_pair_gap": "1910/11289",
+        "min_distinct_wrong_pair_gap": "1910/11289"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Prices in time order are 46, 115, 148, 144, 110, 65, 130, 172. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          46,
+          115,
+          148,
+          144,
+          110,
+          65,
+          130,
+          172
+        ]
+      },
+      "answer": "83/148",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are forty-six, one hundred and fifteen, one hundred and forty-eight, one hundred and forty-four, one hundred and ten, sixty-five, one hundred and thirty, one hundred and seventy-two. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "63/86",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "9/22",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "148"
+        },
+        {
+          "name": "trough_price",
+          "value": "65"
+        },
+        {
+          "name": "price_loss",
+          "value": "83"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "83/148"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "1093/6364",
+            "relative_gap": "1093/3569"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "247/1628",
+            "relative_gap": "247/913"
+          }
+        ],
+        "min_wrong_pair_gap": "153/473",
+        "min_distinct_wrong_pair_gap": "153/473"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Prices in time order are 45, 41, 153, 70, 118, 66, 112, 99. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          45,
+          41,
+          153,
+          70,
+          118,
+          66,
+          112,
+          99
+        ]
+      },
+      "answer": "29/51",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are forty-five, forty-one, one hundred and fifty-three, seventy, one hundred and eighteen, sixty-six, one hundred and twelve, ninety-nine. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "112/153",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "83/153",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "153"
+        },
+        {
+          "name": "trough_price",
+          "value": "66"
+        },
+        {
+          "name": "price_loss",
+          "value": "87"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "29/51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "25/153",
+            "relative_gap": "25/87"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "4/153",
+            "relative_gap": "4/87"
+          }
+        ],
+        "min_wrong_pair_gap": "29/153",
+        "min_distinct_wrong_pair_gap": "29/153"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Prices in time order are 73, 50, 47, 157, 141, 141, 64, 97. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          73,
+          50,
+          47,
+          157,
+          141,
+          141,
+          64,
+          97
+        ]
+      },
+      "answer": "93/157",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are seventy-three, fifty, forty-seven, one hundred and fifty-seven, one hundred and forty-one, one hundred and forty-one, sixty-four, ninety-seven. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "110/157",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "77/141",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "157"
+        },
+        {
+          "name": "trough_price",
+          "value": "64"
+        },
+        {
+          "name": "price_loss",
+          "value": "93"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "93/157"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "17/157",
+            "relative_gap": "17/93"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "1024/22137",
+            "relative_gap": "1024/13113"
+          }
+        ],
+        "min_wrong_pair_gap": "3421/22137",
+        "min_distinct_wrong_pair_gap": "3421/22137"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Prices in time order are 93, 73, 51, 46, 104, 111, 91, 151. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          93,
+          73,
+          51,
+          46,
+          104,
+          111,
+          91,
+          151
+        ]
+      },
+      "answer": "47/93",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are ninety-three, seventy-three, fifty-one, forty-six, one hundred and four, one hundred and eleven, ninety-one, one hundred and fifty-one. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "105/151",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "22/73",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "93"
+        },
+        {
+          "name": "trough_price",
+          "value": "46"
+        },
+        {
+          "name": "price_loss",
+          "value": "47"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "47/93"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "2668/14043",
+            "relative_gap": "2668/7097"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "1385/6789",
+            "relative_gap": "1385/3431"
+          }
+        ],
+        "min_wrong_pair_gap": "4343/11023",
+        "min_distinct_wrong_pair_gap": "4343/11023"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Prices in time order are 86, 154, 116, 154, 174, 152, 115, 134. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          86,
+          154,
+          116,
+          154,
+          174,
+          152,
+          115,
+          134
+        ]
+      },
+      "answer": "59/174",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are eighty-six, one hundred and fifty-four, one hundred and sixteen, one hundred and fifty-four, one hundred and seventy-four, one hundred and fifty-two, one hundred and fifteen, one hundred and thirty-four. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "44/87",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "19/77",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "174"
+        },
+        {
+          "name": "trough_price",
+          "value": "115"
+        },
+        {
+          "name": "price_loss",
+          "value": "59"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "59/174"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "1/6",
+            "relative_gap": "29/59"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "1237/13398",
+            "relative_gap": "1237/4543"
+          }
+        ],
+        "min_wrong_pair_gap": "1735/6699",
+        "min_distinct_wrong_pair_gap": "1735/6699"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Prices in time order are 73, 121, 170, 93, 139, 136, 123, 81. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          73,
+          121,
+          170,
+          93,
+          139,
+          136,
+          123,
+          81
+        ]
+      },
+      "answer": "89/170",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are seventy-three, one hundred and twenty-one, one hundred and seventy, ninety-three, one hundred and thirty-nine, one hundred and thirty-six, one hundred and twenty-three, eighty-one. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "97/170",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "77/170",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "170"
+        },
+        {
+          "name": "trough_price",
+          "value": "81"
+        },
+        {
+          "name": "price_loss",
+          "value": "89"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "89/170"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "4/85",
+            "relative_gap": "8/89"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "6/85",
+            "relative_gap": "12/89"
+          }
+        ],
+        "min_wrong_pair_gap": "2/17",
+        "min_distinct_wrong_pair_gap": "2/17"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Prices in time order are 74, 91, 132, 87, 112, 144, 89, 84. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          74,
+          91,
+          132,
+          87,
+          112,
+          144,
+          89,
+          84
+        ]
+      },
+      "answer": "5/12",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are seventy-four, ninety-one, one hundred and thirty-two, eighty-seven, one hundred and twelve, one hundred and forty-four, eighty-nine, eighty-four. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "35/72",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "55/144",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "144"
+        },
+        {
+          "name": "trough_price",
+          "value": "84"
+        },
+        {
+          "name": "price_loss",
+          "value": "60"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "5/12"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "5/72",
+            "relative_gap": "1/6"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "5/144",
+            "relative_gap": "1/12"
+          }
+        ],
+        "min_wrong_pair_gap": "5/48",
+        "min_distinct_wrong_pair_gap": "5/48"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Prices in time order are 96, 89, 53, 55, 165, 98, 102, 167. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          96,
+          89,
+          53,
+          55,
+          165,
+          98,
+          102,
+          167
+        ]
+      },
+      "answer": "43/96",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are ninety-six, eighty-nine, fifty-three, fifty-five, one hundred and sixty-five, ninety-eight, one hundred and two, one hundred and sixty-seven. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "114/167",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "67/165",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "96"
+        },
+        {
+          "name": "trough_price",
+          "value": "53"
+        },
+        {
+          "name": "price_loss",
+          "value": "43"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "43/96"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "3763/16032",
+            "relative_gap": "3763/7181"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "221/5280",
+            "relative_gap": "221/2365"
+          }
+        ],
+        "min_wrong_pair_gap": "7621/27555",
+        "min_distinct_wrong_pair_gap": "7621/27555"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Prices in time order are 150, 75, 52, 86, 169, 145, 116, 120. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          150,
+          75,
+          52,
+          86,
+          169,
+          145,
+          116,
+          120
+        ]
+      },
+      "answer": "49/75",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and fifty, seventy-five, fifty-two, eighty-six, one hundred and sixty-nine, one hundred and forty-five, one hundred and sixteen, one hundred and twenty. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "9/13",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "1/2",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "150"
+        },
+        {
+          "name": "trough_price",
+          "value": "52"
+        },
+        {
+          "name": "price_loss",
+          "value": "98"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "49/75"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "38/975",
+            "relative_gap": "38/637"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "23/150",
+            "relative_gap": "23/98"
+          }
+        ],
+        "min_wrong_pair_gap": "5/26",
+        "min_distinct_wrong_pair_gap": "5/26"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Prices in time order are 157, 123, 60, 141, 52, 44, 61, 162. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          157,
+          123,
+          60,
+          141,
+          52,
+          44,
+          61,
+          162
+        ]
+      },
+      "answer": "113/157",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and fifty-seven, one hundred and twenty-three, sixty, one hundred and forty-one, fifty-two, forty-four, sixty-one, one hundred and sixty-two. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "59/81",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "89/141",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "157"
+        },
+        {
+          "name": "trough_price",
+          "value": "44"
+        },
+        {
+          "name": "price_loss",
+          "value": "113"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "113/157"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "110/12717",
+            "relative_gap": "110/9153"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "1960/22137",
+            "relative_gap": "1960/15933"
+          }
+        ],
+        "min_wrong_pair_gap": "370/3807",
+        "min_distinct_wrong_pair_gap": "370/3807"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Prices in time order are 109, 108, 134, 124, 165, 133, 123, 149. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          109,
+          108,
+          134,
+          124,
+          165,
+          133,
+          123,
+          149
+        ]
+      },
+      "answer": "14/55",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and nine, one hundred and eight, one hundred and thirty-four, one hundred and twenty-four, one hundred and sixty-five, one hundred and thirty-three, one hundred and twenty-three, one hundred and forty-nine. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "19/55",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "32/165",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "165"
+        },
+        {
+          "name": "trough_price",
+          "value": "123"
+        },
+        {
+          "name": "price_loss",
+          "value": "42"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "14/55"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "1/11",
+            "relative_gap": "5/14"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "2/33",
+            "relative_gap": "5/21"
+          }
+        ],
+        "min_wrong_pair_gap": "5/33",
+        "min_distinct_wrong_pair_gap": "5/33"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Prices in time order are 68, 124, 75, 128, 92, 176, 152, 102. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          68,
+          124,
+          75,
+          128,
+          92,
+          176,
+          152,
+          102
+        ]
+      },
+      "answer": "37/88",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are sixty-eight, one hundred and twenty-four, seventy-five, one hundred and twenty-eight, ninety-two, one hundred and seventy-six, one hundred and fifty-two, one hundred and two. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "27/44",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "49/124",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "176"
+        },
+        {
+          "name": "trough_price",
+          "value": "102"
+        },
+        {
+          "name": "price_loss",
+          "value": "74"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "37/88"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "17/88",
+            "relative_gap": "17/37"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "69/2728",
+            "relative_gap": "69/1147"
+          }
+        ],
+        "min_wrong_pair_gap": "149/682",
+        "min_distinct_wrong_pair_gap": "149/682"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Prices in time order are 71, 55, 177, 108, 164, 91, 74, 57. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          71,
+          55,
+          177,
+          108,
+          164,
+          91,
+          74,
+          57
+        ]
+      },
+      "answer": "40/59",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are seventy-one, fifty-five, one hundred and seventy-seven, one hundred and eight, one hundred and sixty-four, ninety-one, seventy-four, fifty-seven. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "122/177",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "73/164",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "177"
+        },
+        {
+          "name": "trough_price",
+          "value": "57"
+        },
+        {
+          "name": "price_loss",
+          "value": "120"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "40/59"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "2/177",
+            "relative_gap": "1/60"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "2253/9676",
+            "relative_gap": "2253/6560"
+          }
+        ],
+        "min_wrong_pair_gap": "7087/29028",
+        "min_distinct_wrong_pair_gap": "7087/29028"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Prices in time order are 131, 126, 53, 122, 159, 92, 58, 180. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          131,
+          126,
+          53,
+          122,
+          159,
+          92,
+          58,
+          180
+        ]
+      },
+      "answer": "101/159",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and thirty-one, one hundred and twenty-six, fifty-three, one hundred and twenty-two, one hundred and fifty-nine, ninety-two, fifty-eight, one hundred and eighty. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "127/180",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "73/126",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "159"
+        },
+        {
+          "name": "trough_price",
+          "value": "58"
+        },
+        {
+          "name": "price_loss",
+          "value": "101"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "101/159"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "671/9540",
+            "relative_gap": "671/6060"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "373/6678",
+            "relative_gap": "373/4242"
+          }
+        ],
+        "min_wrong_pair_gap": "53/420",
+        "min_distinct_wrong_pair_gap": "53/420"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Prices in time order are 45, 112, 120, 179, 102, 118, 164, 80. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          45,
+          112,
+          120,
+          179,
+          102,
+          118,
+          164,
+          80
+        ]
+      },
+      "answer": "99/179",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are forty-five, one hundred and twelve, one hundred and twenty, one hundred and seventy-nine, one hundred and two, one hundred and eighteen, one hundred and sixty-four, eighty. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "134/179",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "21/41",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "179"
+        },
+        {
+          "name": "trough_price",
+          "value": "80"
+        },
+        {
+          "name": "price_loss",
+          "value": "99"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "99/179"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "35/179",
+            "relative_gap": "35/99"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "300/7339",
+            "relative_gap": "100/1353"
+          }
+        ],
+        "min_wrong_pair_gap": "1735/7339",
+        "min_distinct_wrong_pair_gap": "1735/7339"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Prices in time order are 145, 88, 99, 124, 49, 41, 146, 55. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          145,
+          88,
+          99,
+          124,
+          49,
+          41,
+          146,
+          55
+        ]
+      },
+      "answer": "104/145",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and forty-five, eighty-eight, ninety-nine, one hundred and twenty-four, forty-nine, forty-one, one hundred and forty-six, fifty-five. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "105/146",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "91/146",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "145"
+        },
+        {
+          "name": "trough_price",
+          "value": "41"
+        },
+        {
+          "name": "price_loss",
+          "value": "104"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "104/145"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "41/21170",
+            "relative_gap": "41/15184"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "1989/21170",
+            "relative_gap": "153/1168"
+          }
+        ],
+        "min_wrong_pair_gap": "7/73",
+        "min_distinct_wrong_pair_gap": "7/73"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Prices in time order are 151, 160, 163, 55, 172, 173, 131, 58. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          151,
+          160,
+          163,
+          55,
+          172,
+          173,
+          131,
+          58
+        ]
+      },
+      "answer": "115/173",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and fifty-one, one hundred and sixty, one hundred and sixty-three, fifty-five, one hundred and seventy-two, one hundred and seventy-three, one hundred and thirty-one, fifty-eight. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "118/173",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "108/163",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "173"
+        },
+        {
+          "name": "trough_price",
+          "value": "58"
+        },
+        {
+          "name": "price_loss",
+          "value": "115"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "115/173"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "3/173",
+            "relative_gap": "3/115"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "61/28199",
+            "relative_gap": "61/18745"
+          }
+        ],
+        "min_wrong_pair_gap": "550/28199",
+        "min_distinct_wrong_pair_gap": "550/28199"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Prices in time order are 60, 152, 144, 109, 160, 117, 146, 168. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          60,
+          152,
+          144,
+          109,
+          160,
+          117,
+          146,
+          168
+        ]
+      },
+      "answer": "43/152",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are sixty, one hundred and fifty-two, one hundred and forty-four, one hundred and nine, one hundred and sixty, one hundred and seventeen, one hundred and forty-six, one hundred and sixty-eight. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "9/14",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "43/160",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "152"
+        },
+        {
+          "name": "trough_price",
+          "value": "109"
+        },
+        {
+          "name": "price_loss",
+          "value": "43"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "43/152"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "383/1064",
+            "relative_gap": "383/301"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "43/3040",
+            "relative_gap": "1/20"
+          }
+        ],
+        "min_wrong_pair_gap": "419/1120",
+        "min_distinct_wrong_pair_gap": "419/1120"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Prices in time order are 93, 124, 49, 113, 101, 119, 44, 179. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          93,
+          124,
+          49,
+          113,
+          101,
+          119,
+          44,
+          179
+        ]
+      },
+      "answer": "20/31",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are ninety-three, one hundred and twenty-four, forty-nine, one hundred and thirteen, one hundred and one, one hundred and nineteen, forty-four, one hundred and seventy-nine. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "135/179",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "75/119",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "124"
+        },
+        {
+          "name": "trough_price",
+          "value": "44"
+        },
+        {
+          "name": "price_loss",
+          "value": "80"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "20/31"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "605/5549",
+            "relative_gap": "121/716"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "55/3689",
+            "relative_gap": "11/476"
+          }
+        ],
+        "min_wrong_pair_gap": "2640/21301",
+        "min_distinct_wrong_pair_gap": "2640/21301"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Prices in time order are 68, 132, 167, 140, 146, 127, 90, 169. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          68,
+          132,
+          167,
+          140,
+          146,
+          127,
+          90,
+          169
+        ]
+      },
+      "answer": "77/167",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are sixty-eight, one hundred and thirty-two, one hundred and sixty-seven, one hundred and forty, one hundred and forty-six, one hundred and twenty-seven, ninety, one hundred and sixty-nine. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "101/169",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "37/127",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "167"
+        },
+        {
+          "name": "trough_price",
+          "value": "90"
+        },
+        {
+          "name": "price_loss",
+          "value": "77"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "77/167"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "3854/28223",
+            "relative_gap": "3854/13013"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "3600/21209",
+            "relative_gap": "3600/9779"
+          }
+        ],
+        "min_wrong_pair_gap": "6574/21463",
+        "min_distinct_wrong_pair_gap": "6574/21463"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Prices in time order are 64, 168, 149, 138, 169, 116, 158, 79. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          64,
+          168,
+          149,
+          138,
+          169,
+          116,
+          158,
+          79
+        ]
+      },
+      "answer": "90/169",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are sixty-four, one hundred and sixty-eight, one hundred and forty-nine, one hundred and thirty-eight, one hundred and sixty-nine, one hundred and sixteen, one hundred and fifty-eight, seventy-nine. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "105/169",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "1/2",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "169"
+        },
+        {
+          "name": "trough_price",
+          "value": "79"
+        },
+        {
+          "name": "price_loss",
+          "value": "90"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "90/169"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "15/169",
+            "relative_gap": "1/6"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "11/338",
+            "relative_gap": "11/180"
+          }
+        ],
+        "min_wrong_pair_gap": "41/338",
+        "min_distinct_wrong_pair_gap": "41/338"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Prices in time order are 43, 132, 113, 114, 160, 111, 133, 93. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          43,
+          132,
+          113,
+          114,
+          160,
+          111,
+          133,
+          93
+        ]
+      },
+      "answer": "67/160",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are forty-three, one hundred and thirty-two, one hundred and thirteen, one hundred and fourteen, one hundred and sixty, one hundred and eleven, one hundred and thirty-three, ninety-three. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "117/160",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "49/160",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "160"
+        },
+        {
+          "name": "trough_price",
+          "value": "93"
+        },
+        {
+          "name": "price_loss",
+          "value": "67"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "67/160"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "5/16",
+            "relative_gap": "50/67"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "9/80",
+            "relative_gap": "18/67"
+          }
+        ],
+        "min_wrong_pair_gap": "17/40",
+        "min_distinct_wrong_pair_gap": "17/40"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Prices in time order are 58, 139, 108, 104, 128, 124, 77, 123. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          58,
+          139,
+          108,
+          104,
+          128,
+          124,
+          77,
+          123
+        ]
+      },
+      "answer": "62/139",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are fifty-eight, one hundred and thirty-nine, one hundred and eight, one hundred and four, one hundred and twenty-eight, one hundred and twenty-four, seventy-seven, one hundred and twenty-three. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "81/139",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "47/124",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "139"
+        },
+        {
+          "name": "trough_price",
+          "value": "77"
+        },
+        {
+          "name": "price_loss",
+          "value": "62"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "62/139"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "19/139",
+            "relative_gap": "19/62"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "1155/17236",
+            "relative_gap": "1155/7688"
+          }
+        ],
+        "min_wrong_pair_gap": "3511/17236",
+        "min_distinct_wrong_pair_gap": "3511/17236"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Prices in time order are 86, 166, 78, 40, 145, 86, 150, 170. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          86,
+          166,
+          78,
+          40,
+          145,
+          86,
+          150,
+          170
+        ]
+      },
+      "answer": "63/83",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are eighty-six, one hundred and sixty-six, seventy-eight, forty, one hundred and forty-five, eighty-six, one hundred and fifty, one hundred and seventy. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "13/17",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "44/83",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "166"
+        },
+        {
+          "name": "trough_price",
+          "value": "40"
+        },
+        {
+          "name": "price_loss",
+          "value": "126"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "63/83"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "8/1411",
+            "relative_gap": "8/1071"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "19/83",
+            "relative_gap": "19/63"
+          }
+        ],
+        "min_wrong_pair_gap": "331/1411",
+        "min_distinct_wrong_pair_gap": "331/1411"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Prices in time order are 60, 114, 70, 148, 112, 111, 88, 73. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          60,
+          114,
+          70,
+          148,
+          112,
+          111,
+          88,
+          73
+        ]
+      },
+      "answer": "75/148",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are sixty, one hundred and fourteen, seventy, one hundred and forty-eight, one hundred and twelve, one hundred and eleven, eighty-eight, seventy-three. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "22/37",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "22/57",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "148"
+        },
+        {
+          "name": "trough_price",
+          "value": "73"
+        },
+        {
+          "name": "price_loss",
+          "value": "75"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "75/148"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "13/148",
+            "relative_gap": "13/75"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "1019/8436",
+            "relative_gap": "1019/4275"
+          }
+        ],
+        "min_wrong_pair_gap": "440/2109",
+        "min_distinct_wrong_pair_gap": "440/2109"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Prices in time order are 76, 122, 52, 154, 168, 63, 146, 62. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          76,
+          122,
+          52,
+          154,
+          168,
+          63,
+          146,
+          62
+        ]
+      },
+      "answer": "53/84",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are seventy-six, one hundred and twenty-two, fifty-two, one hundred and fifty-four, one hundred and sixty-eight, sixty-three, one hundred and forty-six, sixty-two. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "29/42",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "5/8",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "168"
+        },
+        {
+          "name": "trough_price",
+          "value": "62"
+        },
+        {
+          "name": "price_loss",
+          "value": "106"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "53/84"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "5/84",
+            "relative_gap": "5/53"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "1/168",
+            "relative_gap": "1/106"
+          }
+        ],
+        "min_wrong_pair_gap": "11/168",
+        "min_distinct_wrong_pair_gap": "11/168"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Prices in time order are 134, 53, 49, 150, 160, 77, 130, 166. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          134,
+          53,
+          49,
+          150,
+          160,
+          77,
+          130,
+          166
+        ]
+      },
+      "answer": "85/134",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and thirty-four, fifty-three, forty-nine, one hundred and fifty, one hundred and sixty, seventy-seven, one hundred and thirty, one hundred and sixty-six. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "117/166",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "81/134",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "134"
+        },
+        {
+          "name": "trough_price",
+          "value": "49"
+        },
+        {
+          "name": "price_loss",
+          "value": "85"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "85/134"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "392/5561",
+            "relative_gap": "784/7055"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "2/67",
+            "relative_gap": "4/85"
+          }
+        ],
+        "min_wrong_pair_gap": "558/5561",
+        "min_distinct_wrong_pair_gap": "558/5561"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Prices in time order are 66, 122, 121, 146, 170, 84, 73, 143. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          66,
+          122,
+          121,
+          146,
+          170,
+          84,
+          73,
+          143
+        ]
+      },
+      "answer": "97/170",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are sixty-six, one hundred and twenty-two, one hundred and twenty-one, one hundred and forty-six, one hundred and seventy, eighty-four, seventy-three, one hundred and forty-three. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "52/85",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "43/85",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "170"
+        },
+        {
+          "name": "trough_price",
+          "value": "73"
+        },
+        {
+          "name": "price_loss",
+          "value": "97"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "97/170"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "7/170",
+            "relative_gap": "7/97"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "11/170",
+            "relative_gap": "11/97"
+          }
+        ],
+        "min_wrong_pair_gap": "9/85",
+        "min_distinct_wrong_pair_gap": "9/85"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Prices in time order are 81, 49, 180, 110, 168, 159, 63, 77. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          81,
+          49,
+          180,
+          110,
+          168,
+          159,
+          63,
+          77
+        ]
+      },
+      "answer": "13/20",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are eighty-one, forty-nine, one hundred and eighty, one hundred and ten, one hundred and sixty-eight, one hundred and fifty-nine, sixty-three, seventy-seven. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "131/180",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "32/53",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "180"
+        },
+        {
+          "name": "trough_price",
+          "value": "63"
+        },
+        {
+          "name": "price_loss",
+          "value": "117"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "13/20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "7/90",
+            "relative_gap": "14/117"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "49/1060",
+            "relative_gap": "49/689"
+          }
+        ],
+        "min_wrong_pair_gap": "1183/9540",
+        "min_distinct_wrong_pair_gap": "1183/9540"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Prices in time order are 59, 90, 47, 126, 84, 58, 93, 125. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          59,
+          90,
+          47,
+          126,
+          84,
+          58,
+          93,
+          125
+        ]
+      },
+      "answer": "34/63",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are fifty-nine, ninety, forty-seven, one hundred and twenty-six, eighty-four, fifty-eight, ninety-three, one hundred and twenty-five. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "79/126",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "43/90",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "126"
+        },
+        {
+          "name": "trough_price",
+          "value": "58"
+        },
+        {
+          "name": "price_loss",
+          "value": "68"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "34/63"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "11/126",
+            "relative_gap": "11/68"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "13/210",
+            "relative_gap": "39/340"
+          }
+        ],
+        "min_wrong_pair_gap": "47/315",
+        "min_distinct_wrong_pair_gap": "47/315"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Prices in time order are 115, 147, 91, 104, 110, 82, 112, 152. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          115,
+          147,
+          91,
+          104,
+          110,
+          82,
+          112,
+          152
+        ]
+      },
+      "answer": "65/147",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and fifteen, one hundred and forty-seven, ninety-one, one hundred and four, one hundred and ten, eighty-two, one hundred and twelve, one hundred and fifty-two. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "35/76",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "8/21",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "147"
+        },
+        {
+          "name": "trough_price",
+          "value": "82"
+        },
+        {
+          "name": "price_loss",
+          "value": "65"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "65/147"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "205/11172",
+            "relative_gap": "41/988"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "3/49",
+            "relative_gap": "9/65"
+          }
+        ],
+        "min_wrong_pair_gap": "127/1596",
+        "min_distinct_wrong_pair_gap": "127/1596"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Prices in time order are 92, 140, 126, 169, 146, 156, 100, 173. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          92,
+          140,
+          126,
+          169,
+          146,
+          156,
+          100,
+          173
+        ]
+      },
+      "answer": "69/169",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are ninety-two, one hundred and forty, one hundred and twenty-six, one hundred and sixty-nine, one hundred and forty-six, one hundred and fifty-six, one hundred, one hundred and seventy-three. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "81/173",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "14/39",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "169"
+        },
+        {
+          "name": "trough_price",
+          "value": "100"
+        },
+        {
+          "name": "price_loss",
+          "value": "69"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "69/169"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "1752/29237",
+            "relative_gap": "584/3979"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "25/507",
+            "relative_gap": "25/207"
+          }
+        ],
+        "min_wrong_pair_gap": "737/6747",
+        "min_distinct_wrong_pair_gap": "737/6747"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Prices in time order are 174, 73, 103, 66, 97, 180, 173, 76. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          174,
+          73,
+          103,
+          66,
+          97,
+          180,
+          173,
+          76
+        ]
+      },
+      "answer": "18/29",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and seventy-four, seventy-three, one hundred and three, sixty-six, ninety-seven, one hundred and eighty, one hundred and seventy-three, seventy-six. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "19/30",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "101/174",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "174"
+        },
+        {
+          "name": "trough_price",
+          "value": "66"
+        },
+        {
+          "name": "price_loss",
+          "value": "108"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "18/29"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "11/870",
+            "relative_gap": "11/540"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "7/174",
+            "relative_gap": "7/108"
+          }
+        ],
+        "min_wrong_pair_gap": "23/435",
+        "min_distinct_wrong_pair_gap": "23/435"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Prices in time order are 97, 82, 131, 161, 119, 41, 84, 178. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          97,
+          82,
+          131,
+          161,
+          119,
+          41,
+          84,
+          178
+        ]
+      },
+      "answer": "120/161",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are ninety-seven, eighty-two, one hundred and thirty-one, one hundred and sixty-one, one hundred and nineteen, forty-one, eighty-four, one hundred and seventy-eight. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "137/178",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "78/119",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "161"
+        },
+        {
+          "name": "trough_price",
+          "value": "41"
+        },
+        {
+          "name": "price_loss",
+          "value": "120"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "120/161"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "697/28658",
+            "relative_gap": "697/21360"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "246/2737",
+            "relative_gap": "41/340"
+          }
+        ],
+        "min_wrong_pair_gap": "2419/21182",
+        "min_distinct_wrong_pair_gap": "2419/21182"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Prices in time order are 152, 91, 101, 81, 113, 169, 112, 107. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          152,
+          91,
+          101,
+          81,
+          113,
+          169,
+          112,
+          107
+        ]
+      },
+      "answer": "71/152",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and fifty-two, ninety-one, one hundred and one, eighty-one, one hundred and thirteen, one hundred and sixty-nine, one hundred and twelve, one hundred and seven. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "88/169",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "61/152",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "152"
+        },
+        {
+          "name": "trough_price",
+          "value": "81"
+        },
+        {
+          "name": "price_loss",
+          "value": "71"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "71/152"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "1377/25688",
+            "relative_gap": "1377/11999"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "5/76",
+            "relative_gap": "10/71"
+          }
+        ],
+        "min_wrong_pair_gap": "3067/25688",
+        "min_distinct_wrong_pair_gap": "3067/25688"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Prices in time order are 167, 133, 123, 43, 107, 96, 88, 170. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          167,
+          133,
+          123,
+          43,
+          107,
+          96,
+          88,
+          170
+        ]
+      },
+      "answer": "124/167",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and sixty-seven, one hundred and thirty-three, one hundred and twenty-three, forty-three, one hundred and seven, ninety-six, eighty-eight, one hundred and seventy. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "127/170",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "80/123",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "167"
+        },
+        {
+          "name": "trough_price",
+          "value": "43"
+        },
+        {
+          "name": "price_loss",
+          "value": "124"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "124/167"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "129/28390",
+            "relative_gap": "129/21080"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "1892/20541",
+            "relative_gap": "473/3813"
+          }
+        ],
+        "min_wrong_pair_gap": "2021/20910",
+        "min_distinct_wrong_pair_gap": "2021/20910"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Prices in time order are 44, 93, 111, 152, 145, 170, 65, 60. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          44,
+          93,
+          111,
+          152,
+          145,
+          170,
+          65,
+          60
+        ]
+      },
+      "answer": "11/17",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are forty-four, ninety-three, one hundred and eleven, one hundred and fifty-two, one hundred and forty-five, one hundred and seventy, sixty-five, sixty. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "63/85",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "21/34",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "170"
+        },
+        {
+          "name": "trough_price",
+          "value": "60"
+        },
+        {
+          "name": "price_loss",
+          "value": "110"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "11/17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "8/85",
+            "relative_gap": "8/55"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "1/34",
+            "relative_gap": "1/22"
+          }
+        ],
+        "min_wrong_pair_gap": "21/170",
+        "min_distinct_wrong_pair_gap": "21/170"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Prices in time order are 99, 177, 147, 97, 168, 157, 180, 99. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          99,
+          177,
+          147,
+          97,
+          168,
+          157,
+          180,
+          99
+        ]
+      },
+      "answer": "80/177",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are ninety-nine, one hundred and seventy-seven, one hundred and forty-seven, ninety-seven, one hundred and sixty-eight, one hundred and fifty-seven, one hundred and eighty, ninety-nine. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "83/180",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "9/20",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "177"
+        },
+        {
+          "name": "trough_price",
+          "value": "97"
+        },
+        {
+          "name": "price_loss",
+          "value": "80"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "80/177"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "97/10620",
+            "relative_gap": "97/4800"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "7/3540",
+            "relative_gap": "7/1600"
+          }
+        ],
+        "min_wrong_pair_gap": "1/90",
+        "min_distinct_wrong_pair_gap": "1/90"
+      },
+      "follow_up": {
+        "question": "Can a single pass find the answer without storing every pair?",
+        "reference": "Maintain the highest price seen so far and compare each current price with that peak. This preserves the required time order."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Prices in time order are 41, 143, 154, 167, 152, 115, 71, 81. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          41,
+          143,
+          154,
+          167,
+          152,
+          115,
+          71,
+          81
+        ]
+      },
+      "answer": "96/167",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are forty-one, one hundred and forty-three, one hundred and fifty-four, one hundred and sixty-seven, one hundred and fifty-two, one hundred and fifteen, seventy-one, eighty-one. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "126/167",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "44/115",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "167"
+        },
+        {
+          "name": "trough_price",
+          "value": "71"
+        },
+        {
+          "name": "price_loss",
+          "value": "96"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "96/167"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "30/167",
+            "relative_gap": "5/16"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "3692/19205",
+            "relative_gap": "923/2760"
+          }
+        ],
+        "min_wrong_pair_gap": "7142/19205",
+        "min_distinct_wrong_pair_gap": "7142/19205"
+      },
+      "follow_up": {
+        "question": "What extra state would a rolling-horizon drawdown require?",
+        "reference": "An expired peak cannot remain valid forever in a time-limited window. Efficient rolling drawdown needs more careful candidate management than the unbounded running-peak algorithm."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Prices in time order are 121, 81, 55, 47, 154, 174, 90, 107. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          121,
+          81,
+          55,
+          47,
+          154,
+          174,
+          90,
+          107
+        ]
+      },
+      "answer": "74/121",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are one hundred and twenty-one, eighty-one, fifty-five, forty-seven, one hundred and fifty-four, one hundred and seventy-four, ninety, one hundred and seven. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "127/174",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "14/29",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "121"
+        },
+        {
+          "name": "trough_price",
+          "value": "47"
+        },
+        {
+          "name": "price_loss",
+          "value": "74"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "74/121"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "2491/21054",
+            "relative_gap": "2491/12876"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "452/3509",
+            "relative_gap": "226/1073"
+          }
+        ],
+        "min_wrong_pair_gap": "43/174",
+        "min_distinct_wrong_pair_gap": "43/174"
+      },
+      "follow_up": {
+        "question": "What should maximum drawdown be for a nondecreasing price series?",
+        "reference": "It is zero under the stated loss definition. No later price lies below any earlier running peak."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Prices in time order are 71, 66, 101, 66, 43, 49, 104, 153. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "params": {
+        "prices": [
+          71,
+          66,
+          101,
+          66,
+          43,
+          49,
+          104,
+          153
+        ]
+      },
+      "answer": "58/101",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Maximum fractional drawdown",
+      "difficulty": "Hard",
+      "spoken_text": "Prices in time order are seventy-one, sixty-six, one hundred and one, sixty-six, forty-three, forty-nine, one hundred and four, one hundred and fifty-three. What is the largest peak-to-later-trough loss as an exact fraction of the peak? Include zero as a possible loss.",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "110/153",
+          "misconceptions": [
+            "ignores_peak_before_trough_time_order"
+          ]
+        },
+        {
+          "value": "23/66",
+          "misconceptions": [
+            "uses_only_adjacent_drawdowns"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "peak_price",
+          "value": "101"
+        },
+        {
+          "name": "trough_price",
+          "value": "43"
+        },
+        {
+          "name": "price_loss",
+          "value": "58"
+        },
+        {
+          "name": "max_drawdown_fraction",
+          "value": "58/101"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_peak_before_trough_time_order",
+            "absolute_gap": "2236/15453",
+            "relative_gap": "1118/4437"
+          },
+          {
+            "misconception": "uses_only_adjacent_drawdowns",
+            "absolute_gap": "1505/6666",
+            "relative_gap": "1505/3828"
+          }
+        ],
+        "min_wrong_pair_gap": "1247/3366",
+        "min_distinct_wrong_pair_gap": "1247/3366"
+      },
+      "follow_up": {
+        "question": "Why is the global highest price minus the global lowest price insufficient?",
+        "reference": "The low may occur before the high. A valid drawdown requires the peak to precede the trough."
+      }
+    }
+  ]
+}

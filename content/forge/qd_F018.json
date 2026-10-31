@@ -1,0 +1,3046 @@
+{
+  "template_id": "qd_F018",
+  "pack": "quant_dev",
+  "topic": "Trading data structures",
+  "topics": [
+    "Trading data structures"
+  ],
+  "source_topic": "Merge timestamp streams",
+  "difficulty": "Easy",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "How should equal timestamps from different streams be treated?",
+    "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Sorted trade timestamps are 38, 54, 55 in one stream and 48, 54, 56 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            38,
+            54,
+            55
+          ],
+          [
+            48,
+            54,
+            56
+          ]
+        ]
+      },
+      "answer": "[38,48,54,54,55,56]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are thirty-eight, fifty-four, fifty-five in one stream and forty-eight, fifty-four, fifty-six in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[38,48,54,55,56]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[38,54,55,48,54,56]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Sorted trade timestamps are 70, 91, 93 in one stream and 71, 91, 99 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            70,
+            91,
+            93
+          ],
+          [
+            71,
+            91,
+            99
+          ]
+        ]
+      },
+      "answer": "[70,71,91,91,93,99]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are seventy, ninety-one, ninety-three in one stream and seventy-one, ninety-one, ninety-nine in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[70,71,91,93,99]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[70,91,93,71,91,99]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Sorted trade timestamps are 80, 93, 97 in one stream and 82, 93, 105 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            80,
+            93,
+            97
+          ],
+          [
+            82,
+            93,
+            105
+          ]
+        ]
+      },
+      "answer": "[80,82,93,93,97,105]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are eighty, ninety-three, ninety-seven in one stream and eighty-two, ninety-three, one hundred and five in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[80,82,93,97,105]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[80,93,97,82,93,105]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Sorted trade timestamps are 79, 89, 97 in one stream and 82, 89, 102 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            79,
+            89,
+            97
+          ],
+          [
+            82,
+            89,
+            102
+          ]
+        ]
+      },
+      "answer": "[79,82,89,89,97,102]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are seventy-nine, eighty-nine, ninety-seven in one stream and eighty-two, eighty-nine, one hundred and two in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[79,82,89,97,102]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[79,89,97,82,89,102]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Sorted trade timestamps are 63, 69, 78 in one stream and 65, 69, 81 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            63,
+            69,
+            78
+          ],
+          [
+            65,
+            69,
+            81
+          ]
+        ]
+      },
+      "answer": "[63,65,69,69,78,81]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are sixty-three, sixty-nine, seventy-eight in one stream and sixty-five, sixty-nine, eighty-one in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[63,65,69,78,81]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[63,69,78,65,69,81]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Sorted trade timestamps are 15, 28, 34 in one stream and 20, 28, 40 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            15,
+            28,
+            34
+          ],
+          [
+            20,
+            28,
+            40
+          ]
+        ]
+      },
+      "answer": "[15,20,28,28,34,40]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are fifteen, twenty-eight, thirty-four in one stream and twenty, twenty-eight, forty in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[15,20,28,34,40]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[15,28,34,20,28,40]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Sorted trade timestamps are 10, 19, 26 in one stream and 11, 19, 37 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            10,
+            19,
+            26
+          ],
+          [
+            11,
+            19,
+            37
+          ]
+        ]
+      },
+      "answer": "[10,11,19,19,26,37]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are ten, nineteen, twenty-six in one stream and eleven, nineteen, thirty-seven in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[10,11,19,26,37]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[10,19,26,11,19,37]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Sorted trade timestamps are 26, 38, 53 in one stream and 28, 38, 55 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            26,
+            38,
+            53
+          ],
+          [
+            28,
+            38,
+            55
+          ]
+        ]
+      },
+      "answer": "[26,28,38,38,53,55]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are twenty-six, thirty-eight, fifty-three in one stream and twenty-eight, thirty-eight, fifty-five in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[26,28,38,53,55]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[26,38,53,28,38,55]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Sorted trade timestamps are 14, 17, 31 in one stream and 16, 17, 38 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            14,
+            17,
+            31
+          ],
+          [
+            16,
+            17,
+            38
+          ]
+        ]
+      },
+      "answer": "[14,16,17,17,31,38]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are fourteen, seventeen, thirty-one in one stream and sixteen, seventeen, thirty-eight in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[14,16,17,31,38]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[14,17,31,16,17,38]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Sorted trade timestamps are 30, 43, 46 in one stream and 31, 43, 56 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            30,
+            43,
+            46
+          ],
+          [
+            31,
+            43,
+            56
+          ]
+        ]
+      },
+      "answer": "[30,31,43,43,46,56]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are thirty, forty-three, forty-six in one stream and thirty-one, forty-three, fifty-six in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[30,31,43,46,56]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[30,43,46,31,43,56]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Sorted trade timestamps are 61, 73, 81 in one stream and 69, 73, 89 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            61,
+            73,
+            81
+          ],
+          [
+            69,
+            73,
+            89
+          ]
+        ]
+      },
+      "answer": "[61,69,73,73,81,89]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are sixty-one, seventy-three, eighty-one in one stream and sixty-nine, seventy-three, eighty-nine in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[61,69,73,81,89]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[61,73,81,69,73,89]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Sorted trade timestamps are 12, 26, 30 in one stream and 16, 26, 39 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            12,
+            26,
+            30
+          ],
+          [
+            16,
+            26,
+            39
+          ]
+        ]
+      },
+      "answer": "[12,16,26,26,30,39]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are twelve, twenty-six, thirty in one stream and sixteen, twenty-six, thirty-nine in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[12,16,26,30,39]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[12,26,30,16,26,39]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Sorted trade timestamps are 17, 29, 31 in one stream and 18, 29, 32 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            17,
+            29,
+            31
+          ],
+          [
+            18,
+            29,
+            32
+          ]
+        ]
+      },
+      "answer": "[17,18,29,29,31,32]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are seventeen, twenty-nine, thirty-one in one stream and eighteen, twenty-nine, thirty-two in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[17,18,29,31,32]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[17,29,31,18,29,32]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Sorted trade timestamps are 48, 52, 56 in one stream and 50, 52, 61 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            48,
+            52,
+            56
+          ],
+          [
+            50,
+            52,
+            61
+          ]
+        ]
+      },
+      "answer": "[48,50,52,52,56,61]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are forty-eight, fifty-two, fifty-six in one stream and fifty, fifty-two, sixty-one in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[48,50,52,56,61]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[48,52,56,50,52,61]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Sorted trade timestamps are 19, 32, 35 in one stream and 30, 32, 42 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            19,
+            32,
+            35
+          ],
+          [
+            30,
+            32,
+            42
+          ]
+        ]
+      },
+      "answer": "[19,30,32,32,35,42]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are nineteen, thirty-two, thirty-five in one stream and thirty, thirty-two, forty-two in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[19,30,32,35,42]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[19,32,35,30,32,42]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Sorted trade timestamps are 23, 31, 37 in one stream and 24, 31, 49 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            23,
+            31,
+            37
+          ],
+          [
+            24,
+            31,
+            49
+          ]
+        ]
+      },
+      "answer": "[23,24,31,31,37,49]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are twenty-three, thirty-one, thirty-seven in one stream and twenty-four, thirty-one, forty-nine in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[23,24,31,37,49]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[23,31,37,24,31,49]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Sorted trade timestamps are 52, 69, 73 in one stream and 59, 69, 75 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            52,
+            69,
+            73
+          ],
+          [
+            59,
+            69,
+            75
+          ]
+        ]
+      },
+      "answer": "[52,59,69,69,73,75]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are fifty-two, sixty-nine, seventy-three in one stream and fifty-nine, sixty-nine, seventy-five in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[52,59,69,73,75]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[52,69,73,59,69,75]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Sorted trade timestamps are 21, 31, 33 in one stream and 24, 31, 37 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            21,
+            31,
+            33
+          ],
+          [
+            24,
+            31,
+            37
+          ]
+        ]
+      },
+      "answer": "[21,24,31,31,33,37]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are twenty-one, thirty-one, thirty-three in one stream and twenty-four, thirty-one, thirty-seven in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[21,24,31,33,37]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[21,31,33,24,31,37]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Sorted trade timestamps are 18, 30, 37 in one stream and 24, 30, 43 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            18,
+            30,
+            37
+          ],
+          [
+            24,
+            30,
+            43
+          ]
+        ]
+      },
+      "answer": "[18,24,30,30,37,43]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are eighteen, thirty, thirty-seven in one stream and twenty-four, thirty, forty-three in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[18,24,30,37,43]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[18,30,37,24,30,43]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Sorted trade timestamps are 64, 71, 82 in one stream and 68, 71, 90 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            64,
+            71,
+            82
+          ],
+          [
+            68,
+            71,
+            90
+          ]
+        ]
+      },
+      "answer": "[64,68,71,71,82,90]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are sixty-four, seventy-one, eighty-two in one stream and sixty-eight, seventy-one, ninety in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[64,68,71,82,90]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[64,71,82,68,71,90]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Sorted trade timestamps are 50, 59, 75 in one stream and 58, 59, 78 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            50,
+            59,
+            75
+          ],
+          [
+            58,
+            59,
+            78
+          ]
+        ]
+      },
+      "answer": "[50,58,59,59,75,78]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are fifty, fifty-nine, seventy-five in one stream and fifty-eight, fifty-nine, seventy-eight in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[50,58,59,75,78]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[50,59,75,58,59,78]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Sorted trade timestamps are 69, 80, 87 in one stream and 78, 80, 98 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            69,
+            80,
+            87
+          ],
+          [
+            78,
+            80,
+            98
+          ]
+        ]
+      },
+      "answer": "[69,78,80,80,87,98]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are sixty-nine, eighty, eighty-seven in one stream and seventy-eight, eighty, ninety-eight in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[69,78,80,87,98]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[69,80,87,78,80,98]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Sorted trade timestamps are 42, 52, 64 in one stream and 49, 52, 66 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            42,
+            52,
+            64
+          ],
+          [
+            49,
+            52,
+            66
+          ]
+        ]
+      },
+      "answer": "[42,49,52,52,64,66]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are forty-two, fifty-two, sixty-four in one stream and forty-nine, fifty-two, sixty-six in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[42,49,52,64,66]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[42,52,64,49,52,66]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Sorted trade timestamps are 49, 65, 70 in one stream and 59, 65, 75 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            49,
+            65,
+            70
+          ],
+          [
+            59,
+            65,
+            75
+          ]
+        ]
+      },
+      "answer": "[49,59,65,65,70,75]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are forty-nine, sixty-five, seventy in one stream and fifty-nine, sixty-five, seventy-five in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[49,59,65,70,75]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[49,65,70,59,65,75]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Sorted trade timestamps are 57, 69, 70 in one stream and 67, 69, 77 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            57,
+            69,
+            70
+          ],
+          [
+            67,
+            69,
+            77
+          ]
+        ]
+      },
+      "answer": "[57,67,69,69,70,77]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are fifty-seven, sixty-nine, seventy in one stream and sixty-seven, sixty-nine, seventy-seven in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[57,67,69,70,77]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[57,69,70,67,69,77]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Sorted trade timestamps are 66, 85, 86 in one stream and 67, 85, 90 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            66,
+            85,
+            86
+          ],
+          [
+            67,
+            85,
+            90
+          ]
+        ]
+      },
+      "answer": "[66,67,85,85,86,90]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are sixty-six, eighty-five, eighty-six in one stream and sixty-seven, eighty-five, ninety in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[66,67,85,86,90]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[66,85,86,67,85,90]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Sorted trade timestamps are 71, 84, 85 in one stream and 80, 84, 94 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            71,
+            84,
+            85
+          ],
+          [
+            80,
+            84,
+            94
+          ]
+        ]
+      },
+      "answer": "[71,80,84,84,85,94]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are seventy-one, eighty-four, eighty-five in one stream and eighty, eighty-four, ninety-four in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[71,80,84,85,94]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[71,84,85,80,84,94]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Sorted trade timestamps are 67, 84, 90 in one stream and 81, 84, 93 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            67,
+            84,
+            90
+          ],
+          [
+            81,
+            84,
+            93
+          ]
+        ]
+      },
+      "answer": "[67,81,84,84,90,93]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are sixty-seven, eighty-four, ninety in one stream and eighty-one, eighty-four, ninety-three in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[67,81,84,90,93]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[67,84,90,81,84,93]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Sorted trade timestamps are 44, 50, 71 in one stream and 48, 50, 72 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            44,
+            50,
+            71
+          ],
+          [
+            48,
+            50,
+            72
+          ]
+        ]
+      },
+      "answer": "[44,48,50,50,71,72]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are forty-four, fifty, seventy-one in one stream and forty-eight, fifty, seventy-two in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[44,48,50,71,72]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[44,50,71,48,50,72]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Sorted trade timestamps are 74, 97, 98 in one stream and 79, 97, 101 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            74,
+            97,
+            98
+          ],
+          [
+            79,
+            97,
+            101
+          ]
+        ]
+      },
+      "answer": "[74,79,97,97,98,101]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are seventy-four, ninety-seven, ninety-eight in one stream and seventy-nine, ninety-seven, one hundred and one in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[74,79,97,98,101]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[74,97,98,79,97,101]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Sorted trade timestamps are 9, 23, 29 in one stream and 22, 23, 30 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            9,
+            23,
+            29
+          ],
+          [
+            22,
+            23,
+            30
+          ]
+        ]
+      },
+      "answer": "[9,22,23,23,29,30]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are nine, twenty-three, twenty-nine in one stream and twenty-two, twenty-three, thirty in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[9,22,23,29,30]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[9,23,29,22,23,30]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Sorted trade timestamps are 37, 52, 53 in one stream and 38, 52, 54 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            37,
+            52,
+            53
+          ],
+          [
+            38,
+            52,
+            54
+          ]
+        ]
+      },
+      "answer": "[37,38,52,52,53,54]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are thirty-seven, fifty-two, fifty-three in one stream and thirty-eight, fifty-two, fifty-four in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[37,38,52,53,54]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[37,52,53,38,52,54]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Sorted trade timestamps are 40, 45, 54 in one stream and 42, 45, 69 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            40,
+            45,
+            54
+          ],
+          [
+            42,
+            45,
+            69
+          ]
+        ]
+      },
+      "answer": "[40,42,45,45,54,69]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are forty, forty-five, fifty-four in one stream and forty-two, forty-five, sixty-nine in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[40,42,45,54,69]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[40,45,54,42,45,69]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Sorted trade timestamps are 33, 41, 46 in one stream and 35, 41, 49 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            33,
+            41,
+            46
+          ],
+          [
+            35,
+            41,
+            49
+          ]
+        ]
+      },
+      "answer": "[33,35,41,41,46,49]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are thirty-three, forty-one, forty-six in one stream and thirty-five, forty-one, forty-nine in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[33,35,41,46,49]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[33,41,46,35,41,49]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Sorted trade timestamps are 59, 76, 78 in one stream and 60, 76, 83 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            59,
+            76,
+            78
+          ],
+          [
+            60,
+            76,
+            83
+          ]
+        ]
+      },
+      "answer": "[59,60,76,76,78,83]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are fifty-nine, seventy-six, seventy-eight in one stream and sixty, seventy-six, eighty-three in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[59,60,76,78,83]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[59,76,78,60,76,83]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Sorted trade timestamps are 54, 64, 65 in one stream and 56, 64, 76 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            54,
+            64,
+            65
+          ],
+          [
+            56,
+            64,
+            76
+          ]
+        ]
+      },
+      "answer": "[54,56,64,64,65,76]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are fifty-four, sixty-four, sixty-five in one stream and fifty-six, sixty-four, seventy-six in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[54,56,64,65,76]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[54,64,65,56,64,76]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Sorted trade timestamps are 56, 66, 67 in one stream and 58, 66, 82 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            56,
+            66,
+            67
+          ],
+          [
+            58,
+            66,
+            82
+          ]
+        ]
+      },
+      "answer": "[56,58,66,66,67,82]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are fifty-six, sixty-six, sixty-seven in one stream and fifty-eight, sixty-six, eighty-two in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[56,58,66,67,82]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[56,66,67,58,66,82]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Sorted trade timestamps are 41, 48, 49 in one stream and 45, 48, 56 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            41,
+            48,
+            49
+          ],
+          [
+            45,
+            48,
+            56
+          ]
+        ]
+      },
+      "answer": "[41,45,48,48,49,56]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are forty-one, forty-eight, forty-nine in one stream and forty-five, forty-eight, fifty-six in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[41,45,48,49,56]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[41,48,49,45,48,56]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Sorted trade timestamps are 31, 48, 57 in one stream and 43, 48, 58 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            31,
+            48,
+            57
+          ],
+          [
+            43,
+            48,
+            58
+          ]
+        ]
+      },
+      "answer": "[31,43,48,48,57,58]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are thirty-one, forty-eight, fifty-seven in one stream and forty-three, forty-eight, fifty-eight in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[31,43,48,57,58]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[31,48,57,43,48,58]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Sorted trade timestamps are 35, 55, 57 in one stream and 53, 55, 60 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            35,
+            55,
+            57
+          ],
+          [
+            53,
+            55,
+            60
+          ]
+        ]
+      },
+      "answer": "[35,53,55,55,57,60]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are thirty-five, fifty-five, fifty-seven in one stream and fifty-three, fifty-five, sixty in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[35,53,55,57,60]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[35,55,57,53,55,60]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Sorted trade timestamps are 6, 10, 19 in one stream and 9, 10, 32 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            6,
+            10,
+            19
+          ],
+          [
+            9,
+            10,
+            32
+          ]
+        ]
+      },
+      "answer": "[6,9,10,10,19,32]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are six, ten, nineteen in one stream and nine, ten, thirty-two in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[6,9,10,19,32]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[6,10,19,9,10,32]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Sorted trade timestamps are 34, 41, 60 in one stream and 37, 41, 62 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            34,
+            41,
+            60
+          ],
+          [
+            37,
+            41,
+            62
+          ]
+        ]
+      },
+      "answer": "[34,37,41,41,60,62]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are thirty-four, forty-one, sixty in one stream and thirty-seven, forty-one, sixty-two in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[34,37,41,60,62]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[34,41,60,37,41,62]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Sorted trade timestamps are 27, 39, 41 in one stream and 30, 39, 56 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            27,
+            39,
+            41
+          ],
+          [
+            30,
+            39,
+            56
+          ]
+        ]
+      },
+      "answer": "[27,30,39,39,41,56]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are twenty-seven, thirty-nine, forty-one in one stream and thirty, thirty-nine, fifty-six in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[27,30,39,41,56]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[27,39,41,30,39,56]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Sorted trade timestamps are 46, 57, 59 in one stream and 50, 57, 62 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            46,
+            57,
+            59
+          ],
+          [
+            50,
+            57,
+            62
+          ]
+        ]
+      },
+      "answer": "[46,50,57,57,59,62]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are forty-six, fifty-seven, fifty-nine in one stream and fifty, fifty-seven, sixty-two in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[46,50,57,59,62]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[46,57,59,50,57,62]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Sorted trade timestamps are 77, 89, 92 in one stream and 86, 89, 102 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            77,
+            89,
+            92
+          ],
+          [
+            86,
+            89,
+            102
+          ]
+        ]
+      },
+      "answer": "[77,86,89,89,92,102]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are seventy-seven, eighty-nine, ninety-two in one stream and eighty-six, eighty-nine, one hundred and two in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[77,86,89,92,102]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[77,89,92,86,89,102]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Sorted trade timestamps are 28, 39, 46 in one stream and 31, 39, 55 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            28,
+            39,
+            46
+          ],
+          [
+            31,
+            39,
+            55
+          ]
+        ]
+      },
+      "answer": "[28,31,39,39,46,55]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are twenty-eight, thirty-nine, forty-six in one stream and thirty-one, thirty-nine, fifty-five in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[28,31,39,46,55]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[28,39,46,31,39,55]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Sorted trade timestamps are 24, 30, 41 in one stream and 29, 30, 48 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            24,
+            30,
+            41
+          ],
+          [
+            29,
+            30,
+            48
+          ]
+        ]
+      },
+      "answer": "[24,29,30,30,41,48]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are twenty-four, thirty, forty-one in one stream and twenty-nine, thirty, forty-eight in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[24,29,30,41,48]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[24,30,41,29,30,48]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would the approach extend to many sorted streams?",
+        "reference": "Maintain the next item from each stream in a min-heap. Emit the minimum and replace it with the next item from that same stream."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Sorted trade timestamps are 11, 17, 25 in one stream and 16, 17, 33 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            11,
+            17,
+            25
+          ],
+          [
+            16,
+            17,
+            33
+          ]
+        ]
+      },
+      "answer": "[11,16,17,17,25,33]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are eleven, seventeen, twenty-five in one stream and sixteen, seventeen, thirty-three in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[11,16,17,25,33]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[11,17,25,16,17,33]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you merge streams too large to fit in memory?",
+        "reference": "Read incrementally and retain only the current item or a small buffer from each source. Backpressure and end-of-stream handling become part of the interface."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Sorted trade timestamps are 73, 87, 93 in one stream and 74, 87, 96 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            73,
+            87,
+            93
+          ],
+          [
+            74,
+            87,
+            96
+          ]
+        ]
+      },
+      "answer": "[73,74,87,87,93,96]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are seventy-three, eighty-seven, ninety-three in one stream and seventy-four, eighty-seven, ninety-six in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[73,74,87,93,96]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[73,87,93,74,87,96]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How should equal timestamps from different streams be treated?",
+        "reference": "They remain separate trades here. If full records require stable ordering, define an additional tie key rather than deleting one record."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Sorted trade timestamps are 76, 84, 100 in one stream and 78, 84, 103 in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "params": {
+        "streams": [
+          [
+            76,
+            84,
+            100
+          ],
+          [
+            78,
+            84,
+            103
+          ]
+        ]
+      },
+      "answer": "[76,78,84,84,100,103]",
+      "tolerance": "0",
+      "topic": "Trading data structures",
+      "source_topic": "Merge timestamp streams",
+      "difficulty": "Easy",
+      "spoken_text": "Sorted trade timestamps are seventy-six, eighty-four, one hundred in one stream and seventy-eight, eighty-four, one hundred and three in another. What is the merged ascending timestamp list, retaining every duplicate?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[76,78,84,100,103]",
+          "misconceptions": [
+            "deduplicates_equal_timestamps"
+          ]
+        },
+        {
+          "value": "[76,84,100,78,84,103]",
+          "misconceptions": [
+            "concatenates_without_merging"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "merged_length",
+          "value": "6"
+        },
+        {
+          "name": "duplicate_count",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why is concatenation not sufficient even when both inputs are sorted?",
+        "reference": "The ranges may overlap. A later element in the first stream can be greater than an early element in the second stream."
+      }
+    }
+  ],
+  "answer_kind": "list",
+  "coding_only": true
+}
