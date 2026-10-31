@@ -42,3 +42,19 @@ def test_nothing_links_the_old_practice_page() -> None:
     app_dir = Path(__file__).resolve().parents[1] / "app"
     pages = list((app_dir / "templates").glob("*.html")) + list((app_dir / "static" / "ui").glob("*.js"))
     assert pages and not [p.name for p in pages if "practice.html" in p.read_text(encoding="utf-8")]
+
+
+def test_pages_are_not_cached_and_assets_carry_the_version(monkeypatch) -> None:
+    import re
+    from app import pages
+    client = TestClient(app)
+    for path in ("/ui", "/ui/interview", "/ui/end", "/ui/profile", "/ui/welcome"):
+        response = client.get(path)
+        assert response.status_code == 200 and response.headers["cache-control"] == "no-cache"
+        assets = re.findall(r'(?:src|href)="(/ui-static/[^"]+)"', response.text)
+        assert assets and all(a.endswith(f"?v={pages.VERSION}") for a in assets), assets
+    assert client.get(f"/ui-static/ui.js?v={pages.VERSION}").status_code == 200
+    # On Render, the deploy's commit is the version.
+    monkeypatch.setenv("RENDER_GIT_COMMIT", "0123456789abcdef0123")
+    assert pages._version() == "0123456789ab"
+    assert 'src="/ui-static/ui.js?v=0123456789ab"' in pages.render("landing.html", "0123456789ab")

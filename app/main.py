@@ -5,10 +5,11 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.database import initialize_database
+from app.pages import page
 from app.model_diagnostics import log_startup_models
 from app.voice_routes import router as voice_router
 from app.interest import router as interest_router
@@ -31,9 +32,6 @@ app.include_router(interest_router)
 app.mount("/voice-static", StaticFiles(directory=Path(__file__).parent / "static"), name="voice-static")
 app.mount("/ui-static", StaticFiles(directory=Path(__file__).parent / "static" / "ui"), name="ui-static")
 
-TEMPLATES = Path(__file__).parent / "templates"
-
-
 # The site opens on the landing page; /health stays for Render.
 @app.get("/", include_in_schema=False)
 def home():
@@ -51,27 +49,27 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-# The Exam Room screens.
+# The Exam Room screens (no-cache HTML, versioned script and stylesheet URLs: app.pages).
 @app.get("/ui")
 def ui_landing():
-    return FileResponse(TEMPLATES / "landing.html")
+    return page("landing.html")
 
 
 @app.get("/ui/interview")
 def ui_interview():
-    return FileResponse(TEMPLATES / "interview.html")
+    return page("interview.html")
 
 
 @app.get("/ui/end")
 def ui_end():
-    return FileResponse(TEMPLATES / "end.html")
+    return page("end.html")
 
 
 @app.get("/ui/profile")
 def ui_profile():
-    return FileResponse(TEMPLATES / "profile.html")
+    return page("profile.html")
 
 
 @app.get("/ui/welcome")
 def ui_welcome():
-    return FileResponse(TEMPLATES / "welcome.html")
+    return page("welcome.html")
