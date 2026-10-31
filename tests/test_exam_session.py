@@ -20,7 +20,10 @@ from engine.labels import Label
 from test_bank_runtime import OTHER_COLOUR, ScriptedProvider, _raw_bag
 from voice.recording import VoiceError
 
-BAG = parse_template(_raw_bag())
+# Without 11 red and 11 blue, where "the other colour" (11/22) would be the right answer.
+_RAW = _raw_bag(n=21)
+_RAW["instances"] = [row for row in _RAW["instances"] if row["params"]["red"] != 11]
+BAG = parse_template(_RAW)
 
 
 def bag_bank():
