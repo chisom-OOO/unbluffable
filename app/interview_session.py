@@ -25,7 +25,7 @@ from engine.coding import Observation, Outcome, code_answer
 from engine.help import position, strength, weight_for
 from engine.interview import Interview, Question
 from engine.templates import POPULATIONS, Puzzle
-from voice.answers import restated_given
+from voice.answers import RESTATED_GIVEN, given_number, restated_given
 from voice.endpointing import cues
 from voice.numbers import number_from_text
 from voice.recording import VoiceError
@@ -67,8 +67,12 @@ def context_for(puzzle: Puzzle) -> str:
 def stated_in(text: str, span: str, puzzle: Puzzle | None = None) -> StatedNumber | None:
     """The committed number in `span`, unless it is a restated given. voice.numbers reads
     spoken forms; engine.answers also reads "18 out of 117", which it does not. A forge
-    answer can be any number, so engine.checker reads it."""
-    if not span or span == "none" or restated_given(text, span):
+    answer can be any number, so engine.checker reads it. For a forge question, a number the
+    question states (that is not the answer) is a restated given, not a commitment."""
+    forge = isinstance(puzzle, ForgePuzzle)
+    givens, answer = (puzzle.givens, puzzle.answer) if forge else ((), None)
+    named = tuple(nv.value for nv in puzzle.named_values) if forge else ()
+    if not span or span == "none" or restated_given(text, span, givens, answer, named):
         return None
     if isinstance(puzzle, ForgePuzzle):
         return parse_value(span)
@@ -116,8 +120,10 @@ class VoiceAnalyzer:
                     raise VoiceError("The committed number was not found verbatim in your answer.")
                 stated = stated_in(text, span, puzzle)
                 wrong = stated is not None and not puzzle.accepts(stated, puzzle.answer)
+                restated = isinstance(puzzle, ForgePuzzle) and given_number(
+                    span, puzzle.givens, puzzle.answer, tuple(nv.value for nv in puzzle.named_values))
                 await send({"type": "challenge_result", "should_challenge": wrong, "message": None,
-                            "number_found": stated is not None,
+                            "number_found": stated is not None, "note": RESTATED_GIVEN if restated else None,
                             "stated_number": str(stated.value) if stated else None, "model": model})
                 return stated, (span if stated else None)
             except VoiceError as error:

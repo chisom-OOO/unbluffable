@@ -5,6 +5,7 @@ from fractions import Fraction
 import re
 
 from engine.answers import matches
+from engine.checker import parse_value
 from engine.coding import code_answer
 from engine.templates import T1
 from voice.numbers import number_from_text
@@ -17,9 +18,26 @@ QUESTION = ("One percent of transactions are fraudulent. The detector flags nine
 FLAGSHIP = T1.build({"p": Fraction(1, 100), "s": Fraction(9, 10), "f": Fraction(1, 20)}, population=2000)
 
 
-def restated_given(text, span):
+RESTATED_GIVEN = "restated a given number"
+
+
+def given_number(span, givens, answer=None, named=()):
+    """Any question: the committed number equals a number the question states (`givens`,
+    with percentages also as shares) and is neither the answer nor a named wrong value
+    (a misconception can be "repeats a number from the question"; that is still an answer)."""
+    stated = parse_value(span) if span and span != "none" else None
+    if stated is None:
+        return False
+    return stated.value in set(givens) and stated.value != answer and stated.value not in set(named)
+
+
+def restated_given(text, span, givens=(), answer=None, named=()):
+    """True when the committed span is not an answer: not found in the words, a number the
+    question states (when its `givens` are passed), or the flagship's givens in its own words."""
     occurrences = list(re.finditer(re.escape(span), text)) if span else []
     if not occurrences:
+        return True
+    if givens and given_number(span, givens, answer, named):
         return True
     for occurrence in occurrences:
         before = re.split(r"[.!?]\s+", text[:occurrence.start()].lower())[-1]
