@@ -43,20 +43,24 @@ AREAS: dict[str, dict[str, tuple[str, ...]]] = {
     "software": {
         "Dynamic programming": ("Dynamic programming",),
         "Graphs & union-find": ("Graphs", "Union-find"),
-        "Sliding window, two pointers & prefix sums": ("Sliding window", "Two pointers", "Prefix sums", "Hash maps and sets"),
-        "Binary search": ("Binary search on the answer", "Binary search", "Sorting and searching"),
+        "Sliding window, two pointers & prefix sums": ("Sliding window", "Two pointers", "Prefix sums"),
+        "Binary search": ("Binary search on the answer", "Binary search"),
         "Heaps & greedy": ("Heaps", "Greedy"),
         "Intervals & monotonic stack": ("Intervals", "Monotonic stack"),
         "Bit manipulation": ("Bit manipulation",),
         "Backtracking & tries": ("Backtracking", "Tries"),
+        # The swf_ fundamentals (decision log 30): software's ninth area.
+        "Fundamentals": ("Arrays and strings", "Hash maps and sets", "Linked lists", "Recursion", "Sorting and searching",
+                         "Stacks and queues", "Trees and binary search trees"),
     },
 }
 
-# Quant development (the quant_dev track): the spoken opener's core quant topics, and every
-# coding family under one "Coding" area (its topics are whatever the quant_dev forge writes).
+# Quant development (qd_ families): the spoken opener's core quant topics, and the quant-dev
+# coding topics under one "Coding" area, each listed (a new topic must be added here).
 AREAS["quant_dev"] = {
     "Probability & expectations": AREAS["quant"]["Probability"] + AREAS["quant"]["Expectations"],
-    "Coding": (),
+    "Coding": ("Event processing", "Exact probability by code", "Order book and matching", "Position and P&L accounting",
+               "Time series", "Trading data structures"),
 }
 
 _BY_TOPIC = {(track, topic.casefold()): area for track, areas in AREAS.items()
@@ -67,8 +71,7 @@ CAPS = {"Easy": Fraction(3, 5), "Medium": Fraction(17, 20), "Hard": Fraction(1)}
 
 
 def area_for(track: str, topic: str | None) -> str | None:
-    found = _BY_TOPIC.get((track, (topic or "").casefold()))
-    return found or ("Coding" if track == "quant_dev" and topic else None)
+    return _BY_TOPIC.get((track, (topic or "").casefold()))
 
 
 def answer_value(scored: str | None, weight: Fraction, difficulty: str | None) -> Fraction:

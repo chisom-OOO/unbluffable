@@ -57,9 +57,9 @@ Q = {
     "Sequences": C("Sequences", "Sequences and recurrences"),
     "Statistical inference": C("Statistical inference", "Statistical inference and hypothesis testing"),
 }
-QD = {  # quant-dev coding families (qd_), live once merged
-    name: C(name, name) for name in ("Order books", "P&L accounting", "Time series", "Probability in code",
-                                     "Trading data structures", "Event processing")
+QD = {  # quant-dev coding families (qd_): chips named as the families' topics
+    name: C(name, name) for name in ("Order book and matching", "Position and P&L accounting", "Time series",
+                                     "Exact probability by code", "Trading data structures", "Event processing")
 }
 I = {
     "Accounting": C("Accounting", "Accounting and three-statement linkages", "Accounting"),
@@ -101,7 +101,7 @@ S = {
     "Hash maps & sets": C("Hash maps & sets", "Hash maps & sets", "Hash maps and sets", "Hash maps", "Hashing"),
     "Linked lists": C("Linked lists"),
     "Stacks & queues": C("Stacks & queues", "Stacks & queues", "Stacks and queues", "Stacks", "Queues"),
-    "Trees": C("Trees", "Trees", "Binary trees"),
+    "Trees": C("Trees", "Trees and binary search trees", "Trees", "Binary trees"),
     "Recursion": C("Recursion"),
     "Sorting & searching": C("Sorting & searching", "Sorting & searching", "Sorting and searching", "Sorting", "Searching"),
     "Two pointers & sliding window": C("Two pointers & sliding window", "Two pointers", "Sliding window", "Prefix sums"),
