@@ -39,6 +39,15 @@
     return args.map((a, i) => `${names[i] || `arg${i + 1}`} = ${pyValue(a)}`).join(", ");
   }
 
+  // Class specs ("implement the component"): a test is a construction and a call sequence,
+  // its output the list of return values: "RecentMax(2); push(5); max()" -> "[None, 5]".
+  function callsLine(className, test) {
+    const args = (values) => values.map(pyValue).join(", ");
+    return [`${className}(${args(test.init)})`, ...test.ops.map(([m, a]) => `${m}(${args(a)})`)].join("; ");
+  }
+  const listText = (values) => `[${values.map((v) => (v === null ? "None" : String(v))).join(", ")}]`;
+  const sameList = (want, got) => Array.isArray(got) && got.length === want.length && want.every((w, i) => (w === null ? got[i] === null : got[i] === w));
+
   // Lines in `now` that weren't in `before` (and the reverse): a cheap measure of an edit.
   function changedLines(before, now) {
     const a = before.split("\n").map((l) => l.trim()).filter(Boolean), b = now.split("\n").map((l) => l.trim()).filter(Boolean);
@@ -47,7 +56,7 @@
   }
 
   if (typeof module !== "undefined") {
-    module.exports = { titleFromName, statementHtml, inputLine, changedLines };
+    module.exports = { titleFromName, statementHtml, inputLine, changedLines, callsLine, listText, sameList };
     return;
   }
 
@@ -87,7 +96,7 @@
       });
       this.onStatus("Loading Python…", "wait");
     }
-    async run(code, fn, cases, timeoutMs) {
+    async run(code, fn, cases, timeoutMs, cls = null) {
       await this.ready;
       const id = ++this.seq;
       return new Promise((resolve) => {
@@ -104,7 +113,7 @@
                                        : { results: e.data.results, stdout: e.data.stdout || "" });
         };
         this.worker.addEventListener("message", listen);
-        this.worker.postMessage({ id, code, fn, cases });
+        this.worker.postMessage({ id, code, fn, cases, cls });
       });
     }
     // Part 2: one large input, built in the worker from (config, seed, n); stopped at timeoutMs.
@@ -126,7 +135,8 @@
   }
 
   let spec = null, editor = null, runner = null, send = null, open = false, pauseTimer = null, editTimer = null, lastSent = "";
-  let starter = "", names = [], lastOutputs = null, selectLeft = null, selectConsole = null;
+  let starter = "", names = [], lastOutputs = null, selectLeft = null, selectConsole = null, isClass = false;
+  const input = (args) => (isClass ? callsLine(spec.class_name, args) : inputLine(names, args));
   let laidOut = false, editorMade = false, part = 1, scale = null, problemNumber = 1;  // decision log 29: parts and problems
   const code = () => (editor && editor.getValue ? editor.getValue() : $("code-editor").value);
   const status = (t, state) => { $("py-status").textContent = t; if (state) $("py-status").dataset.state = state; };
@@ -272,16 +282,19 @@
 
   // ---------- The problem tab ----------
   function problem(s) {
-    names = s.parameters.map((p) => p.name);
+    isClass = s.kind === "class";
+    names = isClass ? [...s.constructor.map((p) => p.name), ...s.methods.map((m) => m.name)] : s.parameters.map((p) => p.name);
     $("ws-ptitle").textContent = part === 3 ? `Bonus part: ${titleFromName(s.function_name).toLowerCase()}` : titleFromName(s.function_name);
     const partChip = part === 1 ? "Part 1" : part === 2 ? "Part 2 · make it fast" : "Bonus part · hints cost half";
     $("ws-chips").innerHTML = [`Problem ${problemNumber}`, partChip, s.difficulty, s.topic].filter(Boolean)
       .map((c, i) => `<span class="tag${i === 1 && part > 1 ? " warn" : ""}">${esc(c)}</span>`).join("");
     $("ws-statement").innerHTML = statementHtml(s.statement, names)
-      + `<p class="ws-signature">Implement <code>${esc(s.signature.replace(/:$/, ""))}</code>.</p>`;
+      + (isClass ? `<p class="ws-signature">Implement the class <code>${esc(s.class_name)}</code>: `
+          + s.methods.map((m) => `<code>${esc(m.name)}(${esc(m.parameters.map((p) => `${p.name}: ${p.type}`).join(", "))}) -> ${esc(m.return_type)}</code>`).join(", ") + ".</p>"
+        : `<p class="ws-signature">Implement <code>${esc(s.signature.replace(/:$/, ""))}</code>.</p>`);
     $("ws-examples").innerHTML = s.examples.map((ex, i) => `<div class="ws-example"><h3>Example ${i + 1}</h3>`
-      + `<p><span class="ws-k">Input:</span> <code>${esc(inputLine(names, ex.args))}</code></p>`
-      + `<p><span class="ws-k">Output:</span> <code>${esc(ex.expected)}</code></p></div>`).join("");
+      + `<p><span class="ws-k">Input:</span> <code>${esc(input(ex.args))}</code></p>`
+      + `<p><span class="ws-k">Output:</span> <code>${esc(isClass ? listText(ex.expected) : ex.expected)}</code></p></div>`).join("");
     const p = s.provenance;
     if (p) {
       $("ws-provenance-text").textContent = `Written by ${p.author}: its solver reproduced the verified answer on ${p.solver_reproduced}/${p.variants} `
@@ -293,11 +306,12 @@
 
   // ---------- The console ----------
   function caseHtml(label, args, expected, r) {
-    const ok = r && r.ok && expected != null && r.value === expected;
-    const got = !r ? "" : r.ok ? `<code>${esc(r.value)}</code>` : `<span class="bad">${esc(r.error)}</span>`;
+    const ok = r && r.ok && expected != null && (isClass ? sameList(expected, r.values) : r.value === expected);
+    const got = !r ? "" : r.ok ? `<code>${esc(isClass ? listText(r.values || []) : r.value)}</code>` : `<span class="bad">${esc(r.error)}</span>`;
+    if (isClass && expected != null) expected = listText(expected);
     return `<div class="code-case ${r ? (ok ? "ok" : "bad") : ""}"><div class="code-case-head"><strong>${esc(label)}</strong>`
       + `${r && expected != null ? `<span class="code-mark">${ok ? "Passed" : "Failed"}</span>` : r ? `<span class="code-mark">Failed</span>` : ""}</div>`
-      + `<dl><div><dt>Input</dt><dd><code>${esc(inputLine(names, args))}</code></dd></div>`
+      + `<dl><div><dt>Input</dt><dd><code>${esc(input(args))}</code></dd></div>`
       + `<div><dt>Expected</dt><dd>${expected == null ? `<span class="fine">Hidden (not one of the examples)</span>` : `<code>${esc(expected)}</code>`}</dd></div>`
       + (r ? `<div><dt>Got</dt><dd>${got}</dd></div>` : "") + `</dl></div>`;
   }
@@ -311,7 +325,7 @@
   async function runExamples() {
     $("run-examples").disabled = true;
     status("Running the examples…", "wait");
-    const out = await runner.run(code(), spec.function_name, spec.examples.map((e) => e.args), EXAMPLES_MS);
+    const out = await runner.run(code(), spec.function_name, spec.examples.map((e) => e.args), EXAMPLES_MS, isClass ? spec.class_name : null);
     status(out.timeout ? "The examples took too long (over 15 s)." : out.compile_error ? out.compile_error : "Examples run.", out.timeout || out.compile_error ? "bad" : "ok");
     showExamples(out.results);
     showOutput(out.stdout);
@@ -325,7 +339,7 @@
   async function submit() {
     $("submit-code").disabled = $("run-examples").disabled = true;
     status(`Running all ${spec.tests.length} tests…`, "wait");
-    const out = await runner.run(code(), spec.function_name, spec.tests, TESTS_MS);
+    const out = await runner.run(code(), spec.function_name, spec.tests, TESTS_MS, isClass ? spec.class_name : null);
     status(out.timeout ? "The tests took too long (over 30 s)." : out.compile_error ? out.compile_error : "Submitted.", out.timeout || out.compile_error ? "bad" : "ok");
     showOutput(out.stdout);
     lastOutputs = out.results;
@@ -350,7 +364,8 @@
       document.getElementById("room").classList.add("coding");
       $("coding-pane").hidden = false;
       if (!laidOut) { layout(); laidOut = true; }
-      $("ws-title").textContent = `Problem ${problemNumber} · Software coding round (Python)`;
+      const round = publicSpec.pack === "quant_dev" ? "Quant development coding round" : "Software coding round";
+      $("ws-title").textContent = `Problem ${problemNumber} · ${round} (Python)`;
       problem(spec);
       showExamples(null);
       showOutput("");
@@ -358,7 +373,7 @@
       $("ws-banner").hidden = true;
       selectLeft($("tab-problem"));
       runner = runner || new Runner(status);
-      starter = `${spec.signature}\n    pass\n`;
+      starter = spec.kind === "class" ? `${spec.signature}\n` : `${spec.signature}\n    pass\n`;
       if (!editorMade) { editorMade = true; await makeEditor(starter); }
       else { if (editor) editor.setOption("readOnly", false); setCode(starter); }
       $("code-editor").readOnly = false;

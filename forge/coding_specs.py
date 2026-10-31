@@ -150,6 +150,141 @@ def verify(spec: dict, family: dict, solver: str, wrong: list[dict], sandbox) ->
     }
 
 
+# --- Class-based specs ("implement the component", e.g. swc_ families) ---------------------
+#
+# A class family's instances hold the constructor's arguments and an "operations" list of
+# [method, *args] calls. Its verified solver replays them and returns, as steps, the value of
+# every call that returns one: "out_<i>" for operation i (bool as 1 or 0). The spec gives a
+# class name, the constructor and the method signatures; each test is an operation sequence
+# and its expected output is the list of return values (None for a call that returns nothing).
+
+OPS = "operations"
+RETURNS = {"int", "float", "bool", "None"}
+CLASS_SPEC = schemas.obj({
+    "class_name": schemas.S,
+    "constructor": schemas.arr(schemas.obj({"name": schemas.S, "type": schemas.S, "param": schemas.S})),
+    "methods": schemas.arr(schemas.obj({"name": schemas.S, "parameters": schemas.arr(schemas.obj({"name": schemas.S, "type": schemas.S})),
+                                        "return_type": schemas.S})),
+    "statement": schemas.S,
+})
+CLASS_PROMPT = """Turn this verified "implement the component" family into a Python class exercise.
+Each instance builds the component with some parameters, then makes the calls in its
+"operations" list ([method name, arguments...]).
+- class_name: CapWords, names the component.
+- constructor: one entry per instance parameter other than "operations". name: snake_case
+  argument name; type: one of int, float, str, bool, list[int], list[float], list[str],
+  list[bool], list[list[int]]; param: the exact instance parameter key it receives.
+- methods: every method the operations call, with its parameters (name and type, in call
+  order) and return_type: int, float, bool, or None for a method that returns nothing.
+- statement: 2-6 plain sentences describing the component and each method in general terms;
+  no specific numbers from the examples, no hints at the method, no solution.
+The forge's verified solver is included only so the names and types are right; never
+describe its method in the statement."""
+CLASS_NAME = re.compile(r"[A-Z][A-Za-z0-9]{0,40}")
+
+
+def is_class_family(family: dict) -> bool:
+    ops = family["instances"][0]["params"].get(OPS)
+    return isinstance(ops, list) and bool(ops) and all(isinstance(o, list) and o and isinstance(o[0], str) for o in ops)
+
+
+def class_signature(spec: dict) -> str:
+    """The starter: the class with every method, each body `pass`."""
+    init = ", ".join(["self"] + [f"{p['name']}: {p['type']}" for p in spec["constructor"]])
+    lines = [f"class {spec['class_name']}:", f"    def __init__({init}):", "        pass"]
+    for m in spec["methods"]:
+        args = ", ".join(["self"] + [f"{p['name']}: {p['type']}" for p in m["parameters"]])
+        lines += ["", f"    def {m['name']}({args}) -> {m['return_type']}:", "        pass"]
+    return "\n".join(lines)
+
+
+def outputs_of(result: dict, ops: list, returns: dict) -> list:
+    """A replay's return values from its steps: out_<i> per operation, None for void calls."""
+    steps = {s["name"]: s["value"] for s in (result.get("steps") or [])}
+    out = []
+    for i, op in enumerate(ops):
+        kind = returns[op[0]]
+        value = steps.get(f"out_{i}")
+        if kind == "None":
+            if value is not None:
+                raise Reject("spec", "void_method_returns_a_value", {"operation": i})
+            out.append(None)
+        elif value is None:
+            raise Reject("spec", "steps_do_not_cover_returns", {"operation": i})
+        elif kind == "bool":
+            out.append("True" if number(value) else "False")
+        else:
+            out.append(str(number(value)))
+    return out
+
+
+def verify_class(spec: dict, family: dict, solver: str, wrong: list[dict], sandbox) -> dict:
+    """Raise Reject unless the class spec is sound; return what ships."""
+    name = spec.get("class_name", "")
+    if not CLASS_NAME.fullmatch(name):
+        raise Reject("spec", "invalid_class_name")
+    ctor, methods = spec.get("constructor") or [], spec.get("methods") or []
+    if any(not IDENT.fullmatch(p.get("name", "")) or p.get("type") not in TYPES for p in ctor):
+        raise Reject("spec", "invalid_constructor")
+    names = [m.get("name", "") for m in methods]
+    if not methods or len(set(names)) != len(names) or any(not IDENT.fullmatch(n) or n.startswith("_") for n in names):
+        raise Reject("spec", "invalid_methods")
+    if any(m.get("return_type") not in RETURNS or any(not IDENT.fullmatch(p.get("name", "")) or p.get("type") not in TYPES
+                                                       for p in m.get("parameters") or []) for m in methods):
+        raise Reject("spec", "invalid_method_types")
+    statement = spec.get("statement", "").strip()
+    if not 20 <= len(statement) <= 1200:
+        raise Reject("spec", "statement_length")
+    keys = [p["param"] for p in ctor]
+    by_name = {m["name"]: m for m in methods}
+    instances = family["instances"]
+    for i, inst in enumerate(instances):
+        params = inst["params"]
+        if sorted(k for k in params if k != OPS) != sorted(keys) or not isinstance(params.get(OPS), list):
+            raise Reject("spec", "parameters_do_not_match", {"variant_index": i})
+        if any(not check_type(params[p["param"]], p["type"]) for p in ctor):
+            raise Reject("spec", "type_mismatch", {"variant_index": i})
+        for op in params[OPS]:
+            m = by_name.get(op[0]) if op else None
+            if m is None or len(op) - 1 != len(m["parameters"]) or any(not check_type(a, p["type"]) for a, p in zip(op[1:], m["parameters"])):
+                raise Reject("spec", "operation_does_not_match", {"variant_index": i})
+    returns = {m["name"]: m["return_type"] for m in methods}
+    points = [inst["params"] for inst in instances]
+    solved = sandbox.run_batch(solver, points)
+    expected = []
+    for i, (got, inst) in enumerate(zip(solved, instances)):
+        if answer_of(got) != number(inst["answer"]):
+            raise Reject("spec", "solver_does_not_reproduce", {"variant_index": i})
+        expected.append(outputs_of(got, inst["params"][OPS], returns))
+    kept = []
+    for method in wrong:
+        try:
+            outs = [outputs_of(r, inst["params"][OPS], returns)
+                    for r, inst in zip(sandbox.run_batch(method["code"], points), instances)]
+        except Reject:
+            continue
+        if outs != expected:
+            kept.append({"name": method["misconception"].replace("_", " "), "outputs": outs, "source": method["code"]})
+    tests = [{"init": [plain(inst["params"][k]) for k in keys], "ops": [[op[0], plain(op[1:])] for op in inst["params"][OPS]]}
+             for inst in instances]
+    friendly = [i for i, inst in enumerate(instances) if inst.get("interview_friendly")] or list(range(len(instances)))
+    examples = []
+    for i in friendly:
+        if len(examples) < 2 and all(expected[i] != expected[j] for j in examples):
+            examples.append(i)
+    shipped = {"class_name": name, "constructor": ctor, "methods": methods}
+    return {
+        "template_id": family["template_id"], "pack": family.get("pack", "software"), "topic": family["topic"],
+        "difficulty": family["difficulty"], "kind": "class", "class_name": name, "function_name": name,
+        "constructor": ctor, "methods": methods, "parameters": ctor, "return_type": "list",
+        "signature": class_signature(shipped), "statement": statement,
+        "examples": examples, "tests": tests, "expected": expected,
+        "wrong_methods": kept, "solver_source": solver,
+        "verification": {"verified": True, "variants": len(instances), "solver_reproduced": len(instances),
+                         "wrong_methods_kept": len(kept), "wrong_methods_given": len(wrong)},
+    }
+
+
 def programs(item: dict) -> tuple[str, list[dict]] | None:
     """The family's verified solver and wrong methods, from the family forge's state."""
     if item.get("status") != "verified" and not (item.get("solver_verification") or {}).get("passed"):
@@ -188,14 +323,16 @@ class CodingForge:
         examples = [{"question": inst["text"], "params": inst["params"], "answer": inst["answer"]}
                     for inst in (family["instances"][0], family["instances"][-1])]
         payload = {"template_id": family["template_id"], "topic": family["topic"], "examples": examples, "solver": solver}
+        component = is_class_family(family)  # "implement the component": a class spec
+        schema, prompt, check = (CLASS_SPEC, CLASS_PROMPT, verify_class) if component else (SPEC, PROMPT, verify)
         for attempt in ("author", "repair"):
             if attempt == "repair":
                 payload = {**payload, "draft": record["draft"], "error": record["failure"]}
-            record["draft"] = self.write("coding_" + attempt, payload,
-                                         PROMPT + ("\nCorrect the reported error; return one complete spec." if attempt == "repair" else ""))
+            record["draft"] = self.write("coding_" + attempt, payload, schema=schema, instructions=
+                                         prompt + ("\nCorrect the reported error; return one complete spec." if attempt == "repair" else ""))
             self.state.save()
             try:
-                shipped = verify(record["draft"], family, solver, wrong, self.sandbox)
+                shipped = check(record["draft"], family, solver, wrong, self.sandbox)
             except Reject as failure:
                 record["failure"] = {"gate": failure.stage, "error_class": failure.reason, **failure.details}
                 if attempt == "repair":
@@ -207,10 +344,10 @@ class CodingForge:
             record.update(status="verified", failure=None)
             return
 
-    def write(self, stage: str, payload: dict, instructions: str) -> dict:
+    def write(self, stage: str, payload: dict, instructions: str, schema=SPEC) -> dict:
         for limit in SPEC_TOKENS:
             try:
-                return self.models.call(stage, payload, SPEC, instructions, author=True, max_tokens=limit)
+                return self.models.call(stage, payload, schema, instructions, author=True, max_tokens=limit)
             except Reject as failure:
                 if failure.details.get("finish") != "length" or limit == SPEC_TOKENS[-1]:
                     raise

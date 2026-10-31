@@ -60,8 +60,11 @@ def specs(pack: str = "software") -> dict:
 
 def public(spec: dict) -> dict:
     """What the page gets: the signature, statement, the two visible examples with their
-    answers, and every test's arguments, but never the other answers."""
-    return {"template_id": spec["template_id"], "function_name": spec["function_name"], "signature": spec["signature"],
+    answers, and every test's arguments, but never the other answers. A class spec also
+    gives its class name, constructor and methods; its tests are operation sequences."""
+    component = {"kind": "class", "class_name": spec["class_name"], "constructor": spec["constructor"],
+                 "methods": spec["methods"]} if spec.get("kind") == "class" else {"kind": "function"}
+    return {**component, "pack": spec.get("pack", "software"),"template_id": spec["template_id"], "function_name": spec["function_name"], "signature": spec["signature"],
             "parameters": [{"name": p["name"], "type": p["type"]} for p in spec["parameters"]],
             "return_type": spec["return_type"], "statement": spec["statement"],
             "examples": [{"args": spec["tests"][i], "expected": spec["expected"][i]} for i in spec["examples"]],
@@ -88,7 +91,59 @@ def value_of(result) -> Fraction | None:
         return None
 
 
+def same_value(expected, got) -> bool:
+    """One return value, exactly: None only for None, bools as written, numbers as numbers."""
+    if expected is None or got is None:
+        return expected is None and got is None
+    if expected in {"True", "False"}:
+        return got == expected
+    v = value_of({"ok": True, "value": got})
+    return v is not None and v == Fraction(expected)
+
+
+def judge_class(spec: dict, outputs: list) -> dict:
+    """A class spec: each test's list of return values against the stored list, exactly; a
+    wrong method is named when its lists match on every test."""
+    expected = spec["expected"]
+    rows = outputs if isinstance(outputs, list) and len(outputs) == len(expected) else [None] * len(expected)
+    got = [r["values"] if isinstance(r, dict) and r.get("ok") and isinstance(r.get("values"), list) else None for r in rows]
+    match = lambda want, have: have is not None and len(have) == len(want) and all(same_value(w, h) for w, h in zip(want, have))  # noqa: E731
+    passed = [match(w, h) for w, h in zip(expected, got)]
+    failing = [i for i, ok in enumerate(passed) if not ok]
+    named = None
+    if failing:
+        named = next((m["name"] for m in spec.get("wrong_methods", []) if all(match(t, h) for t, h in zip(m["outputs"], got))), None)
+    errors = sum(1 for r in rows if isinstance(r, dict) and not r.get("ok"))
+    return {"passed": sum(passed), "total": len(expected), "failing": failing, "named": named, "errors": errors,
+            "timed_out": any(isinstance(r, dict) and r.get("timeout") for r in rows)}
+
+
+def call_text(spec: dict, case) -> str:
+    """A test as code: f(args), or a class's construction and its calls."""
+    args = lambda values: ", ".join(json.dumps(a) for a in values)  # noqa: E731
+    if spec.get("kind") == "class":
+        return f"{spec['class_name']}({args(case['init'])}); " + "; ".join(f"{name}({args(a)})" for name, a in case["ops"])
+    return f"{spec['function_name']}({args(case)})"
+
+
+def output_text(r: dict) -> str:
+    """The candidate's output as shown: a value, or a class's list of return values."""
+    if "values" in r:
+        return "[" + ", ".join("None" if v is None else str(v) for v in r["values"]) + "]"
+    return str(r.get("value"))
+
+
+def case_right(spec: dict, r, expected) -> bool:
+    if spec.get("kind") == "class":
+        values = r.get("values") if isinstance(r, dict) and r.get("ok") else None
+        return isinstance(values, list) and len(values) == len(expected) and all(same_value(e, v) for e, v in zip(expected, values))
+    v = value_of(r)
+    return v is not None and v == Fraction(expected)
+
+
 def judge(spec: dict, outputs: list) -> dict:
+    if spec.get("kind") == "class":
+        return judge_class(spec, outputs)
     expected = [Fraction(x) for x in spec["expected"]]
     got = [value_of(r) for r in outputs] if isinstance(outputs, list) and len(outputs) == len(expected) else [None] * len(expected)
     passed = [g is not None and g == e for g, e in zip(got, expected)]
@@ -161,7 +216,8 @@ GENERIC_QUESTION = "Can you walk me through what this part of your code does?"
 def safe_question(text: str, spec: dict) -> str:
     """A question about the code never gives the solution: no code, no stored answers."""
     q = " ".join((text or "").split())
-    answers = {a for a in spec["expected"]} - {e["expected"] for e in public(spec)["examples"]}
+    flat = lambda rows: {v for row in rows for v in (row if isinstance(row, list) else [row]) if v is not None and v not in {"True", "False"}}  # noqa: E731
+    answers = flat(spec["expected"]) - flat(e["expected"] for e in public(spec)["examples"])
     if not q.endswith("?") or len(q) > 280 or "```" in q or re.search(r"\bdef |\breturn\b|\bfor\s+\w+\s+in\b", q) \
             or any(re.search(rf"(?<![\d.]){re.escape(a)}(?![\d./])", q) for a in answers):
         return GENERIC_QUESTION
@@ -516,9 +572,8 @@ class CodingSession:
         """One Socratic question after a failing submit; it never says what is wrong."""
         if result["failing"]:
             first = result["failing"][0]
-            args = ", ".join(json.dumps(a) for a in spec["tests"][first])
             return (f"Your code gives a different result from the expected one on {result['total'] - result['passed']} of "
-                    f"{result['total']} tests. For example, with {spec['function_name']}({args}). Walk me through what your "
+                    f"{result['total']} tests. For example, with {call_text(spec, spec['tests'][first])}. Walk me through what your "
                     f"code does there?")
         if result.get("verdict") in {"slow", "stopped"}:
             return (f"Your answers are right on the small tests, but with n = {result['n']:,} it takes too long "
@@ -533,17 +588,16 @@ class CodingSession:
             return
         if first is None:
             examples = public(spec)["examples"]
-            first = next((i for i, (r, e) in enumerate(zip(outputs, examples))
-                          if value_of(r) is None or value_of(r) != Fraction(e["expected"])), None)
+            first = next((i for i, (r, e) in enumerate(zip(outputs, examples)) if not case_right(spec, r, e["expected"])), None)
             if first is None:
                 return
         r = outputs[first]
-        got = r.get("value") if isinstance(r, dict) and r.get("ok") else "an error"
-        call = f"{spec['function_name']}({', '.join(json.dumps(a) for a in cases[first])})"
+        got = output_text(r) if isinstance(r, dict) and r.get("ok") else "an error"
+        call = call_text(spec, cases[first])
         if len(call) <= 160:
             shown = {json.dumps(e["args"]) for e in public(spec)["examples"]}
-            hidden = None if json.dumps(cases[first]) in shown else spec["expected"][spec["tests"].index(cases[first])]
-            self.log.part.failing = {"call": call, "got": str(got)[:40], "expected": hidden}
+            hidden = None if json.dumps(cases[first]) in shown or spec.get("kind") == "class"                 else spec["expected"][spec["tests"].index(cases[first])]
+            self.log.part.failing = {"call": call, "got": str(got)[:60], "expected": hidden}
 
     # --- scoring and report ---
     def scored(self, log: CodingLog | None = None, part: int = 1) -> tuple[str | None, Fraction]:

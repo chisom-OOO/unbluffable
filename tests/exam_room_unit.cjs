@@ -156,3 +156,13 @@ console.log("coding workspace helpers ok");
   assert.equal(T.naturalVoice({ name: "Google UK English Female" }), false);
 }
 console.log("interviewer delivery ok");
+
+{
+  const { callsLine, listText, sameList } = require(path.resolve(__dirname, "../app/static/ui/coding-ui.js"));
+  assert.equal(callsLine("RecentMax", { init: [2], ops: [["push", [5]], ["max", []], ["full", []]] }), "RecentMax(2); push(5); max(); full()");
+  assert.equal(listText([null, "5", "True"]), "[None, 5, True]");
+  assert.equal(sameList([null, "5"], [null, "5"]), true);
+  assert.equal(sameList([null, "5"], ["0", "5"]), false, "a void call that returns something fails");
+  assert.equal(sameList([null, "5"], [null]), false);
+}
+console.log("class specs in the page ok");
