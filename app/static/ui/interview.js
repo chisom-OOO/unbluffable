@@ -76,33 +76,58 @@ document.addEventListener("DOMContentLoaded", () => {
   // estimated length plus 2 s, whichever comes first (UBTurn.guardUtterance).
   // `mutes: false` (the device check's test line) never mutes the microphone.
   const guards = new Set();
+  // A more human delivery: the line is said sentence by sentence (about 250 ms apart) at rate
+  // 0.97, with numbers as words and no symbols (UBTurn.speakable). The whole line counts as one
+  // spoken line: "Speaking" and the echo-safety mute hold through the pauses.
   function speak(text, reveal, { mutes = true } = {}) {
     if (muted() || !window.speechSynthesis) { reveal?.finish(); return; }
-    const u = new SpeechSynthesisUtterance(text);
-    u.voice = window.UB.pickVoice();
+    const T = window.UBTurn;
+    const parts = T.sentences(T.speakable(text));
+    const voice = window.UB.pickVoice();
     const gen = speechGen;
-    let counted = false;
-    const guard = window.UBTurn.guardUtterance(u, {
-      text, rate: u.rate,
-      onStart: () => {
-        if (gen !== speechGen) return;
-        counted = true; speaking++; if (mutes) muting++;
-        speechChanged();
-        reveal?.start();
-      },
-      onDone: () => {
-        guards.delete(guard);
-        reveal?.finish();
-        if (!counted || gen !== speechGen) return;
-        speaking = Math.max(0, speaking - 1);
-        if (mutes) muting = Math.max(0, muting - 1);
-        speechChanged();
-      },
-    });
-    guards.add(guard);
-    u.onboundary = (e) => { if (gen === speechGen && e.name === "word") reveal?.boundary(e.charIndex); };
-    speechSynthesis.speak(u);
-    reveal?.watch(() => guard.started);
+    let counted = false, finished = false, index = 0, offset = 0, current = null, pause = null;
+    const line = { started: false };
+    const end = () => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(pause);
+      guards.delete(line);
+      reveal?.finish();
+      if (!counted || gen !== speechGen) return;
+      speaking = Math.max(0, speaking - 1);
+      if (mutes) muting = Math.max(0, muting - 1);
+      speechChanged();
+    };
+    line.cancel = () => { current?.cancel(); end(); };
+    const next = () => {
+      if (finished || gen !== speechGen || index >= parts.length) { end(); return; }
+      const part = parts[index++], at = offset;
+      offset += part.length + 1;
+      const u = new SpeechSynthesisUtterance(part);
+      u.voice = voice;
+      u.rate = T.SPEECH_RATE;
+      current = T.guardUtterance(u, {
+        text: part, rate: u.rate,
+        onStart: () => {
+          if (gen !== speechGen) return;
+          line.started = true;
+          if (counted) return;
+          counted = true; speaking++; if (mutes) muting++;
+          speechChanged();
+          reveal?.start();
+        },
+        onDone: (reason) => {
+          current = null;
+          if (reason === "cancel" || gen !== speechGen) { end(); return; }
+          pause = setTimeout(next, index < parts.length ? T.SENTENCE_PAUSE_MS : 0);
+        },
+      });
+      u.onboundary = (e) => { if (gen === speechGen && e.name === "word") reveal?.boundary(at + e.charIndex); };
+      speechSynthesis.speak(u);
+    };
+    guards.add(line);
+    next();
+    reveal?.watch(() => line.started);
   }
 
   function cancelSpeech() {
@@ -167,11 +192,14 @@ document.addEventListener("DOMContentLoaded", () => {
       receiptHtml(receipt) + `</div>`;
     log.appendChild(el);
     scrollTo(el);
-    const said = speech || text;
-    const reveal = revealer(el.querySelector(".typed"), text, said.length);
+    // A short rotated opener before some statements (spoken only), never in a question.
+    const said = kind === "ack" ? (speech || text) : window.UBTurn.withOpener(speech || text, kind, openers);
+    openers.justAcknowledged = kind === "ack";
+    const reveal = revealer(el.querySelector(".typed"), text, window.UBTurn.speakable(said).length);
     if (reduced || muted() || !window.speechSynthesis) reveal.finish();
     speak(said, reveal);
   }
+  const openers = { n: 0, lastHadOpener: false, justAcknowledged: false };
 
   function addCandidate(text) {
     const el = document.createElement("div");
@@ -824,13 +852,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.UBTurn.onlyRobotic(window.speechSynthesis.getVoices())) {
       $("speaker-note").textContent = "This browser only has robotic-sounding voices. Edge or Chrome have more natural ones.";
     }
+    voiceTip();
   }
+  // One line when the chosen voice isn't a Natural/Online one.
+  function voiceTip() { $("voice-tip").hidden = window.UBTurn.naturalVoice(window.UB.pickVoice()); }
   if (window.speechSynthesis) {
     listVoices();
     speechSynthesis.addEventListener?.("voiceschanged", listVoices);
   }
   $("voice-select").addEventListener("change", () => {
     window.UB.store.set("ub-voice", $("voice-select").value);
+    voiceTip();
     $("speaker-test").click();  // hear it straight away
   });
 

@@ -127,3 +127,32 @@ console.log("model panel grouping ok");
   assert.equal(changedLines("def f(x):\n    pass\n", "def f(x):\n    a = 1\n    b = 2\n    return a\n"), 4);
 }
 console.log("coding workspace helpers ok");
+
+{
+  const T = require(path.resolve(__dirname, "../app/static/ui/turn-logic.js"));
+  // Numbers said naturally; never a symbol.
+  assert.equal(T.speakable("You said 2/3. Why?"), "You said two thirds. Why?");
+  assert.equal(T.speakable("About 15% of 3.2m users pay $5."), "About 15 percent of 3 point 2 million users pay 5 dollars.");
+  assert.equal(T.speakable("It costs $3.2bn"), "It costs 3 point 2 billion dollars");
+  assert.equal(T.speakable("Is 7 - 3 = 4?"), "Is 7 minus 3 equals 4?");
+  assert.equal(T.speakable("max_gain([-11, 16])"), "max gain minus 11, 16");
+  assert.equal(T.speakable("17/250 and 1/2"), "17 over 250 and one half");
+  assert.ok(!/[%$=+*_#/<>()[\]{}|`^]/.test(T.speakable("a*b + c/d = (e) [f] {g} <h> #i `j` |k| ^l 50% $3")), "no symbol is read");
+  // Sentence by sentence, but never at a decimal point or "e.g.".
+  assert.deepEqual(T.sentences("Good. Now 3.5 is close, e.g. near four. Next?"), ["Good.", "Now 3.5 is close, e.g. near four.", "Next?"]);
+  assert.equal(T.SPEECH_RATE >= 0.95 && T.SPEECH_RATE <= 1, true);
+  assert.equal(T.SENTENCE_PAUSE_MS, 250);
+  // Openers: rotated, never before a question or right after an acknowledgement, never twice in a row.
+  const st = {};
+  const a = T.withOpener("That is the end of the interview.", "close", st);
+  const b = T.withOpener("Go ahead and code it in Python.", "prompt", st);
+  const c = T.withOpener("The first die is 4. Update your market.", "reveal", st);
+  assert.ok(a !== "That is the end of the interview." && b === "Go ahead and code it in Python." && c !== "The first die is 4. Update your market.");
+  assert.notEqual(a.split(" ")[0], c.split(" ")[0], "rotated");
+  assert.equal(T.withOpener("What do you get for the posterior alpha?", "nudge", {}), "What do you get for the posterior alpha?");
+  assert.equal(T.withOpener("Now the long statement continues here.", "prompt", { justAcknowledged: true }), "Now the long statement continues here.");
+  assert.equal(T.withOpener("Is this a question about something?", "close", {}), "Is this a question about something?");
+  assert.equal(T.naturalVoice({ name: "Microsoft Libby Online (Natural) - English (United Kingdom)" }), true);
+  assert.equal(T.naturalVoice({ name: "Google UK English Female" }), false);
+}
+console.log("interviewer delivery ok");
