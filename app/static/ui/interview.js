@@ -427,6 +427,9 @@ document.addEventListener("DOMContentLoaded", () => {
       case "coding_open":
         window.UBCoding.opened();
         break;
+      case "coding_part":
+        window.UBCoding.part(event);
+        break;
       case "coding_closed":
         window.UBCoding.closed();
         break;

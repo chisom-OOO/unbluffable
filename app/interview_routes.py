@@ -296,11 +296,18 @@ async def interview_socket(socket: WebSocket):
             # Decision log 27: a track with coding specs (Software) is always a coding round (Python).
             track = selection(begin.get("pack"), None)[0]["id"]
             topics = begin.get("topics") if isinstance(begin.get("topics"), list) else None
+            def steps_for(spec):
+                family = bank().templates.get(spec["template_id"])
+                return [s.name for s in family.instances[0].steps] if family and family.instances else []
+
+            def more():  # decision log 29: the next problem, never one already asked
+                spec = coding.pick(track, topics, exclude=[p.spec["template_id"] for p in session.problems])
+                return (spec, steps_for(spec)) if spec else None
+
             spec = coding.pick(track, topics)
-            family = bank().templates.get(spec["template_id"])
-            steps = [s.name for s in family.instances[0].steps] if family and family.instances else []
+            deadline = time.monotonic() + coding.INTERVIEW_SECONDS  # a 45-minute coding interview
             session = coding.CodingSession(socket.send_json, listen, next_event, provider, spec, track, deadline=deadline,
-                                           steps=steps)
+                                           steps=steps_for(spec), more=more)
         elif selection(begin.get("pack"), begin["topics"] if begin.get("topics") is not None else begin.get("topic"))[1]                 == market.MARKET:
             # Decision log 28: market making, graded exactly; no engine label.
             session = market.MarketSession(socket.send_json, listen, provider, deadline=deadline)
@@ -318,7 +325,7 @@ async def interview_socket(socket: WebSocket):
         session.conditions = conditions(begin, provider.mode)
         session_id = keep(session)
         await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,
-                                "session_seconds": SESSION_SECONDS,
+                                "session_seconds": coding.INTERVIEW_SECONDS if isinstance(session, coding.CodingSession) else SESSION_SECONDS,
                                 "drill": session.target.misconception if isinstance(session, DrillSession) else None})
         await session.run()
     except (WebSocketDisconnect, SessionClosed):

@@ -107,10 +107,27 @@
         this.worker.postMessage({ id, code, fn, cases });
       });
     }
+    // Part 2: one large input, built in the worker from (config, seed, n); stopped at timeoutMs.
+    async runScale(code, fn, scale, seed, timeoutMs) {
+      await this.ready;
+      const id = ++this.seq;
+      return new Promise((resolve) => {
+        const timer = setTimeout(() => { this.worker.terminate(); this.start(); resolve({ ok: false, timeout: true }); }, timeoutMs);
+        const listen = (e) => {
+          if (e.data.id !== id) return;
+          clearTimeout(timer);
+          this.worker.removeEventListener("message", listen);
+          resolve(e.data.scale);
+        };
+        this.worker.addEventListener("message", listen);
+        this.worker.postMessage({ id, code, fn, scale: { generator: scale.generator, config: scale.config, keys: scale.keys, seed, n: scale.n } });
+      });
+    }
   }
 
   let spec = null, editor = null, runner = null, send = null, open = false, pauseTimer = null, editTimer = null, lastSent = "";
   let starter = "", names = [], lastOutputs = null, selectLeft = null, selectConsole = null;
+  let laidOut = false, editorMade = false, part = 1, scale = null, problemNumber = 1;  // decision log 29: parts and problems
   const code = () => (editor && editor.getValue ? editor.getValue() : $("code-editor").value);
   const status = (t, state) => { $("py-status").textContent = t; if (state) $("py-status").dataset.state = state; };
 
@@ -256,8 +273,10 @@
   // ---------- The problem tab ----------
   function problem(s) {
     names = s.parameters.map((p) => p.name);
-    $("ws-ptitle").textContent = titleFromName(s.function_name);
-    $("ws-chips").innerHTML = [s.difficulty, s.topic].filter(Boolean).map((c) => `<span class="tag">${esc(c)}</span>`).join("");
+    $("ws-ptitle").textContent = part === 3 ? `Bonus part: ${titleFromName(s.function_name).toLowerCase()}` : titleFromName(s.function_name);
+    const partChip = part === 1 ? "Part 1" : part === 2 ? "Part 2 · make it fast" : "Bonus part · hints cost half";
+    $("ws-chips").innerHTML = [`Problem ${problemNumber}`, partChip, s.difficulty, s.topic].filter(Boolean)
+      .map((c, i) => `<span class="tag${i === 1 && part > 1 ? " warn" : ""}">${esc(c)}</span>`).join("");
     $("ws-statement").innerHTML = statementHtml(s.statement, names)
       + `<p class="ws-signature">Implement <code>${esc(s.signature.replace(/:$/, ""))}</code>.</p>`;
     $("ws-examples").innerHTML = s.examples.map((ex, i) => `<div class="ws-example"><h3>Example ${i + 1}</h3>`
@@ -311,25 +330,66 @@
     showOutput(out.stdout);
     lastOutputs = out.results;
     lastSent = code();
-    send({ type: "code_submit", code: lastSent, outputs: out.results });
+    let large;
+    if (part === 2 && scale && !out.compile_error && !out.timeout) {
+      large = [];
+      const stop = Math.max(5000, Math.round(scale.time_limit_ms * 2.5));
+      for (const [i, seed] of scale.seeds.entries()) {
+        status(`Large input ${i + 1} of ${scale.seeds.length} (n = ${scale.n.toLocaleString("en-GB")})…`, "wait");
+        large.push(await runner.runScale(lastSent, spec.function_name, scale, seed, stop));
+      }
+    }
+    send({ type: "code_submit", code: lastSent, outputs: out.results, ...(large ? { large } : {}) });
   }
 
   window.UBCoding = {
     // A coding question arrived: lay out the workspace and get the editor and Python ready.
     async enter(publicSpec, sendFn) {
       spec = publicSpec; send = sendFn;
+      part = 1; scale = null; lastOutputs = null; lastSent = ""; problemNumber = publicSpec.problem || 1;
       document.getElementById("room").classList.add("coding");
       $("coding-pane").hidden = false;
-      layout();
+      if (!laidOut) { layout(); laidOut = true; }
+      $("ws-title").textContent = `Software · Coding round (Python) · Problem ${problemNumber}`;
       problem(spec);
       showExamples(null);
+      showOutput("");
+      $("submits-left").textContent = "";
+      $("ws-banner").hidden = true;
+      selectLeft($("tab-problem"));
       runner = runner || new Runner(status);
       starter = `${spec.signature}\n    pass\n`;
-      await makeEditor(starter);
+      if (!editorMade) { editorMade = true; await makeEditor(starter); }
+      else { if (editor) editor.setOption("readOnly", false); setCode(starter); }
+      $("code-editor").readOnly = false;
+      $("reset-code").disabled = false;
       $("run-examples").onclick = runExamples;
       $("submit-code").onclick = submit;
     },
-    opened() { open = true; $("run-examples").disabled = $("submit-code").disabled = false; },
+    // Decision log 29: Part 2 ("make it fast", large inputs) or the bonus Part 3 (a twist).
+    part(event) {
+      part = event.part;
+      if (part === 2) {
+        scale = event;
+        problem(spec);
+        $("ws-statement").insertAdjacentHTML("beforeend", `<p class="ws-part2"><strong>Part 2.</strong> Now n is up to `
+          + `${esc(event.n.toLocaleString("en-GB"))}. Your function must give the same answers within `
+          + `${esc((event.time_limit_ms / 1000).toLocaleString("en-GB"))} s per input. Submit also runs ${event.seeds.length} large inputs.</p>`);
+      } else {
+        scale = null;
+        spec = { ...event.coding, problem: problemNumber };
+        problem(spec);
+        $("ws-statement").insertAdjacentHTML("afterbegin", `<p class="ws-part2"><strong>This one is harder. It's fine to take hints.</strong></p>`);
+        showExamples(null);
+      }
+      lastOutputs = null;
+      selectLeft($("tab-problem"));
+      if (open) $("run-examples").disabled = $("submit-code").disabled = false;
+    },
+    opened() {
+      open = true; $("run-examples").disabled = $("submit-code").disabled = false;
+      if (editor) editor.setOption("readOnly", false); else $("code-editor").readOnly = false;
+    },
     closed() {
       open = false; clearTimeout(pauseTimer); clearTimeout(editTimer);
       $("run-examples").disabled = $("submit-code").disabled = $("reset-code").disabled = true;
@@ -338,7 +398,7 @@
     // A submit's result: "47 / 50 passed", the first failing case, and the receipt (a named
     // wrong method when the outputs match one). A hidden test's expected value is never shown.
     result(event) {
-      const left = event.submits_left, all = event.passed === event.total;
+      const left = event.submits_left, all = event.all_passed ?? event.passed === event.total;
       const named = (event.receipt?.rows || []).find((r) => r.key === "forge_method");
       const idx = Number.isInteger(event.first_failing) ? event.first_failing : -1;
       let failing = "";
@@ -346,7 +406,12 @@
         const shown = spec.examples.find((ex) => JSON.stringify(ex.args) === JSON.stringify(spec.tests[idx]));
         failing = caseHtml("First failing case", spec.tests[idx], shown ? shown.expected : null, (lastOutputs || [])[idx]);
       }
-      $("code-results").innerHTML = `<div class="code-verdict ${all ? "ok" : "bad"}"><strong>${event.passed} / ${event.total} passed</strong>`
+      const big = event.part === 2 ? `<p class="code-large">${esc({ fast: "Correct and fast", slow: "Correct but too slow",
+        stopped: "Too slow: stopped at the time limit", wrong: event.passed === event.total ? "Wrong on a large input" : "Not all tests passed" }[event.verdict])}`
+        + ` · large inputs ${event.large_correct}/${event.large_total} right at n = ${esc(event.n.toLocaleString("en-GB"))}`
+        + (event.max_ms != null ? `, slowest ${esc(event.max_ms.toLocaleString("en-GB"))} ms` : "")
+        + ` (limit ${esc(event.limit_ms.toLocaleString("en-GB"))} ms)</p>` : "";
+      $("code-results").innerHTML = `<div class="code-verdict ${all ? "ok" : "bad"}"><strong>${event.passed} / ${event.total} passed</strong>${big}`
         + (all ? "" : left > 0 ? ` · ${left} submit${left === 1 ? "" : "s"} left` : " · no submits left")
         + (named ? `<p class="code-named">${esc(named.text)}</p>` : "")
         + `${window.UB.receiptHtml(event.receipt, { words: false })}</div>${failing}`;
@@ -354,7 +419,8 @@
       selectConsole($("tab-results"));
       $("submits-left").textContent = all || left === 0 ? "" : `${left} submit${left === 1 ? "" : "s"} left`;
       if (open && !all && left > 0) $("submit-code").disabled = $("run-examples").disabled = false;
-      status(all ? "All tests passed." : "Not all tests passed.", all ? "ok" : "bad");
+      const slowOnly = event.part === 2 && (event.verdict === "slow" || event.verdict === "stopped");
+      status(all ? "All tests passed." : slowOnly ? "Right on the tests, but too slow." : "Not all tests passed.", all ? "ok" : "bad");
     },
     // The interviewer spoke: a dot on the Conversation tab and the line as a banner over the editor.
     interviewerSaid(text) {

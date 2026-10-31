@@ -47,6 +47,35 @@ def _ub_cases(code, fn, cases_json, printed):
         except BaseException as e:
             out.append({"ok": False, "error": type(e).__name__ + ": " + str(e)[:200]})
     return json.dumps({"results": out, "stdout": shown()})
+
+# Part 2 (decision log 29): build one large input with the forge's own generator source, then
+# time only the candidate's function on it.
+def _ub_scale(code, fn, generator, config_json, keys_json, seed, n):
+    import time
+    printed, real = io.StringIO(), sys.stdout
+    sys.stdout = printed
+    try:
+        gen_ns = {}
+        exec(generator, gen_ns)
+        params = gen_ns["generate"](json.loads(config_json), seed, n)
+        args = [params[k] for k in json.loads(keys_json)]
+        ns = {"__name__": "__candidate__"}
+        try:
+            exec(code, ns)
+        except BaseException as e:
+            return json.dumps({"compile_error": type(e).__name__ + ": " + str(e)[:300]})
+        f = ns.get(fn)
+        if not callable(f):
+            return json.dumps({"compile_error": "Define " + fn + "(...) as in the signature."})
+        began = time.perf_counter()
+        try:
+            value = f(*args)
+        except BaseException as e:
+            return json.dumps({"ok": False, "error": type(e).__name__ + ": " + str(e)[:200]})
+        ms = (time.perf_counter() - began) * 1000
+        return json.dumps({"ok": True, "value": _ub_value(value), "ms": round(ms, 1)})
+    finally:
+        sys.stdout = real
 `;
 
 const ready = loadPyodide().then((py) => { py.runPython(HARNESS); return py; });
@@ -54,6 +83,16 @@ ready.then(() => postMessage({ ready: true }), (e) => postMessage({ failed: Stri
 
 onmessage = async ({ data }) => {
   const py = await ready;
+  if (data.scale) {
+    try {
+      const s = data.scale;
+      const out = py.globals.get("_ub_scale")(data.code, data.fn, s.generator, JSON.stringify(s.config), JSON.stringify(s.keys), s.seed, s.n);
+      postMessage({ id: data.id, scale: JSON.parse(out) });
+    } catch (e) {
+      postMessage({ id: data.id, scale: { ok: false, error: String(e).slice(0, 300) } });
+    }
+    return;
+  }
   try {
     const run = py.globals.get("_ub_run");
     postMessage({ id: data.id, ...JSON.parse(run(data.code, data.fn, JSON.stringify(data.cases))) });

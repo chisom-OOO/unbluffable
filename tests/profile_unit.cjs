@@ -147,3 +147,19 @@ assert.equal(P.defaultTrack([]), null);
   assert.deepEqual([s.load().name, s.load().photo], ["", null]);
 }
 console.log("profile ok");
+
+// --- Decision log 29: a bonus part only ever raises its area ---
+{
+  const p = P.empty();
+  const item = (v, bonus) => ({ area: "Dynamic programming", value_float: v, ...(bonus ? { bonus: true } : {}) });
+  P.applyReport(p, { track: "software", rating_items: [item(0.85), item(0.85)] }, "a", "2026-10-31", null);
+  const before = P.areaScores(p, "software", ["Dynamic programming"])[0].score;
+  P.applyReport(p, { track: "software", rating_items: [item(0.5, true)] }, "b", "2026-10-31", null);
+  assert.equal(P.areaScores(p, "software", ["Dynamic programming"])[0].score, before, "a lower bonus is left out");
+  P.applyReport(p, { track: "software", rating_items: [item(1, true)] }, "c", "2026-10-31", null);
+  assert.ok(P.areaScores(p, "software", ["Dynamic programming"])[0].score > before, "a higher bonus counts");
+  const fresh = P.empty();
+  P.applyReport(fresh, { track: "software", rating_items: [item(1, true)] }, "d", "2026-10-31", null);
+  assert.equal(fresh.answers.length, 1, "an unassessed area keeps it (it cannot lower anything)");
+}
+console.log("bonus parts ok");

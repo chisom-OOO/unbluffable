@@ -295,7 +295,7 @@ class QuestionLog:
     challenges: int = 0
     nudges: int = 0
     hints: int = 0
-    help_load: int = 0
+    help_load: int | Fraction = 0  # a hint on a Hard question adds half its strength (decision log 29)
     numbers: list[Fraction] = field(default_factory=list)
     said: list[str] = field(default_factory=list)  # the candidate's own words, for written help
     help_lines: list[tuple[str, str]] = field(default_factory=list)  # (challenge|nudge|hint, text)
@@ -626,7 +626,9 @@ class ExamSession:
             if valid_step and drafted.strip() and allowed(drafted) and not hint_ladder.repeats(drafted, earlier):
                 target, text = step, drafted.strip()
         if target is not None:
-            q.help_load += strength(target, at)
+            # Decision log 29: help on a Hard question costs half.
+            cost = Fraction(strength(target, at))
+            q.help_load += cost / 2 if getattr(q.puzzle, "difficulty", "") == "Hard" else cost
             q.last_target = target
         await self.line(kind, text, target, receipt)
 

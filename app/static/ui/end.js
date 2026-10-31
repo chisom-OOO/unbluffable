@@ -119,11 +119,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Decision log 26: the coding round. Tests are exact; the discussion is model-judged.
   function renderCoding(e) {
-    const c = e.coding;
-    $("end-eyebrow").textContent = "Coding round report";
-    $("end-title").textContent = "How your code did";
-    $("result-tag").textContent = c.outcome === "correct" ? "All tests passed" : c.tests ? "Not all tests passed" : "Not submitted";
-    $("end-sub").textContent = c.tests ? `${c.tests.passed}/${c.tests.total} tests passed on your final submit, compared exactly with the stored answers.`
+    const problems = e.problems && e.problems.length ? e.problems : [e.coding];
+    const c = problems[0];
+    $("end-eyebrow").textContent = "Coding interview report";
+    $("end-title").textContent = problems.length > 1 ? `How your code did on ${problems.length} problems` : "How your code did";
+    const reached = problems.map((p) => p.reached).join(" · ");
+    $("result-tag").textContent = c.outcome === "correct" ? `Reached ${reached}` : c.tests ? "Part 1 not passed" : "Not submitted";
+    $("end-sub").textContent = c.tests ? `Problem 1: ${c.tests.passed}/${c.tests.total} tests passed on your final Part 1 submit, compared exactly with the stored answers.`
       : "No code was submitted.";
     $("conditions").hidden = !e.conditions;
     $("conditions").textContent = e.conditions || "";
@@ -133,31 +135,45 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".section:not(#progress), .end-verdict, #stats").forEach((el) => { el.hidden = true; });
     const clock = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
     const quote = (q) => `<blockquote class="evidence"><p>“${escapeHtml(q)}”</p></blockquote>`;
-    const outcome = c.outcome === "correct" ? (c.challenged ? "Correct after the challenge" : "Correct")
-      : c.named ? `Named mistake: ${escapeHtml(c.named)}` : c.tests ? "Wrong" : "Not submitted";
-    const p = c.provenance;
-    $("coding-report").innerHTML = `<div class="qcard"><header><h3>${escapeHtml(outcome)}</h3>`
-      + `<span class="tag">${c.tests ? `${c.tests.passed}/${c.tests.total} tests` : "no submit"}</span></header>`
-      + `<p class="qcard-time">Time <span class="mono">${clock(c.seconds)}</span> · guide <span class="mono">${clock(c.guide)}</span>`
-      + ` · ${c.submits.length} submit${c.submits.length === 1 ? "" : "s"}${c.submits.length > 1 ? `: ${c.submits.map((s) => `${s.passed}/${s.total}`).join(", ")}` : ""}</p>`
-      + `<p class="bq-question">${escapeHtml(c.statement)}</p>`
-      + (c.receipt ? receiptHtml(c.receipt, { words: false }) : "")
-      + `<div class="code-side"><div><h4>Your approach</h4>`
-      + (c.plan_quotes.length ? c.plan_quotes.map(quote).join("") : `<p class="fine">No plan was quoted from your words.</p>`)
-      + `<h4>Complexity claim</h4>${c.complexity_claim ? quote(c.complexity_claim) : `<p class="fine">None stated.</p>`}</div>`
-      + `<div><h4>Your final code</h4><pre class="code-block mono">${escapeHtml(c.code || "")}</pre></div></div>`
-      + `<h4>Questions about your code <span class="tag">model-chosen</span></h4>`
-      + (c.questions.length ? `<ul class="see-list">${c.questions.map((q) => `<li>${escapeHtml(q)}</li>`).join("")}</ul>` : `<p class="fine">None asked.</p>`)
-      + (c.follow_up ? `<h4>Follow-up <span class="tag">model-judged, not exact</span></h4><p class="fine">${escapeHtml(c.follow_up.question)}</p>`
-        + quote(c.follow_up.answer) + (c.follow_up.verdict ? `<p class="check-line">Judged ${escapeHtml(c.follow_up.verdict)}${c.follow_up.quote ? `, from “${escapeHtml(c.follow_up.quote)}”` : ""}. Not scored.</p>` : "") : "")
-      + `<details class="receipt provenance"><summary>Where this problem came from</summary><div class="receipt-body solo"><div><dl>`
-      + `<div><dt>Solver</dt><dd>Written by ${escapeHtml(p.author)}; reproduced the verified answer on ${p.solver_reproduced}/${p.variants} variants through this signature.</dd></div>`
-      + `<div><dt>Wrong methods</dt><dd>${p.wrong_methods.length ? `${p.wrong_methods.length} verified in code: ${escapeHtml(p.wrong_methods.join(", "))}.` : "None verified."}</dd></div>`
-      + (p.solver_source ? `<div><dt>Solver code</dt><dd><pre class="code-block mono">${escapeHtml(p.solver_source)}</pre></dd></div>` : "")
-      + `</dl></div></div></details></div>`;
+    const partLine = (x) => {
+      const tests = x.tests ? `${x.tests.passed}/${x.tests.total} tests` : "not submitted";
+      const what = x.part === 2 ? `${escapeHtml(x.verdict_text)}${x.n ? ` at n = ${x.n.toLocaleString("en-GB")}` : ""}`
+          + (x.max_ms != null ? ` · slowest ${x.max_ms.toLocaleString("en-GB")} ms (limit ${x.limit_ms.toLocaleString("en-GB")} ms)` : "")
+        : x.outcome === "correct" ? (x.challenged ? "Correct after the challenge" : "Correct")
+        : x.named ? `Named mistake: ${escapeHtml(x.named)}` : x.tests ? "Wrong" : "Not submitted";
+      const help = x.hints.length ? ` · ${x.hints.length} hint${x.hints.length === 1 ? "" : "s"} (H ${escapeHtml(x.help_load)})` : "";
+      return `<li><strong>${escapeHtml(x.label)}</strong>${x.part === 3 ? ` <span class="tag">only raises your rating · hints cost half</span>` : ""}: `
+        + `${what} · ${tests}${help}${x.statement ? `<br><span class="fine">${escapeHtml(x.statement)}</span>` : ""}</li>`;
+    };
+    const card = (c) => {
+      const outcome = c.outcome === "correct" ? (c.challenged ? "Correct after the challenge" : "Correct")
+        : c.named ? `Named mistake: ${escapeHtml(c.named)}` : c.tests ? "Wrong" : "Not submitted";
+      const p = c.provenance;
+      return `<div class="qcard"><header><h3>${problems.length > 1 ? `Problem ${c.number}: ` : ""}${escapeHtml(outcome)}</h3>`
+        + `<span class="tag">${c.tests ? `${c.tests.passed}/${c.tests.total} tests` : "no submit"}</span></header>`
+        + `<p class="qcard-time">Reached <strong>${escapeHtml(c.reached || "Part 1")}</strong> · time <span class="mono">${clock(c.seconds)}</span>`
+        + ` · ${c.submits.length} Part 1 submit${c.submits.length === 1 ? "" : "s"}${c.submits.length > 1 ? `: ${c.submits.map((s) => `${s.passed}/${s.total}`).join(", ")}` : ""}</p>`
+        + `<p class="bq-question">${escapeHtml(c.statement)}</p>`
+        + (c.parts && c.parts.length ? `<h4>How far it got</h4><ul class="see-list parts-list">${c.parts.map(partLine).join("")}</ul>` : "")
+        + (c.receipt ? receiptHtml(c.receipt, { words: false }) : "")
+        + `<div class="code-side"><div><h4>Your approach</h4>`
+        + (c.plan_quotes.length ? c.plan_quotes.map(quote).join("") : `<p class="fine">No plan was quoted from your words.</p>`)
+        + `<h4>Complexity claim</h4>${c.complexity_claim ? quote(c.complexity_claim) : `<p class="fine">None stated.</p>`}</div>`
+        + `<div><h4>Your final code</h4><pre class="code-block mono">${escapeHtml(c.code || "")}</pre></div></div>`
+        + `<h4>Questions about your code <span class="tag">model-chosen</span></h4>`
+        + (c.questions.length ? `<ul class="see-list">${c.questions.map((q) => `<li>${escapeHtml(q)}</li>`).join("")}</ul>` : `<p class="fine">None asked.</p>`)
+        + (c.follow_up ? `<h4>Follow-up <span class="tag">model-judged, not exact</span></h4><p class="fine">${escapeHtml(c.follow_up.question)}</p>`
+          + quote(c.follow_up.answer) + (c.follow_up.verdict ? `<p class="check-line">Judged ${escapeHtml(c.follow_up.verdict)}${c.follow_up.quote ? `, from “${escapeHtml(c.follow_up.quote)}”` : ""}. Not scored.</p>` : "") : "")
+        + `<details class="receipt provenance"><summary>Where this problem came from</summary><div class="receipt-body solo"><div><dl>`
+        + `<div><dt>Solver</dt><dd>Written by ${escapeHtml(p.author)}; reproduced the verified answer on ${p.solver_reproduced}/${p.variants} variants through this signature.</dd></div>`
+        + `<div><dt>Wrong methods</dt><dd>${p.wrong_methods.length ? `${p.wrong_methods.length} verified in code: ${escapeHtml(p.wrong_methods.join(", "))}.` : "None verified."}</dd></div>`
+        + (p.solver_source ? `<div><dt>Solver code</dt><dd><pre class="code-block mono">${escapeHtml(p.solver_source)}</pre></dd></div>` : "")
+        + `</dl></div></div></details></div>`;
+    };
+    $("coding-report").innerHTML = problems.map(card).join("");
     $("coding-section").hidden = false;
     const again = document.querySelector(".end-actions .btn:not(.secondary)");
-    if (again) { again.textContent = "Another coding round →"; again.href = "/ui/interview?track=software"; }
+    if (again) { again.textContent = "Another coding interview →"; again.href = "/ui/interview?track=software"; }
   }
 
   // Decision log 28: market making, one card per game.

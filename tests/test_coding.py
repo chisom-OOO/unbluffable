@@ -87,9 +87,13 @@ class FakeSpark:
 
 
 @pytest.fixture
-def coding_routes(monkeypatch):
+def coding_routes(monkeypatch, tmp_path):
     monkeypatch.setenv("CODING_DIR", str(FIXTURE))
+    # Part 2 / Part 3 content comes from the tests that need it (decision log 29).
+    monkeypatch.setenv("CODING_SCALE_DIR", str(tmp_path / "no_scale"))
+    monkeypatch.setenv("CODING_TWIST_DIR", str(tmp_path / "no_twist"))
     coding._load.cache_clear()
+    coding._load_dir.cache_clear()
     monkeypatch.setattr(interview_routes, "_BANK", _packed_bank(("a", None, "Probability"), ("s", "software", "Dynamic programming")))
     monkeypatch.setattr(interview_routes, "_TOPICS", None)
     spark = FakeSpark()
@@ -191,6 +195,7 @@ def test_coding_hints_climb_the_family_steps_from_the_failing_case_and_never_han
     async def send(e):
         sent.append(e)
     session = coding.CodingSession(send, None, None, None, SPEC, steps=["running_best", "max_consecutive_sum"])
+    session.log.parts.append(coding.PartLog(1, SPEC))
     wrong = SPEC["wrong_methods"][0]["outputs"]
     session.note_failing(out(wrong), SPEC["tests"], coding.judge(SPEC, out(wrong))["failing"][0])
 
@@ -208,5 +213,5 @@ def test_coding_hints_climb_the_family_steps_from_the_failing_case_and_never_han
     hidden = set(SPEC["expected"]) - {SPEC["expected"][i] for i in SPEC["examples"]}
     assert session.log.help_load == 1 + 2 + 2
     # Hints discount a correct answer: w = 2/(2 + H).
-    session.log.submits.append(coding.Submit("", coding.judge(SPEC, out(SPEC["expected"])), 0))
+    session.log.part.submits.append(coding.Submit("", coding.judge(SPEC, out(SPEC["expected"])), 0))
     assert session.scored() == ("correct", Fraction(2, 7))

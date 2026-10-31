@@ -67,3 +67,35 @@ def test_a_step_value_is_said_only_when_the_leak_guard_allows_it():
     allowed = lambda t: leak(puzzle, t, said, None) is None  # noqa: E731
     target, text = next_help(puzzle, 1, 1, ["What do you get for the alpha posterior?"], allowed)
     assert target == 2 and text.startswith(f"The alpha posterior is {value}.")
+
+
+def test_help_on_a_hard_question_costs_half():
+    """Decision log 29: a hint on a Hard question adds half its strength to H."""
+    import asyncio
+    import random
+    from fractions import Fraction
+
+    from app.interview_session import ExamSession
+    from engine.bank import Bank, BankSource, parse_template
+    from engine.interview import Interview
+    from test_bank_runtime import ScriptedProvider, _raw_bag
+    from test_exam_session import Analyzer, say_as
+
+    hard = parse_template({**_raw_bag(n=21, template_id="bag_hard", difficulty="Hard")})
+    script = ["hint", "idk", "hint", "idk", "right", "right"]
+    events = []
+
+    async def send(e):
+        events.append(e)
+
+    async def listen():
+        return say_as(script.pop(0), session.questions[-1].puzzle)
+
+    source = BankSource(Bank({hard.template_id: hard}), "Probability", "Hard", rng=random.Random(1))
+    session = ExamSession(send, listen, Analyzer(ScriptedProvider()), Interview(rng=random.Random(5), source=source))
+    asyncio.run(session.run())
+    q1 = session.questions[0]
+    targets = [h["target_step"] for h in lines(events, "hint")]
+    assert q1.puzzle.difficulty == "Hard" and len(targets) == 2
+    assert q1.help_load == Fraction(sum(targets), 2)
+    assert q1.weight == Fraction(2) / (2 + Fraction(sum(targets), 2))

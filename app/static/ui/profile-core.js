@@ -145,8 +145,17 @@
     if (known || !report || !report.track || !Array.isArray(report.rating_items)) return known || null;
     const track = report.track;
     const before = areaScores(p, track, areas);
-    const items = report.rating_items.filter((i) => i.area);
-    for (const i of items) p.answers.push({ s: session, t: track, a: i.area, v: Number(i.value_float), p: !!report.placement, d: date });
+    const items = report.rating_items.filter((i) => i.area && !i.bonus);
+    const answer = (i) => ({ s: session, t: track, a: i.area, v: Number(i.value_float), p: !!report.placement, d: date });
+    for (const i of items) p.answers.push(answer(i));
+    // Decision log 29: a bonus part can only raise the rating, so it counts only if it lifts its area.
+    for (const i of report.rating_items.filter((x) => x.area && x.bonus)) {
+      const without = areaScores(p, track, [i.area])[0].score;
+      p.answers.push(answer(i));
+      const withIt = areaScores(p, track, [i.area])[0].score;
+      if (without !== null && !(withIt > without)) p.answers.pop();
+      else items.push(i);
+    }
     const after = areaScores(p, track, areas);
     const touched = [...new Set(items.map((i) => i.area))];
     const entry = {
