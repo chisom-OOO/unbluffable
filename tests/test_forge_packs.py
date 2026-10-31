@@ -203,3 +203,40 @@ def test_colliding_public_sector_ids_are_rejected_before_model_calls(tmp_path):
     with pytest.raises(ValueError):
         forge.run(aliases)
     assert not models.calls
+
+
+@pytest.mark.parametrize("pack,prefix", [("software", "swf"), ("quant", "qx"), ("ib", "ibx"), ("quant_dev", "qd"), ("software", "swc")])
+def test_a_new_batch_writes_its_own_prefix(tmp_path, pack, prefix):
+    path, _ = source(tmp_path, count=50)
+    forge = FamilyForge(FakeModels(tmp_path / "private"), output=tmp_path / "public", funnel=tmp_path / "funnel.json",
+                        sandbox=FakeSandbox(), pack=pack, prefix=prefix)
+    assert forge.run(load_families(path))["families_exported"] == 1
+    artifact = json.loads((tmp_path / "public" / f"{prefix}_F001.json").read_text())
+    assert artifact["template_id"] == f"{prefix}_F001" and artifact["pack"] == pack
+
+
+@pytest.mark.parametrize("pack,prefix", [("ib", "sw"), ("software", "family"), ("quant", "Q"), ("software", "a" * 9)])
+def test_a_prefix_can_never_be_another_packs(pack, prefix):
+    from forge.packs import output_prefix
+    with pytest.raises(ValueError):
+        output_prefix(pack, prefix)
+
+
+def test_family_run_refuses_to_overwrite_files_it_did_not_make(tmp_path, monkeypatch, capsys):
+    from forge import family_run
+    path, _ = source(tmp_path, count=50)
+    monkeypatch.setattr(family_run, "ROOT", tmp_path)
+    monkeypatch.setattr(family_run, "get_backend", lambda name: pytest.fail("no model before the overwrite check"))
+    monkeypatch.setattr(family_run, "Models", lambda *a, **k: pytest.fail("no model before the overwrite check"))
+    (tmp_path / "content" / "forge").mkdir(parents=True)
+    (tmp_path / "content" / "forge" / "sw_F001.json").write_text("{}", encoding="utf-8")  # an earlier batch's family
+    monkeypatch.setattr(family_run, "get_backend", lambda name: type("B", (), {"name": "open_weights"})())
+    args = ["--csv", str(path), "--pack", "software", "--work-dir", str(tmp_path / "data" / "forge" / "sw9"), "--mode", "replay"]
+    assert family_run.main(args) == 1
+    out = json.loads(capsys.readouterr().out)
+    assert out["status"] == "would_overwrite" and out["files"] == ["sw_F001"]
+    assert (tmp_path / "content" / "forge" / "sw_F001.json").read_text(encoding="utf-8") == "{}"
+    # The same batch under its own prefix goes ahead (here it stops later only for want of a model).
+    monkeypatch.setattr(family_run, "Models", lambda *a, **k: (_ for _ in ()).throw(ValueError("stop here")))
+    assert family_run.main([*args[:-2], "--prefix", "swf", "--mode", "replay", "--work-dir", str(tmp_path / "data" / "forge" / "swf1")]) == 1
+    assert json.loads(capsys.readouterr().out)["status"] == "configuration_error"

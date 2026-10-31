@@ -162,15 +162,17 @@ def programs(item: dict) -> tuple[str, list[dict]] | None:
 
 
 class CodingForge:
-    def __init__(self, models, sandbox, out: Path = OUT, content: Path = CONTENT):
+    def __init__(self, models, sandbox, out: Path = OUT, content: Path = CONTENT, pack: str = "software",
+                 prefix: str | None = None):
         self.models, self.state, self.sandbox = models, models.state, sandbox
         self.out, self.content = Path(out), Path(content)
+        self.pack, self.prefix = pack, prefix  # a pack's families, or only one batch's (its file prefix)
 
     def families(self) -> list[dict]:
         out = []
         for path in sorted(self.content.glob("*.json")):
             raw = json.loads(path.read_text(encoding="utf-8"))
-            if raw.get("pack") == "software":
+            if raw.get("pack") == self.pack and (self.prefix is None or raw["template_id"].startswith(self.prefix + "_")):
                 out.append(raw)
         return out
 
@@ -251,7 +253,9 @@ def main(argv=None) -> int:
     parser.add_argument("--work-dir", type=Path, default=ROOT / "data" / "forge" / "coding1")
     parser.add_argument("--mode", choices=("live", "replay"), default="replay")
     parser.add_argument("--budget-usd", type=Decimal, default=Decimal(1))
-    parser.add_argument("--families", default="", help="comma-separated template ids (default: all software families)")
+    parser.add_argument("--families", default="", help="comma-separated template ids (default: all of the pack's families)")
+    parser.add_argument("--pack", choices=("software", "quant_dev"), default="software")
+    parser.add_argument("--prefix", default=None, help="only this batch's families (its file prefix, e.g. swc, qd)")
     args = parser.parse_args(argv)
     if not args.work_dir.resolve().is_relative_to((ROOT / "data" / "forge").resolve()):
         parser.error("--work-dir must stay inside ignored data/forge")
@@ -267,7 +271,7 @@ def main(argv=None) -> int:
         state = State(args.work_dir)
         models = Models(state, mode=args.mode, budget_usd=args.budget_usd, prices=dict(DEFAULT_PRICES), author=author)
         only = {x.strip() for x in args.families.split(",") if x.strip()} or None
-        report = CodingForge(models, Sandbox()).run(family_items, only)
+        report = CodingForge(models, Sandbox(), pack=args.pack, prefix=args.prefix).run(family_items, only)
     except (OSError, ValueError, KeyError, MissingKey) as error:
         print(json.dumps({"status": "configuration_error", "type": type(error).__name__}))
         return 1
