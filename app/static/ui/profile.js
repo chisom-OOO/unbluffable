@@ -28,8 +28,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const track = tracks.find((t) => t.id === current);
     const scores = P.areaScores(profile, current, track.areas);
     const o = P.overall(scores);
+    $("rating-track").textContent = track.name;
     $("rating").textContent = o ? String(P.shown(o.rating)) : "Not assessed yet";
     $("rating").classList.toggle("rating-big", !!o);
+    $("rating").classList.toggle("rating-none", !o);
     $("band").textContent = o ? `${P.band(o.rating)} · interviews start at ${P.startLevel(o.rating)}` : "";
     $("rating-basis").textContent = o
       ? `Estimate based on ${o.answers} answer${o.answers === 1 ? "" : "s"} across ${o.areas} area${o.areas === 1 ? "" : "s"}.`
@@ -86,51 +88,61 @@ document.addEventListener("DOMContentLoaded", () => {
   function status(text) { $("data-status").textContent = text; $("data-status").hidden = !text; }
   function refresh() { rolesLine(); renderAbout(); if (current) renderTrack(); renderHistory(); window.UB.refreshProfileLink(); }
 
-  // ---------- About you: display name and photo, in this browser only ----------
+  // ---------- Identity card: avatar, display name and photo, in this browser only ----------
   function renderAbout() {
-    $("avatar").innerHTML = window.UB.avatarHtml(profile, "avatar-big");
-    if (document.activeElement !== $("display-name")) $("display-name").value = profile.name || "";
+    $("avatar").innerHTML = window.UB.avatarHtml(profile, "avatar-big", true);
+    $("identity-name").textContent = profile.name || "Add your name";
+    $("identity-name").classList.toggle("placeholder", !profile.name);
     $("photo-remove").hidden = !profile.photo;
+    $("avatar-button").setAttribute("aria-label", profile.photo ? "Change photo" : "Choose a photo");
   }
   function photoStatus(text) { $("photo-status").textContent = text; $("photo-status").hidden = !text; }
-  let nameTimer = null;
-  $("display-name").addEventListener("input", () => {
-    clearTimeout(nameTimer);
-    nameTimer = setTimeout(() => {
-      profile.name = $("display-name").value.trim().slice(0, P.NAME_MAX);
-      S.save(profile);
-      renderAbout();
-      window.UB.refreshProfileLink();
-    }, 300);
+
+  // The name: pencil (or the name itself) opens the field; Save or Enter keeps it; Cancel or Esc undoes.
+  function editName(on) {
+    $("name-view").hidden = on;
+    $("name-form").hidden = !on;
+    if (on) {
+      $("display-name").value = profile.name || "";
+      $("display-name").focus();
+      $("display-name").select();
+    } else {
+      $("name-edit").focus();
+    }
+  }
+  let savedTimer = null;
+  function saved(text) {
+    clearTimeout(savedTimer);
+    $("name-saved").textContent = text;
+    $("name-saved").classList.remove("fade");
+    savedTimer = setTimeout(() => $("name-saved").classList.add("fade"), 2000);
+  }
+  $("name-edit").addEventListener("click", () => editName(true));
+  $("identity-name").addEventListener("click", () => editName(true));
+  $("name-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    profile.name = $("display-name").value.trim().slice(0, P.NAME_MAX);
+    profile.identity_at = new Date().toISOString();
+    const kept = S.save(profile);
+    editName(false);
+    renderAbout();
+    window.UB.refreshProfileLink();
+    saved(kept ? "Saved" : "Saved for this visit");
+  });
+  $("name-cancel").addEventListener("click", () => editName(false));
+  $("display-name").addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { e.preventDefault(); editName(false); }
   });
 
-  // A square crop, 256 px, JPEG; quality steps down until it is under 100 KB.
-  async function resized(file) {
-    let source;
-    try { source = await createImageBitmap(file); } catch {
-      source = await new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = URL.createObjectURL(file);
-      });
-    }
-    const w = source.width, h = source.height, side = Math.min(w, h);
-    const canvas = Object.assign(document.createElement("canvas"), { width: 256, height: 256 });
-    canvas.getContext("2d").drawImage(source, (w - side) / 2, (h - side) / 2, side, side, 0, 0, 256, 256);
-    for (const quality of [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3]) {
-      const url = canvas.toDataURL("image/jpeg", quality);
-      if (P.validPhoto(url)) return url;
-    }
-    throw new Error("too large");
-  }
   $("photo-choose").addEventListener("click", () => $("photo-input").click());
+  $("avatar-button").addEventListener("click", () => $("photo-input").click());
   $("photo-input").addEventListener("change", async () => {
     const file = $("photo-input").files[0];
     $("photo-input").value = "";
     if (!file) return;
     try {
-      profile.photo = await resized(file);
+      profile.photo = await window.UB.photoFromBlob(file);
+      profile.identity_at = new Date().toISOString();
     } catch {
       photoStatus("That file isn't a picture this browser can read.");
       return;
@@ -143,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   $("photo-remove").addEventListener("click", () => {
     profile.photo = null;
+    profile.identity_at = new Date().toISOString();
     S.save(profile);
     renderAbout();
     window.UB.refreshProfileLink();
@@ -178,6 +191,35 @@ document.addEventListener("DOMContentLoaded", () => {
     S.save(profile);
     refresh();
     status("Your data was cleared.");
+  });
+
+  // ---------- Account (Firebase, when configured) ----------
+  function renderAccount(s) {
+    $("account-section").hidden = !s.enabled;
+    if (!s.enabled) return;
+    const signedIn = !!s.user;
+    $("account-line").textContent = signedIn ? `Signed in as ${s.user.email || s.user.name || "your account"} · synced across your devices`
+      : "You're not signed in, so this profile lasts only for this visit.";
+    $("signin-open").hidden = signedIn;
+    $("sign-out").hidden = $("delete-account").hidden = !signedIn;
+    $("avatar-note").textContent = signedIn ? "Synced to your account" : "Stays on this device.";
+  }
+  const account = window.UBAccount;
+  account.whenReady.then(() => { profile = S.load(); refresh(); renderAccount(account.state()); });
+  document.addEventListener("ub-account", (e) => { profile = S.load(); refresh(); renderAccount(e.detail); });
+  $("signin-open").addEventListener("click", () => account.openSignIn());
+  $("sign-out").addEventListener("click", async () => { await account.signOut(); location.href = "/ui"; });
+  $("delete-account").addEventListener("click", async () => {
+    if (!confirm("Delete your account? Your profile, ratings and history are removed from our database and this browser. This can't be undone.")) return;
+    const say = (t) => { $("account-status").textContent = t; $("account-status").hidden = !t; };
+    try {
+      await account.deleteAccount();
+      profile = P.empty();
+      refresh();
+      say("Your account was deleted.");
+    } catch (error) {
+      say(`Couldn't delete the account${error?.code ? ` (${error.code})` : ""}. Sign in again and retry.`);
+    }
   });
 
   rolesLine();

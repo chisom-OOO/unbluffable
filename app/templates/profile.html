@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="/ui-static/exam-room.css">
   <script src="/ui-static/profile-core.js" defer></script>
   <script src="/ui-static/ui.js" defer></script>
+  <script src="/ui-static/account-core.js" defer></script>
+  <script src="/ui-static/account.js" defer></script>
   <script src="/ui-static/profile.js" defer></script>
 </head>
 <body>
@@ -33,46 +35,49 @@
   </header>
 
   <main id="main" class="reportwrap profilewrap">
-    <div class="profile-head">
-      <div>
-        <p class="eyebrow">Progress estimate</p>
-        <h1>Your profile</h1>
-        <p class="muted" id="roles-line"></p>
-      </div>
-      <a class="btn secondary btn-small" href="/ui/welcome">Change roles</a>
-    </div>
-    <p class="storage-note" id="storage-note" hidden>Your browser is blocking storage, so your progress lasts only for this visit.</p>
-
-    <section class="panel about" aria-labelledby="about-title">
-      <h2 id="about-title">About you</h2>
-      <div class="about-grid">
-        <figure class="avatar-figure">
-          <div class="avatar-holder" id="avatar"></div>
-          <figcaption class="fine">Stays on this device.</figcaption>
-        </figure>
-        <div class="about-fields">
-          <div class="field">
-            <label for="display-name">Display name</label>
-            <input type="text" id="display-name" maxlength="60" autocomplete="nickname">
+    <section class="panel identity" aria-labelledby="identity-name">
+      <div class="identity-main">
+        <div class="identity-avatar">
+          <button type="button" class="avatar-button" id="avatar-button" aria-label="Change photo"><span class="avatar-holder" id="avatar"></span></button>
+          <p class="fine avatar-note" id="avatar-note">Stays on this device.</p>
+        </div>
+        <div class="identity-text">
+          <p class="eyebrow">Your profile</p>
+          <div class="name-row" id="name-view">
+            <h1 id="identity-name"></h1>
+            <button class="icon-btn icon-btn-small" type="button" id="name-edit" aria-label="Edit display name"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></svg></button>
           </div>
-          <div class="data-actions">
-            <button class="btn secondary btn-small" type="button" id="photo-choose">Choose a photo</button>
-            <input type="file" id="photo-input" accept="image/*" class="visually-hidden" tabindex="-1" aria-hidden="true">
+          <form class="name-form" id="name-form" hidden>
+            <label class="visually-hidden" for="display-name">Display name</label>
+            <input class="text-input" type="text" id="display-name" maxlength="60" autocomplete="nickname" placeholder="Your name">
+            <button class="btn btn-small" type="submit">Save</button>
+            <button class="btn secondary btn-small" type="button" id="name-cancel">Cancel</button>
+          </form>
+          <p class="saved-note" id="name-saved" role="status" aria-live="polite"></p>
+          <p class="muted" id="roles-line"></p>
+          <div class="identity-actions">
+            <a class="btn secondary btn-small" href="/ui/welcome">Change roles</a>
+            <button class="btn secondary btn-small" type="button" id="photo-choose">Change photo</button>
             <button class="btn secondary btn-small" type="button" id="photo-remove" hidden>Remove photo</button>
+            <input type="file" id="photo-input" accept="image/*" class="visually-hidden" tabindex="-1" aria-hidden="true">
           </div>
           <p class="status" id="photo-status" role="status" hidden></p>
         </div>
       </div>
+      <div class="identity-rating">
+        <p class="eyebrow">Rating estimate · <span id="rating-track"></span></p>
+        <p class="rating-big" id="rating"></p>
+        <p class="rating-band" id="band"></p>
+      </div>
     </section>
+    <p class="storage-note" id="storage-note" hidden>Your browser is blocking storage, so your progress lasts only for this visit.</p>
 
     <div class="tabs track-tabs" role="tablist" aria-label="Track" id="track-tabs"></div>
 
     <div role="tabpanel" id="track-panel" tabindex="0">
       <div class="profile-grid">
         <section class="panel rating-card" aria-labelledby="rating-title">
-          <h2 id="rating-title" class="eyebrow">Rating estimate</h2>
-          <p class="rating-big" id="rating"></p>
-          <p class="rating-band" id="band"></p>
+          <h2 id="rating-title">This track</h2>
           <p class="fine" id="rating-basis"></p>
           <div class="rating-actions">
             <a class="btn" id="placement-link" href="/ui/interview?placement=1">Find my starting level →</a>
@@ -119,6 +124,17 @@
       </div>
     </section>
 
+    <section class="panel" id="account-section" aria-labelledby="account-title" hidden>
+      <h2 id="account-title">Account</h2>
+      <p id="account-line"></p>
+      <div class="data-actions">
+        <button class="btn btn-small" type="button" id="signin-open" hidden>Sign in to save your progress</button>
+        <button class="btn secondary btn-small" type="button" id="sign-out" hidden>Sign out</button>
+        <button class="btn secondary btn-small danger" type="button" id="delete-account" hidden>Delete my account</button>
+      </div>
+      <p class="status" id="account-status" role="status" hidden></p>
+    </section>
+
     <section class="panel" aria-labelledby="data-title">
       <h2 id="data-title">Your data</h2>
       <p class="fine">Your profile lives in this browser only. Export it to keep a copy or move it to another browser.</p>
@@ -134,7 +150,7 @@
 
   <footer class="disclosure">
     <p>Ratings are estimates from the engine's exact checks of your answers, not a model's opinion.</p>
-    <p>Your profile stays in this browser. Nothing about it is stored on our server.</p>
+    <p class="storage-line">Your profile stays in this browser. Nothing about it is stored on our server.</p>
   </footer>
 </div>
 </body>

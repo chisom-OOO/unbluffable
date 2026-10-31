@@ -53,6 +53,9 @@ VERDICT = obj({"verdict": {"type": "string", "enum": list(stats.LABELS)}})
 HEADLINE = "Sounding right isn't the same as being right"
 HEADLINE_IF_CLOSE = "a careful chatbot needs a verified answer key; the forge supplies one"
 CLOSE_ITEMS = 2  # decision log 15: within 2 items of Unbluffable
+# Optional rows (not pre-registered): the careful arm and Unbluffable again on Muse Spark Open
+# (backend open_weights), reported separately; the four arms above and the headline rule are unchanged.
+OPEN_WEIGHTS_ARMS = {"careful_open_weights": "careful", "unbluffable_open_weights": "unbluffable"}
 FROZEN_PATHS = ("scripts/evidence/prompts", "scripts/evidence/harness.py", "scripts/evidence/stats.py")
 
 
@@ -181,20 +184,25 @@ async def unbluffable_verdict(provider, item: dict) -> str:
 
 
 async def evaluate(items: list[dict], provider, runs: int = 3, concurrency: int = 4,
-                   prompts: dict[str, str] | None = None) -> dict[str, list[dict[str, str]]]:
-    """verdicts[arm][run][item id]."""
+                   prompts: dict[str, str] | None = None, open_weights=None) -> dict[str, list[dict[str, str]]]:
+    """verdicts[arm][run][item id]. `open_weights`: a second provider on Muse Spark Open;
+    with it, the careful arm and Unbluffable also run there as separate arms."""
     prompts = prompts or load_prompts()
     gate = asyncio.Semaphore(concurrency)
+    plan = {arm: (arm, provider) for arm in ARMS}
+    if open_weights is not None:
+        plan.update({arm: (base, open_weights) for arm, base in OPEN_WEIGHTS_ARMS.items()})
 
     async def one(arm, item):
+        base, on = plan[arm]
         async with gate:
-            if arm == "unbluffable":
-                return await unbluffable_verdict(provider, item)
-            return await chatbot_verdict(provider, arm, prompts[arm], item)
+            if base == "unbluffable":
+                return await unbluffable_verdict(on, item)
+            return await chatbot_verdict(on, base, prompts[base], item)
 
-    verdicts = {arm: [] for arm in ARMS}
+    verdicts = {arm: [] for arm in plan}
     for _ in range(runs):
-        for arm in ARMS:
+        for arm in plan:
             results = await asyncio.gather(*(one(arm, item) for item in items))
             verdicts[arm].append({item["id"]: v for item, v in zip(items, results)})
     return verdicts
@@ -221,12 +229,20 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
                                 for o, t in zip(ours["runs"], arms[arm]["runs"])]}
                for arm in ARMS if arm != "unbluffable"}
     gap = ours["majority"]["correct"] - arms["careful_answers"]["majority"]["correct"]
+    open_rows = {}
+    if all(arm in arms for arm in OPEN_WEIGHTS_ARMS):
+        theirs = arms["unbluffable_open_weights"]
+        open_rows = {"unbluffable_open_weights_vs_careful_open_weights": stats.compare(
+                         labels, theirs["majority"]["verdicts"], arms["careful_open_weights"]["majority"]["verdicts"]),
+                     "unbluffable_vs_unbluffable_open_weights": stats.compare(
+                         labels, ours["majority"]["verdicts"], theirs["majority"]["verdicts"])}
     return {
         **provenance,
         "n_items": len(labels),
         "n_understands": sum(1 for v in labels.values() if v == stats.UNDERSTANDS),
         "arms": arms,
         "mcnemar_vs_unbluffable": mcnemar,
+        "open_weights": open_rows,
         "headline_rule": {
             "unbluffable_correct": ours["majority"]["correct"],
             "careful_answers_correct": arms["careful_answers"]["majority"]["correct"],
@@ -241,7 +257,8 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
 def markdown(results: dict) -> str:
     pct = lambda x: f"{x * 100:.1f}%"
     names = {"plain": "Plain Spark", "careful": "Careful Spark", "careful_answers": "Careful Spark + stored answers",
-             "unbluffable": "Unbluffable"}
+             "unbluffable": "Unbluffable", "careful_open_weights": "Careful Muse Spark Open",
+             "unbluffable_open_weights": "Unbluffable on Muse Spark Open"}
     n = results["n_items"]
     lines = [
         "# Evidence run",
@@ -263,6 +280,20 @@ def markdown(results: dict) -> str:
     for arm, m in results["mcnemar_vs_unbluffable"].items():
         per_run = ", ".join(f"{r['p']:.4g}" for r in m["by_run"])
         lines.append(f"| {names[arm]} | {m['majority']['b']} | {m['majority']['c']} | {m['majority']['p']:.4g} | {per_run} |")
+    if results.get("open_weights"):
+        lines += ["", "## Muse Spark Open (backend open_weights; separate rows, not pre-registered)", "",
+                  "| Arm | Correct (majority) | Accuracy per run | False-flag rate (majority) | Verdict flip rate | Errors (majority) |",
+                  "|---|---|---|---|---|---|"]
+        for arm in OPEN_WEIGHTS_ARMS:
+            a = results["arms"][arm]
+            per_run = ", ".join(pct(r["accuracy"]) for r in a["runs"])
+            lines.append(f"| {names[arm]} | {a['majority']['correct']}/{n} | {per_run} | "
+                         f"{pct(a['majority']['false_flag_rate'])} | {pct(a['flip_rate'])} | {a['majority']['errors']} |")
+        ow = results["open_weights"]
+        a, b = ow["unbluffable_open_weights_vs_careful_open_weights"], ow["unbluffable_vs_unbluffable_open_weights"]
+        lines += ["", "| Comparison (exact McNemar, majority) | b | c | p (two-sided) |", "|---|---|---|---|",
+                  f"| Unbluffable on Open vs careful Open | {a['b']} | {a['c']} | {a['p']:.4g} |",
+                  f"| Unbluffable vs Unbluffable on Open | {b['b']} | {b['c']} | {b['p']:.4g} |"]
     h = results["headline_rule"]
     lines += ["", "## Pre-registered headline rule", "",
               f"Unbluffable {h['unbluffable_correct']}/{n} correct; careful Spark with stored answers "
@@ -311,6 +342,8 @@ def main(argv=None) -> int:
     parser.add_argument("--out", type=Path, default=ROOT / "eval" / "raw" / "evidence")
     parser.add_argument("--record-dir", type=Path, default=ROOT / "recordings" / "evidence")
     parser.add_argument("--expect-items-sha256", default=None, help="refuse to run unless the item file has this hash")
+    parser.add_argument("--open-weights", action="store_true",
+                        help="also run the careful arm and Unbluffable on Muse Spark Open (backend open_weights), as separate rows")
     args = parser.parse_args(argv)
 
     dirty = git("status", "--porcelain", "--", *FROZEN_PATHS)
@@ -325,8 +358,14 @@ def main(argv=None) -> int:
     if args.backend:
         provider.spark_backend = backends.get_backend(args.backend)
     prompts = load_prompts()
-    verdicts = asyncio.run(evaluate(items, provider, args.runs, args.concurrency, prompts))
+    second = None
+    if args.open_weights:
+        second = MetaVoice("live", str(args.record_dir))
+        second.spark_backend = backends.get_backend("open_weights")
+    verdicts = asyncio.run(evaluate(items, provider, args.runs, args.concurrency, prompts, open_weights=second))
     results = summarise(items, verdicts, provenance(args.items, items_sha, provider, args.runs, prompts))
+    if second is not None:
+        results["open_weights_model"] = second.spark_backend.model
     write_outputs(results, args.out)
     print(markdown(results))
     return 0

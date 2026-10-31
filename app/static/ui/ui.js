@@ -126,10 +126,12 @@
   // The candidate's photo, else their initials, else a plain person icon. Decorative: the
   // name is said in the surrounding label.
   const PERSON = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>';
-  function avatarHtml(p, cls = "avatar-small") {
+  // `circle`: the person icon also sits on the accent circle (the profile's large avatar).
+  function avatarHtml(p, cls = "avatar-small", circle = false) {
     if (p.photo && window.UBProfile.validPhoto(p.photo)) return `<img class="avatar-img ${cls}" src="${p.photo}" alt="">`;
     const letters = window.UBProfile.initials(p.name);
-    return letters ? `<span class="avatar-initials ${cls}" aria-hidden="true">${escapeHtml(letters)}</span>` : PERSON;
+    if (letters) return `<span class="avatar-initials ${cls}" aria-hidden="true">${escapeHtml(letters)}</span>`;
+    return circle ? `<span class="avatar-initials avatar-person ${cls}" aria-hidden="true">${PERSON}</span>` : PERSON;
   }
   function initProfileLink() {
     const link = document.getElementById("profile-link");
@@ -146,7 +148,45 @@
     link.setAttribute("aria-label", `${p.name ? `${p.name}'s profile` : "Profile"}${o ? `, rating estimate ${window.UBProfile.shown(o.rating)}` : ""}`);
   }
 
-  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
+  // A photo for the profile: a square crop, 256 px, JPEG; quality steps down until it is
+  // under 100 KB. `blob` is a file the candidate chose, or a fetched image (the Google photo).
+  async function photoFromBlob(blob) {
+    let source;
+    try { source = await createImageBitmap(blob); } catch {
+      source = await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = URL.createObjectURL(blob);
+      });
+    }
+    const w = source.width, h = source.height, side = Math.min(w, h);
+    const canvas = Object.assign(document.createElement("canvas"), { width: 256, height: 256 });
+    canvas.getContext("2d").drawImage(source, (w - side) / 2, (h - side) / 2, side, side, 0, 0, 256, 256);
+    for (const quality of [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3]) {
+      const url = canvas.toDataURL("image/jpeg", quality);
+      if (window.UBProfile.validPhoto(url)) return url;
+    }
+    throw new Error("too large");
+  }
+
+  // "Where this question came from": the forge's verification record for its family.
+  function provenanceHtml(rows) {
+    if (!rows || !rows.length) return "";
+    return `<details class="receipt provenance"><summary>Where this question came from</summary><div class="receipt-body solo"><div><dl>`
+      + rows.map((r) => `<div><dt>${escapeHtml(r.label)}</dt><dd>${escapeHtml(r.text)}</dd></div>`).join("")
+      + `</dl><p class="receipt-note"><a href="/ui/forge">Every family in the question bank</a></p></div></div></details>`;
+  }
+
+  window.UB = { store, photoFromBlob, provenanceHtml, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
                 refreshProfileLink: initProfileLink };
   document.addEventListener("DOMContentLoaded", () => { initTheme(); initMute(); initProfileLink(); });
+  document.addEventListener("ub-account", initProfileLink);
+  // Signed in, the profile is also kept with the account: say so wherever the page says where it lives.
+  document.addEventListener("ub-account", (e) => {
+    if (!e.detail.user) return;
+    document.querySelectorAll(".storage-line").forEach((el) => {
+      el.textContent = "Signed in: your profile is kept with your account and synced across your devices. Interview answer text is never stored there.";
+    });
+  });
 })();

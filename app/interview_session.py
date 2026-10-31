@@ -16,6 +16,7 @@ from fractions import Fraction
 from typing import Awaitable, Callable
 
 from app import exam_text as say
+from app import provenance as forge_provenance
 from app import follow_up, receipts
 from engine.answers import StatedNumber, matches, normalise_numbers, parse_number
 from engine import mathtext
@@ -356,7 +357,8 @@ class ExamSession:
                              "template": question.puzzle.template_id, "text": text,
                              "topic": getattr(question.puzzle, "topic", None) or None,
                              "difficulty": getattr(question.puzzle, "difficulty", None) or None,
-                             "guide_seconds": GUIDE_SECONDS[question.kind]})
+                             "guide_seconds": GUIDE_SECONDS[question.kind],
+                             "provenance_rows": forge_provenance.rows(forge_provenance.provenance(self.template_of(question.puzzle)))})
         if repeat:
             await self.say_question(question.puzzle, say.REPEAT_INTRO)
         elif question.kind in {"twin", "drill"}:
@@ -495,13 +497,20 @@ class ExamSession:
             await self.line("close", say.FOLLOW_UP_CLOSE, receipt=log.receipt)
             return
 
-    @staticmethod
-    def _answer(puzzle: Puzzle, text: str, analysis: Analysis) -> Answer:
+    def template_of(self, puzzle: Puzzle):
+        """The forge family a question comes from (a BankSource's, or a drill's own)."""
+        templates = getattr(getattr(self.interview, "source", None), "templates", None) or {}
+        return templates.get(puzzle.template_id) or getattr(self.interview, "template", None)
+
+    def _answer(self, puzzle: Puzzle, text: str, analysis: Analysis) -> Answer:
         obs = analysis.observation
+        receipt = receipts.build(puzzle, text, analysis.span, analysis.stated, obs, analysis.quote)
+        row = forge_provenance.matched_row(self.template_of(puzzle), puzzle, obs)
+        if row:
+            receipt["rows"].insert(next((i + 1 for i, r in enumerate(receipt["rows"]) if r["key"] == "methods"), len(receipt["rows"])), row)
         return Answer(text, obs.outcome.value if obs else None,
                       str(analysis.stated.value) if analysis.stated else None, analysis.span,
-                      obs.misconception if obs else None, analysis.quote,
-                      receipts.build(puzzle, text, analysis.span, analysis.stated, obs, analysis.quote))
+                      obs.misconception if obs else None, analysis.quote, receipt)
 
     def _challenge_text(self, q: QuestionLog, obs: Observation, analysis: Analysis) -> str:
         if analysis.stated is None:

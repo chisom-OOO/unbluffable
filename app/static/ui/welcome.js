@@ -1,13 +1,61 @@
 // First-visit onboarding (decision log 23): one skippable screen of roles, then the offer of
 // a placement interview. Roles stay in this browser; only when "Share" is ticked are the
 // roles and the "Other" text sent to /api/interest, which logs them and stores nothing.
-document.addEventListener("DOMContentLoaded", () => {
+// With accounts (Firebase): only after a first sign-in, "Make it yours" (name and photo) comes
+// first; guests are sent back, since nothing of theirs is kept before they sign in.
+document.addEventListener("DOMContentLoaded", () => window.UBAccount.whenReady.then((acct) => {
   const { escapeHtml } = window.UB;
   const P = window.UBProfile;
   const $ = (id) => document.getElementById(id);
   const S = window.UB.profile();
   const profile = S.load();
   $("storage-note").hidden = S.ok;
+  const account = window.UBAccount;
+  if (acct.enabled && !acct.user) { location.replace("/ui"); return; }
+
+  // ---------- Make it yours (first sign-in only) ----------
+  const first = acct.enabled && acct.user && (account.firstTime || new URLSearchParams(location.search).get("first") === "1")
+    && profile.onboarded !== "done";
+  let photo = profile.photo;
+  const preview = () => { $("make-avatar").innerHTML = window.UB.avatarHtml({ name: $("make-name").value, photo }, "avatar-big", true); };
+  const makeStatus = (t) => { $("make-status").textContent = t; $("make-status").hidden = !t; };
+  if (first) {
+    $("make-step").hidden = false;
+    $("roles-step").hidden = true;
+    $("make-name").value = profile.name || acct.user.name || "";
+    $("google-photo-row").hidden = !acct.user.photoURL;
+    if (acct.user.photoURL && !photo) document.querySelector('input[name="make-photo"][value="google"]').checked = true;
+    if (photo) document.querySelector('input[name="make-photo"][value="upload"]').checked = true;
+    preview();
+    $("make-title").focus();
+  }
+  $("make-name").addEventListener("input", preview);
+  document.querySelectorAll('input[name="make-photo"]').forEach((radio) => radio.addEventListener("change", async () => {
+    makeStatus("");
+    if (radio.value === "upload" && radio.checked) $("make-photo-input").click();
+    if (radio.value === "none" && radio.checked) { photo = null; preview(); }
+    if (radio.value === "google" && radio.checked) {
+      try { photo = await window.UB.photoFromBlob(await (await fetch(acct.user.photoURL)).blob()); }
+      catch { photo = null; makeStatus("Couldn't use the Google photo here, so your initials show for now. You can upload one instead."); }
+      preview();
+    }
+  }));
+  $("make-photo-input").addEventListener("change", async () => {
+    const file = $("make-photo-input").files[0];
+    $("make-photo-input").value = "";
+    if (!file) return;
+    try { photo = await window.UB.photoFromBlob(file); } catch { makeStatus("That file isn't a picture this browser can read."); }
+    preview();
+  });
+  $("make-continue").addEventListener("click", () => {
+    Object.assign(profile, { name: $("make-name").value.trim().slice(0, P.NAME_MAX), photo, identity_at: new Date().toISOString() });
+    S.save(profile);
+    window.UB.refreshProfileLink();
+    $("make-step").hidden = true;
+    $("roles-step").hidden = false;
+    $("roles-title").setAttribute("tabindex", "-1");
+    $("roles-title").focus();
+  });
 
   const chosen = new Set(profile.roles);
   $("roles").innerHTML = P.ROLES.map((r) =>
@@ -35,7 +83,8 @@ document.addEventListener("DOMContentLoaded", () => {
   $("continue").addEventListener("click", () => {
     const roles = P.ROLES.map((r) => r.id).filter((id) => chosen.has(id));
     const other = chosen.has("other") ? $("other-text").value.trim().slice(0, 200) : "";
-    Object.assign(profile, { onboarded: "done", roles, other_text: other, default_track: P.defaultTrack(roles) });
+    Object.assign(profile, { onboarded: "done", roles, other_text: other, default_track: P.defaultTrack(roles),
+                             roles_at: new Date().toISOString() });
     S.save(profile);
     if ($("share").checked && roles.length) {
       fetch("/api/interest", { method: "POST", headers: { "Content-Type": "application/json" },
@@ -55,4 +104,4 @@ document.addEventListener("DOMContentLoaded", () => {
     $("placement-step").hidden = false;
     $("placement-step").focus();
   });
-});
+}));

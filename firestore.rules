@@ -1,0 +1,26 @@
+rules_version = '2';
+
+// Unbluffable accounts: one document per user, users/{uid}, holding the same profile the
+// browser keeps (roles, display name, a photo under 100 KB, rating values, history
+// summaries, placement). Interview answer text is never stored. Nothing else is readable.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['profile', 'updated_at'])
+        && request.resource.data.profile is map
+        && request.resource.data.profile.keys().hasOnly(['version', 'onboarded', 'roles', 'other_text',
+             'default_track', 'name', 'photo', 'identity_at', 'roles_at', 'answers', 'history', 'placement'])
+        && (request.resource.data.profile.get('photo', null) == null
+            || (request.resource.data.profile.photo is string && request.resource.data.profile.photo.size() < 140000))
+        && request.resource.data.profile.get('name', '').size() <= 60
+        && request.resource.data.profile.get('other_text', '').size() <= 200
+        && request.resource.data.profile.get('answers', []).size() <= 5000
+        && request.resource.data.profile.get('history', []).size() <= 1000;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

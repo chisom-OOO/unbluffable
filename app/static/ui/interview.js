@@ -245,6 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
       case "question":
         question = event;
         $("puzzle").textContent = event.text;
+        $("provenance").innerHTML = window.UB.provenanceHtml(event.provenance_rows);
         $("puzzle-eyebrow").textContent = (event.kind === "check" ? "Drill check"
           : event.kind === "behavioural" ? `Behavioural question ${event.number} of 2`
           : event.kind === "drill" ? `Drill question ${event.number} of up to 3`

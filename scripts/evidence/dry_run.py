@@ -87,7 +87,7 @@ def estimate(calls: list[tuple[str, int]]) -> dict:
             "usd_estimate": f"{cost(OUT_TOKENS):.2f}", "usd_upper_bound": f"{cost(CAP_TOKENS):.2f}"}
 
 
-def dry_run(path: Path, runs: int = 3) -> dict:
+def dry_run(path: Path, runs: int = 3, open_weights: bool = False) -> dict:
     items = copy.deepcopy(itemcheck.read(path))
     for item in items:
         for part in ("original", "twin"):
@@ -96,20 +96,27 @@ def dry_run(path: Path, runs: int = 3) -> dict:
         item["source"] = "model-written"
     assert not itemcheck.problems(items), itemcheck.problems(items)
     provider = CountingProvider()
-    verdicts = asyncio.run(harness.evaluate(items, provider, runs=runs))
+    second = CountingProvider() if open_weights else None
+    verdicts = asyncio.run(harness.evaluate(items, provider, runs=runs, open_weights=second))
     results = harness.summarise(items, verdicts, {"dry_run": True})
-    return {"results": results, "cost": estimate(provider.calls)}
+    out = {"results": results, "cost": estimate(provider.calls)}
+    if second is not None:
+        # The same budgeting prices for open_weights (forge/models.py); a separate line.
+        out["cost_open_weights"] = estimate(second.calls)
+    return out
 
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--items", type=Path, default=itemcheck.DRAFT)
     parser.add_argument("--runs", type=int, default=3)
+    parser.add_argument("--open-weights", action="store_true", help="also the careful arm and Unbluffable on Muse Spark Open")
     args = parser.parse_args(argv)
-    out = dry_run(args.items, args.runs)
-    accuracy = {arm: out["results"]["arms"][arm]["majority"]["accuracy"] for arm in harness.ARMS}
+    out = dry_run(args.items, args.runs, args.open_weights)
+    accuracy = {arm: a["majority"]["accuracy"] for arm, a in out["results"]["arms"].items()}
     print("Dry run with a fake model (synthetic transcripts): every arm ran; accuracy is not a result.")
-    print(json.dumps({"majority_accuracy": accuracy, "cost_estimate": out["cost"]}, indent=2))
+    print(json.dumps({"majority_accuracy": accuracy, "cost_estimate": out["cost"],
+                      **({"cost_estimate_open_weights": out["cost_open_weights"]} if args.open_weights else {})}, indent=2))
     return 0
 
 

@@ -12,15 +12,27 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".section, .end-verdict, #stats").forEach((el) => { el.hidden = true; });
   }
   if (!sessionId) { unavailable("No report to show yet. A report appears here at the end of an interview."); return; }
-  fetch(`/api/interview/${encodeURIComponent(sessionId)}/report`)
-    .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-    .then(render)
+  // With accounts, a guest's result is kept only after signing in (the page then reloads).
+  const account = window.UBAccount;
+  document.addEventListener("ub-account", (e) => { if (e.detail.user && keepPending) location.reload(); });
+  let keepPending = false;
+  Promise.all([fetch(`/api/interview/${encodeURIComponent(sessionId)}/report`)
+    .then((r) => (r.ok ? r.json() : Promise.reject(r.status))), account.whenReady])
+    .then(([e]) => render(e))
     .catch(() => unavailable("This report is no longer available. Reports are kept in memory for the session only."));
 
   // Decision log 23: add this interview to the profile once, then show what changed.
   function showProgress(e) {
     const P = window.UBProfile, S = window.UB.profile();
     if (!P || !S || !e.track || !Array.isArray(e.rating_items)) return null;
+    if (account.guest) {
+      keepPending = true;
+      $("progress-body").innerHTML = `<div class="keep-result"><p>Your profile, rating and history are kept only after you sign in.</p>`
+        + `<button class="btn" type="button" id="keep-result">Sign in to keep this result</button></div>`;
+      $("keep-result").addEventListener("click", () => account.openSignIn("Sign in to keep this result in your profile."));
+      $("progress").hidden = false;
+      return null;
+    }
     const profile = S.load();
     const entry = P.applyReport(profile, e, sessionId, new Date().toISOString().slice(0, 10), null);
     if (!entry) return null;
@@ -45,7 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     $("progress-body").innerHTML = head + (changes ? `<ul class="change-list">${changes}</ul>` : "") + radar
       + (S.ok ? "" : `<p class="storage-note">Your browser is blocking storage, so this lasts only for this visit.</p>`)
-      + `<p class="fine">Estimates from your scored answers. <a href="/ui/profile?track=${encodeURIComponent(e.track)}">See your profile</a></p>`;
+      + `<p class="fine">Estimates from your scored answers. <a href="/ui/profile?track=${encodeURIComponent(e.track)}">See your profile</a></p>`
+      + (account.enabled && account.firstTime ? `<a class="btn btn-small" href="/ui/welcome?first=1">Make it yours →</a>` : "");
     $("progress").hidden = false;
     // The header link shows the new rating.
     const link = document.querySelector("#profile-link .profile-rating");
@@ -189,6 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
       (c.follow_up ? `<div class="qcard-extra"><p class="qcard-when">Follow-up · model-matched, not scored</p><p class="fine">${escapeHtml(c.follow_up.question)}</p>` +
         quote(c.follow_up.words, c.follow_up.receipt) + `<p class="check-line">${escapeHtml(c.follow_up.verdict)}</p>` +
         receiptHtml(c.follow_up.receipt, { words: false }) + `</div>` : "") +
+      window.UB.provenanceHtml(c.provenance_rows) +
       `</article>`).join("");
 
     // Numbers only: each question's outcome and words are on its evidence card.
