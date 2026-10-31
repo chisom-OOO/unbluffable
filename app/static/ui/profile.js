@@ -28,8 +28,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const track = tracks.find((t) => t.id === current);
     const scores = P.areaScores(profile, current, track.areas);
     const o = P.overall(scores);
+    $("rating-track").textContent = track.name;
     $("rating").textContent = o ? String(P.shown(o.rating)) : "Not assessed yet";
     $("rating").classList.toggle("rating-big", !!o);
+    $("rating").classList.toggle("rating-none", !o);
     $("band").textContent = o ? `${P.band(o.rating)} · interviews start at ${P.startLevel(o.rating)}` : "";
     $("rating-basis").textContent = o
       ? `Estimate based on ${o.answers} answer${o.answers === 1 ? "" : "s"} across ${o.areas} area${o.areas === 1 ? "" : "s"}.`
@@ -86,22 +88,49 @@ document.addEventListener("DOMContentLoaded", () => {
   function status(text) { $("data-status").textContent = text; $("data-status").hidden = !text; }
   function refresh() { rolesLine(); renderAbout(); if (current) renderTrack(); renderHistory(); window.UB.refreshProfileLink(); }
 
-  // ---------- About you: display name and photo, in this browser only ----------
+  // ---------- Identity card: avatar, display name and photo, in this browser only ----------
   function renderAbout() {
-    $("avatar").innerHTML = window.UB.avatarHtml(profile, "avatar-big");
-    if (document.activeElement !== $("display-name")) $("display-name").value = profile.name || "";
+    $("avatar").innerHTML = window.UB.avatarHtml(profile, "avatar-big", true);
+    $("identity-name").textContent = profile.name || "Add your name";
+    $("identity-name").classList.toggle("placeholder", !profile.name);
     $("photo-remove").hidden = !profile.photo;
+    $("avatar-button").setAttribute("aria-label", profile.photo ? "Change photo" : "Choose a photo");
   }
   function photoStatus(text) { $("photo-status").textContent = text; $("photo-status").hidden = !text; }
-  let nameTimer = null;
-  $("display-name").addEventListener("input", () => {
-    clearTimeout(nameTimer);
-    nameTimer = setTimeout(() => {
-      profile.name = $("display-name").value.trim().slice(0, P.NAME_MAX);
-      S.save(profile);
-      renderAbout();
-      window.UB.refreshProfileLink();
-    }, 300);
+
+  // The name: pencil (or the name itself) opens the field; Save or Enter keeps it; Cancel or Esc undoes.
+  function editName(on) {
+    $("name-view").hidden = on;
+    $("name-form").hidden = !on;
+    if (on) {
+      $("display-name").value = profile.name || "";
+      $("display-name").focus();
+      $("display-name").select();
+    } else {
+      $("name-edit").focus();
+    }
+  }
+  let savedTimer = null;
+  function saved(text) {
+    clearTimeout(savedTimer);
+    $("name-saved").textContent = text;
+    $("name-saved").classList.remove("fade");
+    savedTimer = setTimeout(() => $("name-saved").classList.add("fade"), 2000);
+  }
+  $("name-edit").addEventListener("click", () => editName(true));
+  $("identity-name").addEventListener("click", () => editName(true));
+  $("name-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    profile.name = $("display-name").value.trim().slice(0, P.NAME_MAX);
+    const kept = S.save(profile);
+    editName(false);
+    renderAbout();
+    window.UB.refreshProfileLink();
+    saved(kept ? "Saved" : "Saved for this visit");
+  });
+  $("name-cancel").addEventListener("click", () => editName(false));
+  $("display-name").addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { e.preventDefault(); editName(false); }
   });
 
   // A square crop, 256 px, JPEG; quality steps down until it is under 100 KB.
@@ -125,6 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
     throw new Error("too large");
   }
   $("photo-choose").addEventListener("click", () => $("photo-input").click());
+  $("avatar-button").addEventListener("click", () => $("photo-input").click());
   $("photo-input").addEventListener("change", async () => {
     const file = $("photo-input").files[0];
     $("photo-input").value = "";

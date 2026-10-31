@@ -126,10 +126,12 @@
   // The candidate's photo, else their initials, else a plain person icon. Decorative: the
   // name is said in the surrounding label.
   const PERSON = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>';
-  function avatarHtml(p, cls = "avatar-small") {
+  // `circle`: the person icon also sits on the accent circle (the profile's large avatar).
+  function avatarHtml(p, cls = "avatar-small", circle = false) {
     if (p.photo && window.UBProfile.validPhoto(p.photo)) return `<img class="avatar-img ${cls}" src="${p.photo}" alt="">`;
     const letters = window.UBProfile.initials(p.name);
-    return letters ? `<span class="avatar-initials ${cls}" aria-hidden="true">${escapeHtml(letters)}</span>` : PERSON;
+    if (letters) return `<span class="avatar-initials ${cls}" aria-hidden="true">${escapeHtml(letters)}</span>`;
+    return circle ? `<span class="avatar-initials avatar-person ${cls}" aria-hidden="true">${PERSON}</span>` : PERSON;
   }
   function initProfileLink() {
     const link = document.getElementById("profile-link");
