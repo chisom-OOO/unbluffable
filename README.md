@@ -21,7 +21,7 @@ so anyone can know what the room feels like before they're in it.
 ---
 
 > [!NOTE]
-> **Status, 31 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode, behavioural questions, the readiness profile and the end-of-interview report work end to end in tests. Four tracks run on cross-checked question families: quant, investment banking, consulting and software engineering. In progress: a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
+> **Status, 31 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode, behavioural questions, the readiness profile and the end-of-interview report work end to end in tests. Four tracks run on cross-checked question families: quant, investment banking, consulting and software engineering. A first pre-registered comparison against a carefully prompted chatbot is reported below; a second, harder run is in progress ([What's next](#whats-next)). Results appear here only once they are measured.
 
 ## Why
 
@@ -133,12 +133,28 @@ From our cloud host, Meta's API showed no Muse Spark models for our key: `GET /v
 
 Every change from the original plan is in the [decision log](spec/DECISION_LOG.md), with the evidence that forced it, including what failed.
 
+### Comparison against a carefully prompted chatbot (run 1)
+
+Pre-registered and frozen before any model saw it ([decision log](spec/DECISION_LOG.md) rows 15, 31, 32; items in [`eval/items_draft.json`](eval/items_draft.json), sha256 `b9aeb7f1`). 40 answer pairs (an original question and its new-numbers twin): 15 correct, 10 recited from memory, 10 confident misconceptions, 5 arithmetic slips. Every arm saw the same transcripts, three runs each.
+
+| Arm | Correct verdicts | False flags on answers that show understanding |
+| --- | --- | --- |
+| Plain Muse Spark 1.3 | 39 / 40 | 5% |
+| Carefully prompted Muse Spark | 34 / 40 | 25% |
+| Carefully prompted, given the verified answers | 35 / 40 | 25% |
+| **Unbluffable** (Muse Spark) | 34 / 40 | 30% |
+| **Unbluffable on Muse Spark Open** | 35 / 40 | 25% |
+
+**What it shows.** No arm is significantly better than another (exact McNemar, smallest p = 0.06). Every arm caught every recited and every misconceived answer: the bluffs in this set were too easy to spot, because 39 of the 40 transcripts were written by a model (Claude) and give themselves away. The arms differ only on the five arithmetic slips, which Unbluffable marks as not yet shown in a frozen transcript; in a live interview it would challenge the number instead. One correct answer was misjudged by Unbluffable; that bug is being fixed. Unbluffable on open weights matched Unbluffable on Muse Spark, with no verdict changing across runs.
+
+**What it doesn't show.** It doesn't test the live interview, where Unbluffable picks numbers that expose a suspected mistake and challenges the number you commit to. A second run with real candidates' fluent answers is in progress.
+
 ## What's next
 
 > [!IMPORTANT]
 > In progress. None of this is claimed as a result yet.
 
-- **Careful-chatbot comparison.** A pre-registered test on frozen answers: plain Muse Spark, carefully prompted Muse Spark, carefully prompted Muse Spark given the answer key, and Unbluffable, all on the same model, three runs each.
+- **Comparison, run 2.** The same pre-registered test on fluent answers from real candidates, including answers read from a chatbot, frozen before any arm runs.
 - **Real users** from a university quant society, with consent.
 
 ## Run it locally
