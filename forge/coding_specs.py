@@ -55,6 +55,10 @@ Return a function signature for the candidate to implement and a short problem s
   names; no specific numbers from the examples, no hints at the method, no solution.
 The forge's verified solver is included only so the mapping and types are right; never
 describe its method in the statement."""
+# A spec plus the model's reasoning can outrun 4,000 tokens. A response cut off at the limit
+# is retried once with a higher one; the higher limit is a different request, so it never
+# replays the cached truncated response.
+SPEC_TOKENS = (12000, 24000)
 
 
 def check_type(value, annotation: str) -> bool:
@@ -185,9 +189,8 @@ class CodingForge:
         for attempt in ("author", "repair"):
             if attempt == "repair":
                 payload = {**payload, "draft": record["draft"], "error": record["failure"]}
-            record["draft"] = self.models.call("coding_" + attempt, payload, SPEC,
-                                               PROMPT + ("\nCorrect the reported error; return one complete spec." if attempt == "repair" else ""),
-                                               author=True)
+            record["draft"] = self.write("coding_" + attempt, payload,
+                                         PROMPT + ("\nCorrect the reported error; return one complete spec." if attempt == "repair" else ""))
             self.state.save()
             try:
                 shipped = verify(record["draft"], family, solver, wrong, self.sandbox)
@@ -202,6 +205,14 @@ class CodingForge:
             record.update(status="verified", failure=None)
             return
 
+    def write(self, stage: str, payload: dict, instructions: str) -> dict:
+        for limit in SPEC_TOKENS:
+            try:
+                return self.models.call(stage, payload, SPEC, instructions, author=True, max_tokens=limit)
+            except Reject as failure:
+                if failure.details.get("finish") != "length" or limit == SPEC_TOKENS[-1]:
+                    raise
+
     def run(self, family_items: dict, only: set[str] | None = None) -> dict:
         halt = None
         for family in self.families():
@@ -212,12 +223,20 @@ class CodingForge:
                     self.one(family, family_items.get(family["template_id"], {}))
                 except (BudgetStop, ReplayMissing, ResumeBlocked) as stop:
                     halt = type(stop).__name__
+                except Reject as failure:
+                    # A model failure fails this family only; a later run tries it again
+                    # (recorded calls replay at no cost).
+                    self.state.data["items"][family["template_id"]].update(
+                        status="failed", failure={"gate": failure.stage, "error_class": failure.reason, **failure.details})
             self.state.save()
         items = self.state.data["items"]
+        ids = [f["template_id"] for f in self.families() if not only or f["template_id"] in only]
         report = {"status": halt or "completed", "families": len(self.families()),
                   "verified": sum(i.get("status") == "verified" for i in items.values()),
                   "fallback": sum(i.get("status") == "fallback" for i in items.values()),
-                  "failures": {k: i.get("failure") for k, i in items.items() if i.get("status") == "fallback"},
+                  "failed": sum(i.get("status") == "failed" for i in items.values()),
+                  "failures": {k: i.get("failure") for k, i in items.items() if i.get("status") in {"fallback", "failed"}},
+                  "outcomes": {k: (items.get(k) or {}).get("status", "not_run") for k in ids},
                   "cost_usd": str(self.models.spent()), "budget_usd": str(self.models.budget)}
         atomic_json(self.state.root / "report.json", report)
         return report
