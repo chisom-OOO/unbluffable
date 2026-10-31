@@ -8,7 +8,11 @@ Arms, all on the same configurable Spark backend (LLM_BACKEND or --backend):
 
 Evidence run 2 (--design run2): the careful and careful-with-answers chatbots see only the
 original question and its transcript ("careful_first_only", "careful_answers_first_only",
-the same prompts); Unbluffable runs as above, on the original and the twin.
+the same prompts); careful and plain Spark see the original and the twin, as in run 1;
+Unbluffable runs as above, on the original and the twin. The headline comparison is
+Unbluffable against careful_first_only (HEADLINE_ARM, by provenance["design"]); every other
+chatbot arm is a secondary exact McNemar row. An item file that names its design ("design":
+"run2") runs only with that --design.
 
 Each arm runs `--runs` times (3 by default). Outputs results.json and results.md:
 accuracy, false-flag rate on items labelled "understands", verdict flip rate across
@@ -60,7 +64,10 @@ HERE = Path(__file__).resolve().parent
 PROMPTS = HERE / "prompts"
 ARMS = ("plain", "careful", "careful_answers", "unbluffable")
 # Evidence run 2: the chatbots see only the original question and transcript (same prompts).
-DESIGNS = {"run1": ARMS, "run2": ("careful_first_only", "careful_answers_first_only", "unbluffable")}
+DESIGNS = {"run1": ARMS,
+           "run2": ("careful_first_only", "careful_answers_first_only", "careful", "plain", "unbluffable")}
+# The arm the headline compares Unbluffable with, per design; the other chatbot arms are secondary rows.
+HEADLINE_ARM = {"run1": "careful_answers", "run2": "careful_first_only"}
 PROMPT_OF = {"careful_first_only": "careful", "careful_answers_first_only": "careful_answers"}
 WITH_ANSWERS = {"careful_answers", "careful_answers_first_only"}
 FIRST_ONLY = {"careful_first_only", "careful_answers_first_only"}
@@ -119,6 +126,15 @@ def load_prompts() -> dict[str, str]:
 # --- Items ---------------------------------------------------------------------
 
 
+def file_design(path: Path) -> str | None:
+    """The design an item file names ("design": "run2"), or None (unreadable files fail later, in load_items)."""
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return data.get("design") if isinstance(data, dict) else None
+
+
 def load_items(path: Path) -> tuple[list[dict], str]:
     """The frozen item file: {"version": 1, "items": [{id, label, template_id,
     original: {question, transcript}, twin: {question, transcript}}]}. `question`
@@ -127,6 +143,8 @@ def load_items(path: Path) -> tuple[list[dict], str]:
     data = json.loads(raw.decode("utf-8"))
     if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("items"), list):
         raise ItemError("item file needs version 1 and an items list")
+    if "design" in data and data["design"] not in DESIGNS:
+        raise ItemError(f"design must be one of {tuple(DESIGNS)}")
     seen = set()
     for n, item in enumerate(data["items"]):
         where = f"items[{n}]"
@@ -290,11 +308,14 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
             "flipped_items": flipped,
         }
     ours = arms["unbluffable"]
+    key = HEADLINE_ARM[provenance.get("design", "run1")]
+    if key not in arms:
+        raise ValueError(f"the headline arm {key} did not run")
     mcnemar = {arm: {"majority": stats.compare(labels, ours["majority"]["verdicts"], arms[arm]["majority"]["verdicts"]),
                      "by_run": [stats.compare(labels, o["verdicts"], t["verdicts"])
                                 for o, t in zip(ours["runs"], arms[arm]["runs"])]}
                for arm in arms if arm != "unbluffable" and arm not in OPEN_WEIGHTS_ARMS}
-    key = "careful_answers" if "careful_answers" in arms else "careful_answers_first_only"
+    mcnemar = {key: mcnemar[key], **{arm: m for arm, m in mcnemar.items() if arm != key}}  # the headline row first
     gap = ours["majority"]["correct"] - arms[key]["majority"]["correct"]
     open_rows = {}
     if all(arm in arms for arm in OPEN_WEIGHTS_ARMS):
@@ -313,6 +334,8 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
             "n_understands": sum(1 for v in labels.values() if v == stats.UNDERSTANDS),
             "arms": arms,
             "mcnemar_vs_unbluffable": None,
+            "headline_comparison": None,
+            "secondary_comparisons": None,
             "open_weights": None,
             "headline_rule": None,
         }
@@ -324,10 +347,12 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
         "n_understands": sum(1 for v in labels.values() if v == stats.UNDERSTANDS),
         "arms": arms,
         "mcnemar_vs_unbluffable": mcnemar,
+        "headline_comparison": key,
+        "secondary_comparisons": [arm for arm in mcnemar if arm != key],
         "open_weights": open_rows,
         "headline_rule": {
             "unbluffable_correct": ours["majority"]["correct"],
-            "careful_answers_correct": arms[key]["majority"]["correct"],
+            "compared_correct": arms[key]["majority"]["correct"],
             "compared_with": key,
             "gap": gap,
             "within": CLOSE_ITEMS,
@@ -371,12 +396,20 @@ def markdown(results: dict) -> str:
         lines += [f"- Prompt `{arm}`: sha256 `{h_}`" for arm, h_ in results["prompt_sha256"].items()]
         lines += [f"- Run at {results['created_at']}", ""]
         return "\n".join(lines)
+    def rows(arms):
+        out = ["| Arm | b | c | p (two-sided) | p per run |", "|---|---|---|---|---|"]
+        for arm in arms:
+            m = results["mcnemar_vs_unbluffable"][arm]
+            per_run = ", ".join(f"{r['p']:.4g}" for r in m["by_run"])
+            out.append(f"| {names[arm]} | {m['majority']['b']} | {m['majority']['c']} | {m['majority']['p']:.4g} | {per_run} |")
+        return out
+
+    primary = results["headline_comparison"]
     lines += ["", "## Exact McNemar, Unbluffable against each arm (majority verdicts)", "",
               "b = Unbluffable right and the other arm wrong; c = the reverse.", "",
-              "| Arm | b | c | p (two-sided) | p per run |", "|---|---|---|---|---|"]
-    for arm, m in results["mcnemar_vs_unbluffable"].items():
-        per_run = ", ".join(f"{r['p']:.4g}" for r in m["by_run"])
-        lines.append(f"| {names[arm]} | {m['majority']['b']} | {m['majority']['c']} | {m['majority']['p']:.4g} | {per_run} |")
+              f"Headline comparison: Unbluffable against {names[primary]}.", ""] + rows([primary])
+    if results["secondary_comparisons"]:
+        lines += ["", "Secondary comparisons:", ""] + rows(results["secondary_comparisons"])
     if results.get("open_weights"):
         lines += ["", "## Muse Spark Open (backend open_weights; separate rows, not pre-registered)", "",
                   "| Arm | Correct (majority) | Accuracy per run | False-flag rate (majority) | Verdict flip rate | Errors (majority) |",
@@ -393,8 +426,8 @@ def markdown(results: dict) -> str:
                   f"| Unbluffable vs Unbluffable on Open | {b['b']} | {b['c']} | {b['p']:.4g} |"]
     h = results["headline_rule"]
     lines += ["", "## Pre-registered headline rule", "",
-              f"Unbluffable {h['unbluffable_correct']}/{n} correct; careful Spark with stored answers "
-              f"{h['careful_answers_correct']}/{n}. Gap {h['gap']} item(s); the rule triggers within {h['within']}.",
+              f"Unbluffable {h['unbluffable_correct']}/{n} correct; {names[h['compared_with']]} "
+              f"{h['compared_correct']}/{n}. Gap {h['gap']} item(s); the rule triggers within {h['within']}.",
               "", f"Headline: **{h['headline']}**", "",
               "## Provenance", "",
               f"- Commit: `{results['git_commit']}`",
@@ -446,6 +479,10 @@ def main(argv=None) -> int:
                         help="also run the careful arm and Unbluffable on Muse Spark Open (backend open_weights), as separate rows")
     args = parser.parse_args(argv)
 
+    declared = file_design(args.items)
+    if declared is not None and declared != args.design:
+        print(f"Refusing to start: the item file is for design {declared}; run it with --design {declared}.")
+        return 2
     needed = [args.backend or os.environ.get("LLM_BACKEND", "meta_api")] + (["open_weights"] if args.open_weights else [])
     missing = missing_keys(needed)
     if missing:

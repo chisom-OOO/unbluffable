@@ -12,6 +12,7 @@ line per file:
            otherwise the session is left out and listed
 
 Writes eval/items_run2_draft.json in the harness's item format; freeze.py checks it unchanged.
+The report lists every session left out, and counts the genuine ones left out by reason.
 No model calls, no network.
 
   python scripts/evidence/from_sessions.py --bluff a.json b.json --genuine c.json d.json
@@ -103,7 +104,8 @@ def item(n: int, category: str, path: Path, timeline: dict, index: dict) -> dict
             "original": {"question": inst, "transcript": first}, "twin": {"question": twin_inst, "transcript": second}}
 
 
-def build(files: list[tuple[str, Path]], index: dict | None = None) -> tuple[dict, list[str]]:
+def build(files: list[tuple[str, Path]], index: dict | None = None) -> tuple[dict, list[dict]]:
+    """(item file, sessions left out as {file, category, reason})."""
     index = index if index is not None else instance_index()
     items, skipped = [], []
     for category, path in files:
@@ -111,8 +113,18 @@ def build(files: list[tuple[str, Path]], index: dict | None = None) -> tuple[dic
             timeline = json.loads(Path(path).read_text(encoding="utf-8"))
             items.append(item(len(items) + 1, category, Path(path), timeline, index))
         except (SessionError, OSError, ValueError, KeyError) as error:
-            skipped.append(f"{Path(path).name} ({category}): {error}")
+            reason = str(error) if isinstance(error, SessionError) else f"unreadable ({type(error).__name__})"
+            skipped.append({"file": Path(path).name, "category": category, "reason": reason})
     return {"version": 1, "design": "run2", "items": items}, skipped
+
+
+def genuine_excluded(skipped: list[dict]) -> dict:
+    """How many genuine sessions were left out, and why."""
+    genuine = [s for s in skipped if s["category"] == "genuine"]
+    reasons: dict[str, int] = {}
+    for s in genuine:
+        reasons[s["reason"]] = reasons.get(s["reason"], 0) + 1
+    return {"count": len(genuine), "by_reason": reasons, "files": [s["file"] for s in genuine]}
 
 
 def main(argv=None) -> int:
@@ -129,7 +141,9 @@ def main(argv=None) -> int:
     args.out.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     labels = [i["label"] for i in data["items"]]
     print(json.dumps({"written": str(args.out), "items": len(labels), "understands": labels.count("understands"),
-                      "does_not_understand": labels.count("does_not_understand"), "left_out": skipped}, indent=2))
+                      "does_not_understand": labels.count("does_not_understand"),
+                      "genuine_sessions": len(args.genuine), "genuine_excluded": genuine_excluded(skipped),
+                      "left_out": [f"{s['file']} ({s['category']}): {s['reason']}" for s in skipped]}, indent=2))
     return 0
 
 
