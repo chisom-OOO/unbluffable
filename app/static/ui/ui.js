@@ -50,11 +50,16 @@
 
   // An English speech voice: natural-sounding first, then British, then American. `not`
   // skips one voice, so a second speaker can sound different.
+  // The interviewer's voice: the one chosen in the device check (remembered in this browser),
+  // else the most human-sounding English voice (UBTurn.rankVoices). `not` skips one voice.
+  function rankedVoices() {
+    const all = window.speechSynthesis?.getVoices() || [];
+    return window.UBTurn ? window.UBTurn.rankVoices(all) : all.filter((v) => /^en/i.test(v.lang || ""));
+  }
   function pickVoice(not) {
-    const voices = (window.speechSynthesis?.getVoices() || []).filter((v) => v.lang.startsWith("en") && v !== not)
-      .sort((a, b) => a.name.localeCompare(b.name));
-    return voices.find((v) => /Natural|Online/i.test(v.name)) || voices.find((v) => v.lang === "en-GB")
-      || voices.find((v) => v.lang === "en-US") || voices[0] || null;
+    const ranked = rankedVoices().filter((v) => v !== not);
+    const chosen = store.get("ub-voice");
+    return (!not && ranked.find((v) => v.voiceURI === chosen)) || ranked[0] || null;
   }
 
   function escapeHtml(s) {
@@ -178,7 +183,7 @@
       + `</dl><p class="receipt-note"><a href="/ui/forge">Every family in the question bank</a></p></div></div></details>`;
   }
 
-  window.UB = { store, photoFromBlob, provenanceHtml, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
+  window.UB = { store, photoFromBlob, provenanceHtml, rankedVoices, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
                 refreshProfileLink: initProfileLink };
   document.addEventListener("DOMContentLoaded", () => { initTheme(); initMute(); initProfileLink(); });
   document.addEventListener("ub-account", initProfileLink);

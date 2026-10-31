@@ -45,6 +45,23 @@ def old_practice():
     return RedirectResponse("/ui", status_code=307)
 
 
+RECORDING = Path(__file__).resolve().parents[1] / "content" / "landing" / "recorded-interview.json"
+
+
+@app.get("/api/landing-recording", include_in_schema=False)
+def landing_recording():
+    """The landing page's "A real recorded interview": an exported, text-only timeline once one
+    is committed; until then {"available": false} and the scripted sample plays."""
+    import json
+    try:
+        data = json.loads(RECORDING.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"available": False}
+    if data.get("version") != 1 or data.get("kind") != "unbluffable-recorded-interview" or not isinstance(data.get("events"), list):
+        return {"available": False}
+    return data
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     """Return machine-readable service health."""

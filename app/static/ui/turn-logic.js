@@ -57,7 +57,28 @@
     return out;
   }
 
-  const api = { shouldOfferHelp, speechTimeoutMs, guardUtterance, gateProblems };
+  // The browser's English voices, most human first: natural/neural voices, then Google's
+  // UK/US English, then the rest, with robotic desktop voices last; British English first
+  // within each group, then American, then other English.
+  const NATURAL = /natural|neural|online|premium|enhanced|siri/i;
+  const ROBOTIC = /desktop|espeak|compact|eloquence|\bbad\b|robot/i;
+  function voiceTier(v) {
+    if (NATURAL.test(v.name)) return 0;
+    if (/^google (uk|us) english/i.test(v.name)) return 1;
+    if (ROBOTIC.test(v.name)) return 3;
+    return 2;
+  }
+  const langRank = (lang) => (/^en[-_]GB/i.test(lang) ? 0 : /^en[-_]US/i.test(lang) ? 1 : 2);
+  function rankVoices(voices) {
+    return voices.filter((v) => /^en/i.test(v.lang || ""))
+      .map((v, i) => ({ v, i }))
+      .sort((a, b) => voiceTier(a.v) - voiceTier(b.v) || langRank(a.v.lang) - langRank(b.v.lang)
+                       || a.v.name.localeCompare(b.v.name) || a.i - b.i)
+      .map(({ v }) => v);
+  }
+  const onlyRobotic = (voices) => { const ranked = rankVoices(voices); return ranked.length > 0 && ranked.every((v) => voiceTier(v) === 3); };
+
+  const api = { shouldOfferHelp, speechTimeoutMs, guardUtterance, gateProblems, rankVoices, voiceTier, onlyRobotic };
   if (typeof module !== "undefined") module.exports = api;
   else window.UBTurn = api;
 })();
