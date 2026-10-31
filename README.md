@@ -12,7 +12,7 @@ so anyone can know what the room feels like before they're in it.
 ![Theme](https://img.shields.io/badge/theme-Build_for_Your_World-0866FF)
 ![Open weights](https://img.shields.io/badge/open_weights-Muse_Spark_Open-6E40C9)
 ![Python](https://img.shields.io/badge/python-3.12-3776AB)
-![Tests](https://img.shields.io/badge/tests-450%2B-2EA043)
+![Tests](https://img.shields.io/badge/tests-900%2B-2EA043)
 
 [How it works](#how-it-works) · [Meta models](#meta-models-and-their-roles) · [Measured so far](#measured-so-far) · [Run it](#run-it-locally) · [Decision log](spec/DECISION_LOG.md)
 
@@ -21,7 +21,7 @@ so anyone can know what the room feels like before they're in it.
 ---
 
 > [!NOTE]
-> **Status, 30 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode and the end-of-interview report work end to end in tests. Four tracks run on cross-checked question families: quant, investment banking, consulting and software engineering. In progress: a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
+> **Status, 31 Oct 2026.** The hands-free voice interview, exact checking, Bayesian scoring, diagnostic twins, the live evidence meter, receipts, drill mode, behavioural questions, the readiness profile and the end-of-interview report work end to end in tests. Four tracks run on cross-checked question families: quant, investment banking, consulting and software engineering. In progress: a measured comparison against a carefully prompted chatbot ([What's next](#whats-next)). Results appear here only once they are measured.
 
 ## Why
 
@@ -108,8 +108,8 @@ sequenceDiagram
 | Model | Runs on | Job |
 | --- | --- | --- |
 | **Muse Voice Transcribe** · `muse-voice-transcribe-1.0` | Meta Model API, realtime | Live speech-to-text for the hands-free interview |
-| **Muse Spark** · `muse-spark-1.3` | Meta Model API | Extracts the committed answer and verbatim quotes; judges whether an answer is finished |
-| **Muse Spark Open** · `muse-spark-open-1026` | Baseten (open weights) | The same reasoning jobs on the hosted app; writes each question family's solver, wrong-method values and solution steps (in progress) |
+| **Muse Spark** · `muse-spark-1.3` | Meta Model API | Extracts the committed answer and verbatim quotes, judges whether an answer is finished, judges behavioural answers (local runs) |
+| **Muse Spark Open** · `muse-spark-open-1026` | Baseten (open weights) | Every reasoning call on the hosted app, including judging behavioural answers. Offline, it wrote an independent solver and wrong-method programs for every question family; only families whose solver reproduced every stored answer were shipped |
 | **Exact maths** | Our code | Every number check and every score |
 
 ### Why open weights
@@ -129,7 +129,7 @@ From our cloud host, Meta's API showed no Muse Spark models for our key: `GET /v
 | **End-of-answer detection** on 60 recorded clips | **0 early cut-offs.** 32/60 completed exactly once; every miss was the app waiting too long, never interrupting. A silence check was added afterwards (rows 11–12). |
 | **Last word to spoken acknowledgement** | About 2 s in a timed run, most of it one Muse Spark call |
 | **Question families cross-checked** | **188** families across four tracks (99 quant, 89 investment banking, consulting and software engineering): for each one, Muse Spark Open wrote an independent solver, and it reproduced the stored answer on every variant. **0 disagreements.** 143 families also have wrong-method values verified in code, which the interviewer uses to name a misconception. |
-| **Automated tests** | 450+ (pytest), including pinned values for the engine maths |
+| **Automated tests** | 900+ (pytest), including pinned values for the engine maths, plus browser checks across phone and laptop widths in light and dark |
 
 Every change from the original plan is in the [decision log](spec/DECISION_LOG.md), with the evidence that forced it, including what failed.
 
