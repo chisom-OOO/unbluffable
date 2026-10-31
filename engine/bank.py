@@ -45,7 +45,7 @@ DIFFICULTIES = ("Easy", "Medium", "Hard")
 START_LEVELS = ("Easy", "Medium")
 MIXED = "Mixed"
 PACKS = {"quant": "Quant", "ib": "Investment banking", "consulting": "Consulting",
-         "software": "Software engineering"}  # template "pack": the track it belongs to
+         "software": "Software engineering", "quant_dev": "Quant development"}  # template "pack": the track it belongs to
 DEFAULT_PACK = "quant"  # a template without a pack
 MIN_INSTANCES = 8
 WRONG_OUTCOMES = (Outcome.NAMED_WRONG, Outcome.OTHER_WRONG, Outcome.RECITED)

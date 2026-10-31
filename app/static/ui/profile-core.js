@@ -6,6 +6,7 @@
   const WINDOW = 10;  // an area's score uses its last 10 scored answers
   const ROLES = [
     { id: "quant", name: "Quant trading/research", track: "quant" },
+    { id: "quant_dev", name: "Quantitative development", track: "quant_dev" },
     { id: "ib", name: "Investment banking", track: "ib" },
     { id: "consulting", name: "Consulting", track: "consulting" },
     { id: "software", name: "Software engineering", track: "software" },

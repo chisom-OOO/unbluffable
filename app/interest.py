@@ -10,7 +10,7 @@ import logging
 from fastapi import APIRouter, Response
 from pydantic import BaseModel, Field, field_validator
 
-ROLES = ("quant", "ib", "consulting", "software", "other")
+ROLES = ("quant", "quant_dev", "ib", "consulting", "software", "other")
 log = logging.getLogger("unbluffable.interest")
 router = APIRouter(prefix="/api")
 

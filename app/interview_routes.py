@@ -15,7 +15,7 @@ from contextlib import suppress
 
 from fastapi import APIRouter, HTTPException, Response, WebSocket, WebSocketDisconnect
 
-from app import behavioural, coding, interview_report, market, voice_routes
+from app import behavioural, coding, interview_report, market, quant_dev, voice_routes
 from app.areas import AREAS
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
@@ -69,6 +69,11 @@ def _build_topics() -> dict:
     all there is no default track and no interview can start."""
     tracks = []
     for pack, name in PACKS.items():
+        if pack == quant_dev.TRACK:  # an opener and a coding round: no topic picker
+            tracks.append({"id": pack, "name": name, "count": len(coding.specs(pack)), "available": quant_dev.available(bank()),
+                           "topics": [], "default": None, "areas": list(AREAS[pack]), "coding": True,
+                           "format": quant_dev.TOPICS_LABEL})
+            continue
         found = bank().topics(pack)
         count = sum(n for _, n in found)
         options = [{"id": MIXED, "name": MIXED, "count": count}] if found else []
@@ -199,6 +204,8 @@ def report(session_id: str):
         return behavioural.report(session)
     if isinstance(session, market.MarketSession):
         return market.report(session)
+    if isinstance(session, quant_dev.QuantDevSession):
+        return quant_dev.report(session, bank().templates)
     return interview_report.build(session, bank().templates)
 
 
@@ -285,6 +292,21 @@ async def interview_socket(socket: WebSocket):
                     continue
                 # interviewer_speaking and other controls outside a capture: nothing to do
 
+        def coding_round(track, topics, deadline):
+            """A coding interview (decision log 29): up to three problems from the track's specs."""
+            def steps_for(spec):
+                family = bank().templates.get(spec["template_id"])
+                return [s.name for s in family.instances[0].steps] if family and family.instances else []
+
+            def more():  # the next problem, never one already asked
+                spec = coding.pick(track, topics, exclude=[p.spec["template_id"] for p in round_.problems])
+                return (spec, steps_for(spec)) if spec else None
+
+            spec = coding.pick(track, topics)
+            round_ = coding.CodingSession(socket.send_json, listen, next_event, provider, spec, track, deadline=deadline,
+                                          steps=steps_for(spec), more=more)
+            return round_
+
         deadline = time.monotonic() + SESSION_SECONDS
         if begin.get("drill") is not None:
             session = drill_for(begin["drill"], socket.send_json, listen, VoiceAnalyzer(provider), deadline)
@@ -292,22 +314,17 @@ async def interview_socket(socket: WebSocket):
             track, interview = placement_for(begin.get("pack"))
             session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
             session.track, session.placement, session.topics = track, True, "Placement: one question per strength area"
+        elif begin.get("pack") == quant_dev.TRACK and quant_dev.available(bank()):
+            # A spoken opener (probability or expectations), then the coding round on quant_dev families.
+            deadline = time.monotonic() + coding.INTERVIEW_SECONDS
+            session = quant_dev.QuantDevSession(socket.send_json, listen, next_event, provider, VoiceAnalyzer(provider), bank(),
+                                                coding_round(quant_dev.TRACK, None, deadline), deadline=deadline)
         elif coding.specs(selection(begin.get("pack"), None)[0]["id"]):
             # Decision log 27: a track with coding specs (Software) is always a coding round (Python).
             track = selection(begin.get("pack"), None)[0]["id"]
             topics = begin.get("topics") if isinstance(begin.get("topics"), list) else None
-            def steps_for(spec):
-                family = bank().templates.get(spec["template_id"])
-                return [s.name for s in family.instances[0].steps] if family and family.instances else []
-
-            def more():  # decision log 29: the next problem, never one already asked
-                spec = coding.pick(track, topics, exclude=[p.spec["template_id"] for p in session.problems])
-                return (spec, steps_for(spec)) if spec else None
-
-            spec = coding.pick(track, topics)
             deadline = time.monotonic() + coding.INTERVIEW_SECONDS  # a 45-minute coding interview
-            session = coding.CodingSession(socket.send_json, listen, next_event, provider, spec, track, deadline=deadline,
-                                           steps=steps_for(spec), more=more)
+            session = coding_round(track, topics, deadline)
         elif selection(begin.get("pack"), begin["topics"] if begin.get("topics") is not None else begin.get("topic"))[1]                 == market.MARKET:
             # Decision log 28: market making, graded exactly; no engine label.
             session = market.MarketSession(socket.send_json, listen, provider, deadline=deadline)
@@ -324,8 +341,9 @@ async def interview_socket(socket: WebSocket):
             session.track = selection(begin.get("pack"), chosen)[0]["id"]
         session.conditions = conditions(begin, provider.mode)
         session_id = keep(session)
+        long = isinstance(session, (coding.CodingSession, quant_dev.QuantDevSession))
         await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,
-                                "session_seconds": coding.INTERVIEW_SECONDS if isinstance(session, coding.CodingSession) else SESSION_SECONDS,
+                                "session_seconds": coding.INTERVIEW_SECONDS if long else SESSION_SECONDS,
                                 "drill": session.target.misconception if isinstance(session, DrillSession) else None})
         await session.run()
     except (WebSocketDisconnect, SessionClosed):

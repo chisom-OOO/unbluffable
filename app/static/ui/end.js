@@ -170,10 +170,21 @@ document.addEventListener("DOMContentLoaded", () => {
         + (p.solver_source ? `<div><dt>Solver code</dt><dd><pre class="code-block mono">${escapeHtml(p.solver_source)}</pre></dd></div>` : "")
         + `</dl></div></div></details></div>`;
     };
-    $("coding-report").innerHTML = problems.map(card).join("");
+    // Quant development: the spoken opener's card first.
+    const opener = (e.opener?.cards || []).map((o) => `<div class="qcard"><header><h3>Spoken opener: ${escapeHtml(o.outcome)}</h3>`
+      + `<span class="tag">graded exactly</span></header>`
+      + o.words.map((w) => `<h4>${escapeHtml(w.when)}</h4>${quote(w.text)}`).join("")
+      + (o.said ? `<p class="check-line">You said <span class="mono">${escapeHtml(o.said)}</span>; exact <span class="mono">${escapeHtml(o.exact || "")}</span>.</p>` : "")
+      + (o.receipt ? receiptHtml(o.receipt) : "") + `</div>`).join("");
+    $("coding-report").innerHTML = opener + problems.map(card).join("");
+    if (e.quant_dev) {
+      $("coding-report-title").textContent = "Quant development: spoken opener + coding round";
+      const again = document.querySelector(".end-actions .btn:not(.secondary)");
+      if (again) { again.textContent = "Another quant development interview →"; again.href = "/ui/interview?track=quant_dev"; }
+    }
     $("coding-section").hidden = false;
     const again = document.querySelector(".end-actions .btn:not(.secondary)");
-    if (again) { again.textContent = "Another coding interview →"; again.href = "/ui/interview?track=software"; }
+    if (again && !e.quant_dev) { again.textContent = "Another coding interview →"; again.href = "/ui/interview?track=software"; }
   }
 
   // Decision log 28: market making, one card per game.

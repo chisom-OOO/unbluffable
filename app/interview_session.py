@@ -345,6 +345,7 @@ class ExamSession:
         self.topics = None  # the selected topics for the report header, set by the route
         self.track = None  # the track (template pack), set by the route
         self.placement = False  # a placement interview (decision log 23)
+        self.ends_session = True  # False: a part of a longer interview (the quant_dev opener)
 
     # --- events ---
     async def line(self, kind: str, text: str, target: int | None = None, receipt: dict | None = None,
@@ -387,8 +388,10 @@ class ExamSession:
                 if self.deadline is not None and self.clock() >= self.deadline and not self.interview.finished:
                     self.timed_out = True
                     break
-            await self.line("close", say.TIME_CLOSE if self.timed_out else say.SESSION_CLOSE)
             self.finished = True
+            if not self.ends_session:
+                return
+            await self.line("close", say.TIME_CLOSE if self.timed_out else say.SESSION_CLOSE)
             await self.send({"type": "session_end", "label": self.interview.label.value,
                              "timed_out": self.timed_out})
         except SessionClosed:

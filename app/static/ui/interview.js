@@ -318,7 +318,8 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle").textContent = event.text;
         $("provenance").innerHTML = window.UB.provenanceHtml(event.provenance_rows);
         $("market-panel").hidden = event.kind !== "market";
-        $("puzzle-eyebrow").textContent = (event.kind === "check" ? "Drill check"
+        $("puzzle-eyebrow").textContent = (event.opener ? "Spoken opener · then a coding round"
+          : event.kind === "check" ? "Drill check"
           : event.kind === "market" ? `Market ${event.number} of ${event.market.rounds}`
           : event.kind === "behavioural" ? `Behavioural question ${event.number} of 2`
           : event.kind === "coding" ? "Coding round"
@@ -953,6 +954,10 @@ document.addEventListener("DOMContentLoaded", () => {
     showTopics();
     levelFromProfile();
     $("coding-note").hidden = !codingChosen();
+    const format = tracks.find((t) => t.id === id)?.format;  // Quant development: an opener, then the coding round
+    $("coding-note").textContent = format ? `${format}: one spoken probability or expectations question, then a coding round in Python `
+      + "(talk through your approach, code it while you explain, then run the tests)."
+      : "Software interviews are a coding round in Python: talk through your approach, code it in the editor while you explain, then run the tests.";
     syncFormat();
   }
   // Decision log 27: a track with coding specs (Software) is always a coding round.
