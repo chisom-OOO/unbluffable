@@ -25,7 +25,7 @@ from pathlib import Path
 from app import exam_text as say
 from app.interview_session import SessionClosed
 from engine.checker import values_in
-from voice.endpointing import cues
+from voice.endpointing import BehaviouralTurn, cues
 from voice.recording import VoiceError
 from voice.schemas import obj
 
@@ -285,7 +285,11 @@ class BehaviouralSession:
             await self.send({"type": "model_error", "message": "The model couldn't judge that answer; it is shown without quotes."})
 
     async def silence_check(self, text: str) -> bool:
-        return False  # long answers: the relay's own pause rule ends the turn
+        return False  # unused: turn_policy decides behavioural turns
+
+    def turn_policy(self) -> BehaviouralTurn:
+        """Decision log 27: each spoken answer gets its own end-of-answer policy."""
+        return BehaviouralTurn()
 
     async def run(self) -> None:
         try:
