@@ -1,0 +1,3644 @@
+{
+  "template_id": "ibx_F002",
+  "pack": "ib",
+  "topic": "Trading comparables",
+  "topics": [
+    "Trading comparables"
+  ],
+  "source_topic": "Peer-median implied share price",
+  "difficulty": "Hard",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "Why use the median rather than the mean of peers?",
+    "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Consider a retailer. Peer EV-to-EBITDA multiples are 11, 15.5, 7. Target EBITDA is 60 million dollars. Debt is 175 million dollars and cash is 10 million dollars. There are 30 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 10,
+        "debt": 175,
+        "ebitda": 60,
+        "peer_multiples": [
+          "11",
+          "31/2",
+          "7"
+        ],
+        "shares": 30
+      },
+      "answer": "33/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. Peer EV-to-EBITDA multiples are eleven, fifteen point five, seven. Target EBITDA is sixty million dollars. Debt is one hundred and seventy-five million dollars and cash is ten million dollars. There are thirty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "101/6",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "55/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "11"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "660"
+        },
+        {
+          "name": "equity_value",
+          "value": "495"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "1/3",
+            "relative_gap": "2/99"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "11",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "32/3",
+        "min_distinct_wrong_pair_gap": "32/3"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are 13, 9.5, 10.5. Target EBITDA is 100 million dollars. Debt is 300 million dollars and cash is 115 million dollars. There are 100 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 115,
+        "debt": 300,
+        "ebitda": 100,
+        "peer_multiples": [
+          "13",
+          "19/2",
+          "21/2"
+        ],
+        "shares": 100
+      },
+      "answer": "173/20",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are thirteen, nine point five, ten point five. Target EBITDA is one hundred million dollars. Debt is three hundred million dollars and cash is one hundred and fifteen million dollars. There are one hundred million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "183/20",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "247/20",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "21/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1050"
+        },
+        {
+          "name": "equity_value",
+          "value": "865"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "1/2",
+            "relative_gap": "10/173"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "37/10",
+            "relative_gap": "74/173"
+          }
+        ],
+        "min_wrong_pair_gap": "16/5",
+        "min_distinct_wrong_pair_gap": "16/5"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Consider a distributor. Peer EV-to-EBITDA multiples are 11.5, 16, 8.5. Target EBITDA is 170 million dollars. Debt is 375 million dollars and cash is 100 million dollars. There are 40 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 100,
+        "debt": 375,
+        "ebitda": 170,
+        "peer_multiples": [
+          "23/2",
+          "16",
+          "17/2"
+        ],
+        "shares": 40
+      },
+      "answer": "42",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. Peer EV-to-EBITDA multiples are eleven point five, sixteen, eight point five. Target EBITDA is one hundred and seventy million dollars. Debt is three hundred and seventy-five million dollars and cash is one hundred million dollars. There are forty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "353/8",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "223/4",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "23/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1955"
+        },
+        {
+          "name": "equity_value",
+          "value": "1680"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "17/8",
+            "relative_gap": "17/336"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "55/4",
+            "relative_gap": "55/168"
+          }
+        ],
+        "min_wrong_pair_gap": "93/8",
+        "min_distinct_wrong_pair_gap": "93/8"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Consider a publisher. Peer EV-to-EBITDA multiples are 11, 15, 10. Target EBITDA is 80 million dollars. Debt is 150 million dollars and cash is 55 million dollars. There are 10 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 55,
+        "debt": 150,
+        "ebitda": 80,
+        "peer_multiples": [
+          "11",
+          "15",
+          "10"
+        ],
+        "shares": 10
+      },
+      "answer": "157/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. Peer EV-to-EBITDA multiples are eleven, fifteen, ten. Target EBITDA is eighty million dollars. Debt is one hundred and fifty million dollars and cash is fifty-five million dollars. There are ten million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "173/2",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "195/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "11"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "880"
+        },
+        {
+          "name": "equity_value",
+          "value": "785"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "8",
+            "relative_gap": "16/157"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "19",
+            "relative_gap": "38/157"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are 7, 10.5, 9. Target EBITDA is 120 million dollars. Debt is 175 million dollars and cash is 20 million dollars. There are 40 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 20,
+        "debt": 175,
+        "ebitda": 120,
+        "peer_multiples": [
+          "7",
+          "21/2",
+          "9"
+        ],
+        "shares": 40
+      },
+      "answer": "185/8",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are seven, ten point five, nine. Target EBITDA is one hundred and twenty million dollars. Debt is one hundred and seventy-five million dollars and cash is twenty million dollars. There are forty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "181/8",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "247/8",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "9"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1080"
+        },
+        {
+          "name": "equity_value",
+          "value": "925"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "1/2",
+            "relative_gap": "4/185"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "31/4",
+            "relative_gap": "62/185"
+          }
+        ],
+        "min_wrong_pair_gap": "33/4",
+        "min_distinct_wrong_pair_gap": "33/4"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Consider a retailer. Peer EV-to-EBITDA multiples are 15.5, 12, 14.5. Target EBITDA is 110 million dollars. Debt is 375 million dollars and cash is 150 million dollars. There are 40 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 150,
+        "debt": 375,
+        "ebitda": 110,
+        "peer_multiples": [
+          "31/2",
+          "12",
+          "29/2"
+        ],
+        "shares": 40
+      },
+      "answer": "137/4",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. Peer EV-to-EBITDA multiples are fifteen point five, twelve, fourteen point five. Target EBITDA is one hundred and ten million dollars. Debt is three hundred and seventy-five million dollars and cash is one hundred and fifty million dollars. There are forty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "263/8",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "91/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "29/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1595"
+        },
+        {
+          "name": "equity_value",
+          "value": "1370"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "11/8",
+            "relative_gap": "11/274"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "45/4",
+            "relative_gap": "45/137"
+          }
+        ],
+        "min_wrong_pair_gap": "101/8",
+        "min_distinct_wrong_pair_gap": "101/8"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are 14, 10.5, 8. Target EBITDA is 110 million dollars. Debt is 250 million dollars and cash is 85 million dollars. There are 90 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 85,
+        "debt": 250,
+        "ebitda": 110,
+        "peer_multiples": [
+          "14",
+          "21/2",
+          "8"
+        ],
+        "shares": 90
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are fourteen, ten point five, eight. Target EBITDA is one hundred and ten million dollars. Debt is two hundred and fifty million dollars and cash is eighty-five million dollars. There are ninety million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "308/27",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "44/3",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "21/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1155"
+        },
+        {
+          "name": "equity_value",
+          "value": "990"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "11/27",
+            "relative_gap": "1/27"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "11/3",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "88/27",
+        "min_distinct_wrong_pair_gap": "88/27"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Consider a distributor. Peer EV-to-EBITDA multiples are 9, 12, 14. Target EBITDA is 170 million dollars. Debt is 150 million dollars and cash is 120 million dollars. There are 90 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 120,
+        "debt": 150,
+        "ebitda": 170,
+        "peer_multiples": [
+          "9",
+          "12",
+          "14"
+        ],
+        "shares": 90
+      },
+      "answer": "67/3",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. Peer EV-to-EBITDA multiples are nine, twelve, fourteen. Target EBITDA is one hundred and seventy million dollars. Debt is one hundred and fifty million dollars and cash is one hundred and twenty million dollars. There are ninety million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "586/27",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "23",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "12"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2040"
+        },
+        {
+          "name": "equity_value",
+          "value": "2010"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "17/27",
+            "relative_gap": "17/603"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "2/3",
+            "relative_gap": "2/67"
+          }
+        ],
+        "min_wrong_pair_gap": "35/27",
+        "min_distinct_wrong_pair_gap": "35/27"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Consider a publisher. Peer EV-to-EBITDA multiples are 8.5, 12.5, 10. Target EBITDA is 160 million dollars. Debt is 75 million dollars and cash is 35 million dollars. There are 80 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 35,
+        "debt": 75,
+        "ebitda": 160,
+        "peer_multiples": [
+          "17/2",
+          "25/2",
+          "10"
+        ],
+        "shares": 80
+      },
+      "answer": "39/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. Peer EV-to-EBITDA multiples are eight point five, twelve point five, ten. Target EBITDA is one hundred and sixty million dollars. Debt is seventy-five million dollars and cash is thirty-five million dollars. There are eighty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "121/6",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "41/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "10"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1600"
+        },
+        {
+          "name": "equity_value",
+          "value": "1560"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "2/3",
+            "relative_gap": "4/117"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "1",
+            "relative_gap": "2/39"
+          }
+        ],
+        "min_wrong_pair_gap": "1/3",
+        "min_distinct_wrong_pair_gap": "1/3"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are 6.5, 12.5, 7. Target EBITDA is 70 million dollars. Debt is 175 million dollars and cash is 140 million dollars. There are 80 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 140,
+        "debt": 175,
+        "ebitda": 70,
+        "peer_multiples": [
+          "13/2",
+          "25/2",
+          "7"
+        ],
+        "shares": 80
+      },
+      "answer": "91/16",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are six point five, twelve point five, seven. Target EBITDA is seventy million dollars. Debt is one hundred and seventy-five million dollars and cash is one hundred and forty million dollars. There are eighty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "343/48",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "105/16",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "7"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "490"
+        },
+        {
+          "name": "equity_value",
+          "value": "455"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "35/24",
+            "relative_gap": "10/39"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "7/8",
+            "relative_gap": "2/13"
+          }
+        ],
+        "min_wrong_pair_gap": "7/12",
+        "min_distinct_wrong_pair_gap": "7/12"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Consider a retailer. Peer EV-to-EBITDA multiples are 11, 8, 12.5. Target EBITDA is 110 million dollars. Debt is 125 million dollars and cash is 105 million dollars. There are 90 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 105,
+        "debt": 125,
+        "ebitda": 110,
+        "peer_multiples": [
+          "11",
+          "8",
+          "25/2"
+        ],
+        "shares": 90
+      },
+      "answer": "119/9",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. Peer EV-to-EBITDA multiples are eleven, eight, twelve point five. Target EBITDA is one hundred and ten million dollars. Debt is one hundred and twenty-five million dollars and cash is one hundred and five million dollars. There are ninety million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "227/18",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "41/3",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "11"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1210"
+        },
+        {
+          "name": "equity_value",
+          "value": "1190"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "11/18",
+            "relative_gap": "11/238"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "4/9",
+            "relative_gap": "4/119"
+          }
+        ],
+        "min_wrong_pair_gap": "19/18",
+        "min_distinct_wrong_pair_gap": "19/18"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are 15, 10.5, 13. Target EBITDA is 150 million dollars. Debt is 200 million dollars and cash is 150 million dollars. There are 30 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 150,
+        "debt": 200,
+        "ebitda": 150,
+        "peer_multiples": [
+          "15",
+          "21/2",
+          "13"
+        ],
+        "shares": 30
+      },
+      "answer": "190/3",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are fifteen, ten point five, thirteen. Target EBITDA is one hundred and fifty million dollars. Debt is two hundred million dollars and cash is one hundred and fifty million dollars. There are thirty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "125/2",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "200/3",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "13"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1950"
+        },
+        {
+          "name": "equity_value",
+          "value": "1900"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "5/6",
+            "relative_gap": "1/76"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "10/3",
+            "relative_gap": "1/19"
+          }
+        ],
+        "min_wrong_pair_gap": "25/6",
+        "min_distinct_wrong_pair_gap": "25/6"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Consider a distributor. Peer EV-to-EBITDA multiples are 10, 12.5, 6. Target EBITDA is 190 million dollars. Debt is 225 million dollars and cash is 105 million dollars. There are 70 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 105,
+        "debt": 225,
+        "ebitda": 190,
+        "peer_multiples": [
+          "10",
+          "25/2",
+          "6"
+        ],
+        "shares": 70
+      },
+      "answer": "178/7",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. Peer EV-to-EBITDA multiples are ten, twelve point five, six. Target EBITDA is one hundred and ninety million dollars. Debt is two hundred and twenty-five million dollars and cash is one hundred and five million dollars. There are seventy million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "337/14",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "202/7",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "10"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1900"
+        },
+        {
+          "name": "equity_value",
+          "value": "1780"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "19/14",
+            "relative_gap": "19/356"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "24/7",
+            "relative_gap": "12/89"
+          }
+        ],
+        "min_wrong_pair_gap": "67/14",
+        "min_distinct_wrong_pair_gap": "67/14"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Consider a publisher. Peer EV-to-EBITDA multiples are 12, 9, 13.5. Target EBITDA is 140 million dollars. Debt is 75 million dollars and cash is 150 million dollars. There are 30 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 150,
+        "debt": 75,
+        "ebitda": 140,
+        "peer_multiples": [
+          "12",
+          "9",
+          "27/2"
+        ],
+        "shares": 30
+      },
+      "answer": "117/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. Peer EV-to-EBITDA multiples are twelve, nine, thirteen point five. Target EBITDA is one hundred and forty million dollars. Debt is seventy-five million dollars and cash is one hundred and fifty million dollars. There are thirty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "337/6",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "107/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "12"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1680"
+        },
+        {
+          "name": "equity_value",
+          "value": "1755"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "7/3",
+            "relative_gap": "14/351"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "5",
+            "relative_gap": "10/117"
+          }
+        ],
+        "min_wrong_pair_gap": "8/3",
+        "min_distinct_wrong_pair_gap": "8/3"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are 9, 14, 15. Target EBITDA is 170 million dollars. Debt is 50 million dollars and cash is 135 million dollars. There are 10 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 135,
+        "debt": 50,
+        "ebitda": 170,
+        "peer_multiples": [
+          "9",
+          "14",
+          "15"
+        ],
+        "shares": 10
+      },
+      "answer": "493/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are nine, fourteen, fifteen. Target EBITDA is one hundred and seventy million dollars. Debt is fifty million dollars and cash is one hundred and thirty-five million dollars. There are ten million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1343/6",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "459/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "14"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2380"
+        },
+        {
+          "name": "equity_value",
+          "value": "2465"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "68/3",
+            "relative_gap": "8/87"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "17",
+            "relative_gap": "2/29"
+          }
+        ],
+        "min_wrong_pair_gap": "17/3",
+        "min_distinct_wrong_pair_gap": "17/3"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Consider a retailer. Peer EV-to-EBITDA multiples are 10, 7.5, 7. Target EBITDA is 70 million dollars. Debt is 75 million dollars and cash is 50 million dollars. There are 10 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 50,
+        "debt": 75,
+        "ebitda": 70,
+        "peer_multiples": [
+          "10",
+          "15/2",
+          "7"
+        ],
+        "shares": 10
+      },
+      "answer": "50",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. Peer EV-to-EBITDA multiples are ten, seven point five, seven. Target EBITDA is seventy million dollars. Debt is seventy-five million dollars and cash is fifty million dollars. There are ten million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "164/3",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "15/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "525"
+        },
+        {
+          "name": "equity_value",
+          "value": "500"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "14/3",
+            "relative_gap": "7/75"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "5",
+            "relative_gap": "1/10"
+          }
+        ],
+        "min_wrong_pair_gap": "1/3",
+        "min_distinct_wrong_pair_gap": "1/3"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are 10, 8.5, 9.5. Target EBITDA is 110 million dollars. Debt is 150 million dollars and cash is 45 million dollars. There are 50 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 45,
+        "debt": 150,
+        "ebitda": 110,
+        "peer_multiples": [
+          "10",
+          "17/2",
+          "19/2"
+        ],
+        "shares": 50
+      },
+      "answer": "94/5",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are ten, eight point five, nine point five. Target EBITDA is one hundred and ten million dollars. Debt is one hundred and fifty million dollars and cash is forty-five million dollars. There are fifty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "553/30",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "23",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "19/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1045"
+        },
+        {
+          "name": "equity_value",
+          "value": "940"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "11/30",
+            "relative_gap": "11/564"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "21/5",
+            "relative_gap": "21/94"
+          }
+        ],
+        "min_wrong_pair_gap": "137/30",
+        "min_distinct_wrong_pair_gap": "137/30"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Consider a distributor. Peer EV-to-EBITDA multiples are 7.5, 15.5, 15. Target EBITDA is 170 million dollars. Debt is 250 million dollars and cash is 60 million dollars. There are 90 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 60,
+        "debt": 250,
+        "ebitda": 170,
+        "peer_multiples": [
+          "15/2",
+          "31/2",
+          "15"
+        ],
+        "shares": 90
+      },
+      "answer": "236/9",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. Peer EV-to-EBITDA multiples are seven point five, fifteen point five, fifteen. Target EBITDA is one hundred and seventy million dollars. Debt is two hundred and fifty million dollars and cash is sixty million dollars. There are ninety million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "589/27",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "274/9",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "15"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2550"
+        },
+        {
+          "name": "equity_value",
+          "value": "2360"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "119/27",
+            "relative_gap": "119/708"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "38/9",
+            "relative_gap": "19/118"
+          }
+        ],
+        "min_wrong_pair_gap": "233/27",
+        "min_distinct_wrong_pair_gap": "233/27"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Consider a publisher. Peer EV-to-EBITDA multiples are 9, 6, 10.5. Target EBITDA is 60 million dollars. Debt is 100 million dollars and cash is 125 million dollars. There are 40 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 125,
+        "debt": 100,
+        "ebitda": 60,
+        "peer_multiples": [
+          "9",
+          "6",
+          "21/2"
+        ],
+        "shares": 40
+      },
+      "answer": "113/8",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. Peer EV-to-EBITDA multiples are nine, six, ten point five. Target EBITDA is sixty million dollars. Debt is one hundred million dollars and cash is one hundred and twenty-five million dollars. There are forty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "107/8",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "103/8",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "9"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "540"
+        },
+        {
+          "name": "equity_value",
+          "value": "565"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "3/4",
+            "relative_gap": "6/113"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "5/4",
+            "relative_gap": "10/113"
+          }
+        ],
+        "min_wrong_pair_gap": "1/2",
+        "min_distinct_wrong_pair_gap": "1/2"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are 11, 13.5, 11.5. Target EBITDA is 50 million dollars. Debt is 300 million dollars and cash is 55 million dollars. There are 90 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 55,
+        "debt": 300,
+        "ebitda": 50,
+        "peer_multiples": [
+          "11",
+          "27/2",
+          "23/2"
+        ],
+        "shares": 90
+      },
+      "answer": "11/3",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are eleven, thirteen point five, eleven point five. Target EBITDA is fifty million dollars. Debt is three hundred million dollars and cash is fifty-five million dollars. There are ninety million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "71/18",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "82/9",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "23/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "575"
+        },
+        {
+          "name": "equity_value",
+          "value": "330"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "5/18",
+            "relative_gap": "5/66"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "49/9",
+            "relative_gap": "49/33"
+          }
+        ],
+        "min_wrong_pair_gap": "31/6",
+        "min_distinct_wrong_pair_gap": "31/6"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Consider a retailer. Peer EV-to-EBITDA multiples are 9.5, 14.5, 14. Target EBITDA is 110 million dollars. Debt is 125 million dollars and cash is 5 million dollars. There are 70 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 5,
+        "debt": 125,
+        "ebitda": 110,
+        "peer_multiples": [
+          "19/2",
+          "29/2",
+          "14"
+        ],
+        "shares": 70
+      },
+      "answer": "142/7",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. Peer EV-to-EBITDA multiples are nine point five, fourteen point five, fourteen. Target EBITDA is one hundred and ten million dollars. Debt is one hundred and twenty-five million dollars and cash is five million dollars. There are seventy million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "382/21",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "166/7",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "14"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1540"
+        },
+        {
+          "name": "equity_value",
+          "value": "1420"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "44/21",
+            "relative_gap": "22/213"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "24/7",
+            "relative_gap": "12/71"
+          }
+        ],
+        "min_wrong_pair_gap": "116/21",
+        "min_distinct_wrong_pair_gap": "116/21"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are 12, 11, 8.5. Target EBITDA is 110 million dollars. Debt is 350 million dollars and cash is 120 million dollars. There are 10 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 120,
+        "debt": 350,
+        "ebitda": 110,
+        "peer_multiples": [
+          "12",
+          "11",
+          "17/2"
+        ],
+        "shares": 10
+      },
+      "answer": "98",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are twelve, eleven, eight point five. Target EBITDA is one hundred and ten million dollars. Debt is three hundred and fifty million dollars and cash is one hundred and twenty million dollars. There are ten million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "185/2",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "144",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "11"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1210"
+        },
+        {
+          "name": "equity_value",
+          "value": "980"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "11/2",
+            "relative_gap": "11/196"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "46",
+            "relative_gap": "23/49"
+          }
+        ],
+        "min_wrong_pair_gap": "103/2",
+        "min_distinct_wrong_pair_gap": "103/2"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Consider a distributor. Peer EV-to-EBITDA multiples are 12.5, 8.5, 11. Target EBITDA is 150 million dollars. Debt is 200 million dollars and cash is 90 million dollars. There are 40 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 90,
+        "debt": 200,
+        "ebitda": 150,
+        "peer_multiples": [
+          "25/2",
+          "17/2",
+          "11"
+        ],
+        "shares": 40
+      },
+      "answer": "77/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. Peer EV-to-EBITDA multiples are twelve point five, eight point five, eleven. Target EBITDA is one hundred and fifty million dollars. Debt is two hundred million dollars and cash is ninety million dollars. There are forty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "149/4",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "44",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "11"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1650"
+        },
+        {
+          "name": "equity_value",
+          "value": "1540"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "5/4",
+            "relative_gap": "5/154"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "11/2",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "27/4",
+        "min_distinct_wrong_pair_gap": "27/4"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Consider a publisher. Peer EV-to-EBITDA multiples are 8.5, 12, 9. Target EBITDA is 90 million dollars. Debt is 250 million dollars and cash is 5 million dollars. There are 60 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 5,
+        "debt": 250,
+        "ebitda": 90,
+        "peer_multiples": [
+          "17/2",
+          "12",
+          "9"
+        ],
+        "shares": 60
+      },
+      "answer": "113/12",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. Peer EV-to-EBITDA multiples are eight point five, twelve, nine. Target EBITDA is ninety million dollars. Debt is two hundred and fifty million dollars and cash is five million dollars. There are sixty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "32/3",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "211/12",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "9"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "810"
+        },
+        {
+          "name": "equity_value",
+          "value": "565"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "5/4",
+            "relative_gap": "15/113"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "49/6",
+            "relative_gap": "98/113"
+          }
+        ],
+        "min_wrong_pair_gap": "83/12",
+        "min_distinct_wrong_pair_gap": "83/12"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are 16, 12, 8.5. Target EBITDA is 170 million dollars. Debt is 350 million dollars and cash is 125 million dollars. There are 10 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 125,
+        "debt": 350,
+        "ebitda": 170,
+        "peer_multiples": [
+          "16",
+          "12",
+          "17/2"
+        ],
+        "shares": 10
+      },
+      "answer": "363/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are sixteen, twelve, eight point five. Target EBITDA is one hundred and seventy million dollars. Debt is three hundred and fifty million dollars and cash is one hundred and twenty-five million dollars. There are ten million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "553/3",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "453/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "12"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2040"
+        },
+        {
+          "name": "equity_value",
+          "value": "1815"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "17/6",
+            "relative_gap": "17/1089"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "45",
+            "relative_gap": "30/121"
+          }
+        ],
+        "min_wrong_pair_gap": "253/6",
+        "min_distinct_wrong_pair_gap": "253/6"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Consider a retailer. Peer EV-to-EBITDA multiples are 16, 13.5, 14.5. Target EBITDA is 170 million dollars. Debt is 250 million dollars and cash is 80 million dollars. There are 50 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 80,
+        "debt": 250,
+        "ebitda": 170,
+        "peer_multiples": [
+          "16",
+          "27/2",
+          "29/2"
+        ],
+        "shares": 50
+      },
+      "answer": "459/10",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. Peer EV-to-EBITDA multiples are sixteen, thirteen point five, fourteen point five. Target EBITDA is one hundred and seventy million dollars. Debt is two hundred and fifty million dollars and cash is eighty million dollars. There are fifty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "697/15",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "527/10",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "29/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2465"
+        },
+        {
+          "name": "equity_value",
+          "value": "2295"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "17/30",
+            "relative_gap": "1/81"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "34/5",
+            "relative_gap": "4/27"
+          }
+        ],
+        "min_wrong_pair_gap": "187/30",
+        "min_distinct_wrong_pair_gap": "187/30"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are 9, 10.5, 16. Target EBITDA is 110 million dollars. Debt is 75 million dollars and cash is 30 million dollars. There are 70 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 30,
+        "debt": 75,
+        "ebitda": 110,
+        "peer_multiples": [
+          "9",
+          "21/2",
+          "16"
+        ],
+        "shares": 70
+      },
+      "answer": "111/7",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are nine, ten point five, sixteen. Target EBITDA is one hundred and ten million dollars. Debt is seventy-five million dollars and cash is thirty million dollars. There are seventy million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "377/21",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "120/7",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "21/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1155"
+        },
+        {
+          "name": "equity_value",
+          "value": "1110"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "44/21",
+            "relative_gap": "44/333"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "9/7",
+            "relative_gap": "3/37"
+          }
+        ],
+        "min_wrong_pair_gap": "17/21",
+        "min_distinct_wrong_pair_gap": "17/21"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Consider a distributor. Peer EV-to-EBITDA multiples are 13, 6, 15. Target EBITDA is 80 million dollars. Debt is 325 million dollars and cash is 140 million dollars. There are 50 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 140,
+        "debt": 325,
+        "ebitda": 80,
+        "peer_multiples": [
+          "13",
+          "6",
+          "15"
+        ],
+        "shares": 50
+      },
+      "answer": "171/10",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. Peer EV-to-EBITDA multiples are thirteen, six, fifteen. Target EBITDA is eighty million dollars. Debt is three hundred and twenty-five million dollars and cash is one hundred and forty million dollars. There are fifty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "433/30",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "49/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "13"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1040"
+        },
+        {
+          "name": "equity_value",
+          "value": "855"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "8/3",
+            "relative_gap": "80/513"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "37/5",
+            "relative_gap": "74/171"
+          }
+        ],
+        "min_wrong_pair_gap": "151/15",
+        "min_distinct_wrong_pair_gap": "151/15"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Consider a publisher. Peer EV-to-EBITDA multiples are 10.5, 11.5, 6. Target EBITDA is 90 million dollars. Debt is 225 million dollars and cash is 20 million dollars. There are 50 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 20,
+        "debt": 225,
+        "ebitda": 90,
+        "peer_multiples": [
+          "21/2",
+          "23/2",
+          "6"
+        ],
+        "shares": 50
+      },
+      "answer": "74/5",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. Peer EV-to-EBITDA multiples are ten point five, eleven point five, six. Target EBITDA is ninety million dollars. Debt is two hundred and twenty-five million dollars and cash is twenty million dollars. There are fifty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "127/10",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "23",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "21/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "945"
+        },
+        {
+          "name": "equity_value",
+          "value": "740"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "21/10",
+            "relative_gap": "21/148"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "41/5",
+            "relative_gap": "41/74"
+          }
+        ],
+        "min_wrong_pair_gap": "103/10",
+        "min_distinct_wrong_pair_gap": "103/10"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are 14.5, 16, 11.5. Target EBITDA is 200 million dollars. Debt is 150 million dollars and cash is 75 million dollars. There are 40 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 75,
+        "debt": 150,
+        "ebitda": 200,
+        "peer_multiples": [
+          "29/2",
+          "16",
+          "23/2"
+        ],
+        "shares": 40
+      },
+      "answer": "565/8",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are fourteen point five, sixteen, eleven point five. Target EBITDA is two hundred million dollars. Debt is one hundred and fifty million dollars and cash is seventy-five million dollars. There are forty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "545/8",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "595/8",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "29/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2900"
+        },
+        {
+          "name": "equity_value",
+          "value": "2825"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "5/2",
+            "relative_gap": "4/113"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "15/4",
+            "relative_gap": "6/113"
+          }
+        ],
+        "min_wrong_pair_gap": "25/4",
+        "min_distinct_wrong_pair_gap": "25/4"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Consider a retailer. Peer EV-to-EBITDA multiples are 12, 6.5, 8. Target EBITDA is 110 million dollars. Debt is 75 million dollars and cash is 90 million dollars. There are 50 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 90,
+        "debt": 75,
+        "ebitda": 110,
+        "peer_multiples": [
+          "12",
+          "13/2",
+          "8"
+        ],
+        "shares": 50
+      },
+      "answer": "179/10",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. Peer EV-to-EBITDA multiples are twelve, six point five, eight. Target EBITDA is one hundred and ten million dollars. Debt is seventy-five million dollars and cash is ninety million dollars. There are fifty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "296/15",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "173/10",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "8"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "880"
+        },
+        {
+          "name": "equity_value",
+          "value": "895"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "11/6",
+            "relative_gap": "55/537"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "3/5",
+            "relative_gap": "6/179"
+          }
+        ],
+        "min_wrong_pair_gap": "73/30",
+        "min_distinct_wrong_pair_gap": "73/30"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are 14, 16, 6.5. Target EBITDA is 80 million dollars. Debt is 50 million dollars and cash is 60 million dollars. There are 90 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 60,
+        "debt": 50,
+        "ebitda": 80,
+        "peer_multiples": [
+          "14",
+          "16",
+          "13/2"
+        ],
+        "shares": 90
+      },
+      "answer": "113/9",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are fourteen, sixteen, six point five. Target EBITDA is eighty million dollars. Debt is fifty million dollars and cash is sixty million dollars. There are ninety million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "295/27",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "37/3",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "14"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1120"
+        },
+        {
+          "name": "equity_value",
+          "value": "1130"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "44/27",
+            "relative_gap": "44/339"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "2/9",
+            "relative_gap": "2/113"
+          }
+        ],
+        "min_wrong_pair_gap": "38/27",
+        "min_distinct_wrong_pair_gap": "38/27"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Consider a distributor. Peer EV-to-EBITDA multiples are 15.5, 6.5, 6. Target EBITDA is 100 million dollars. Debt is 200 million dollars and cash is 45 million dollars. There are 100 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 45,
+        "debt": 200,
+        "ebitda": 100,
+        "peer_multiples": [
+          "31/2",
+          "13/2",
+          "6"
+        ],
+        "shares": 100
+      },
+      "answer": "99/20",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. Peer EV-to-EBITDA multiples are fifteen point five, six point five, six. Target EBITDA is one hundred million dollars. Debt is two hundred million dollars and cash is forty-five million dollars. There are one hundred million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "467/60",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "161/20",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "13/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "650"
+        },
+        {
+          "name": "equity_value",
+          "value": "495"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "17/6",
+            "relative_gap": "170/297"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "31/10",
+            "relative_gap": "62/99"
+          }
+        ],
+        "min_wrong_pair_gap": "4/15",
+        "min_distinct_wrong_pair_gap": "4/15"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Consider a publisher. Peer EV-to-EBITDA multiples are 13, 9.5, 7. Target EBITDA is 100 million dollars. Debt is 175 million dollars and cash is 100 million dollars. There are 30 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 100,
+        "debt": 175,
+        "ebitda": 100,
+        "peer_multiples": [
+          "13",
+          "19/2",
+          "7"
+        ],
+        "shares": 30
+      },
+      "answer": "175/6",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. Peer EV-to-EBITDA multiples are thirteen, nine point five, seven. Target EBITDA is one hundred million dollars. Debt is one hundred and seventy-five million dollars and cash is one hundred million dollars. There are thirty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "545/18",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "205/6",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "19/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "950"
+        },
+        {
+          "name": "equity_value",
+          "value": "875"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "10/9",
+            "relative_gap": "4/105"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "5",
+            "relative_gap": "6/35"
+          }
+        ],
+        "min_wrong_pair_gap": "35/9",
+        "min_distinct_wrong_pair_gap": "35/9"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are 6.5, 9, 12. Target EBITDA is 50 million dollars. Debt is 400 million dollars and cash is 5 million dollars. There are 70 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 5,
+        "debt": 400,
+        "ebitda": 50,
+        "peer_multiples": [
+          "13/2",
+          "9",
+          "12"
+        ],
+        "shares": 70
+      },
+      "answer": "11/14",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are six point five, nine, twelve. Target EBITDA is fifty million dollars. Debt is four hundred million dollars and cash is five million dollars. There are seventy million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "19/21",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "169/14",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "9"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "450"
+        },
+        {
+          "name": "equity_value",
+          "value": "55"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "5/42",
+            "relative_gap": "5/33"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "79/7",
+            "relative_gap": "158/11"
+          }
+        ],
+        "min_wrong_pair_gap": "67/6",
+        "min_distinct_wrong_pair_gap": "67/6"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Consider a retailer. Peer EV-to-EBITDA multiples are 16, 6.5, 15. Target EBITDA is 150 million dollars. Debt is 125 million dollars and cash is 120 million dollars. There are 70 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 120,
+        "debt": 125,
+        "ebitda": 150,
+        "peer_multiples": [
+          "16",
+          "13/2",
+          "15"
+        ],
+        "shares": 70
+      },
+      "answer": "449/14",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. Peer EV-to-EBITDA multiples are sixteen, six point five, fifteen. Target EBITDA is one hundred and fifty million dollars. Debt is one hundred and twenty-five million dollars and cash is one hundred and twenty million dollars. There are seventy million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "187/7",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "451/14",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "15"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2250"
+        },
+        {
+          "name": "equity_value",
+          "value": "2245"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "75/14",
+            "relative_gap": "75/449"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "1/7",
+            "relative_gap": "2/449"
+          }
+        ],
+        "min_wrong_pair_gap": "11/2",
+        "min_distinct_wrong_pair_gap": "11/2"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are 13, 10, 10.5. Target EBITDA is 60 million dollars. Debt is 175 million dollars and cash is 55 million dollars. There are 70 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 55,
+        "debt": 175,
+        "ebitda": 60,
+        "peer_multiples": [
+          "13",
+          "10",
+          "21/2"
+        ],
+        "shares": 70
+      },
+      "answer": "51/7",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are thirteen, ten, ten point five. Target EBITDA is sixty million dollars. Debt is one hundred and seventy-five million dollars and cash is fifty-five million dollars. There are seventy million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "55/7",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "75/7",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "21/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "630"
+        },
+        {
+          "name": "equity_value",
+          "value": "510"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "4/7",
+            "relative_gap": "4/51"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "24/7",
+            "relative_gap": "8/17"
+          }
+        ],
+        "min_wrong_pair_gap": "20/7",
+        "min_distinct_wrong_pair_gap": "20/7"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Consider a distributor. Peer EV-to-EBITDA multiples are 13.5, 11.5, 10. Target EBITDA is 160 million dollars. Debt is 175 million dollars and cash is 55 million dollars. There are 80 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 55,
+        "debt": 175,
+        "ebitda": 160,
+        "peer_multiples": [
+          "27/2",
+          "23/2",
+          "10"
+        ],
+        "shares": 80
+      },
+      "answer": "43/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. Peer EV-to-EBITDA multiples are thirteen point five, eleven point five, ten. Target EBITDA is one hundred and sixty million dollars. Debt is one hundred and seventy-five million dollars and cash is fifty-five million dollars. There are eighty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "131/6",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "49/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "23/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1840"
+        },
+        {
+          "name": "equity_value",
+          "value": "1720"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "1/3",
+            "relative_gap": "2/129"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "3",
+            "relative_gap": "6/43"
+          }
+        ],
+        "min_wrong_pair_gap": "8/3",
+        "min_distinct_wrong_pair_gap": "8/3"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Consider a publisher. Peer EV-to-EBITDA multiples are 11.5, 9, 7.5. Target EBITDA is 190 million dollars. Debt is 225 million dollars and cash is 40 million dollars. There are 10 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 40,
+        "debt": 225,
+        "ebitda": 190,
+        "peer_multiples": [
+          "23/2",
+          "9",
+          "15/2"
+        ],
+        "shares": 10
+      },
+      "answer": "305/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. Peer EV-to-EBITDA multiples are eleven point five, nine, seven point five. Target EBITDA is one hundred and ninety million dollars. Debt is two hundred and twenty-five million dollars and cash is forty million dollars. There are ten million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "953/6",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "379/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "9"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1710"
+        },
+        {
+          "name": "equity_value",
+          "value": "1525"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "19/3",
+            "relative_gap": "38/915"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "37",
+            "relative_gap": "74/305"
+          }
+        ],
+        "min_wrong_pair_gap": "92/3",
+        "min_distinct_wrong_pair_gap": "92/3"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are 15.5, 12, 16. Target EBITDA is 110 million dollars. Debt is 100 million dollars and cash is 130 million dollars. There are 20 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 130,
+        "debt": 100,
+        "ebitda": 110,
+        "peer_multiples": [
+          "31/2",
+          "12",
+          "16"
+        ],
+        "shares": 20
+      },
+      "answer": "347/4",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are fifteen point five, twelve, sixteen. Target EBITDA is one hundred and ten million dollars. Debt is one hundred million dollars and cash is one hundred and thirty million dollars. There are twenty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "325/4",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "335/4",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "31/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1705"
+        },
+        {
+          "name": "equity_value",
+          "value": "1735"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "11/2",
+            "relative_gap": "22/347"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "3",
+            "relative_gap": "12/347"
+          }
+        ],
+        "min_wrong_pair_gap": "5/2",
+        "min_distinct_wrong_pair_gap": "5/2"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Consider a retailer. Peer EV-to-EBITDA multiples are 7, 7.5, 15.5. Target EBITDA is 80 million dollars. Debt is 75 million dollars and cash is 20 million dollars. There are 10 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 20,
+        "debt": 75,
+        "ebitda": 80,
+        "peer_multiples": [
+          "7",
+          "15/2",
+          "31/2"
+        ],
+        "shares": 10
+      },
+      "answer": "109/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. Peer EV-to-EBITDA multiples are seven, seven point five, fifteen point five. Target EBITDA is eighty million dollars. Debt is seventy-five million dollars and cash is twenty million dollars. There are ten million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "149/2",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "131/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "15/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "600"
+        },
+        {
+          "name": "equity_value",
+          "value": "545"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "20",
+            "relative_gap": "40/109"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "11",
+            "relative_gap": "22/109"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are 9.5, 9, 13.5. Target EBITDA is 200 million dollars. Debt is 250 million dollars and cash is 15 million dollars. There are 70 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 15,
+        "debt": 250,
+        "ebitda": 200,
+        "peer_multiples": [
+          "19/2",
+          "9",
+          "27/2"
+        ],
+        "shares": 70
+      },
+      "answer": "333/14",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are nine point five, nine, thirteen point five. Target EBITDA is two hundred million dollars. Debt is two hundred and fifty million dollars and cash is fifteen million dollars. There are seventy million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1139/42",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "61/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "19/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1900"
+        },
+        {
+          "name": "equity_value",
+          "value": "1665"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "10/3",
+            "relative_gap": "140/999"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "47/7",
+            "relative_gap": "94/333"
+          }
+        ],
+        "min_wrong_pair_gap": "71/21",
+        "min_distinct_wrong_pair_gap": "71/21"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Consider a distributor. Peer EV-to-EBITDA multiples are 12.5, 11.5, 15. Target EBITDA is 140 million dollars. Debt is 375 million dollars and cash is 150 million dollars. There are 50 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 150,
+        "debt": 375,
+        "ebitda": 140,
+        "peer_multiples": [
+          "25/2",
+          "23/2",
+          "15"
+        ],
+        "shares": 50
+      },
+      "answer": "61/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. Peer EV-to-EBITDA multiples are twelve point five, eleven point five, fifteen. Target EBITDA is one hundred and forty million dollars. Debt is three hundred and seventy-five million dollars and cash is one hundred and fifty million dollars. There are fifty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "319/10",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "79/2",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "25/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1750"
+        },
+        {
+          "name": "equity_value",
+          "value": "1525"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "7/5",
+            "relative_gap": "14/305"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "9",
+            "relative_gap": "18/61"
+          }
+        ],
+        "min_wrong_pair_gap": "38/5",
+        "min_distinct_wrong_pair_gap": "38/5"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Consider a publisher. Peer EV-to-EBITDA multiples are 13, 9, 15.5. Target EBITDA is 190 million dollars. Debt is 250 million dollars and cash is 5 million dollars. There are 20 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 5,
+        "debt": 250,
+        "ebitda": 190,
+        "peer_multiples": [
+          "13",
+          "9",
+          "31/2"
+        ],
+        "shares": 20
+      },
+      "answer": "445/4",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. Peer EV-to-EBITDA multiples are thirteen, nine, fifteen point five. Target EBITDA is one hundred and ninety million dollars. Debt is two hundred and fifty million dollars and cash is five million dollars. There are twenty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "213/2",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "543/4",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "13"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2470"
+        },
+        {
+          "name": "equity_value",
+          "value": "2225"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "19/4",
+            "relative_gap": "19/445"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "49/2",
+            "relative_gap": "98/445"
+          }
+        ],
+        "min_wrong_pair_gap": "117/4",
+        "min_distinct_wrong_pair_gap": "117/4"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are 8, 6.5, 8.5. Target EBITDA is 90 million dollars. Debt is 75 million dollars and cash is 10 million dollars. There are 100 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 10,
+        "debt": 75,
+        "ebitda": 90,
+        "peer_multiples": [
+          "8",
+          "13/2",
+          "17/2"
+        ],
+        "shares": 100
+      },
+      "answer": "131/20",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are eight, six point five, eight point five. Target EBITDA is ninety million dollars. Debt is seventy-five million dollars and cash is ten million dollars. There are one hundred million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "25/4",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "157/20",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "8"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "720"
+        },
+        {
+          "name": "equity_value",
+          "value": "655"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "3/10",
+            "relative_gap": "6/131"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "13/10",
+            "relative_gap": "26/131"
+          }
+        ],
+        "min_wrong_pair_gap": "8/5",
+        "min_distinct_wrong_pair_gap": "8/5"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Consider a retailer. Peer EV-to-EBITDA multiples are 10.5, 9.5, 12. Target EBITDA is 130 million dollars. Debt is 275 million dollars and cash is 85 million dollars. There are 100 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 85,
+        "debt": 275,
+        "ebitda": 130,
+        "peer_multiples": [
+          "21/2",
+          "19/2",
+          "12"
+        ],
+        "shares": 100
+      },
+      "answer": "47/4",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. Peer EV-to-EBITDA multiples are ten point five, nine point five, twelve. Target EBITDA is one hundred and thirty million dollars. Debt is two hundred and seventy-five million dollars and cash is eighty-five million dollars. There are one hundred million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "359/30",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "311/20",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "21/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1365"
+        },
+        {
+          "name": "equity_value",
+          "value": "1175"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "13/60",
+            "relative_gap": "13/705"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "19/5",
+            "relative_gap": "76/235"
+          }
+        ],
+        "min_wrong_pair_gap": "43/12",
+        "min_distinct_wrong_pair_gap": "43/12"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are 8, 10, 13. Target EBITDA is 50 million dollars. Debt is 200 million dollars and cash is 10 million dollars. There are 30 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 10,
+        "debt": 200,
+        "ebitda": 50,
+        "peer_multiples": [
+          "8",
+          "10",
+          "13"
+        ],
+        "shares": 30
+      },
+      "answer": "31/3",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. Peer EV-to-EBITDA multiples are eight, ten, thirteen. Target EBITDA is fifty million dollars. Debt is two hundred million dollars and cash is ten million dollars. There are thirty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "98/9",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "23",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "10"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "500"
+        },
+        {
+          "name": "equity_value",
+          "value": "310"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "5/9",
+            "relative_gap": "5/93"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "38/3",
+            "relative_gap": "38/31"
+          }
+        ],
+        "min_wrong_pair_gap": "109/9",
+        "min_distinct_wrong_pair_gap": "109/9"
+      },
+      "follow_up": {
+        "question": "How would additional debt affect implied equity value at unchanged EBITDA?",
+        "reference": "It would reduce equity value dollar for dollar under the stated EV bridge. The operating enterprise value implied by the peer multiple would be unchanged."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Consider a distributor. Peer EV-to-EBITDA multiples are 10, 11.5, 11. Target EBITDA is 190 million dollars. Debt is 250 million dollars and cash is 95 million dollars. There are 70 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 95,
+        "debt": 250,
+        "ebitda": 190,
+        "peer_multiples": [
+          "10",
+          "23/2",
+          "11"
+        ],
+        "shares": 70
+      },
+      "answer": "387/14",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. Peer EV-to-EBITDA multiples are ten, eleven point five, eleven. Target EBITDA is one hundred and ninety million dollars. Debt is two hundred and fifty million dollars and cash is ninety-five million dollars. There are seventy million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "571/21",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "449/14",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "11"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2090"
+        },
+        {
+          "name": "equity_value",
+          "value": "1935"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "19/42",
+            "relative_gap": "19/1161"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "31/7",
+            "relative_gap": "62/387"
+          }
+        ],
+        "min_wrong_pair_gap": "205/42",
+        "min_distinct_wrong_pair_gap": "205/42"
+      },
+      "follow_up": {
+        "question": "Can you value equity at every peer multiple before taking the median?",
+        "reference": "Yes, the EV-to-equity bridge is the same increasing linear transformation for each peer. Its median therefore equals the median-multiple equity valuation."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Consider a publisher. Peer EV-to-EBITDA multiples are 7.5, 16, 15. Target EBITDA is 160 million dollars. Debt is 250 million dollars and cash is 25 million dollars. There are 60 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 25,
+        "debt": 250,
+        "ebitda": 160,
+        "peer_multiples": [
+          "15/2",
+          "16",
+          "15"
+        ],
+        "shares": 60
+      },
+      "answer": "145/4",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. Peer EV-to-EBITDA multiples are seven point five, sixteen, fifteen. Target EBITDA is one hundred and sixty million dollars. Debt is two hundred and fifty million dollars and cash is twenty-five million dollars. There are sixty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1097/36",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "175/4",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "15"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2400"
+        },
+        {
+          "name": "equity_value",
+          "value": "2175"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "52/9",
+            "relative_gap": "208/1305"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "15/2",
+            "relative_gap": "6/29"
+          }
+        ],
+        "min_wrong_pair_gap": "239/18",
+        "min_distinct_wrong_pair_gap": "239/18"
+      },
+      "follow_up": {
+        "question": "Why use the median rather than the mean of peers?",
+        "reference": "The median is less sensitive to an extreme peer multiple. It still requires comparable businesses, accounting policies and forecast periods."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are 13, 6.5, 6. Target EBITDA is 140 million dollars. Debt is 75 million dollars and cash is 145 million dollars. There are 40 million shares. Using the median, what is implied value in dollars per share?",
+      "params": {
+        "cash": 145,
+        "debt": 75,
+        "ebitda": 140,
+        "peer_multiples": [
+          "13",
+          "13/2",
+          "6"
+        ],
+        "shares": 40
+      },
+      "answer": "49/2",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Peer-median implied share price",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. Peer EV-to-EBITDA multiples are thirteen, six point five, six. Target EBITDA is one hundred and forty million dollars. Debt is seventy-five million dollars and cash is one hundred and forty-five million dollars. There are forty million shares. Using the median, what is implied value in dollars per share?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "63/2",
+          "misconceptions": [
+            "uses_the_mean_peer_multiple"
+          ]
+        },
+        {
+          "value": "21",
+          "misconceptions": [
+            "reverses_the_net_debt_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "median_multiple",
+          "value": "13/2"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "910"
+        },
+        {
+          "name": "equity_value",
+          "value": "980"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_the_mean_peer_multiple",
+            "absolute_gap": "7",
+            "relative_gap": "2/7"
+          },
+          {
+            "misconception": "reverses_the_net_debt_bridge",
+            "absolute_gap": "7/2",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "21/2",
+        "min_distinct_wrong_pair_gap": "21/2"
+      },
+      "follow_up": {
+        "question": "What if the middle peer were a poor operational match?",
+        "reference": "The median is robust to a numerical outlier, not to poor peer selection. Rebuild the peer group before relying on its central value."
+      }
+    }
+  ]
+}

@@ -1,0 +1,3189 @@
+{
+  "template_id": "ibx_F005",
+  "pack": "ib",
+  "topic": "Trading comparables",
+  "topics": [
+    "Trading comparables"
+  ],
+  "source_topic": "Forward EV-to-EBITDA multiple",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "Why is forward EBITDA required here?",
+    "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Consider a retailer. Enterprise value is 500 million dollars. EBITDA of 80 million dollars grows 25 percent next year; forecast net income is 75 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 80,
+        "enterprise_value": 500,
+        "forward_net_income": 75,
+        "growth": "1/4"
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Enterprise value is five hundred million dollars. EBITDA of eighty million dollars grows twenty-five percent next year; forecast net income is seventy-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "25/4",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "20/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "100"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "5/4",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "5/3",
+            "relative_gap": "1/3"
+          }
+        ],
+        "min_wrong_pair_gap": "5/12",
+        "min_distinct_wrong_pair_gap": "5/12"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Consider a manufacturer. Enterprise value is 1 billion dollars. EBITDA of 140 million dollars grows 30 percent next year; forecast net income is 55 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 140,
+        "enterprise_value": 1000,
+        "forward_net_income": 55,
+        "growth": "3/10"
+      },
+      "answer": "500/91",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Enterprise value is one billion dollars. EBITDA of one hundred and forty million dollars grows thirty percent next year; forecast net income is fifty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "50/7",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "200/11",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "182"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "500/91"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "150/91",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "12700/1001",
+            "relative_gap": "127/55"
+          }
+        ],
+        "min_wrong_pair_gap": "850/77",
+        "min_distinct_wrong_pair_gap": "850/77"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Consider a distributor. Enterprise value is 500 million dollars. EBITDA of 240 million dollars grows 30 percent next year; forecast net income is 75 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 240,
+        "enterprise_value": 500,
+        "forward_net_income": 75,
+        "growth": "3/10"
+      },
+      "answer": "125/78",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Enterprise value is five hundred million dollars. EBITDA of two hundred and forty million dollars grows thirty percent next year; forecast net income is seventy-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "25/12",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "20/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "312"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "125/78"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "25/52",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "395/78",
+            "relative_gap": "79/25"
+          }
+        ],
+        "min_wrong_pair_gap": "55/12",
+        "min_distinct_wrong_pair_gap": "55/12"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Consider a publisher. Enterprise value is 2.3 billion dollars. EBITDA of 170 million dollars grows 20 percent next year; forecast net income is 60 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 170,
+        "enterprise_value": 2300,
+        "forward_net_income": 60,
+        "growth": "1/5"
+      },
+      "answer": "575/51",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Enterprise value is two point three billion dollars. EBITDA of one hundred and seventy million dollars grows twenty percent next year; forecast net income is sixty million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "230/17",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "115/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "204"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "575/51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "115/51",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "460/17",
+            "relative_gap": "12/5"
+          }
+        ],
+        "min_wrong_pair_gap": "1265/51",
+        "min_distinct_wrong_pair_gap": "1265/51"
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Consider a wholesaler. Enterprise value is 3.1 billion dollars. EBITDA of 100 million dollars grows 5 percent next year; forecast net income is 70 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 100,
+        "enterprise_value": 3100,
+        "forward_net_income": 70,
+        "growth": "1/20"
+      },
+      "answer": "620/21",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Enterprise value is three point one billion dollars. EBITDA of one hundred million dollars grows five percent next year; forecast net income is seventy million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "31",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "310/7",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "105"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "620/21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "31/21",
+            "relative_gap": "1/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "310/21",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "93/7",
+        "min_distinct_wrong_pair_gap": "93/7"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Consider a retailer. Enterprise value is 2.4 billion dollars. EBITDA of 90 million dollars grows 10 percent next year; forecast net income is 50 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 90,
+        "enterprise_value": 2400,
+        "forward_net_income": 50,
+        "growth": "1/10"
+      },
+      "answer": "800/33",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Enterprise value is two point four billion dollars. EBITDA of ninety million dollars grows ten percent next year; forecast net income is fifty million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "80/3",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "48",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "99"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "800/33"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "80/33",
+            "relative_gap": "1/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "784/33",
+            "relative_gap": "49/50"
+          }
+        ],
+        "min_wrong_pair_gap": "64/3",
+        "min_distinct_wrong_pair_gap": "64/3"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Consider a manufacturer. Enterprise value is 2.9 billion dollars. EBITDA of 60 million dollars grows 20 percent next year; forecast net income is 25 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 60,
+        "enterprise_value": 2900,
+        "forward_net_income": 25,
+        "growth": "1/5"
+      },
+      "answer": "725/18",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Enterprise value is two point nine billion dollars. EBITDA of sixty million dollars grows twenty percent next year; forecast net income is twenty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "145/3",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "116",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "72"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "725/18"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "145/18",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "1363/18",
+            "relative_gap": "47/25"
+          }
+        ],
+        "min_wrong_pair_gap": "203/3",
+        "min_distinct_wrong_pair_gap": "203/3"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Consider a distributor. Enterprise value is 3.4 billion dollars. EBITDA of 170 million dollars grows 25 percent next year; forecast net income is 20 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 170,
+        "enterprise_value": 3400,
+        "forward_net_income": 20,
+        "growth": "1/4"
+      },
+      "answer": "16",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Enterprise value is three point four billion dollars. EBITDA of one hundred and seventy million dollars grows twenty-five percent next year; forecast net income is twenty million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "170",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "425/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "4",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "154",
+            "relative_gap": "77/8"
+          }
+        ],
+        "min_wrong_pair_gap": "150",
+        "min_distinct_wrong_pair_gap": "150"
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Consider a publisher. Enterprise value is 2.9 billion dollars. EBITDA of 200 million dollars grows 10 percent next year; forecast net income is 40 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 200,
+        "enterprise_value": 2900,
+        "forward_net_income": 40,
+        "growth": "1/10"
+      },
+      "answer": "145/11",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Enterprise value is two point nine billion dollars. EBITDA of two hundred million dollars grows ten percent next year; forecast net income is forty million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "29/2",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "145/2",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "220"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "145/11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "29/22",
+            "relative_gap": "1/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "1305/22",
+            "relative_gap": "9/2"
+          }
+        ],
+        "min_wrong_pair_gap": "58",
+        "min_distinct_wrong_pair_gap": "58"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Consider a wholesaler. Enterprise value is 3.7 billion dollars. EBITDA of 160 million dollars grows 20 percent next year; forecast net income is 45 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 160,
+        "enterprise_value": 3700,
+        "forward_net_income": 45,
+        "growth": "1/5"
+      },
+      "answer": "925/48",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Enterprise value is three point seven billion dollars. EBITDA of one hundred and sixty million dollars grows twenty percent next year; forecast net income is forty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "185/8",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "740/9",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "192"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "925/48"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "185/48",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "9065/144",
+            "relative_gap": "49/15"
+          }
+        ],
+        "min_wrong_pair_gap": "4255/72",
+        "min_distinct_wrong_pair_gap": "4255/72"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Consider a retailer. Enterprise value is 1 billion dollars. EBITDA of 250 million dollars grows 30 percent next year; forecast net income is 55 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 250,
+        "enterprise_value": 1000,
+        "forward_net_income": 55,
+        "growth": "3/10"
+      },
+      "answer": "40/13",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Enterprise value is one billion dollars. EBITDA of two hundred and fifty million dollars grows thirty percent next year; forecast net income is fifty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "200/11",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "325"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "40/13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "12/13",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "2160/143",
+            "relative_gap": "54/11"
+          }
+        ],
+        "min_wrong_pair_gap": "156/11",
+        "min_distinct_wrong_pair_gap": "156/11"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Consider a manufacturer. Enterprise value is 1.4 billion dollars. EBITDA of 150 million dollars grows 30 percent next year; forecast net income is 30 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 150,
+        "enterprise_value": 1400,
+        "forward_net_income": 30,
+        "growth": "3/10"
+      },
+      "answer": "280/39",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Enterprise value is one point four billion dollars. EBITDA of one hundred and fifty million dollars grows thirty percent next year; forecast net income is thirty million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "28/3",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "140/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "195"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "280/39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "28/13",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "1540/39",
+            "relative_gap": "11/2"
+          }
+        ],
+        "min_wrong_pair_gap": "112/3",
+        "min_distinct_wrong_pair_gap": "112/3"
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Consider a distributor. Enterprise value is 4 billion dollars. EBITDA of 50 million dollars grows 5 percent next year; forecast net income is 30 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 50,
+        "enterprise_value": 4000,
+        "forward_net_income": 30,
+        "growth": "1/20"
+      },
+      "answer": "1600/21",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Enterprise value is four billion dollars. EBITDA of fifty million dollars grows five percent next year; forecast net income is thirty million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "80",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "400/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "105/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "1600/21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "80/21",
+            "relative_gap": "1/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "400/7",
+            "relative_gap": "3/4"
+          }
+        ],
+        "min_wrong_pair_gap": "160/3",
+        "min_distinct_wrong_pair_gap": "160/3"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Consider a publisher. Enterprise value is 2 billion dollars. EBITDA of 90 million dollars grows 20 percent next year; forecast net income is 45 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 90,
+        "enterprise_value": 2000,
+        "forward_net_income": 45,
+        "growth": "1/5"
+      },
+      "answer": "500/27",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Enterprise value is two billion dollars. EBITDA of ninety million dollars grows twenty percent next year; forecast net income is forty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "200/9",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "400/9",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "108"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "500/27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "100/27",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "700/27",
+            "relative_gap": "7/5"
+          }
+        ],
+        "min_wrong_pair_gap": "200/9",
+        "min_distinct_wrong_pair_gap": "200/9"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Consider a wholesaler. Enterprise value is 3.2 billion dollars. EBITDA of 250 million dollars grows 25 percent next year; forecast net income is 65 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 250,
+        "enterprise_value": 3200,
+        "forward_net_income": 65,
+        "growth": "1/4"
+      },
+      "answer": "256/25",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Enterprise value is three point two billion dollars. EBITDA of two hundred and fifty million dollars grows twenty-five percent next year; forecast net income is sixty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "64/5",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "640/13",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "625/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "256/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "64/25",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "12672/325",
+            "relative_gap": "99/26"
+          }
+        ],
+        "min_wrong_pair_gap": "2368/65",
+        "min_distinct_wrong_pair_gap": "2368/65"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Consider a retailer. Enterprise value is 2.7 billion dollars. EBITDA of 140 million dollars grows 10 percent next year; forecast net income is 45 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 140,
+        "enterprise_value": 2700,
+        "forward_net_income": 45,
+        "growth": "1/10"
+      },
+      "answer": "1350/77",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Enterprise value is two point seven billion dollars. EBITDA of one hundred and forty million dollars grows ten percent next year; forecast net income is forty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "135/7",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "60",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "154"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "1350/77"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "135/77",
+            "relative_gap": "1/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "3270/77",
+            "relative_gap": "109/45"
+          }
+        ],
+        "min_wrong_pair_gap": "285/7",
+        "min_distinct_wrong_pair_gap": "285/7"
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Consider a manufacturer. Enterprise value is three and a half billion dollars. EBITDA of 50 million dollars grows 25 percent next year; forecast net income is 55 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 50,
+        "enterprise_value": 3500,
+        "forward_net_income": 55,
+        "growth": "1/4"
+      },
+      "answer": "56",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Enterprise value is three and a half billion dollars. EBITDA of fifty million dollars grows twenty-five percent next year; forecast net income is fifty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "70",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "700/11",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "125/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "56"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "14",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "84/11",
+            "relative_gap": "3/22"
+          }
+        ],
+        "min_wrong_pair_gap": "70/11",
+        "min_distinct_wrong_pair_gap": "70/11"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Consider a distributor. Enterprise value is 2.6 billion dollars. EBITDA of 140 million dollars grows 10 percent next year; forecast net income is 70 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 140,
+        "enterprise_value": 2600,
+        "forward_net_income": 70,
+        "growth": "1/10"
+      },
+      "answer": "1300/77",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Enterprise value is two point six billion dollars. EBITDA of one hundred and forty million dollars grows ten percent next year; forecast net income is seventy million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "130/7",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "260/7",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "154"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "1300/77"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "130/77",
+            "relative_gap": "1/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "1560/77",
+            "relative_gap": "6/5"
+          }
+        ],
+        "min_wrong_pair_gap": "130/7",
+        "min_distinct_wrong_pair_gap": "130/7"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Consider a publisher. Enterprise value is 1.6 billion dollars. EBITDA of 200 million dollars grows 25 percent next year; forecast net income is 25 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 200,
+        "enterprise_value": 1600,
+        "forward_net_income": 25,
+        "growth": "1/4"
+      },
+      "answer": "32/5",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Enterprise value is one point six billion dollars. EBITDA of two hundred million dollars grows twenty-five percent next year; forecast net income is twenty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "64",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "250"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "32/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "8/5",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "288/5",
+            "relative_gap": "9"
+          }
+        ],
+        "min_wrong_pair_gap": "56",
+        "min_distinct_wrong_pair_gap": "56"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Consider a wholesaler. Enterprise value is two and a half billion dollars. EBITDA of 250 million dollars grows 20 percent next year; forecast net income is 70 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 250,
+        "enterprise_value": 2500,
+        "forward_net_income": 70,
+        "growth": "1/5"
+      },
+      "answer": "25/3",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Enterprise value is two and a half billion dollars. EBITDA of two hundred and fifty million dollars grows twenty percent next year; forecast net income is seventy million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "10",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "250/7",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "300"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "25/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "5/3",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "575/21",
+            "relative_gap": "23/7"
+          }
+        ],
+        "min_wrong_pair_gap": "180/7",
+        "min_distinct_wrong_pair_gap": "180/7"
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Consider a retailer. Enterprise value is 600 million dollars. EBITDA of 200 million dollars grows 15 percent next year; forecast net income is 15 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 200,
+        "enterprise_value": 600,
+        "forward_net_income": 15,
+        "growth": "3/20"
+      },
+      "answer": "60/23",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Enterprise value is six hundred million dollars. EBITDA of two hundred million dollars grows fifteen percent next year; forecast net income is fifteen million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "40",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "230"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "60/23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "9/23",
+            "relative_gap": "3/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "860/23",
+            "relative_gap": "43/3"
+          }
+        ],
+        "min_wrong_pair_gap": "37",
+        "min_distinct_wrong_pair_gap": "37"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Consider a manufacturer. Enterprise value is 3.1 billion dollars. EBITDA of 80 million dollars grows 5 percent next year; forecast net income is 55 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 80,
+        "enterprise_value": 3100,
+        "forward_net_income": 55,
+        "growth": "1/20"
+      },
+      "answer": "775/21",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Enterprise value is three point one billion dollars. EBITDA of eighty million dollars grows five percent next year; forecast net income is fifty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "155/4",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "620/11",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "84"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "775/21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "155/84",
+            "relative_gap": "1/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "4495/231",
+            "relative_gap": "29/55"
+          }
+        ],
+        "min_wrong_pair_gap": "775/44",
+        "min_distinct_wrong_pair_gap": "775/44"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Consider a distributor. Enterprise value is 2.2 billion dollars. EBITDA of 50 million dollars grows 25 percent next year; forecast net income is 25 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 50,
+        "enterprise_value": 2200,
+        "forward_net_income": 25,
+        "growth": "1/4"
+      },
+      "answer": "176/5",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Enterprise value is two point two billion dollars. EBITDA of fifty million dollars grows twenty-five percent next year; forecast net income is twenty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "44",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "88",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "125/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "176/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "44/5",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "264/5",
+            "relative_gap": "3/2"
+          }
+        ],
+        "min_wrong_pair_gap": "44",
+        "min_distinct_wrong_pair_gap": "44"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Consider a publisher. Enterprise value is 1.9 billion dollars. EBITDA of 160 million dollars grows 30 percent next year; forecast net income is 15 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 160,
+        "enterprise_value": 1900,
+        "forward_net_income": 15,
+        "growth": "3/10"
+      },
+      "answer": "475/52",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Enterprise value is one point nine billion dollars. EBITDA of one hundred and sixty million dollars grows thirty percent next year; forecast net income is fifteen million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "95/8",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "380/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "208"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "475/52"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "285/104",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "18335/156",
+            "relative_gap": "193/15"
+          }
+        ],
+        "min_wrong_pair_gap": "2755/24",
+        "min_distinct_wrong_pair_gap": "2755/24"
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Consider a wholesaler. Enterprise value is three and a half billion dollars. EBITDA of 60 million dollars grows 15 percent next year; forecast net income is 55 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 60,
+        "enterprise_value": 3500,
+        "forward_net_income": 55,
+        "growth": "3/20"
+      },
+      "answer": "3500/69",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Enterprise value is three and a half billion dollars. EBITDA of sixty million dollars grows fifteen percent next year; forecast net income is fifty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "175/3",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "700/11",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "69"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "3500/69"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "175/23",
+            "relative_gap": "3/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "9800/759",
+            "relative_gap": "14/55"
+          }
+        ],
+        "min_wrong_pair_gap": "175/33",
+        "min_distinct_wrong_pair_gap": "175/33"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Consider a retailer. Enterprise value is 3.4 billion dollars. EBITDA of 80 million dollars grows 30 percent next year; forecast net income is 70 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 80,
+        "enterprise_value": 3400,
+        "forward_net_income": 70,
+        "growth": "3/10"
+      },
+      "answer": "425/13",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Enterprise value is three point four billion dollars. EBITDA of eighty million dollars grows thirty percent next year; forecast net income is seventy million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "85/2",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "340/7",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "104"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "425/13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "255/26",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "1445/91",
+            "relative_gap": "17/35"
+          }
+        ],
+        "min_wrong_pair_gap": "85/14",
+        "min_distinct_wrong_pair_gap": "85/14"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Consider a manufacturer. Enterprise value is 900 million dollars. EBITDA of 200 million dollars grows 25 percent next year; forecast net income is 70 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 200,
+        "enterprise_value": 900,
+        "forward_net_income": 70,
+        "growth": "1/4"
+      },
+      "answer": "18/5",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Enterprise value is nine hundred million dollars. EBITDA of two hundred million dollars grows twenty-five percent next year; forecast net income is seventy million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "9/2",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "90/7",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "250"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "18/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "9/10",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "324/35",
+            "relative_gap": "18/7"
+          }
+        ],
+        "min_wrong_pair_gap": "117/14",
+        "min_distinct_wrong_pair_gap": "117/14"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Consider a distributor. Enterprise value is 2.3 billion dollars. EBITDA of 250 million dollars grows 20 percent next year; forecast net income is 80 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 250,
+        "enterprise_value": 2300,
+        "forward_net_income": 80,
+        "growth": "1/5"
+      },
+      "answer": "23/3",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Enterprise value is two point three billion dollars. EBITDA of two hundred and fifty million dollars grows twenty percent next year; forecast net income is eighty million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "46/5",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "115/4",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "300"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "23/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "23/15",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "253/12",
+            "relative_gap": "11/4"
+          }
+        ],
+        "min_wrong_pair_gap": "391/20",
+        "min_distinct_wrong_pair_gap": "391/20"
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Consider a publisher. Enterprise value is 3.3 billion dollars. EBITDA of 200 million dollars grows 15 percent next year; forecast net income is 35 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 200,
+        "enterprise_value": 3300,
+        "forward_net_income": 35,
+        "growth": "3/20"
+      },
+      "answer": "330/23",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Enterprise value is three point three billion dollars. EBITDA of two hundred million dollars grows fifteen percent next year; forecast net income is thirty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "33/2",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "660/7",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "230"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "330/23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "99/46",
+            "relative_gap": "3/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "12870/161",
+            "relative_gap": "39/7"
+          }
+        ],
+        "min_wrong_pair_gap": "1089/14",
+        "min_distinct_wrong_pair_gap": "1089/14"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Consider a wholesaler. Enterprise value is 2.8 billion dollars. EBITDA of 210 million dollars grows 10 percent next year; forecast net income is 40 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 210,
+        "enterprise_value": 2800,
+        "forward_net_income": 40,
+        "growth": "1/10"
+      },
+      "answer": "400/33",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Enterprise value is two point eight billion dollars. EBITDA of two hundred and ten million dollars grows ten percent next year; forecast net income is forty million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "40/3",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "70",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "231"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "400/33"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "40/33",
+            "relative_gap": "1/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "1910/33",
+            "relative_gap": "191/40"
+          }
+        ],
+        "min_wrong_pair_gap": "170/3",
+        "min_distinct_wrong_pair_gap": "170/3"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Consider a retailer. Enterprise value is 1.1 billion dollars. EBITDA of 130 million dollars grows 25 percent next year; forecast net income is 45 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 130,
+        "enterprise_value": 1100,
+        "forward_net_income": 45,
+        "growth": "1/4"
+      },
+      "answer": "88/13",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Enterprise value is one point one billion dollars. EBITDA of one hundred and thirty million dollars grows twenty-five percent next year; forecast net income is forty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "110/13",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "220/9",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "325/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "88/13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "22/13",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "2068/117",
+            "relative_gap": "47/18"
+          }
+        ],
+        "min_wrong_pair_gap": "1870/117",
+        "min_distinct_wrong_pair_gap": "1870/117"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Consider a manufacturer. Enterprise value is 2 billion dollars. EBITDA of 60 million dollars grows 25 percent next year; forecast net income is 60 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 60,
+        "enterprise_value": 2000,
+        "forward_net_income": 60,
+        "growth": "1/4"
+      },
+      "answer": "80/3",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Enterprise value is two billion dollars. EBITDA of sixty million dollars grows twenty-five percent next year; forecast net income is sixty million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "100/3",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda",
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "75"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "80/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "20/3",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "20/3",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Consider a distributor. Enterprise value is 3.9 billion dollars. EBITDA of 140 million dollars grows 25 percent next year; forecast net income is 45 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 140,
+        "enterprise_value": 3900,
+        "forward_net_income": 45,
+        "growth": "1/4"
+      },
+      "answer": "156/7",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Enterprise value is three point nine billion dollars. EBITDA of one hundred and forty million dollars grows twenty-five percent next year; forecast net income is forty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "195/7",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "260/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "175"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "156/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "39/7",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "1352/21",
+            "relative_gap": "26/9"
+          }
+        ],
+        "min_wrong_pair_gap": "1235/21",
+        "min_distinct_wrong_pair_gap": "1235/21"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Consider a publisher. Enterprise value is 1.9 billion dollars. EBITDA of 140 million dollars grows 25 percent next year; forecast net income is 75 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 140,
+        "enterprise_value": 1900,
+        "forward_net_income": 75,
+        "growth": "1/4"
+      },
+      "answer": "76/7",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Enterprise value is one point nine billion dollars. EBITDA of one hundred and forty million dollars grows twenty-five percent next year; forecast net income is seventy-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "95/7",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "76/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "175"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "76/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "19/7",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "304/21",
+            "relative_gap": "4/3"
+          }
+        ],
+        "min_wrong_pair_gap": "247/21",
+        "min_distinct_wrong_pair_gap": "247/21"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Consider a wholesaler. Enterprise value is 3.8 billion dollars. EBITDA of 240 million dollars grows 15 percent next year; forecast net income is 30 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 240,
+        "enterprise_value": 3800,
+        "forward_net_income": 30,
+        "growth": "3/20"
+      },
+      "answer": "950/69",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Enterprise value is three point eight billion dollars. EBITDA of two hundred and forty million dollars grows fifteen percent next year; forecast net income is thirty million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "95/6",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "380/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "276"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "950/69"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "95/46",
+            "relative_gap": "3/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "7790/69",
+            "relative_gap": "41/5"
+          }
+        ],
+        "min_wrong_pair_gap": "665/6",
+        "min_distinct_wrong_pair_gap": "665/6"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Consider a retailer. Enterprise value is 2.4 billion dollars. EBITDA of 130 million dollars grows 25 percent next year; forecast net income is 65 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 130,
+        "enterprise_value": 2400,
+        "forward_net_income": 65,
+        "growth": "1/4"
+      },
+      "answer": "192/13",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Enterprise value is two point four billion dollars. EBITDA of one hundred and thirty million dollars grows twenty-five percent next year; forecast net income is sixty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "240/13",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "480/13",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "325/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "192/13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "48/13",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "288/13",
+            "relative_gap": "3/2"
+          }
+        ],
+        "min_wrong_pair_gap": "240/13",
+        "min_distinct_wrong_pair_gap": "240/13"
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Consider a manufacturer. Enterprise value is 1.3 billion dollars. EBITDA of 250 million dollars grows 15 percent next year; forecast net income is 45 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 250,
+        "enterprise_value": 1300,
+        "forward_net_income": 45,
+        "growth": "3/20"
+      },
+      "answer": "104/23",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Enterprise value is one point three billion dollars. EBITDA of two hundred and fifty million dollars grows fifteen percent next year; forecast net income is forty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "26/5",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "260/9",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "575/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "104/23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "78/115",
+            "relative_gap": "3/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "5044/207",
+            "relative_gap": "97/18"
+          }
+        ],
+        "min_wrong_pair_gap": "1066/45",
+        "min_distinct_wrong_pair_gap": "1066/45"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Consider a distributor. Enterprise value is 4 billion dollars. EBITDA of 70 million dollars grows 25 percent next year; forecast net income is 15 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 70,
+        "enterprise_value": 4000,
+        "forward_net_income": 15,
+        "growth": "1/4"
+      },
+      "answer": "320/7",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Enterprise value is four billion dollars. EBITDA of seventy million dollars grows twenty-five percent next year; forecast net income is fifteen million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "400/7",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "800/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "175/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "320/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "80/7",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "4640/21",
+            "relative_gap": "29/6"
+          }
+        ],
+        "min_wrong_pair_gap": "4400/21",
+        "min_distinct_wrong_pair_gap": "4400/21"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Consider a publisher. Enterprise value is 1.1 billion dollars. EBITDA of 210 million dollars grows 25 percent next year; forecast net income is 45 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 210,
+        "enterprise_value": 1100,
+        "forward_net_income": 45,
+        "growth": "1/4"
+      },
+      "answer": "88/21",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Enterprise value is one point one billion dollars. EBITDA of two hundred and ten million dollars grows twenty-five percent next year; forecast net income is forty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "110/21",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "220/9",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "525/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "88/21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "22/21",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "1276/63",
+            "relative_gap": "29/6"
+          }
+        ],
+        "min_wrong_pair_gap": "1210/63",
+        "min_distinct_wrong_pair_gap": "1210/63"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Consider a wholesaler. Enterprise value is 2.3 billion dollars. EBITDA of 240 million dollars grows 10 percent next year; forecast net income is 25 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 240,
+        "enterprise_value": 2300,
+        "forward_net_income": 25,
+        "growth": "1/10"
+      },
+      "answer": "575/66",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Enterprise value is two point three billion dollars. EBITDA of two hundred and forty million dollars grows ten percent next year; forecast net income is twenty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "115/12",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "92",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "264"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "575/66"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "115/132",
+            "relative_gap": "1/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "5497/66",
+            "relative_gap": "239/25"
+          }
+        ],
+        "min_wrong_pair_gap": "989/12",
+        "min_distinct_wrong_pair_gap": "989/12"
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Consider a retailer. Enterprise value is 1.7 billion dollars. EBITDA of 60 million dollars grows 10 percent next year; forecast net income is 35 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 60,
+        "enterprise_value": 1700,
+        "forward_net_income": 35,
+        "growth": "1/10"
+      },
+      "answer": "850/33",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Enterprise value is one point seven billion dollars. EBITDA of sixty million dollars grows ten percent next year; forecast net income is thirty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "85/3",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "340/7",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "66"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "850/33"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "85/33",
+            "relative_gap": "1/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "5270/231",
+            "relative_gap": "31/35"
+          }
+        ],
+        "min_wrong_pair_gap": "425/21",
+        "min_distinct_wrong_pair_gap": "425/21"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Consider a manufacturer. Enterprise value is 2.7 billion dollars. EBITDA of 90 million dollars grows 30 percent next year; forecast net income is 35 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 90,
+        "enterprise_value": 2700,
+        "forward_net_income": 35,
+        "growth": "3/10"
+      },
+      "answer": "300/13",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Enterprise value is two point seven billion dollars. EBITDA of ninety million dollars grows thirty percent next year; forecast net income is thirty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "540/7",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "117"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "300/13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "90/13",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "4920/91",
+            "relative_gap": "82/35"
+          }
+        ],
+        "min_wrong_pair_gap": "330/7",
+        "min_distinct_wrong_pair_gap": "330/7"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Consider a distributor. Enterprise value is 2.9 billion dollars. EBITDA of 120 million dollars grows 15 percent next year; forecast net income is 15 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 120,
+        "enterprise_value": 2900,
+        "forward_net_income": 15,
+        "growth": "3/20"
+      },
+      "answer": "1450/69",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Enterprise value is two point nine billion dollars. EBITDA of one hundred and twenty million dollars grows fifteen percent next year; forecast net income is fifteen million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "145/6",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "580/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "138"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "1450/69"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "145/46",
+            "relative_gap": "3/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "11890/69",
+            "relative_gap": "41/5"
+          }
+        ],
+        "min_wrong_pair_gap": "1015/6",
+        "min_distinct_wrong_pair_gap": "1015/6"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Consider a publisher. Enterprise value is 2.1 billion dollars. EBITDA of 150 million dollars grows 10 percent next year; forecast net income is 50 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 150,
+        "enterprise_value": 2100,
+        "forward_net_income": 50,
+        "growth": "1/10"
+      },
+      "answer": "140/11",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Enterprise value is two point one billion dollars. EBITDA of one hundred and fifty million dollars grows ten percent next year; forecast net income is fifty million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "14",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "42",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "165"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "140/11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "14/11",
+            "relative_gap": "1/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "322/11",
+            "relative_gap": "23/10"
+          }
+        ],
+        "min_wrong_pair_gap": "28",
+        "min_distinct_wrong_pair_gap": "28"
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Consider a wholesaler. Enterprise value is 2.8 billion dollars. EBITDA of 250 million dollars grows 15 percent next year; forecast net income is 75 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 250,
+        "enterprise_value": 2800,
+        "forward_net_income": 75,
+        "growth": "3/20"
+      },
+      "answer": "224/23",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Enterprise value is two point eight billion dollars. EBITDA of two hundred and fifty million dollars grows fifteen percent next year; forecast net income is seventy-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "56/5",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "112/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "575/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "224/23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "168/115",
+            "relative_gap": "3/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "1904/69",
+            "relative_gap": "17/6"
+          }
+        ],
+        "min_wrong_pair_gap": "392/15",
+        "min_distinct_wrong_pair_gap": "392/15"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Consider a retailer. Enterprise value is 2.4 billion dollars. EBITDA of 150 million dollars grows 5 percent next year; forecast net income is 70 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 150,
+        "enterprise_value": 2400,
+        "forward_net_income": 70,
+        "growth": "1/20"
+      },
+      "answer": "320/21",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Enterprise value is two point four billion dollars. EBITDA of one hundred and fifty million dollars grows five percent next year; forecast net income is seventy million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "16",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "240/7",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "315/2"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "320/21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "16/21",
+            "relative_gap": "1/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "400/21",
+            "relative_gap": "5/4"
+          }
+        ],
+        "min_wrong_pair_gap": "128/7",
+        "min_distinct_wrong_pair_gap": "128/7"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Consider a manufacturer. Enterprise value is 3.7 billion dollars. EBITDA of 140 million dollars grows 30 percent next year; forecast net income is 15 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 140,
+        "enterprise_value": 3700,
+        "forward_net_income": 15,
+        "growth": "3/10"
+      },
+      "answer": "1850/91",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Enterprise value is three point seven billion dollars. EBITDA of one hundred and forty million dollars grows thirty percent next year; forecast net income is fifteen million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "185/7",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "740/3",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "182"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "1850/91"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "555/91",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "61790/273",
+            "relative_gap": "167/15"
+          }
+        ],
+        "min_wrong_pair_gap": "4625/21",
+        "min_distinct_wrong_pair_gap": "4625/21"
+      },
+      "follow_up": {
+        "question": "Which forecast assumption would you sanity-check first?",
+        "reference": "Check whether the EBITDA increase is supported by revenue, margins and operating capacity. The numerical multiple is only as reliable as that forecast."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Consider a distributor. Enterprise value is three and a half billion dollars. EBITDA of 240 million dollars grows 25 percent next year; forecast net income is 55 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 240,
+        "enterprise_value": 3500,
+        "forward_net_income": 55,
+        "growth": "1/4"
+      },
+      "answer": "35/3",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Enterprise value is three and a half billion dollars. EBITDA of two hundred and forty million dollars grows twenty-five percent next year; forecast net income is fifty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "175/12",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "700/11",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "300"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "35/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "35/12",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "1715/33",
+            "relative_gap": "49/11"
+          }
+        ],
+        "min_wrong_pair_gap": "6475/132",
+        "min_distinct_wrong_pair_gap": "6475/132"
+      },
+      "follow_up": {
+        "question": "How would you compare this with a trailing peer multiple?",
+        "reference": "Use a common forecast period or reconcile each business from trailing to forward earnings. Otherwise differing growth rates can distort the comparison."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Consider a publisher. Enterprise value is 600 million dollars. EBITDA of 80 million dollars grows 25 percent next year; forecast net income is 55 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 80,
+        "enterprise_value": 600,
+        "forward_net_income": 55,
+        "growth": "1/4"
+      },
+      "answer": "6",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Enterprise value is six hundred million dollars. EBITDA of eighty million dollars grows twenty-five percent next year; forecast net income is fifty-five million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "15/2",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "120/11",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "100"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "3/2",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "54/11",
+            "relative_gap": "9/11"
+          }
+        ],
+        "min_wrong_pair_gap": "75/22",
+        "min_distinct_wrong_pair_gap": "75/22"
+      },
+      "follow_up": {
+        "question": "Why is forward EBITDA required here?",
+        "reference": "The requested multiple uses next year's operating earnings. Using the trailing figure would ignore the stated growth assumption and change the denominator."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Consider a wholesaler. Enterprise value is 3.9 billion dollars. EBITDA of 120 million dollars grows 15 percent next year; forecast net income is 15 million dollars. What is the forward EV-to-EBITDA multiple?",
+      "params": {
+        "ebitda": 120,
+        "enterprise_value": 3900,
+        "forward_net_income": 15,
+        "growth": "3/20"
+      },
+      "answer": "650/23",
+      "tolerance": "0",
+      "topic": "Trading comparables",
+      "source_topic": "Forward EV-to-EBITDA multiple",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Enterprise value is three point nine billion dollars. EBITDA of one hundred and twenty million dollars grows fifteen percent next year; forecast net income is fifteen million dollars. What is the forward EV-to-EBITDA multiple?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "65/2",
+          "misconceptions": [
+            "uses_trailing_instead_of_forward_ebitda"
+          ]
+        },
+        {
+          "value": "260",
+          "misconceptions": [
+            "uses_forward_net_income_as_the_denominator"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "forward_ebitda",
+          "value": "138"
+        },
+        {
+          "name": "forward_ev_to_ebitda_multiple",
+          "value": "650/23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_trailing_instead_of_forward_ebitda",
+            "absolute_gap": "195/46",
+            "relative_gap": "3/20"
+          },
+          {
+            "misconception": "uses_forward_net_income_as_the_denominator",
+            "absolute_gap": "5330/23",
+            "relative_gap": "41/5"
+          }
+        ],
+        "min_wrong_pair_gap": "455/2",
+        "min_distinct_wrong_pair_gap": "455/2"
+      },
+      "follow_up": {
+        "question": "What if EBITDA growth were negative?",
+        "reference": "Positive enterprise value divided by lower positive EBITDA would produce a higher forward multiple. If forecast EBITDA reached zero or became negative, the usual positive-multiple interpretation would fail."
+      }
+    }
+  ]
+}

@@ -1,0 +1,3244 @@
+{
+  "template_id": "ibx_F028",
+  "pack": "ib",
+  "topic": "Financial statement analysis",
+  "topics": [
+    "Financial statement analysis"
+  ],
+  "source_topic": "Return on invested capital",
+  "difficulty": "Hard",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "Why exclude excess cash from invested capital?",
+    "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Consider a retailer. EBIT is 130 million dollars, tax is 40 percent, average debt is 850 million dollars, average equity is 250 million dollars, and average excess cash is 100 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 850,
+        "average_equity": 250,
+        "average_excess_cash": 100,
+        "ebit": 130,
+        "tax_rate": "2/5"
+      },
+      "answer": "39/500",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred and thirty million dollars, tax is forty percent, average debt is eight hundred and fifty million dollars, average equity is two hundred and fifty million dollars, and average excess cash is one hundred million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 1,
+      "interview_friendly_basis": "clean_decimal_or_percent",
+      "wrong": [
+        {
+          "value": "13/100",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "39/550",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "78"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1000"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "13/250",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "39/5500",
+            "relative_gap": "1/11"
+          }
+        ],
+        "min_wrong_pair_gap": "13/220",
+        "min_distinct_wrong_pair_gap": "13/220"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Consider a manufacturer. EBIT is 110 million dollars, tax is 30 percent, average debt is 350 million dollars, average equity is 700 million dollars, and average excess cash is 170 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 350,
+        "average_equity": 700,
+        "average_excess_cash": 170,
+        "ebit": 110,
+        "tax_rate": "3/10"
+      },
+      "answer": "7/80",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred and ten million dollars, tax is thirty percent, average debt is three hundred and fifty million dollars, average equity is seven hundred million dollars, and average excess cash is one hundred and seventy million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1/8",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "11/150",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "77"
+        },
+        {
+          "name": "invested_capital",
+          "value": "880"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "3/80",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "17/1200",
+            "relative_gap": "17/105"
+          }
+        ],
+        "min_wrong_pair_gap": "31/600",
+        "min_distinct_wrong_pair_gap": "31/600"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Consider a distributor. EBIT is 150 million dollars, tax is 20 percent, average debt is 450 million dollars, average equity is 550 million dollars, and average excess cash is 80 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 450,
+        "average_equity": 550,
+        "average_excess_cash": 80,
+        "ebit": 150,
+        "tax_rate": "1/5"
+      },
+      "answer": "3/23",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred and fifty million dollars, tax is twenty percent, average debt is four hundred and fifty million dollars, average equity is five hundred and fifty million dollars, and average excess cash is eighty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "15/92",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "3/25",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "120"
+        },
+        {
+          "name": "invested_capital",
+          "value": "920"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "3/92",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "6/575",
+            "relative_gap": "2/25"
+          }
+        ],
+        "min_wrong_pair_gap": "99/2300",
+        "min_distinct_wrong_pair_gap": "99/2300"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Consider a publisher. EBIT is 90 million dollars, tax is 30 percent, average debt is 250 million dollars, average equity is 800 million dollars, and average excess cash is 10 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 250,
+        "average_equity": 800,
+        "average_excess_cash": 10,
+        "ebit": 90,
+        "tax_rate": "3/10"
+      },
+      "answer": "63/1040",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is ninety million dollars, tax is thirty percent, average debt is two hundred and fifty million dollars, average equity is eight hundred million dollars, and average excess cash is ten million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "9/104",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "3/50",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "63"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1040"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "27/1040",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "3/5200",
+            "relative_gap": "1/105"
+          }
+        ],
+        "min_wrong_pair_gap": "69/2600",
+        "min_distinct_wrong_pair_gap": "69/2600"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Consider a wholesaler. EBIT is 120 million dollars, tax is 25 percent, average debt is 900 million dollars, average equity is 400 million dollars, and average excess cash is 190 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 900,
+        "average_equity": 400,
+        "average_excess_cash": 190,
+        "ebit": 120,
+        "tax_rate": "1/4"
+      },
+      "answer": "3/37",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and twenty million dollars, tax is twenty-five percent, average debt is nine hundred million dollars, average equity is four hundred million dollars, and average excess cash is one hundred and ninety million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4/37",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "9/130",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "90"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1110"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "1/37",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "57/4810",
+            "relative_gap": "19/130"
+          }
+        ],
+        "min_wrong_pair_gap": "187/4810",
+        "min_distinct_wrong_pair_gap": "187/4810"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Consider a retailer. EBIT is 140 million dollars, tax is 30 percent, average debt is 450 million dollars, average equity is 500 million dollars, and average excess cash is 170 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 450,
+        "average_equity": 500,
+        "average_excess_cash": 170,
+        "ebit": 140,
+        "tax_rate": "3/10"
+      },
+      "answer": "49/390",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred and forty million dollars, tax is thirty percent, average debt is four hundred and fifty million dollars, average equity is five hundred million dollars, and average excess cash is one hundred and seventy million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "7/39",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "49/475",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "98"
+        },
+        {
+          "name": "invested_capital",
+          "value": "780"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "7/130",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "833/37050",
+            "relative_gap": "17/95"
+          }
+        ],
+        "min_wrong_pair_gap": "1414/18525",
+        "min_distinct_wrong_pair_gap": "1414/18525"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Consider a manufacturer. EBIT is 50 million dollars, tax is 40 percent, average debt is 500 million dollars, average equity is 100 million dollars, and average excess cash is 10 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 500,
+        "average_equity": 100,
+        "average_excess_cash": 10,
+        "ebit": 50,
+        "tax_rate": "2/5"
+      },
+      "answer": "3/59",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is fifty million dollars, tax is forty percent, average debt is five hundred million dollars, average equity is one hundred million dollars, and average excess cash is ten million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5/59",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "1/20",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "30"
+        },
+        {
+          "name": "invested_capital",
+          "value": "590"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "2/59",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "1/1180",
+            "relative_gap": "1/60"
+          }
+        ],
+        "min_wrong_pair_gap": "41/1180",
+        "min_distinct_wrong_pair_gap": "41/1180"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Consider a distributor. EBIT is 190 million dollars, tax is 20 percent, average debt is 800 million dollars, average equity is 700 million dollars, and average excess cash is 120 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 800,
+        "average_equity": 700,
+        "average_excess_cash": 120,
+        "ebit": 190,
+        "tax_rate": "1/5"
+      },
+      "answer": "38/345",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred and ninety million dollars, tax is twenty percent, average debt is eight hundred million dollars, average equity is seven hundred million dollars, and average excess cash is one hundred and twenty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "19/138",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "38/375",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "152"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1380"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "19/690",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "76/8625",
+            "relative_gap": "2/25"
+          }
+        ],
+        "min_wrong_pair_gap": "209/5750",
+        "min_distinct_wrong_pair_gap": "209/5750"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Consider a publisher. EBIT is 40 million dollars, tax is 40 percent, average debt is 1 billion dollars, average equity is 200 million dollars, and average excess cash is 20 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 1000,
+        "average_equity": 200,
+        "average_excess_cash": 20,
+        "ebit": 40,
+        "tax_rate": "2/5"
+      },
+      "answer": "6/295",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is forty million dollars, tax is forty percent, average debt is one billion dollars, average equity is two hundred million dollars, and average excess cash is twenty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "2/59",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "1/50",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "24"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1180"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "4/295",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "1/2950",
+            "relative_gap": "1/60"
+          }
+        ],
+        "min_wrong_pair_gap": "41/2950",
+        "min_distinct_wrong_pair_gap": "41/2950"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Consider a wholesaler. EBIT is 190 million dollars, tax is 40 percent, average debt is 350 million dollars, average equity is 550 million dollars, and average excess cash is 50 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 350,
+        "average_equity": 550,
+        "average_excess_cash": 50,
+        "ebit": 190,
+        "tax_rate": "2/5"
+      },
+      "answer": "57/425",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and ninety million dollars, tax is forty percent, average debt is three hundred and fifty million dollars, average equity is five hundred and fifty million dollars, and average excess cash is fifty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "19/85",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "19/150",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "114"
+        },
+        {
+          "name": "invested_capital",
+          "value": "850"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "38/425",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "19/2550",
+            "relative_gap": "1/18"
+          }
+        ],
+        "min_wrong_pair_gap": "247/2550",
+        "min_distinct_wrong_pair_gap": "247/2550"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Consider a retailer. EBIT is 40 million dollars, tax is 30 percent, average debt is 900 million dollars, average equity is 300 million dollars, and average excess cash is 200 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 900,
+        "average_equity": 300,
+        "average_excess_cash": 200,
+        "ebit": 40,
+        "tax_rate": "3/10"
+      },
+      "answer": "7/250",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is forty million dollars, tax is thirty percent, average debt is nine hundred million dollars, average equity is three hundred million dollars, and average excess cash is two hundred million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 1,
+      "interview_friendly_basis": "clean_decimal_or_percent",
+      "wrong": [
+        {
+          "value": "1/25",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "7/300",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "28"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1000"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "3/250",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "7/1500",
+            "relative_gap": "1/6"
+          }
+        ],
+        "min_wrong_pair_gap": "1/60",
+        "min_distinct_wrong_pair_gap": "1/60"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Consider a manufacturer. EBIT is 140 million dollars, tax is 20 percent, average debt is 650 million dollars, average equity is 500 million dollars, and average excess cash is 90 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 650,
+        "average_equity": 500,
+        "average_excess_cash": 90,
+        "ebit": 140,
+        "tax_rate": "1/5"
+      },
+      "answer": "28/265",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred and forty million dollars, tax is twenty percent, average debt is six hundred and fifty million dollars, average equity is five hundred million dollars, and average excess cash is ninety million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "7/53",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "56/575",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "112"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1060"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "7/265",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "252/30475",
+            "relative_gap": "9/115"
+          }
+        ],
+        "min_wrong_pair_gap": "1057/30475",
+        "min_distinct_wrong_pair_gap": "1057/30475"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Consider a distributor. EBIT is 140 million dollars, tax is 25 percent, average debt is 250 million dollars, average equity is 650 million dollars, and average excess cash is 140 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 250,
+        "average_equity": 650,
+        "average_excess_cash": 140,
+        "ebit": 140,
+        "tax_rate": "1/4"
+      },
+      "answer": "21/152",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred and forty million dollars, tax is twenty-five percent, average debt is two hundred and fifty million dollars, average equity is six hundred and fifty million dollars, and average excess cash is one hundred and forty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "7/38",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "7/60",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "105"
+        },
+        {
+          "name": "invested_capital",
+          "value": "760"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "7/152",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "49/2280",
+            "relative_gap": "7/45"
+          }
+        ],
+        "min_wrong_pair_gap": "77/1140",
+        "min_distinct_wrong_pair_gap": "77/1140"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Consider a publisher. EBIT is 50 million dollars, tax is 25 percent, average debt is 900 million dollars, average equity is 250 million dollars, and average excess cash is 180 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 900,
+        "average_equity": 250,
+        "average_excess_cash": 180,
+        "ebit": 50,
+        "tax_rate": "1/4"
+      },
+      "answer": "15/388",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is fifty million dollars, tax is twenty-five percent, average debt is nine hundred million dollars, average equity is two hundred and fifty million dollars, and average excess cash is one hundred and eighty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "5/97",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "3/92",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "75/2"
+        },
+        {
+          "name": "invested_capital",
+          "value": "970"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "5/388",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "27/4462",
+            "relative_gap": "18/115"
+          }
+        ],
+        "min_wrong_pair_gap": "169/8924",
+        "min_distinct_wrong_pair_gap": "169/8924"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Consider a wholesaler. EBIT is 110 million dollars, tax is 30 percent, average debt is 1 billion dollars, average equity is 400 million dollars, and average excess cash is 180 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 1000,
+        "average_equity": 400,
+        "average_excess_cash": 180,
+        "ebit": 110,
+        "tax_rate": "3/10"
+      },
+      "answer": "77/1220",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and ten million dollars, tax is thirty percent, average debt is one billion dollars, average equity is four hundred million dollars, and average excess cash is one hundred and eighty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "11/122",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "11/200",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "77"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1220"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "33/1220",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "99/12200",
+            "relative_gap": "9/70"
+          }
+        ],
+        "min_wrong_pair_gap": "429/12200",
+        "min_distinct_wrong_pair_gap": "429/12200"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Consider a retailer. EBIT is 140 million dollars, tax is 30 percent, average debt is 250 million dollars, average equity is 100 million dollars, and average excess cash is 20 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 250,
+        "average_equity": 100,
+        "average_excess_cash": 20,
+        "ebit": 140,
+        "tax_rate": "3/10"
+      },
+      "answer": "49/165",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred and forty million dollars, tax is thirty percent, average debt is two hundred and fifty million dollars, average equity is one hundred million dollars, and average excess cash is twenty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "14/33",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "7/25",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "98"
+        },
+        {
+          "name": "invested_capital",
+          "value": "330"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "7/55",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "14/825",
+            "relative_gap": "2/35"
+          }
+        ],
+        "min_wrong_pair_gap": "119/825",
+        "min_distinct_wrong_pair_gap": "119/825"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Consider a manufacturer. EBIT is 160 million dollars, tax is 30 percent, average debt is 250 million dollars, average equity is 450 million dollars, and average excess cash is 180 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 250,
+        "average_equity": 450,
+        "average_excess_cash": 180,
+        "ebit": 160,
+        "tax_rate": "3/10"
+      },
+      "answer": "14/65",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred and sixty million dollars, tax is thirty percent, average debt is two hundred and fifty million dollars, average equity is four hundred and fifty million dollars, and average excess cash is one hundred and eighty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4/13",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "4/25",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "112"
+        },
+        {
+          "name": "invested_capital",
+          "value": "520"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "6/65",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "18/325",
+            "relative_gap": "9/35"
+          }
+        ],
+        "min_wrong_pair_gap": "48/325",
+        "min_distinct_wrong_pair_gap": "48/325"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Consider a distributor. EBIT is 200 million dollars, tax is 25 percent, average debt is 350 million dollars, average equity is 750 million dollars, and average excess cash is 60 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 350,
+        "average_equity": 750,
+        "average_excess_cash": 60,
+        "ebit": 200,
+        "tax_rate": "1/4"
+      },
+      "answer": "15/104",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is two hundred million dollars, tax is twenty-five percent, average debt is three hundred and fifty million dollars, average equity is seven hundred and fifty million dollars, and average excess cash is sixty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "5/26",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "3/22",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "150"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1040"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "5/104",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "9/1144",
+            "relative_gap": "3/55"
+          }
+        ],
+        "min_wrong_pair_gap": "8/143",
+        "min_distinct_wrong_pair_gap": "8/143"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Consider a publisher. EBIT is 50 million dollars, tax is 20 percent, average debt is 200 million dollars, average equity is 100 million dollars, and average excess cash is 40 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 200,
+        "average_equity": 100,
+        "average_excess_cash": 40,
+        "ebit": 50,
+        "tax_rate": "1/5"
+      },
+      "answer": "2/13",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is fifty million dollars, tax is twenty percent, average debt is two hundred million dollars, average equity is one hundred million dollars, and average excess cash is forty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5/26",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "2/15",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "40"
+        },
+        {
+          "name": "invested_capital",
+          "value": "260"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "1/26",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "4/195",
+            "relative_gap": "2/15"
+          }
+        ],
+        "min_wrong_pair_gap": "23/390",
+        "min_distinct_wrong_pair_gap": "23/390"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Consider a wholesaler. EBIT is 180 million dollars, tax is 20 percent, average debt is 400 million dollars, average equity is 300 million dollars, and average excess cash is 150 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 400,
+        "average_equity": 300,
+        "average_excess_cash": 150,
+        "ebit": 180,
+        "tax_rate": "1/5"
+      },
+      "answer": "72/275",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and eighty million dollars, tax is twenty percent, average debt is four hundred million dollars, average equity is three hundred million dollars, and average excess cash is one hundred and fifty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "18/55",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "36/175",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "144"
+        },
+        {
+          "name": "invested_capital",
+          "value": "550"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "18/275",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "108/1925",
+            "relative_gap": "3/14"
+          }
+        ],
+        "min_wrong_pair_gap": "234/1925",
+        "min_distinct_wrong_pair_gap": "234/1925"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Consider a retailer. EBIT is 120 million dollars, tax is 30 percent, average debt is 750 million dollars, average equity is 750 million dollars, and average excess cash is 20 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 750,
+        "average_equity": 750,
+        "average_excess_cash": 20,
+        "ebit": 120,
+        "tax_rate": "3/10"
+      },
+      "answer": "21/370",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred and twenty million dollars, tax is thirty percent, average debt is seven hundred and fifty million dollars, average equity is seven hundred and fifty million dollars, and average excess cash is twenty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "3/37",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "7/125",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "84"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1480"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "9/370",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "7/9250",
+            "relative_gap": "1/75"
+          }
+        ],
+        "min_wrong_pair_gap": "116/4625",
+        "min_distinct_wrong_pair_gap": "116/4625"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Consider a manufacturer. EBIT is 110 million dollars, tax is 25 percent, average debt is 500 million dollars, average equity is 550 million dollars, and average excess cash is 70 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 500,
+        "average_equity": 550,
+        "average_excess_cash": 70,
+        "ebit": 110,
+        "tax_rate": "1/4"
+      },
+      "answer": "33/392",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred and ten million dollars, tax is twenty-five percent, average debt is five hundred million dollars, average equity is five hundred and fifty million dollars, and average excess cash is seventy million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "11/98",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "11/140",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "165/2"
+        },
+        {
+          "name": "invested_capital",
+          "value": "980"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "11/392",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "11/1960",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "33/980",
+        "min_distinct_wrong_pair_gap": "33/980"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Consider a distributor. EBIT is 150 million dollars, tax is 30 percent, average debt is 600 million dollars, average equity is 550 million dollars, and average excess cash is 90 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 600,
+        "average_equity": 550,
+        "average_excess_cash": 90,
+        "ebit": 150,
+        "tax_rate": "3/10"
+      },
+      "answer": "21/212",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred and fifty million dollars, tax is thirty percent, average debt is six hundred million dollars, average equity is five hundred and fifty million dollars, and average excess cash is ninety million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "15/106",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "21/230",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "105"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1060"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "9/212",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "189/24380",
+            "relative_gap": "9/115"
+          }
+        ],
+        "min_wrong_pair_gap": "306/6095",
+        "min_distinct_wrong_pair_gap": "306/6095"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Consider a publisher. EBIT is 60 million dollars, tax is 25 percent, average debt is 500 million dollars, average equity is 600 million dollars, and average excess cash is 80 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 500,
+        "average_equity": 600,
+        "average_excess_cash": 80,
+        "ebit": 60,
+        "tax_rate": "1/4"
+      },
+      "answer": "3/68",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is sixty million dollars, tax is twenty-five percent, average debt is five hundred million dollars, average equity is six hundred million dollars, and average excess cash is eighty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1/17",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "9/220",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "45"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1020"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "1/68",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "3/935",
+            "relative_gap": "4/55"
+          }
+        ],
+        "min_wrong_pair_gap": "67/3740",
+        "min_distinct_wrong_pair_gap": "67/3740"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Consider a wholesaler. EBIT is 40 million dollars, tax is 30 percent, average debt is 550 million dollars, average equity is 350 million dollars, and average excess cash is 100 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 550,
+        "average_equity": 350,
+        "average_excess_cash": 100,
+        "ebit": 40,
+        "tax_rate": "3/10"
+      },
+      "answer": "7/200",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is forty million dollars, tax is thirty percent, average debt is five hundred and fifty million dollars, average equity is three hundred and fifty million dollars, and average excess cash is one hundred million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 1,
+      "interview_friendly_basis": "clean_decimal_or_percent",
+      "wrong": [
+        {
+          "value": "1/20",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "7/225",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "28"
+        },
+        {
+          "name": "invested_capital",
+          "value": "800"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "3/200",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "7/1800",
+            "relative_gap": "1/9"
+          }
+        ],
+        "min_wrong_pair_gap": "17/900",
+        "min_distinct_wrong_pair_gap": "17/900"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Consider a retailer. EBIT is 120 million dollars, tax is 20 percent, average debt is 300 million dollars, average equity is 700 million dollars, and average excess cash is 10 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 300,
+        "average_equity": 700,
+        "average_excess_cash": 10,
+        "ebit": 120,
+        "tax_rate": "1/5"
+      },
+      "answer": "16/165",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred and twenty million dollars, tax is twenty percent, average debt is three hundred million dollars, average equity is seven hundred million dollars, and average excess cash is ten million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "4/33",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "12/125",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "96"
+        },
+        {
+          "name": "invested_capital",
+          "value": "990"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "4/165",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "4/4125",
+            "relative_gap": "1/100"
+          }
+        ],
+        "min_wrong_pair_gap": "104/4125",
+        "min_distinct_wrong_pair_gap": "104/4125"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Consider a manufacturer. EBIT is 120 million dollars, tax is 25 percent, average debt is 350 million dollars, average equity is 450 million dollars, and average excess cash is 60 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 350,
+        "average_equity": 450,
+        "average_excess_cash": 60,
+        "ebit": 120,
+        "tax_rate": "1/4"
+      },
+      "answer": "9/74",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred and twenty million dollars, tax is twenty-five percent, average debt is three hundred and fifty million dollars, average equity is four hundred and fifty million dollars, and average excess cash is sixty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "6/37",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "9/80",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "90"
+        },
+        {
+          "name": "invested_capital",
+          "value": "740"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "3/74",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "27/2960",
+            "relative_gap": "3/40"
+          }
+        ],
+        "min_wrong_pair_gap": "147/2960",
+        "min_distinct_wrong_pair_gap": "147/2960"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Consider a distributor. EBIT is 100 million dollars, tax is 40 percent, average debt is 650 million dollars, average equity is 550 million dollars, and average excess cash is 90 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 650,
+        "average_equity": 550,
+        "average_excess_cash": 90,
+        "ebit": 100,
+        "tax_rate": "2/5"
+      },
+      "answer": "2/37",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred million dollars, tax is forty percent, average debt is six hundred and fifty million dollars, average equity is five hundred and fifty million dollars, and average excess cash is ninety million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "10/111",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "1/20",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "60"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1110"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "4/111",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "3/740",
+            "relative_gap": "3/40"
+          }
+        ],
+        "min_wrong_pair_gap": "89/2220",
+        "min_distinct_wrong_pair_gap": "89/2220"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Consider a publisher. EBIT is 200 million dollars, tax is 25 percent, average debt is 600 million dollars, average equity is 550 million dollars, and average excess cash is 150 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 600,
+        "average_equity": 550,
+        "average_excess_cash": 150,
+        "ebit": 200,
+        "tax_rate": "1/4"
+      },
+      "answer": "3/20",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is two hundred million dollars, tax is twenty-five percent, average debt is six hundred million dollars, average equity is five hundred and fifty million dollars, and average excess cash is one hundred and fifty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1/5",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "3/23",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "150"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1000"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "1/20",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "9/460",
+            "relative_gap": "3/23"
+          }
+        ],
+        "min_wrong_pair_gap": "8/115",
+        "min_distinct_wrong_pair_gap": "8/115"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Consider a wholesaler. EBIT is 60 million dollars, tax is 40 percent, average debt is 650 million dollars, average equity is 200 million dollars, and average excess cash is 90 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 650,
+        "average_equity": 200,
+        "average_excess_cash": 90,
+        "ebit": 60,
+        "tax_rate": "2/5"
+      },
+      "answer": "9/190",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is sixty million dollars, tax is forty percent, average debt is six hundred and fifty million dollars, average equity is two hundred million dollars, and average excess cash is ninety million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "3/38",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "18/425",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "36"
+        },
+        {
+          "name": "invested_capital",
+          "value": "760"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "3/95",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "81/16150",
+            "relative_gap": "9/85"
+          }
+        ],
+        "min_wrong_pair_gap": "591/16150",
+        "min_distinct_wrong_pair_gap": "591/16150"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Consider a retailer. EBIT is 50 million dollars, tax is 40 percent, average debt is 650 million dollars, average equity is 650 million dollars, and average excess cash is 80 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 650,
+        "average_equity": 650,
+        "average_excess_cash": 80,
+        "ebit": 50,
+        "tax_rate": "2/5"
+      },
+      "answer": "3/122",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is fifty million dollars, tax is forty percent, average debt is six hundred and fifty million dollars, average equity is six hundred and fifty million dollars, and average excess cash is eighty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "5/122",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "3/130",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "30"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1220"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "1/61",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "6/3965",
+            "relative_gap": "4/65"
+          }
+        ],
+        "min_wrong_pair_gap": "71/3965",
+        "min_distinct_wrong_pair_gap": "71/3965"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Consider a manufacturer. EBIT is 120 million dollars, tax is 20 percent, average debt is 850 million dollars, average equity is 650 million dollars, and average excess cash is 50 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 850,
+        "average_equity": 650,
+        "average_excess_cash": 50,
+        "ebit": 120,
+        "tax_rate": "1/5"
+      },
+      "answer": "48/725",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred and twenty million dollars, tax is twenty percent, average debt is eight hundred and fifty million dollars, average equity is six hundred and fifty million dollars, and average excess cash is fifty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "12/145",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "8/125",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "96"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1450"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "12/725",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "8/3625",
+            "relative_gap": "1/30"
+          }
+        ],
+        "min_wrong_pair_gap": "68/3625",
+        "min_distinct_wrong_pair_gap": "68/3625"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Consider a distributor. EBIT is 200 million dollars, tax is 40 percent, average debt is 300 million dollars, average equity is 800 million dollars, and average excess cash is 40 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 300,
+        "average_equity": 800,
+        "average_excess_cash": 40,
+        "ebit": 200,
+        "tax_rate": "2/5"
+      },
+      "answer": "6/53",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is two hundred million dollars, tax is forty percent, average debt is three hundred million dollars, average equity is eight hundred million dollars, and average excess cash is forty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "10/53",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "6/55",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "120"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1060"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "4/53",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "12/2915",
+            "relative_gap": "2/55"
+          }
+        ],
+        "min_wrong_pair_gap": "232/2915",
+        "min_distinct_wrong_pair_gap": "232/2915"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Consider a publisher. EBIT is 80 million dollars, tax is 40 percent, average debt is 350 million dollars, average equity is 300 million dollars, and average excess cash is 140 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 350,
+        "average_equity": 300,
+        "average_excess_cash": 140,
+        "ebit": 80,
+        "tax_rate": "2/5"
+      },
+      "answer": "8/85",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is eighty million dollars, tax is forty percent, average debt is three hundred and fifty million dollars, average equity is three hundred million dollars, and average excess cash is one hundred and forty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "8/51",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "24/325",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "48"
+        },
+        {
+          "name": "invested_capital",
+          "value": "510"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "16/255",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "112/5525",
+            "relative_gap": "14/65"
+          }
+        ],
+        "min_wrong_pair_gap": "1376/16575",
+        "min_distinct_wrong_pair_gap": "1376/16575"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Consider a wholesaler. EBIT is 100 million dollars, tax is 25 percent, average debt is 350 million dollars, average equity is 200 million dollars, and average excess cash is 110 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 350,
+        "average_equity": 200,
+        "average_excess_cash": 110,
+        "ebit": 100,
+        "tax_rate": "1/4"
+      },
+      "answer": "15/88",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred million dollars, tax is twenty-five percent, average debt is three hundred and fifty million dollars, average equity is two hundred million dollars, and average excess cash is one hundred and ten million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5/22",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "3/22",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "75"
+        },
+        {
+          "name": "invested_capital",
+          "value": "440"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "5/88",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "3/88",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "1/11",
+        "min_distinct_wrong_pair_gap": "1/11"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Consider a retailer. EBIT is 120 million dollars, tax is 25 percent, average debt is 650 million dollars, average equity is 450 million dollars, and average excess cash is 110 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 650,
+        "average_equity": 450,
+        "average_excess_cash": 110,
+        "ebit": 120,
+        "tax_rate": "1/4"
+      },
+      "answer": "1/11",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred and twenty million dollars, tax is twenty-five percent, average debt is six hundred and fifty million dollars, average equity is four hundred and fifty million dollars, and average excess cash is one hundred and ten million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4/33",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "9/110",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "90"
+        },
+        {
+          "name": "invested_capital",
+          "value": "990"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "1/33",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "1/110",
+            "relative_gap": "1/10"
+          }
+        ],
+        "min_wrong_pair_gap": "13/330",
+        "min_distinct_wrong_pair_gap": "13/330"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Consider a manufacturer. EBIT is 140 million dollars, tax is 30 percent, average debt is 350 million dollars, average equity is 650 million dollars, and average excess cash is 50 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 350,
+        "average_equity": 650,
+        "average_excess_cash": 50,
+        "ebit": 140,
+        "tax_rate": "3/10"
+      },
+      "answer": "49/475",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred and forty million dollars, tax is thirty percent, average debt is three hundred and fifty million dollars, average equity is six hundred and fifty million dollars, and average excess cash is fifty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "14/95",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "49/500",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "98"
+        },
+        {
+          "name": "invested_capital",
+          "value": "950"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "21/475",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "49/9500",
+            "relative_gap": "1/20"
+          }
+        ],
+        "min_wrong_pair_gap": "469/9500",
+        "min_distinct_wrong_pair_gap": "469/9500"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Consider a distributor. EBIT is 200 million dollars, tax is 40 percent, average debt is 300 million dollars, average equity is 500 million dollars, and average excess cash is 180 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 300,
+        "average_equity": 500,
+        "average_excess_cash": 180,
+        "ebit": 200,
+        "tax_rate": "2/5"
+      },
+      "answer": "6/31",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is two hundred million dollars, tax is forty percent, average debt is three hundred million dollars, average equity is five hundred million dollars, and average excess cash is one hundred and eighty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "10/31",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "3/20",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "120"
+        },
+        {
+          "name": "invested_capital",
+          "value": "620"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "4/31",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "27/620",
+            "relative_gap": "9/40"
+          }
+        ],
+        "min_wrong_pair_gap": "107/620",
+        "min_distinct_wrong_pair_gap": "107/620"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Consider a publisher. EBIT is 160 million dollars, tax is 30 percent, average debt is 500 million dollars, average equity is 150 million dollars, and average excess cash is 170 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 500,
+        "average_equity": 150,
+        "average_excess_cash": 170,
+        "ebit": 160,
+        "tax_rate": "3/10"
+      },
+      "answer": "7/30",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is one hundred and sixty million dollars, tax is thirty percent, average debt is five hundred million dollars, average equity is one hundred and fifty million dollars, and average excess cash is one hundred and seventy million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1/3",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "56/325",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "112"
+        },
+        {
+          "name": "invested_capital",
+          "value": "480"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "1/10",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "119/1950",
+            "relative_gap": "17/65"
+          }
+        ],
+        "min_wrong_pair_gap": "157/975",
+        "min_distinct_wrong_pair_gap": "157/975"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Consider a wholesaler. EBIT is 110 million dollars, tax is 40 percent, average debt is 350 million dollars, average equity is 250 million dollars, and average excess cash is 190 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 350,
+        "average_equity": 250,
+        "average_excess_cash": 190,
+        "ebit": 110,
+        "tax_rate": "2/5"
+      },
+      "answer": "33/205",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and ten million dollars, tax is forty percent, average debt is three hundred and fifty million dollars, average equity is two hundred and fifty million dollars, and average excess cash is one hundred and ninety million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "11/41",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "11/100",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "66"
+        },
+        {
+          "name": "invested_capital",
+          "value": "410"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "22/205",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "209/4100",
+            "relative_gap": "19/60"
+          }
+        ],
+        "min_wrong_pair_gap": "649/4100",
+        "min_distinct_wrong_pair_gap": "649/4100"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Consider a retailer. EBIT is 30 million dollars, tax is 25 percent, average debt is 650 million dollars, average equity is 150 million dollars, and average excess cash is 100 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 650,
+        "average_equity": 150,
+        "average_excess_cash": 100,
+        "ebit": 30,
+        "tax_rate": "1/4"
+      },
+      "answer": "9/280",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is thirty million dollars, tax is twenty-five percent, average debt is six hundred and fifty million dollars, average equity is one hundred and fifty million dollars, and average excess cash is one hundred million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "3/70",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "9/320",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "45/2"
+        },
+        {
+          "name": "invested_capital",
+          "value": "700"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "3/280",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "9/2240",
+            "relative_gap": "1/8"
+          }
+        ],
+        "min_wrong_pair_gap": "33/2240",
+        "min_distinct_wrong_pair_gap": "33/2240"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Consider a manufacturer. EBIT is 150 million dollars, tax is 25 percent, average debt is 700 million dollars, average equity is 450 million dollars, and average excess cash is 190 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 700,
+        "average_equity": 450,
+        "average_excess_cash": 190,
+        "ebit": 150,
+        "tax_rate": "1/4"
+      },
+      "answer": "15/128",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred and fifty million dollars, tax is twenty-five percent, average debt is seven hundred million dollars, average equity is four hundred and fifty million dollars, and average excess cash is one hundred and ninety million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "5/32",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "9/92",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "225/2"
+        },
+        {
+          "name": "invested_capital",
+          "value": "960"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "5/128",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "57/2944",
+            "relative_gap": "19/115"
+          }
+        ],
+        "min_wrong_pair_gap": "43/736",
+        "min_distinct_wrong_pair_gap": "43/736"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Consider a distributor. EBIT is 150 million dollars, tax is 25 percent, average debt is 850 million dollars, average equity is 750 million dollars, and average excess cash is 40 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 850,
+        "average_equity": 750,
+        "average_excess_cash": 40,
+        "ebit": 150,
+        "tax_rate": "1/4"
+      },
+      "answer": "15/208",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred and fifty million dollars, tax is twenty-five percent, average debt is eight hundred and fifty million dollars, average equity is seven hundred and fifty million dollars, and average excess cash is forty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "5/52",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "9/128",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "225/2"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1560"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "5/208",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "3/1664",
+            "relative_gap": "1/40"
+          }
+        ],
+        "min_wrong_pair_gap": "43/1664",
+        "min_distinct_wrong_pair_gap": "43/1664"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Consider a publisher. EBIT is 110 million dollars, tax is 40 percent, average debt is 750 million dollars, average equity is 350 million dollars, and average excess cash is 140 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 750,
+        "average_equity": 350,
+        "average_excess_cash": 140,
+        "ebit": 110,
+        "tax_rate": "2/5"
+      },
+      "answer": "11/160",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is one hundred and ten million dollars, tax is forty percent, average debt is seven hundred and fifty million dollars, average equity is three hundred and fifty million dollars, and average excess cash is one hundred and forty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "11/96",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "3/50",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "66"
+        },
+        {
+          "name": "invested_capital",
+          "value": "960"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "11/240",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "7/800",
+            "relative_gap": "7/55"
+          }
+        ],
+        "min_wrong_pair_gap": "131/2400",
+        "min_distinct_wrong_pair_gap": "131/2400"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Consider a wholesaler. EBIT is 110 million dollars, tax is 40 percent, average debt is 950 million dollars, average equity is 700 million dollars, and average excess cash is 60 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 950,
+        "average_equity": 700,
+        "average_excess_cash": 60,
+        "ebit": 110,
+        "tax_rate": "2/5"
+      },
+      "answer": "11/265",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and ten million dollars, tax is forty percent, average debt is nine hundred and fifty million dollars, average equity is seven hundred million dollars, and average excess cash is sixty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "11/159",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "1/25",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "66"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1590"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "22/795",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "2/1325",
+            "relative_gap": "2/55"
+          }
+        ],
+        "min_wrong_pair_gap": "116/3975",
+        "min_distinct_wrong_pair_gap": "116/3975"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Consider a retailer. EBIT is 190 million dollars, tax is 40 percent, average debt is 300 million dollars, average equity is 450 million dollars, and average excess cash is 120 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 300,
+        "average_equity": 450,
+        "average_excess_cash": 120,
+        "ebit": 190,
+        "tax_rate": "2/5"
+      },
+      "answer": "19/105",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred and ninety million dollars, tax is forty percent, average debt is three hundred million dollars, average equity is four hundred and fifty million dollars, and average excess cash is one hundred and twenty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "19/63",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "19/125",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "114"
+        },
+        {
+          "name": "invested_capital",
+          "value": "630"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "38/315",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "76/2625",
+            "relative_gap": "4/25"
+          }
+        ],
+        "min_wrong_pair_gap": "1178/7875",
+        "min_distinct_wrong_pair_gap": "1178/7875"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Consider a manufacturer. EBIT is 100 million dollars, tax is 25 percent, average debt is 750 million dollars, average equity is 250 million dollars, and average excess cash is 10 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 750,
+        "average_equity": 250,
+        "average_excess_cash": 10,
+        "ebit": 100,
+        "tax_rate": "1/4"
+      },
+      "answer": "5/66",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred million dollars, tax is twenty-five percent, average debt is seven hundred and fifty million dollars, average equity is two hundred and fifty million dollars, and average excess cash is ten million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "10/99",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "3/40",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "75"
+        },
+        {
+          "name": "invested_capital",
+          "value": "990"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "5/198",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "1/1320",
+            "relative_gap": "1/100"
+          }
+        ],
+        "min_wrong_pair_gap": "103/3960",
+        "min_distinct_wrong_pair_gap": "103/3960"
+      },
+      "follow_up": {
+        "question": "What if some cash were required to run the business?",
+        "reference": "Retain required operating cash in invested capital. The stated subtraction applies only to excess cash."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Consider a distributor. EBIT is 180 million dollars, tax is 20 percent, average debt is 450 million dollars, average equity is 100 million dollars, and average excess cash is 160 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 450,
+        "average_equity": 100,
+        "average_excess_cash": 160,
+        "ebit": 180,
+        "tax_rate": "1/5"
+      },
+      "answer": "24/65",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred and eighty million dollars, tax is twenty percent, average debt is four hundred and fifty million dollars, average equity is one hundred million dollars, and average excess cash is one hundred and sixty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "6/13",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "72/275",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "144"
+        },
+        {
+          "name": "invested_capital",
+          "value": "390"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "6/65",
+            "relative_gap": "1/4"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "384/3575",
+            "relative_gap": "16/55"
+          }
+        ],
+        "min_wrong_pair_gap": "714/3575",
+        "min_distinct_wrong_pair_gap": "714/3575"
+      },
+      "follow_up": {
+        "question": "How would an impairment affect the interpretation of future ROIC?",
+        "reference": "An impairment can reduce book invested capital without improving operating cash generation. A later increase in ROIC may therefore reflect a smaller denominator rather than better operations."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Consider a publisher. EBIT is 30 million dollars, tax is 40 percent, average debt is 1 billion dollars, average equity is 550 million dollars, and average excess cash is 130 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 1000,
+        "average_equity": 550,
+        "average_excess_cash": 130,
+        "ebit": 30,
+        "tax_rate": "2/5"
+      },
+      "answer": "9/710",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is thirty million dollars, tax is forty percent, average debt is one billion dollars, average equity is five hundred and fifty million dollars, and average excess cash is one hundred and thirty million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "3/142",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "9/775",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "18"
+        },
+        {
+          "name": "invested_capital",
+          "value": "1420"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "3/355",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "117/110050",
+            "relative_gap": "13/155"
+          }
+        ],
+        "min_wrong_pair_gap": "1047/110050",
+        "min_distinct_wrong_pair_gap": "1047/110050"
+      },
+      "follow_up": {
+        "question": "Why exclude excess cash from invested capital?",
+        "reference": "The numerator measures after-tax operating profit rather than investment income on excess cash. Excluding excess cash aligns the capital base with those operating earnings."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Consider a wholesaler. EBIT is 190 million dollars, tax is 25 percent, average debt is 200 million dollars, average equity is 100 million dollars, and average excess cash is 170 million dollars. What is ROIC, as a percentage?",
+      "params": {
+        "average_debt": 200,
+        "average_equity": 100,
+        "average_excess_cash": 170,
+        "ebit": 190,
+        "tax_rate": "1/4"
+      },
+      "answer": "57/52",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Return on invested capital",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and ninety million dollars, tax is twenty-five percent, average debt is two hundred million dollars, average equity is one hundred million dollars, and average excess cash is one hundred and seventy million dollars. What is ROIC, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "19/13",
+          "misconceptions": [
+            "uses_pretax_ebit_in_the_numerator"
+          ]
+        },
+        {
+          "value": "19/40",
+          "misconceptions": [
+            "includes_excess_cash_in_invested_capital"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "after_tax_operating_profit",
+          "value": "285/2"
+        },
+        {
+          "name": "invested_capital",
+          "value": "130"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_pretax_ebit_in_the_numerator",
+            "absolute_gap": "19/52",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "includes_excess_cash_in_invested_capital",
+            "absolute_gap": "323/520",
+            "relative_gap": "17/30"
+          }
+        ],
+        "min_wrong_pair_gap": "513/520",
+        "min_distinct_wrong_pair_gap": "513/520"
+      },
+      "follow_up": {
+        "question": "Why use after-tax EBIT rather than net income?",
+        "reference": "ROIC measures the return available from operations before allocating it between lenders and shareholders. Net income would deduct financing costs and mismatch the combined capital base."
+      }
+    }
+  ]
+}

@@ -1,0 +1,3439 @@
+{
+  "template_id": "qx_F024",
+  "pack": "quant",
+  "topic": "Betting, bankroll and optimal staking",
+  "topics": [
+    "Betting, bankroll and optimal staking"
+  ],
+  "source_topic": "Rebalanced bankroll compounding",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "Why does the dollar stake change after a win or loss?",
+    "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Start with 100 dollars and bet 50 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 100,
+        "fraction": "1/2",
+        "losses": 2,
+        "net_odds": 3,
+        "wins": 3
+      },
+      "answer": "3125/8",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with one hundred dollars and bet fifty percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "450",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "675",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "5/2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "1/2"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "3125/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "475/8",
+            "relative_gap": "19/125"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "2275/8",
+            "relative_gap": "91/125"
+          }
+        ],
+        "min_wrong_pair_gap": "225",
+        "min_distinct_wrong_pair_gap": "225"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Start with 550 dollars and bet 40 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 2 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 550,
+        "fraction": "2/5",
+        "losses": 1,
+        "net_odds": 1,
+        "wins": 2
+      },
+      "answer": "3234/5",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with five hundred and fifty dollars and bet forty percent of current bankroll each round. A win adds the stake; a loss removes the stake. After two wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "770",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "5346/5",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "7/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "3234/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "616/5",
+            "relative_gap": "4/21"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "2112/5",
+            "relative_gap": "32/49"
+          }
+        ],
+        "min_wrong_pair_gap": "1496/5",
+        "min_distinct_wrong_pair_gap": "1496/5"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Start with 100 dollars and bet 10 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 100,
+        "fraction": "1/10",
+        "losses": 1,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "3888/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with one hundred dollars and bet ten percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "150",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "19773/100",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "6/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "3888/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "138/25",
+            "relative_gap": "23/648"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "4221/100",
+            "relative_gap": "469/1728"
+          }
+        ],
+        "min_wrong_pair_gap": "4773/100",
+        "min_distinct_wrong_pair_gap": "4773/100"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Start with 900 dollars and bet 20 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 2 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 900,
+        "fraction": "1/5",
+        "losses": 1,
+        "net_odds": 3,
+        "wins": 2
+      },
+      "answer": "9216/5",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with nine hundred dollars and bet twenty percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After two wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1800",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "11664/5",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "8/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "4/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "9216/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "216/5",
+            "relative_gap": "3/128"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "2448/5",
+            "relative_gap": "17/64"
+          }
+        ],
+        "min_wrong_pair_gap": "2664/5",
+        "min_distinct_wrong_pair_gap": "2664/5"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Start with 550 dollars and bet 10 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 550,
+        "fraction": "1/10",
+        "losses": 2,
+        "net_odds": 1,
+        "wins": 3
+      },
+      "answer": "1185921/2000",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with five hundred and fifty dollars and bet ten percent of current bankroll each round. A win adds the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "605",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "96228/125",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "11/10"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "1185921/2000"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "24079/2000",
+            "relative_gap": "199/9801"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "353727/2000",
+            "relative_gap": "397/1331"
+          }
+        ],
+        "min_wrong_pair_gap": "20603/125",
+        "min_distinct_wrong_pair_gap": "20603/125"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Start with 700 dollars and bet 25 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 700,
+        "fraction": "1/4",
+        "losses": 2,
+        "net_odds": 1,
+        "wins": 3
+      },
+      "answer": "196875/256",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with seven hundred dollars and bet twenty-five percent of current bankroll each round. A win adds the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "875",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "42525/32",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "5/4"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/4"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "196875/256"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "27125/256",
+            "relative_gap": "31/225"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "143325/256",
+            "relative_gap": "91/125"
+          }
+        ],
+        "min_wrong_pair_gap": "14525/32",
+        "min_distinct_wrong_pair_gap": "14525/32"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Start with 750 dollars and bet 25 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 750,
+        "fraction": "1/4",
+        "losses": 2,
+        "net_odds": 3,
+        "wins": 3
+      },
+      "answer": "1157625/512",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with seven hundred and fifty dollars and bet twenty-five percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "4125/2",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "3375",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "7/4"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/4"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "1157625/512"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "101625/512",
+            "relative_gap": "271/3087"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "570375/512",
+            "relative_gap": "169/343"
+          }
+        ],
+        "min_wrong_pair_gap": "2625/2",
+        "min_distinct_wrong_pair_gap": "2625/2"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Start with 700 dollars and bet 25 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 700,
+        "fraction": "1/4",
+        "losses": 1,
+        "net_odds": 1,
+        "wins": 3
+      },
+      "answer": "65625/64",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with seven hundred dollars and bet twenty-five percent of current bankroll each round. A win adds the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1050",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "14175/8",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "5/4"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/4"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "65625/64"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "1575/64",
+            "relative_gap": "3/125"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "47775/64",
+            "relative_gap": "91/125"
+          }
+        ],
+        "min_wrong_pair_gap": "5775/8",
+        "min_distinct_wrong_pair_gap": "5775/8"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Start with 750 dollars and bet 10 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 750,
+        "fraction": "1/10",
+        "losses": 2,
+        "net_odds": 1,
+        "wins": 2
+      },
+      "answer": "29403/40",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with seven hundred and fifty dollars and bet ten percent of current bankroll each round. A win adds the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "750",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "4374/5",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "11/10"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "29403/40"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "597/40",
+            "relative_gap": "199/9801"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "5589/40",
+            "relative_gap": "23/121"
+          }
+        ],
+        "min_wrong_pair_gap": "624/5",
+        "min_distinct_wrong_pair_gap": "624/5"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Start with 200 dollars and bet 10 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 200,
+        "fraction": "1/10",
+        "losses": 2,
+        "net_odds": 3,
+        "wins": 2
+      },
+      "answer": "13689/50",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with two hundred dollars and bet ten percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "280",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "7938/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "13/10"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "13689/50"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "311/50",
+            "relative_gap": "311/13689"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "2187/50",
+            "relative_gap": "27/169"
+          }
+        ],
+        "min_wrong_pair_gap": "938/25",
+        "min_distinct_wrong_pair_gap": "938/25"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Start with 1000 dollars and bet 40 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 1000,
+        "fraction": "2/5",
+        "losses": 1,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "17496/5",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with one thousand dollars and bet forty percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "3000",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "31944/5",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "9/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "17496/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "2496/5",
+            "relative_gap": "104/729"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "14448/5",
+            "relative_gap": "602/729"
+          }
+        ],
+        "min_wrong_pair_gap": "16944/5",
+        "min_distinct_wrong_pair_gap": "16944/5"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Start with 900 dollars and bet 20 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 900,
+        "fraction": "1/5",
+        "losses": 1,
+        "net_odds": 1,
+        "wins": 3
+      },
+      "answer": "31104/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with nine hundred dollars and bet twenty percent of current bankroll each round. A win adds the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1260",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "49392/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "6/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "4/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "31104/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "396/25",
+            "relative_gap": "11/864"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "18288/25",
+            "relative_gap": "127/216"
+          }
+        ],
+        "min_wrong_pair_gap": "17892/25",
+        "min_distinct_wrong_pair_gap": "17892/25"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Start with 800 dollars and bet 50 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 2 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 800,
+        "fraction": "1/2",
+        "losses": 1,
+        "net_odds": 3,
+        "wins": 2
+      },
+      "answer": "2500",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with eight hundred dollars and bet fifty percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After two wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2800",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "3600",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "5/2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "1/2"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "2500"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "300",
+            "relative_gap": "3/25"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "1100",
+            "relative_gap": "11/25"
+          }
+        ],
+        "min_wrong_pair_gap": "800",
+        "min_distinct_wrong_pair_gap": "800"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Start with 100 dollars and bet 40 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 100,
+        "fraction": "2/5",
+        "losses": 2,
+        "net_odds": 2,
+        "wins": 2
+      },
+      "answer": "2916/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with one hundred dollars and bet forty percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "180",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "4356/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "9/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "2916/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "1584/25",
+            "relative_gap": "44/81"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "288/5",
+            "relative_gap": "40/81"
+          }
+        ],
+        "min_wrong_pair_gap": "144/25",
+        "min_distinct_wrong_pair_gap": "144/25"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Start with 250 dollars and bet 10 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 250,
+        "fraction": "1/10",
+        "losses": 2,
+        "net_odds": 1,
+        "wins": 2
+      },
+      "answer": "9801/40",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with two hundred and fifty dollars and bet ten percent of current bankroll each round. A win adds the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "250",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "1458/5",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "11/10"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "9801/40"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "199/40",
+            "relative_gap": "199/9801"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "1863/40",
+            "relative_gap": "23/121"
+          }
+        ],
+        "min_wrong_pair_gap": "208/5",
+        "min_distinct_wrong_pair_gap": "208/5"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Start with 200 dollars and bet 20 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 200,
+        "fraction": "1/5",
+        "losses": 2,
+        "net_odds": 1,
+        "wins": 2
+      },
+      "answer": "4608/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with two hundred dollars and bet twenty percent of current bankroll each round. A win adds the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "200",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "6272/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "6/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "4/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "4608/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "392/25",
+            "relative_gap": "49/576"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "1664/25",
+            "relative_gap": "13/36"
+          }
+        ],
+        "min_wrong_pair_gap": "1272/25",
+        "min_distinct_wrong_pair_gap": "1272/25"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Start with 200 dollars and bet 10 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 2 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 200,
+        "fraction": "1/10",
+        "losses": 1,
+        "net_odds": 3,
+        "wins": 2
+      },
+      "answer": "1521/5",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with two hundred dollars and bet ten percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After two wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "300",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "1764/5",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "13/10"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "1521/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "21/5",
+            "relative_gap": "7/507"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "243/5",
+            "relative_gap": "27/169"
+          }
+        ],
+        "min_wrong_pair_gap": "264/5",
+        "min_distinct_wrong_pair_gap": "264/5"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Start with 350 dollars and bet 10 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 350,
+        "fraction": "1/10",
+        "losses": 2,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "61236/125",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with three hundred and fifty dollars and bet ten percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "490",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "1245699/2000",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "6/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "61236/125"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "14/125",
+            "relative_gap": "1/4374"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "265923/2000",
+            "relative_gap": "469/1728"
+          }
+        ],
+        "min_wrong_pair_gap": "265699/2000",
+        "min_distinct_wrong_pair_gap": "265699/2000"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Start with 350 dollars and bet 40 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 2 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 350,
+        "fraction": "2/5",
+        "losses": 1,
+        "net_odds": 2,
+        "wins": 2
+      },
+      "answer": "3402/5",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with three hundred and fifty dollars and bet forty percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After two wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "770",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "5082/5",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "9/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "3402/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "448/5",
+            "relative_gap": "32/243"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "336",
+            "relative_gap": "40/81"
+          }
+        ],
+        "min_wrong_pair_gap": "1232/5",
+        "min_distinct_wrong_pair_gap": "1232/5"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Start with 1000 dollars and bet 40 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 1000,
+        "fraction": "2/5",
+        "losses": 2,
+        "net_odds": 1,
+        "wins": 3
+      },
+      "answer": "24696/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with one thousand dollars and bet forty percent of current bankroll each round. A win adds the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1400",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "52488/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "7/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "24696/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "10304/25",
+            "relative_gap": "184/441"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "27792/25",
+            "relative_gap": "386/343"
+          }
+        ],
+        "min_wrong_pair_gap": "17488/25",
+        "min_distinct_wrong_pair_gap": "17488/25"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Start with 600 dollars and bet 10 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 600,
+        "fraction": "1/10",
+        "losses": 2,
+        "net_odds": 3,
+        "wins": 3
+      },
+      "answer": "533871/500",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with six hundred dollars and bet ten percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "1020",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "166698/125",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "13/10"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "533871/500"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "23871/500",
+            "relative_gap": "7957/177957"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "132921/500",
+            "relative_gap": "547/2197"
+          }
+        ],
+        "min_wrong_pair_gap": "39198/125",
+        "min_distinct_wrong_pair_gap": "39198/125"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Start with 950 dollars and bet 20 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 950,
+        "fraction": "1/5",
+        "losses": 2,
+        "net_odds": 3,
+        "wins": 2
+      },
+      "answer": "38912/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with nine hundred and fifty dollars and bet twenty percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1710",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "49248/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "8/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "4/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "38912/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "3838/25",
+            "relative_gap": "101/1024"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "10336/25",
+            "relative_gap": "17/64"
+          }
+        ],
+        "min_wrong_pair_gap": "6498/25",
+        "min_distinct_wrong_pair_gap": "6498/25"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Start with 800 dollars and bet 25 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 2 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 800,
+        "fraction": "1/4",
+        "losses": 1,
+        "net_odds": 2,
+        "wins": 2
+      },
+      "answer": "1350",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with eight hundred dollars and bet twenty-five percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After two wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1400",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "3675/2",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "3/2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/4"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "1350"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "50",
+            "relative_gap": "1/27"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "975/2",
+            "relative_gap": "13/36"
+          }
+        ],
+        "min_wrong_pair_gap": "875/2",
+        "min_distinct_wrong_pair_gap": "875/2"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Start with 650 dollars and bet 40 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 650,
+        "fraction": "2/5",
+        "losses": 2,
+        "net_odds": 1,
+        "wins": 2
+      },
+      "answer": "11466/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with six hundred and fifty dollars and bet forty percent of current bankroll each round. A win adds the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "650",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "18954/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "7/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "11466/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "4784/25",
+            "relative_gap": "184/441"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "7488/25",
+            "relative_gap": "32/49"
+          }
+        ],
+        "min_wrong_pair_gap": "2704/25",
+        "min_distinct_wrong_pair_gap": "2704/25"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Start with 950 dollars and bet 50 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 950,
+        "fraction": "1/2",
+        "losses": 2,
+        "net_odds": 1,
+        "wins": 2
+      },
+      "answer": "4275/8",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with nine hundred and fifty dollars and bet fifty percent of current bankroll each round. A win adds the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "950",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed",
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "3/2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "1/2"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "4275/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "3325/8",
+            "relative_gap": "7/9"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "3325/8",
+            "relative_gap": "7/9"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Start with 500 dollars and bet 50 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 500,
+        "fraction": "1/2",
+        "losses": 1,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "2000",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with five hundred dollars and bet fifty percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1750",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "15625/4",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "1/2"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "2000"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "250",
+            "relative_gap": "1/8"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "7625/4",
+            "relative_gap": "61/64"
+          }
+        ],
+        "min_wrong_pair_gap": "8625/4",
+        "min_distinct_wrong_pair_gap": "8625/4"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Start with 400 dollars and bet 10 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 400,
+        "fraction": "1/10",
+        "losses": 2,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "69984/125",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with four hundred dollars and bet ten percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "560",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "177957/250",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "6/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "69984/125"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "16/125",
+            "relative_gap": "1/4374"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "37989/250",
+            "relative_gap": "469/1728"
+          }
+        ],
+        "min_wrong_pair_gap": "37957/250",
+        "min_distinct_wrong_pair_gap": "37957/250"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Start with 250 dollars and bet 50 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 250,
+        "fraction": "1/2",
+        "losses": 2,
+        "net_odds": 1,
+        "wins": 3
+      },
+      "answer": "3375/16",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with two hundred and fifty dollars and bet fifty percent of current bankroll each round. A win adds the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "375",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "500",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "3/2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "1/2"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "3375/16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "2625/16",
+            "relative_gap": "7/9"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "4625/16",
+            "relative_gap": "37/27"
+          }
+        ],
+        "min_wrong_pair_gap": "125",
+        "min_distinct_wrong_pair_gap": "125"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Start with 950 dollars and bet 50 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 950,
+        "fraction": "1/2",
+        "losses": 1,
+        "net_odds": 3,
+        "wins": 3
+      },
+      "answer": "59375/8",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with nine hundred and fifty dollars and bet fifty percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4750",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "12825",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "5/2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "1/2"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "59375/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "21375/8",
+            "relative_gap": "9/25"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "43225/8",
+            "relative_gap": "91/125"
+          }
+        ],
+        "min_wrong_pair_gap": "8075",
+        "min_distinct_wrong_pair_gap": "8075"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Start with 950 dollars and bet 20 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 950,
+        "fraction": "1/5",
+        "losses": 2,
+        "net_odds": 2,
+        "wins": 2
+      },
+      "answer": "29792/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with nine hundred and fifty dollars and bet twenty percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1330",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "38912/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "7/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "4/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "29792/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "3458/25",
+            "relative_gap": "13/112"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "1824/5",
+            "relative_gap": "15/49"
+          }
+        ],
+        "min_wrong_pair_gap": "5662/25",
+        "min_distinct_wrong_pair_gap": "5662/25"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Start with 250 dollars and bet 25 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 250,
+        "fraction": "1/4",
+        "losses": 1,
+        "net_odds": 1,
+        "wins": 3
+      },
+      "answer": "46875/128",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with two hundred and fifty dollars and bet twenty-five percent of current bankroll each round. A win adds the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "375",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "10125/16",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "5/4"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/4"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "46875/128"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "1125/128",
+            "relative_gap": "3/125"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "34125/128",
+            "relative_gap": "91/125"
+          }
+        ],
+        "min_wrong_pair_gap": "4125/16",
+        "min_distinct_wrong_pair_gap": "4125/16"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Start with 200 dollars and bet 25 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 200,
+        "fraction": "1/4",
+        "losses": 1,
+        "net_odds": 3,
+        "wins": 3
+      },
+      "answer": "25725/32",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with two hundred dollars and bet twenty-five percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "600",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "1200",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "7/4"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/4"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "25725/32"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "6525/32",
+            "relative_gap": "87/343"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "12675/32",
+            "relative_gap": "169/343"
+          }
+        ],
+        "min_wrong_pair_gap": "600",
+        "min_distinct_wrong_pair_gap": "600"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Start with 400 dollars and bet 10 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 400,
+        "fraction": "1/10",
+        "losses": 1,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "15552/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with four hundred dollars and bet ten percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "600",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "19773/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "6/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "15552/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "552/25",
+            "relative_gap": "23/648"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "4221/25",
+            "relative_gap": "469/1728"
+          }
+        ],
+        "min_wrong_pair_gap": "4773/25",
+        "min_distinct_wrong_pair_gap": "4773/25"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Start with 350 dollars and bet 10 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 350,
+        "fraction": "1/10",
+        "losses": 1,
+        "net_odds": 1,
+        "wins": 3
+      },
+      "answer": "83853/200",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with three hundred and fifty dollars and bet ten percent of current bankroll each round. A win adds the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "420",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "13608/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "11/10"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "83853/200"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "147/200",
+            "relative_gap": "7/3993"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "25011/200",
+            "relative_gap": "397/1331"
+          }
+        ],
+        "min_wrong_pair_gap": "3108/25",
+        "min_distinct_wrong_pair_gap": "3108/25"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Start with 650 dollars and bet 25 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 650,
+        "fraction": "1/4",
+        "losses": 1,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "26325/16",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with six hundred and fifty dollars and bet twenty-five percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2925/2",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "334425/128",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "3/2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/4"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "26325/16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "2925/16",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "123825/128",
+            "relative_gap": "127/216"
+          }
+        ],
+        "min_wrong_pair_gap": "147225/128",
+        "min_distinct_wrong_pair_gap": "147225/128"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Start with 1000 dollars and bet 25 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 1000,
+        "fraction": "1/4",
+        "losses": 2,
+        "net_odds": 3,
+        "wins": 2
+      },
+      "answer": "55125/32",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with one thousand dollars and bet twenty-five percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2000",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "2250",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "7/4"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/4"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "55125/32"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "8875/32",
+            "relative_gap": "71/441"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "16875/32",
+            "relative_gap": "15/49"
+          }
+        ],
+        "min_wrong_pair_gap": "250",
+        "min_distinct_wrong_pair_gap": "250"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Start with 850 dollars and bet 40 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 850,
+        "fraction": "2/5",
+        "losses": 2,
+        "net_odds": 3,
+        "wins": 2
+      },
+      "answer": "37026/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with eight hundred and fifty dollars and bet forty percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2210",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "51714/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "11/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "37026/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "18224/25",
+            "relative_gap": "536/1089"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "14688/25",
+            "relative_gap": "48/121"
+          }
+        ],
+        "min_wrong_pair_gap": "3536/25",
+        "min_distinct_wrong_pair_gap": "3536/25"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Start with 700 dollars and bet 40 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 700,
+        "fraction": "2/5",
+        "losses": 1,
+        "net_odds": 3,
+        "wins": 3
+      },
+      "answer": "111804/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with seven hundred dollars and bet forty percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2940",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "184548/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "11/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "111804/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "38304/25",
+            "relative_gap": "456/1331"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "72744/25",
+            "relative_gap": "866/1331"
+          }
+        ],
+        "min_wrong_pair_gap": "111048/25",
+        "min_distinct_wrong_pair_gap": "111048/25"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Start with 900 dollars and bet 50 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 2 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 900,
+        "fraction": "1/2",
+        "losses": 1,
+        "net_odds": 3,
+        "wins": 2
+      },
+      "answer": "5625/2",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with nine hundred dollars and bet fifty percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After two wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "3150",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "4050",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "5/2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "1/2"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "5625/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "675/2",
+            "relative_gap": "3/25"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "2475/2",
+            "relative_gap": "11/25"
+          }
+        ],
+        "min_wrong_pair_gap": "900",
+        "min_distinct_wrong_pair_gap": "900"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Start with 600 dollars and bet 10 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 2 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 600,
+        "fraction": "1/10",
+        "losses": 1,
+        "net_odds": 3,
+        "wins": 2
+      },
+      "answer": "4563/5",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with six hundred dollars and bet ten percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After two wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "900",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "5292/5",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "13/10"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "4563/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "63/5",
+            "relative_gap": "7/507"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "729/5",
+            "relative_gap": "27/169"
+          }
+        ],
+        "min_wrong_pair_gap": "792/5",
+        "min_distinct_wrong_pair_gap": "792/5"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Start with 800 dollars and bet 25 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 800,
+        "fraction": "1/4",
+        "losses": 2,
+        "net_odds": 1,
+        "wins": 3
+      },
+      "answer": "28125/32",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with eight hundred dollars and bet twenty-five percent of current bankroll each round. A win adds the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1000",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "6075/4",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "5/4"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/4"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "28125/32"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "3875/32",
+            "relative_gap": "31/225"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "20475/32",
+            "relative_gap": "91/125"
+          }
+        ],
+        "min_wrong_pair_gap": "2075/4",
+        "min_distinct_wrong_pair_gap": "2075/4"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Start with 900 dollars and bet 10 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 900,
+        "fraction": "1/10",
+        "losses": 1,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "34992/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with nine hundred dollars and bet ten percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1350",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "177957/100",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "6/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "34992/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "1242/25",
+            "relative_gap": "23/648"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "37989/100",
+            "relative_gap": "469/1728"
+          }
+        ],
+        "min_wrong_pair_gap": "42957/100",
+        "min_distinct_wrong_pair_gap": "42957/100"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Start with 450 dollars and bet 40 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 450,
+        "fraction": "2/5",
+        "losses": 2,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "118098/125",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with four hundred and fifty dollars and bet forty percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "1170",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "215622/125",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "9/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "118098/125"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "28152/125",
+            "relative_gap": "1564/6561"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "97524/125",
+            "relative_gap": "602/729"
+          }
+        ],
+        "min_wrong_pair_gap": "69372/125",
+        "min_distinct_wrong_pair_gap": "69372/125"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Start with 600 dollars and bet 10 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 600,
+        "fraction": "1/10",
+        "losses": 2,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "104976/125",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with six hundred dollars and bet ten percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "840",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "533871/500",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "6/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "104976/125"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "24/125",
+            "relative_gap": "1/4374"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "113967/500",
+            "relative_gap": "469/1728"
+          }
+        ],
+        "min_wrong_pair_gap": "113871/500",
+        "min_distinct_wrong_pair_gap": "113871/500"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Start with 300 dollars and bet 50 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 2 wins followed by 1 loss, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 300,
+        "fraction": "1/2",
+        "losses": 1,
+        "net_odds": 1,
+        "wins": 2
+      },
+      "answer": "675/2",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with three hundred dollars and bet fifty percent of current bankroll each round. A win adds the stake; a loss removes the stake. After two wins followed by one loss, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "450",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "600",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "3/2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "1/2"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "675/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "225/2",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "525/2",
+            "relative_gap": "7/9"
+          }
+        ],
+        "min_wrong_pair_gap": "150",
+        "min_distinct_wrong_pair_gap": "150"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Start with 550 dollars and bet 50 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 550,
+        "fraction": "1/2",
+        "losses": 2,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "1100",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with five hundred and fifty dollars and bet fifty percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1650",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "34375/16",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "1/2"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "1100"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "550",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "16775/16",
+            "relative_gap": "61/64"
+          }
+        ],
+        "min_wrong_pair_gap": "7975/16",
+        "min_distinct_wrong_pair_gap": "7975/16"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Start with 950 dollars and bet 10 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 950,
+        "fraction": "1/10",
+        "losses": 2,
+        "net_odds": 3,
+        "wins": 2
+      },
+      "answer": "260091/200",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with nine hundred and fifty dollars and bet ten percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "1330",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "75411/50",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "13/10"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "9/10"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "260091/200"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "5909/200",
+            "relative_gap": "311/13689"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "41553/200",
+            "relative_gap": "27/169"
+          }
+        ],
+        "min_wrong_pair_gap": "8911/50",
+        "min_distinct_wrong_pair_gap": "8911/50"
+      },
+      "follow_up": {
+        "question": "What could make outcome order matter?",
+        "reference": "Fixed fees, minimum stakes or a changing fraction could alter later feasible bets. The simple commutative multiplier model would then be incomplete."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Start with 650 dollars and bet 20 percent of current bankroll each round. A win adds 2 times the stake; a loss removes the stake. After 3 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 650,
+        "fraction": "1/5",
+        "losses": 2,
+        "net_odds": 2,
+        "wins": 3
+      },
+      "answer": "142688/125",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with six hundred and fifty dollars and bet twenty percent of current bankroll each round. A win adds two times the stake; a loss removes the stake. After three wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "1170",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "212992/125",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "7/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "4/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "142688/125"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "3562/125",
+            "relative_gap": "137/5488"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "70304/125",
+            "relative_gap": "169/343"
+          }
+        ],
+        "min_wrong_pair_gap": "66742/125",
+        "min_distinct_wrong_pair_gap": "66742/125"
+      },
+      "follow_up": {
+        "question": "Why does an equal-percentage gain not undo a loss?",
+        "reference": "After a loss the gain applies to a smaller base. Returning to the starting amount requires a larger percentage increase."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Start with 450 dollars and bet 50 percent of current bankroll each round. A win adds 3 times the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 450,
+        "fraction": "1/2",
+        "losses": 2,
+        "net_odds": 3,
+        "wins": 2
+      },
+      "answer": "5625/8",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with four hundred and fifty dollars and bet fifty percent of current bankroll each round. A win adds three times the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1350",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "2025/2",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "5/2"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "1/2"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "5625/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "5175/8",
+            "relative_gap": "23/25"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "2475/8",
+            "relative_gap": "11/25"
+          }
+        ],
+        "min_wrong_pair_gap": "675/2",
+        "min_distinct_wrong_pair_gap": "675/2"
+      },
+      "follow_up": {
+        "question": "Why does the dollar stake change after a win or loss?",
+        "reference": "The rule stakes a fraction of the current bankroll. The base for the next stake therefore changes whenever wealth changes."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Start with 100 dollars and bet 40 percent of current bankroll each round. A win adds the stake; a loss removes the stake. After 2 wins followed by 2 losses, what is the bankroll, in dollars?",
+      "params": {
+        "bankroll": 100,
+        "fraction": "2/5",
+        "losses": 2,
+        "net_odds": 1,
+        "wins": 2
+      },
+      "answer": "1764/25",
+      "tolerance": "0",
+      "topic": "Betting, bankroll and optimal staking",
+      "source_topic": "Rebalanced bankroll compounding",
+      "difficulty": "Medium",
+      "spoken_text": "Start with one hundred dollars and bet forty percent of current bankroll each round. A win adds the stake; a loss removes the stake. After two wins followed by two losses, what is the bankroll, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "100",
+          "misconceptions": [
+            "keeps_the_initial_dollar_stake_fixed"
+          ]
+        },
+        {
+          "value": "2916/25",
+          "misconceptions": [
+            "counts_stake_return_as_extra_profit"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "win_multiplier",
+          "value": "7/5"
+        },
+        {
+          "name": "loss_multiplier",
+          "value": "3/5"
+        },
+        {
+          "name": "final_bankroll",
+          "value": "1764/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "keeps_the_initial_dollar_stake_fixed",
+            "absolute_gap": "736/25",
+            "relative_gap": "184/441"
+          },
+          {
+            "misconception": "counts_stake_return_as_extra_profit",
+            "absolute_gap": "1152/25",
+            "relative_gap": "32/49"
+          }
+        ],
+        "min_wrong_pair_gap": "416/25",
+        "min_distinct_wrong_pair_gap": "416/25"
+      },
+      "follow_up": {
+        "question": "Would reversing the order of the stated wins and losses change the answer?",
+        "reference": "Not under this exact fixed-fraction rule with fixed odds and no other cash flows. The same wealth multipliers commute."
+      }
+    }
+  ]
+}
