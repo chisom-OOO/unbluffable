@@ -19,19 +19,23 @@ import time
 from dataclasses import dataclass, field
 from fractions import Fraction
 from functools import lru_cache
+from types import SimpleNamespace
 from pathlib import Path
 
 from app import exam_text as say
 from app.areas import answer_value, area_for
 from app.behavioural import verbatim
+from app import hint_ladder
 from app.interview_session import SessionClosed
-from engine.help import weight_for
+from engine.help import strength, weight_for
+from voice.endpointing import cues
 from voice.recording import VoiceError
 from voice.schemas import obj
 
 DIR = Path(__file__).resolve().parents[1] / "content" / "coding"
 GUIDE_SECONDS = 900
-MAX_QUESTIONS = 2  # about the code, while coding
+MAX_QUESTIONS = 2  # about the code, while coding: on Run, a 20 s typing pause or a notable edit
+TRIGGERS = {"code_run": "run", "code_pause": "pause", "code_edit": "edit"}
 MAX_SUBMITS = 3
 STRING = {"type": "string"}
 
@@ -205,6 +209,10 @@ class CodingLog:
     questions: list = field(default_factory=list)  # {"question", "code", "trigger"}
     submits: list = field(default_factory=list)
     challenges: int = 0
+    hints: list = field(default_factory=list)  # {"text", "target"}: the hint ladder
+    help_load: int = 0
+    last_target: int | None = None
+    failing: dict | None = None  # the latest failing case: {"call", "got"}
     follow_up: dict | None = None
     seconds: float = 0
 
@@ -214,17 +222,45 @@ class CodingSession:
     (one Socratic challenge after a failing submit; up to three submits), then one follow-up."""
 
     def __init__(self, send, listen, next_event, provider, spec: dict, track: str = "software",
-                 deadline: float | None = None, clock=time.monotonic):
+                 deadline: float | None = None, clock=time.monotonic, steps: list[str] | None = None):
         self.send, self.listen, self.next_event, self.provider = send, listen, next_event, provider
         self.log = CodingLog(spec)
+        self.steps = list(steps or [])  # the family's solution steps (names only), for hints
         self.track, self.topics, self.placement, self.conditions = track, f"Coding round: {spec['topic']}", False, "exam"
         self.deadline, self.clock = deadline, clock
         self.finished = self.timed_out = False
         self.author = "Muse Spark Open"
 
-    async def line(self, kind: str, text: str, receipt: dict | None = None) -> None:
-        await self.send({"type": "interviewer_line", "kind": kind, "text": text, "target_step": None,
-                         "counts": {"challenges": self.log.challenges, "nudges": 0, "hints": 0}, "receipt": receipt})
+    async def line(self, kind: str, text: str, receipt: dict | None = None, target: int | None = None) -> None:
+        await self.send({"type": "interviewer_line", "kind": kind, "text": text, "target_step": target,
+                         "counts": {"challenges": self.log.challenges, "nudges": 0, "hints": len(self.log.hints)},
+                         "receipt": receipt})
+
+    def allowed(self, text: str) -> bool:
+        """A hint never hands over code, and never the failing case's expected output (the
+        case's own arguments and the candidate's output may be quoted)."""
+        q = " ".join(text.split())
+        if not q.endswith("?") or len(q) > 400 or "```" in q or re.search(r"\bdef |\breturn\b|\bfor\s+\w+\s+in\b", q):
+            return False
+        hidden = self.log.failing.get("expected") if self.log.failing else None
+        return not (hidden and re.search(rf"(?<![\d.]){re.escape(hidden)}(?![\d./])", q))
+
+    async def hint(self) -> None:
+        """Decision log 27: the same ladder as spoken questions, one step further each time
+        along the family's steps, never repeating; anchored to the latest failing case."""
+        log = self.log
+        steps = SimpleNamespace(steps=[SimpleNamespace(name=n, value=None) for n in self.steps])
+        earlier = [h["text"] for h in log.hints] + [q["question"] for q in log.questions]
+        target, text = hint_ladder.next_help(steps, 0, log.last_target, earlier, self.allowed)
+        if log.failing and not any(log.failing["call"] in h["text"] for h in log.hints):
+            text = f"Take {log.failing['call']}, where your code gives {log.failing['got']}. {text}"
+        if not self.allowed(text):
+            text = GENERIC_QUESTION
+        if target is not None:
+            log.help_load += strength(target, 0)
+            log.last_target = target
+        log.hints.append({"text": text, "target": target})
+        await self.line("hint", text, target=target)
 
     async def model_row(self, model: dict | None, job: str) -> None:
         if model:
@@ -278,18 +314,24 @@ class CodingSession:
             if kind == "speech":
                 log.transcript.append(event["text"])
                 await self.send({"type": "coding_speech", "text": event["text"]})
-            elif kind in {"code_run", "code_pause"}:
+                cue = cues(event["text"])
+                if cue is not None and cue.kind == "help":
+                    await self.hint()
+            elif kind in TRIGGERS:
+                if kind == "code_run":
+                    self.note_failing(event.get("results"), [e["args"] for e in public(spec)["examples"]])
                 if len(log.questions) < MAX_QUESTIONS and str(event.get("code", "")).strip():
                     question, model = await code_question(self.provider, spec, event["code"], " ".join(log.transcript))
                     await self.model_row(model, "coding_question")
-                    if question in {q["question"] for q in log.questions}:
+                    if hint_ladder.repeats(question, [q["question"] for q in log.questions]):
                         continue  # never the same question twice
-                    log.questions.append({"question": question, "code": event["code"],
-                                          "trigger": "run" if kind == "code_run" else "pause"})
+                    log.questions.append({"question": question, "code": event["code"], "trigger": TRIGGERS[kind]})
                     await self.line("probe", question)
             elif kind == "code_submit":
                 result = judge(spec, event.get("outputs"))
                 log.submits.append(Submit(str(event.get("code", "")), result, self.clock()))
+                if result["failing"]:
+                    self.note_failing(event.get("outputs"), spec["tests"], result["failing"][0])
                 card = receipt(spec, result, self.author)
                 await self.send({"type": "coding_result", "passed": result["passed"], "total": result["total"],
                                  "submit": len(log.submits), "submits_left": MAX_SUBMITS - len(log.submits), "receipt": card})
@@ -306,6 +348,24 @@ class CodingSession:
             elif kind == "end":
                 raise SessionClosed
 
+    def note_failing(self, outputs, cases, first: int | None = None) -> None:
+        """The latest failing case, by its arguments and the candidate's own output."""
+        if not isinstance(outputs, list) or len(outputs) != len(cases):
+            return
+        if first is None:
+            examples = public(self.log.spec)["examples"]
+            first = next((i for i, (r, e) in enumerate(zip(outputs, examples))
+                          if value_of(r) is None or value_of(r) != Fraction(e["expected"])), None)
+            if first is None:
+                return
+        r = outputs[first]
+        got = r.get("value") if isinstance(r, dict) and r.get("ok") else "an error"
+        call = f"{self.log.spec['function_name']}({', '.join(json.dumps(a) for a in cases[first])})"
+        if len(call) <= 160:
+            shown = {json.dumps(e["args"]) for e in public(self.log.spec)["examples"]}
+            hidden = None if json.dumps(cases[first]) in shown else self.log.spec["expected"][self.log.spec["tests"].index(cases[first])]
+            self.log.failing = {"call": call, "got": str(got)[:40], "expected": hidden}
+
     # --- scoring and report ---
     def scored(self) -> tuple[str | None, Fraction]:
         if not self.log.submits:
@@ -313,7 +373,9 @@ class CodingSession:
         final = self.log.submits[-1].result
         result = outcome(final)
         recovered = result == "correct" and len(self.log.submits) > 1
-        return result, (weight_for(0, True) if recovered else Fraction(1))
+        if result != "correct":
+            return result, Fraction(1)
+        return result, weight_for(self.log.help_load, recovered)
 
 
 def report(session: CodingSession) -> dict:
@@ -343,6 +405,7 @@ def report(session: CodingSession) -> dict:
             "approach": log.approach, "plan_quotes": log.plan.get("plan_quotes", []),
             "complexity_claim": log.plan.get("complexity_claim"),
             "questions": [q["question"] for q in log.questions], "transcript": log.transcript,
+            "hints": [h["text"] for h in log.hints], "help_load": log.help_load,
             "follow_up": log.follow_up, "challenged": bool(log.challenges),
             "seconds": round(log.seconds), "guide": GUIDE_SECONDS,
             "provenance": {"author": "Muse Spark Open", "variants": spec["verification"]["variants"],

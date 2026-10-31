@@ -509,7 +509,7 @@ document.addEventListener("DOMContentLoaded", () => {
       : placement
         ? { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, placement: true, typed_practice: typedPractice }
         : { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, topics: sentTopics(), level,
-            typed_practice: typedPractice, ...(codingChosen() ? { format: "coding" } : {}) }));
+            typed_practice: typedPractice }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
       if (phase !== "finished") { phase = "finished"; voice.close(); setStatus("The connection closed. Reload to start again."); render(); }
@@ -915,14 +915,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     showTopics();
     levelFromProfile();
-    const offersCoding = (tracks.find((t) => t.id === id)?.formats || []).includes("coding");
-    $("format-row").hidden = !offersCoding || placement || !!drill;
-    if (!offersCoding) document.querySelector('input[name="format"][value="spoken"]').checked = true;
+    $("coding-note").hidden = !codingChosen();
     syncFormat();
   }
-  const codingChosen = () => !$("format-row").hidden && document.querySelector('input[name="format"]:checked')?.value === "coding";
+  // Decision log 27: a track with coding specs (Software) is always a coding round.
+  const codingChosen = () => !placement && !drill && !!tracks.find((t) => t.id === chosenTrack)?.coding;
   function syncFormat() { $("levels").hidden = placement || codingChosen() || chosenTopics.has?.("Behavioural"); }
-  document.querySelectorAll('input[name="format"]').forEach((r) => r.addEventListener("change", syncFormat));
 
   // Decision log 23: the start level follows this track's rating estimate (< 40 Easy,
   // 40-69 Medium, 70+ Hard); it can still be changed here.

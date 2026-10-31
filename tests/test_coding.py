@@ -98,14 +98,15 @@ def coding_routes(monkeypatch):
     coding._load.cache_clear()
 
 
-def test_only_the_software_track_offers_a_coding_round_once_specs_exist(coding_routes, monkeypatch):
-    formats = {t["id"]: t["formats"] for t in TestClient(app).get("/api/interview/topics").json()["tracks"]}
-    assert formats["software"] == ["spoken", "coding"] and formats["quant"] == ["spoken"]
+def test_the_software_track_is_always_a_coding_round_once_specs_exist(coding_routes, monkeypatch):
+    coding_flags = {t["id"]: t["coding"] for t in TestClient(app).get("/api/interview/topics").json()["tracks"]}
+    assert coding_flags["software"] is True and coding_flags["quant"] is False
+    assert all("formats" not in t for t in TestClient(app).get("/api/interview/topics").json()["tracks"])
     monkeypatch.setenv("CODING_DIR", str(FIXTURE / "nothing"))
     coding._load.cache_clear()
     monkeypatch.setattr(interview_routes, "_TOPICS", None)
-    formats = {t["id"]: t["formats"] for t in TestClient(app).get("/api/interview/topics").json()["tracks"]}
-    assert formats["software"] == ["spoken"]  # no verified specs: no coding round
+    coding_flags = {t["id"]: t["coding"] for t in TestClient(app).get("/api/interview/topics").json()["tracks"]}
+    assert coding_flags["software"] is False  # no verified specs: no coding round
 
 
 def drain(socket, until):
@@ -121,7 +122,7 @@ def test_a_coding_round_end_to_end(coding_routes):
     client = TestClient(app)
     wrong = SPEC["wrong_methods"][0]["outputs"]
     with client.websocket_connect("/api/interview/ws") as socket:
-        socket.send_json({"type": "begin", "consent": True, "pack": "software", "format": "coding"})
+        socket.send_json({"type": "begin", "consent": True, "pack": "software"})  # no format choice
         seen = drain(socket, {"state"})
         session_id = seen[0]["id"]
         question = next(e for e in seen if e["type"] == "question")
@@ -138,7 +139,7 @@ def test_a_coding_round_end_to_end(coding_routes):
         seen = drain(socket, {"state"})
         assert {"type": "coding_speech", "text": "Now I loop over the gains."} in seen
         probes = 0
-        for trigger in ("code_run", "code_pause", "code_run"):
+        for trigger in ("code_run", "code_edit", "code_pause"):
             socket.send_json({"type": trigger, "code": "def max_consecutive_gain(gains):\n    return sum(gains)\n"})
             seen = drain(socket, {"state"})
             probes += sum(1 for e in seen if e.get("kind") == "probe")
@@ -181,3 +182,31 @@ def test_a_software_familys_provenance_shows_its_solver_code_once_exported(codin
     assert provenance.rows(p)[-1] == {"key": "solver_code", "label": "Solver code", "text": p["solver_source"]}
     other = provenance.provenance(parse_template(_raw_bag(template_id="bag")))
     assert not other["solver_source_stored"] and provenance.rows(other)[-1]["key"] == "source"
+
+
+def test_coding_hints_climb_the_family_steps_from_the_failing_case_and_never_hand_over_code():
+    import asyncio
+    sent = []
+
+    async def send(e):
+        sent.append(e)
+    session = coding.CodingSession(send, None, None, None, SPEC, steps=["running_best", "max_consecutive_sum"])
+    wrong = SPEC["wrong_methods"][0]["outputs"]
+    session.note_failing(out(wrong), SPEC["tests"], coding.judge(SPEC, out(wrong))["failing"][0])
+
+    async def three():
+        for _ in range(3):
+            await session.hint()
+    asyncio.run(three())
+    hints = [e for e in sent if e["kind"] == "hint"]
+    texts = [h["text"] for h in hints]
+    assert texts[0].startswith("Take max_consecutive_gain(") and "running best" in texts[0]
+    assert [h["target_step"] for h in hints] == [1, 2, 2] and len(set(texts)) == 3
+    from app.hint_ladder import repeats
+    assert not any(repeats(t, texts[:i]) for i, t in enumerate(texts[1:], 1))
+    assert all("def " not in t and "return" not in t for t in texts)
+    hidden = set(SPEC["expected"]) - {SPEC["expected"][i] for i in SPEC["examples"]}
+    assert session.log.help_load == 1 + 2 + 2
+    # Hints discount a correct answer: w = 2/(2 + H).
+    session.log.submits.append(coding.Submit("", coding.judge(SPEC, out(SPEC["expected"])), 0))
+    assert session.scored() == ("correct", Fraction(2, 7))

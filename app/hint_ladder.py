@@ -52,9 +52,10 @@ def step_prompt(puzzle, target: int, earlier_help: bool, allowed: Callable[[str]
     if not earlier_help or target < 2:
         return ask
     before = steps[target - 2]
-    with_value = f"The {step_name(before.name)} is {_number(before.value)}. Building on that: {ask[0].lower()}{ask[1:]}"
-    if allowed(with_value):
-        return with_value
+    if before.value is not None:  # coding rounds pass step names only
+        with_value = f"The {step_name(before.name)} is {_number(before.value)}. Building on that: {ask[0].lower()}{ask[1:]}"
+        if allowed(with_value):
+            return with_value
     return f"Start from the {step_name(before.name)}, then go a step further: {ask[0].lower()}{ask[1:]}"
 
 

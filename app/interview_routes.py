@@ -79,8 +79,8 @@ def _build_topics() -> dict:
         tracks.append({"id": pack, "name": name, "count": count, "available": bool(options),
                        "topics": options, "default": options[0]["id"] if options else None,
                        "areas": list(AREAS[pack]),
-                       # Decision log 26: coding rounds once verified specs exist (content/coding/).
-                       "formats": ["spoken", "coding"] if coding.specs(pack) else ["spoken"]})
+                       # Decision log 27: with verified specs (content/coding/), the track is always a coding round.
+                       "coding": bool(coding.specs(pack))})
     open_tracks = [t["id"] for t in tracks if t["available"]]
     default = DEFAULT_PACK if DEFAULT_PACK in open_tracks else open_tracks[0] if open_tracks else None
     # Easy and Medium are chosen in setup; Hard is the start for a rating of 70+ (decision log 23).
@@ -248,7 +248,7 @@ async def interview_socket(socket: WebSocket):
                 kind = control.get("type")
                 if kind == "end":
                     raise SessionClosed
-                if codes and kind in {"code_run", "code_pause", "code_submit"}:
+                if codes and kind in {"code_run", "code_pause", "code_edit", "code_submit"}:
                     if len(json.dumps(control)) <= 400_000:
                         return "control", control
                     await socket.send_json({"type": "error", "message": "That code or its results are too large to check."})
@@ -286,14 +286,15 @@ async def interview_socket(socket: WebSocket):
             track, interview = placement_for(begin.get("pack"))
             session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
             session.track, session.placement, session.topics = track, True, "Placement: one question per strength area"
-        elif begin.get("format") == "coding":
-            # Decision log 26: a coding round (Python), on the software track.
-            track = selection(begin.get("pack") or "software", None)[0]["id"]
+        elif coding.specs(selection(begin.get("pack"), None)[0]["id"]):
+            # Decision log 27: a track with coding specs (Software) is always a coding round (Python).
+            track = selection(begin.get("pack"), None)[0]["id"]
             topics = begin.get("topics") if isinstance(begin.get("topics"), list) else None
             spec = coding.pick(track, topics)
-            if spec is None:
-                raise VoiceError("Coding rounds are not available for this track yet.")
-            session = coding.CodingSession(socket.send_json, listen, next_event, provider, spec, track, deadline=deadline)
+            family = bank().templates.get(spec["template_id"])
+            steps = [s.name for s in family.instances[0].steps] if family and family.instances else []
+            session = coding.CodingSession(socket.send_json, listen, next_event, provider, spec, track, deadline=deadline,
+                                           steps=steps)
         elif selection(begin.get("pack"), begin["topics"] if begin.get("topics") is not None else begin.get("topic"))[1]                 == behavioural.BEHAVIOURAL:
             # Decision log 24: model-judged, not exact; no engine label.
             track = selection(begin.get("pack"), behavioural.BEHAVIOURAL)[0]["id"]

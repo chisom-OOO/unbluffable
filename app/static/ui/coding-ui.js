@@ -5,6 +5,7 @@
 (() => {
   const CM = "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/";
   const PAUSE_MS = 20000;            // a 20 s typing pause may prompt a question about the code
+  const EDIT_SETTLE_MS = 3000, EDIT_LINES = 4;  // a notable edit: 4+ changed lines, then 3 s still
   const EXAMPLES_MS = 15000, TESTS_MS = 30000;  // after Python has loaded
   const $ = (id) => document.getElementById(id);
   const esc = (t) => window.UB.escapeHtml(String(t));
@@ -55,7 +56,7 @@
     }
   }
 
-  let spec = null, editor = null, runner = null, send = null, open = false, pauseTimer = null, lastSent = "";
+  let spec = null, editor = null, runner = null, send = null, open = false, pauseTimer = null, editTimer = null, lastSent = "";
   const code = () => (editor && editor.getValue ? editor.getValue() : $("code-editor").value);
   const status = (t) => { $("py-status").textContent = t; };
   const fmtArgs = (args) => args.map((a) => JSON.stringify(a)).join(", ");
@@ -77,13 +78,26 @@
     }
   }
 
+  // Lines in `now` that weren't in `before` (and the reverse): a cheap measure of an edit.
+  function changedLines(before, now) {
+    const a = before.split("\n").map((l) => l.trim()).filter(Boolean), b = now.split("\n").map((l) => l.trim()).filter(Boolean);
+    const inA = new Set(a), inB = new Set(b);
+    return b.filter((l) => !inA.has(l)).length + a.filter((l) => !inB.has(l)).length;
+  }
+
   function typed() {
-    clearTimeout(pauseTimer);
+    clearTimeout(pauseTimer); clearTimeout(editTimer);
     if (!open) return;
     pauseTimer = setTimeout(() => {
       const now = code();
       if (open && now.trim() && now !== lastSent) { lastSent = now; send({ type: "code_pause", code: now }); }
     }, PAUSE_MS);
+    editTimer = setTimeout(() => {
+      const now = code();
+      if (open && now.trim() && changedLines(lastSent || `${spec.signature}\n    pass\n`, now) >= EDIT_LINES) {
+        lastSent = now; send({ type: "code_edit", code: now });
+      }
+    }, EDIT_SETTLE_MS);
   }
 
   function showExamples(results) {
@@ -131,7 +145,7 @@
       $("submit-code").onclick = submit;
     },
     opened() { open = true; $("run-examples").disabled = $("submit-code").disabled = false; },
-    closed() { open = false; clearTimeout(pauseTimer); $("run-examples").disabled = $("submit-code").disabled = true;
+    closed() { open = false; clearTimeout(pauseTimer); clearTimeout(editTimer); $("run-examples").disabled = $("submit-code").disabled = true;
                if (editor) editor.setOption("readOnly", true); else $("code-editor").readOnly = true; },
     result(event) {
       const left = event.submits_left;
