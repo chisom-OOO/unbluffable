@@ -15,7 +15,7 @@ from contextlib import suppress
 
 from fastapi import APIRouter, HTTPException, Response, WebSocket, WebSocketDisconnect
 
-from app import behavioural, interview_report, voice_routes
+from app import behavioural, coding, interview_report, voice_routes
 from app.areas import AREAS
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
@@ -78,7 +78,9 @@ def _build_topics() -> dict:
             options.append({"id": behavioural.BEHAVIOURAL, "name": behavioural.BEHAVIOURAL, "count": len(asked)})
         tracks.append({"id": pack, "name": name, "count": count, "available": bool(options),
                        "topics": options, "default": options[0]["id"] if options else None,
-                       "areas": list(AREAS[pack])})
+                       "areas": list(AREAS[pack]),
+                       # Decision log 26: coding rounds once verified specs exist (content/coding/).
+                       "formats": ["spoken", "coding"] if coding.specs(pack) else ["spoken"]})
     open_tracks = [t["id"] for t in tracks if t["available"]]
     default = DEFAULT_PACK if DEFAULT_PACK in open_tracks else open_tracks[0] if open_tracks else None
     # Easy and Medium are chosen in setup; Hard is the start for a rating of 70+ (decision log 23).
@@ -187,6 +189,8 @@ def report(session_id: str):
         raise HTTPException(404, "This report is no longer available.")
     if isinstance(session, DrillSession):
         return interview_report.build_drill(session)
+    if isinstance(session, coding.CodingSession):
+        return coding.report(session)
     if isinstance(session, behavioural.BehaviouralSession):
         return behavioural.report(session)
     return interview_report.build(session, bank().templates)
@@ -223,6 +227,18 @@ async def interview_socket(socket: WebSocket):
         async def listen() -> str:
             await socket.send_json({"type": "state", "value": "listening"})
             while True:
+                kind, value = await receive(False)
+                if kind == "speech":
+                    return value
+
+        async def next_event() -> dict:
+            """Coding rounds: the next utterance, or a code run, typing pause or submit."""
+            await socket.send_json({"type": "state", "value": "listening"})
+            kind, value = await receive(True)
+            return {"type": "speech", "text": value} if kind == "speech" else value
+
+        async def receive(codes: bool):
+            while True:
                 message = await socket.receive()
                 if message["type"] == "websocket.disconnect":
                     raise SessionClosed
@@ -232,10 +248,15 @@ async def interview_socket(socket: WebSocket):
                 kind = control.get("type")
                 if kind == "end":
                     raise SessionClosed
+                if codes and kind in {"code_run", "code_pause", "code_submit"}:
+                    if len(json.dumps(control)) <= 400_000:
+                        return "control", control
+                    await socket.send_json({"type": "error", "message": "That code or its results are too large to check."})
+                    continue
                 if kind == "typed":
                     text = control.get("transcript")
                     if isinstance(text, str) and text.strip() and len(text) <= 20_000:
-                        return text.strip()
+                        return "speech", text.strip()
                     await socket.send_json({"type": "error", "message": "Enter a nonempty answer of at most 20,000 characters."})
                     continue
                 if kind == "capture":
@@ -249,7 +270,7 @@ async def interview_socket(socket: WebSocket):
                         await socket.send_json({"type": "state", "value": "listening"})
                         continue
                     await socket.send_json({"type": "transcription_model", "model": model})
-                    return text
+                    return "speech", text
                 if kind == "mic_failed" and session.conditions == "exam":
                     # Decision log 20: the microphone failed after Start, so the rest is typed practice.
                     session.conditions = "typed"
@@ -263,6 +284,14 @@ async def interview_socket(socket: WebSocket):
             track, interview = placement_for(begin.get("pack"))
             session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
             session.track, session.placement, session.topics = track, True, "Placement: one question per strength area"
+        elif begin.get("format") == "coding":
+            # Decision log 26: a coding round (Python), on the software track.
+            track = selection(begin.get("pack") or "software", None)[0]["id"]
+            topics = begin.get("topics") if isinstance(begin.get("topics"), list) else None
+            spec = coding.pick(track, topics)
+            if spec is None:
+                raise VoiceError("Coding rounds are not available for this track yet.")
+            session = coding.CodingSession(socket.send_json, listen, next_event, provider, spec, track, deadline=deadline)
         elif selection(begin.get("pack"), begin["topics"] if begin.get("topics") is not None else begin.get("topic"))[1]                 == behavioural.BEHAVIOURAL:
             # Decision log 24: model-judged, not exact; no engine label.
             track = selection(begin.get("pack"), behavioural.BEHAVIOURAL)[0]["id"]
