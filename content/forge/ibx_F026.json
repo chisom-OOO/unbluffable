@@ -1,0 +1,3244 @@
+{
+  "template_id": "ibx_F026",
+  "pack": "ib",
+  "topic": "Financial statement analysis",
+  "topics": [
+    "Financial statement analysis"
+  ],
+  "source_topic": "Normalized EBITDA margin",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+    "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Consider a retailer. Revenue is 1 billion dollars; reported EBITDA of 200 million dollars includes a one-off expense of 25 million dollars and an asset-sale gain of 40 million dollars. Depreciation is 25 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 40,
+        "depreciation": 25,
+        "one_off_expense": 25,
+        "reported_ebitda": 200,
+        "revenue": 1000
+      },
+      "answer": "37/200",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Revenue is one billion dollars; reported EBITDA of two hundred million dollars includes a one-off expense of twenty-five million dollars and an asset-sale gain of forty million dollars. Depreciation is twenty-five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "53/200",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "4/25",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "185"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "37/200"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/25",
+            "relative_gap": "16/37"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/40",
+            "relative_gap": "5/37"
+          }
+        ],
+        "min_wrong_pair_gap": "21/200",
+        "min_distinct_wrong_pair_gap": "21/200"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Consider a manufacturer. Revenue is 900 million dollars; reported EBITDA of 50 million dollars includes a one-off expense of 5 million dollars and an asset-sale gain of 15 million dollars. Depreciation is 30 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 15,
+        "depreciation": 30,
+        "one_off_expense": 5,
+        "reported_ebitda": 50,
+        "revenue": 900
+      },
+      "answer": "2/45",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Revenue is nine hundred million dollars; reported EBITDA of fifty million dollars includes a one-off expense of five million dollars and an asset-sale gain of fifteen million dollars. Depreciation is thirty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "7/90",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "1/90",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "40"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "2/45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/30",
+            "relative_gap": "3/4"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/30",
+            "relative_gap": "3/4"
+          }
+        ],
+        "min_wrong_pair_gap": "1/15",
+        "min_distinct_wrong_pair_gap": "1/15"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Consider a distributor. Revenue is 1.1 billion dollars; reported EBITDA of 130 million dollars includes a one-off expense of 35 million dollars and an asset-sale gain of 15 million dollars. Depreciation is 35 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 15,
+        "depreciation": 35,
+        "one_off_expense": 35,
+        "reported_ebitda": 130,
+        "revenue": 1100
+      },
+      "answer": "3/22",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Revenue is one point one billion dollars; reported EBITDA of one hundred and thirty million dollars includes a one-off expense of thirty-five million dollars and an asset-sale gain of fifteen million dollars. Depreciation is thirty-five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "9/55",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "23/220",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "150"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "3/22"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/110",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "7/220",
+            "relative_gap": "7/30"
+          }
+        ],
+        "min_wrong_pair_gap": "13/220",
+        "min_distinct_wrong_pair_gap": "13/220"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Consider a publisher. Revenue is 500 million dollars; reported EBITDA of 160 million dollars includes a one-off expense of 30 million dollars and an asset-sale gain of 5 million dollars. Depreciation is 20 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 5,
+        "depreciation": 20,
+        "one_off_expense": 30,
+        "reported_ebitda": 160,
+        "revenue": 500
+      },
+      "answer": "37/100",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Revenue is five hundred million dollars; reported EBITDA of one hundred and sixty million dollars includes a one-off expense of thirty million dollars and an asset-sale gain of five million dollars. Depreciation is twenty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "39/100",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "33/100",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "185"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "37/100"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/50",
+            "relative_gap": "2/37"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/25",
+            "relative_gap": "4/37"
+          }
+        ],
+        "min_wrong_pair_gap": "3/50",
+        "min_distinct_wrong_pair_gap": "3/50"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Consider a wholesaler. Revenue is 1.4 billion dollars; reported EBITDA of 220 million dollars includes a one-off expense of 30 million dollars and an asset-sale gain of 25 million dollars. Depreciation is 5 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 25,
+        "depreciation": 5,
+        "one_off_expense": 30,
+        "reported_ebitda": 220,
+        "revenue": 1400
+      },
+      "answer": "9/56",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Revenue is one point four billion dollars; reported EBITDA of two hundred and twenty million dollars includes a one-off expense of thirty million dollars and an asset-sale gain of twenty-five million dollars. Depreciation is five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "11/56",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "11/70",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "225"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "9/56"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/28",
+            "relative_gap": "2/9"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/280",
+            "relative_gap": "1/45"
+          }
+        ],
+        "min_wrong_pair_gap": "11/280",
+        "min_distinct_wrong_pair_gap": "11/280"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Consider a retailer. Revenue is one and a half billion dollars; reported EBITDA of 130 million dollars includes a one-off expense of 30 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 15 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 15,
+        "one_off_expense": 30,
+        "reported_ebitda": 130,
+        "revenue": 1500
+      },
+      "answer": "7/75",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Revenue is one and a half billion dollars; reported EBITDA of one hundred and thirty million dollars includes a one-off expense of thirty million dollars and an asset-sale gain of twenty million dollars. Depreciation is fifteen million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "3/25",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "1/12",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "140"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "7/75"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/75",
+            "relative_gap": "2/7"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/100",
+            "relative_gap": "3/28"
+          }
+        ],
+        "min_wrong_pair_gap": "11/300",
+        "min_distinct_wrong_pair_gap": "11/300"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Consider a manufacturer. Revenue is 700 million dollars; reported EBITDA of 170 million dollars includes a one-off expense of 15 million dollars and an asset-sale gain of 25 million dollars. Depreciation is 25 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 25,
+        "depreciation": 25,
+        "one_off_expense": 15,
+        "reported_ebitda": 170,
+        "revenue": 700
+      },
+      "answer": "8/35",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Revenue is seven hundred million dollars; reported EBITDA of one hundred and seventy million dollars includes a one-off expense of fifteen million dollars and an asset-sale gain of twenty-five million dollars. Depreciation is twenty-five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "3/10",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "27/140",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "160"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "8/35"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/14",
+            "relative_gap": "5/16"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/28",
+            "relative_gap": "5/32"
+          }
+        ],
+        "min_wrong_pair_gap": "3/28",
+        "min_distinct_wrong_pair_gap": "3/28"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Consider a distributor. Revenue is 1.7 billion dollars; reported EBITDA of 250 million dollars includes a one-off expense of 10 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 20 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 20,
+        "one_off_expense": 10,
+        "reported_ebitda": 250,
+        "revenue": 1700
+      },
+      "answer": "12/85",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Revenue is one point seven billion dollars; reported EBITDA of two hundred and fifty million dollars includes a one-off expense of ten million dollars and an asset-sale gain of twenty million dollars. Depreciation is twenty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "14/85",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "11/85",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "240"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "12/85"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/85",
+            "relative_gap": "1/6"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/85",
+            "relative_gap": "1/12"
+          }
+        ],
+        "min_wrong_pair_gap": "3/85",
+        "min_distinct_wrong_pair_gap": "3/85"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Consider a publisher. Revenue is 1.4 billion dollars; reported EBITDA of 80 million dollars includes a one-off expense of 5 million dollars and an asset-sale gain of 30 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 30,
+        "depreciation": 10,
+        "one_off_expense": 5,
+        "reported_ebitda": 80,
+        "revenue": 1400
+      },
+      "answer": "11/280",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Revenue is one point four billion dollars; reported EBITDA of eighty million dollars includes a one-off expense of five million dollars and an asset-sale gain of thirty million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "23/280",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "9/280",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "55"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "11/280"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/70",
+            "relative_gap": "12/11"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/140",
+            "relative_gap": "2/11"
+          }
+        ],
+        "min_wrong_pair_gap": "1/20",
+        "min_distinct_wrong_pair_gap": "1/20"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Consider a wholesaler. Revenue is 1.2 billion dollars; reported EBITDA of 240 million dollars includes a one-off expense of 25 million dollars and an asset-sale gain of 15 million dollars. Depreciation is 35 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 15,
+        "depreciation": 35,
+        "one_off_expense": 25,
+        "reported_ebitda": 240,
+        "revenue": 1200
+      },
+      "answer": "5/24",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Revenue is one point two billion dollars; reported EBITDA of two hundred and forty million dollars includes a one-off expense of twenty-five million dollars and an asset-sale gain of fifteen million dollars. Depreciation is thirty-five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "7/30",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "43/240",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "250"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "5/24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/40",
+            "relative_gap": "3/25"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "7/240",
+            "relative_gap": "7/50"
+          }
+        ],
+        "min_wrong_pair_gap": "13/240",
+        "min_distinct_wrong_pair_gap": "13/240"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Consider a retailer. Revenue is 2 billion dollars; reported EBITDA of 250 million dollars includes a one-off expense of 30 million dollars and an asset-sale gain of 15 million dollars. Depreciation is 15 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 15,
+        "depreciation": 15,
+        "one_off_expense": 30,
+        "reported_ebitda": 250,
+        "revenue": 2000
+      },
+      "answer": "53/400",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Revenue is two billion dollars; reported EBITDA of two hundred and fifty million dollars includes a one-off expense of thirty million dollars and an asset-sale gain of fifteen million dollars. Depreciation is fifteen million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "59/400",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "1/8",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "265"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "53/400"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/200",
+            "relative_gap": "6/53"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "3/400",
+            "relative_gap": "3/53"
+          }
+        ],
+        "min_wrong_pair_gap": "9/400",
+        "min_distinct_wrong_pair_gap": "9/400"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Consider a manufacturer. Revenue is 1.9 billion dollars; reported EBITDA of 100 million dollars includes a one-off expense of 40 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 5 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 5,
+        "one_off_expense": 40,
+        "reported_ebitda": 100,
+        "revenue": 1900
+      },
+      "answer": "6/95",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Revenue is one point nine billion dollars; reported EBITDA of one hundred million dollars includes a one-off expense of forty million dollars and an asset-sale gain of twenty million dollars. Depreciation is five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "8/95",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "23/380",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "120"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "6/95"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/95",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/380",
+            "relative_gap": "1/24"
+          }
+        ],
+        "min_wrong_pair_gap": "9/380",
+        "min_distinct_wrong_pair_gap": "9/380"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Consider a distributor. Revenue is 1.1 billion dollars; reported EBITDA of 70 million dollars includes a one-off expense of 10 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 15 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 15,
+        "one_off_expense": 10,
+        "reported_ebitda": 70,
+        "revenue": 1100
+      },
+      "answer": "3/55",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Revenue is one point one billion dollars; reported EBITDA of seventy million dollars includes a one-off expense of ten million dollars and an asset-sale gain of twenty million dollars. Depreciation is fifteen million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1/11",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "9/220",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "60"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "3/55"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/55",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "3/220",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "1/20",
+        "min_distinct_wrong_pair_gap": "1/20"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Consider a publisher. Revenue is 1.7 billion dollars; reported EBITDA of 150 million dollars includes a one-off expense of 15 million dollars and an asset-sale gain of 40 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 40,
+        "depreciation": 10,
+        "one_off_expense": 15,
+        "reported_ebitda": 150,
+        "revenue": 1700
+      },
+      "answer": "5/68",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Revenue is one point seven billion dollars; reported EBITDA of one hundred and fifty million dollars includes a one-off expense of fifteen million dollars and an asset-sale gain of forty million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "41/340",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "23/340",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "125"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "5/68"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "4/85",
+            "relative_gap": "16/25"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/170",
+            "relative_gap": "2/25"
+          }
+        ],
+        "min_wrong_pair_gap": "9/170",
+        "min_distinct_wrong_pair_gap": "9/170"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Consider a wholesaler. Revenue is 2 billion dollars; reported EBITDA of 230 million dollars includes a one-off expense of 30 million dollars and an asset-sale gain of 40 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 40,
+        "depreciation": 10,
+        "one_off_expense": 30,
+        "reported_ebitda": 230,
+        "revenue": 2000
+      },
+      "answer": "11/100",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Revenue is two billion dollars; reported EBITDA of two hundred and thirty million dollars includes a one-off expense of thirty million dollars and an asset-sale gain of forty million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "3/20",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "21/200",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "220"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "11/100"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/25",
+            "relative_gap": "4/11"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/200",
+            "relative_gap": "1/22"
+          }
+        ],
+        "min_wrong_pair_gap": "9/200",
+        "min_distinct_wrong_pair_gap": "9/200"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Consider a retailer. Revenue is 800 million dollars; reported EBITDA of 80 million dollars includes a one-off expense of 35 million dollars and an asset-sale gain of 30 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 30,
+        "depreciation": 10,
+        "one_off_expense": 35,
+        "reported_ebitda": 80,
+        "revenue": 800
+      },
+      "answer": "17/160",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Revenue is eight hundred million dollars; reported EBITDA of eighty million dollars includes a one-off expense of thirty-five million dollars and an asset-sale gain of thirty million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "29/160",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "3/32",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "85"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "17/160"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/40",
+            "relative_gap": "12/17"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/80",
+            "relative_gap": "2/17"
+          }
+        ],
+        "min_wrong_pair_gap": "7/80",
+        "min_distinct_wrong_pair_gap": "7/80"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Consider a manufacturer. Revenue is 600 million dollars; reported EBITDA of 220 million dollars includes a one-off expense of 40 million dollars and an asset-sale gain of 10 million dollars. Depreciation is 20 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 10,
+        "depreciation": 20,
+        "one_off_expense": 40,
+        "reported_ebitda": 220,
+        "revenue": 600
+      },
+      "answer": "5/12",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Revenue is six hundred million dollars; reported EBITDA of two hundred and twenty million dollars includes a one-off expense of forty million dollars and an asset-sale gain of ten million dollars. Depreciation is twenty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "9/20",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "23/60",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "250"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "5/12"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/30",
+            "relative_gap": "2/25"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/30",
+            "relative_gap": "2/25"
+          }
+        ],
+        "min_wrong_pair_gap": "1/15",
+        "min_distinct_wrong_pair_gap": "1/15"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Consider a distributor. Revenue is 1.3 billion dollars; reported EBITDA of 60 million dollars includes a one-off expense of 20 million dollars and an asset-sale gain of 40 million dollars. Depreciation is 30 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 40,
+        "depreciation": 30,
+        "one_off_expense": 20,
+        "reported_ebitda": 60,
+        "revenue": 1300
+      },
+      "answer": "2/65",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Revenue is one point three billion dollars; reported EBITDA of sixty million dollars includes a one-off expense of twenty million dollars and an asset-sale gain of forty million dollars. Depreciation is thirty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "6/65",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "1/130",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "40"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "2/65"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "4/65",
+            "relative_gap": "2"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "3/130",
+            "relative_gap": "3/4"
+          }
+        ],
+        "min_wrong_pair_gap": "11/130",
+        "min_distinct_wrong_pair_gap": "11/130"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Consider a publisher. Revenue is 1.2 billion dollars; reported EBITDA of 70 million dollars includes a one-off expense of 30 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 40 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 40,
+        "one_off_expense": 30,
+        "reported_ebitda": 70,
+        "revenue": 1200
+      },
+      "answer": "1/15",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Revenue is one point two billion dollars; reported EBITDA of seventy million dollars includes a one-off expense of thirty million dollars and an asset-sale gain of twenty million dollars. Depreciation is forty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1/10",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "1/30",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "80"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "1/15"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/30",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/30",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "1/15",
+        "min_distinct_wrong_pair_gap": "1/15"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Consider a wholesaler. Revenue is 1.9 billion dollars; reported EBITDA of 50 million dollars includes a one-off expense of 20 million dollars and an asset-sale gain of 40 million dollars. Depreciation is 20 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 40,
+        "depreciation": 20,
+        "one_off_expense": 20,
+        "reported_ebitda": 50,
+        "revenue": 1900
+      },
+      "answer": "3/190",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Revenue is one point nine billion dollars; reported EBITDA of fifty million dollars includes a one-off expense of twenty million dollars and an asset-sale gain of forty million dollars. Depreciation is twenty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "11/190",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "1/190",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "30"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "3/190"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "4/95",
+            "relative_gap": "8/3"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/95",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1/19",
+        "min_distinct_wrong_pair_gap": "1/19"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Consider a retailer. Revenue is one and a half billion dollars; reported EBITDA of 130 million dollars includes a one-off expense of 35 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 10,
+        "one_off_expense": 35,
+        "reported_ebitda": 130,
+        "revenue": 1500
+      },
+      "answer": "29/300",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Revenue is one and a half billion dollars; reported EBITDA of one hundred and thirty million dollars includes a one-off expense of thirty-five million dollars and an asset-sale gain of twenty million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "37/300",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "9/100",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "145"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "29/300"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/75",
+            "relative_gap": "8/29"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/150",
+            "relative_gap": "2/29"
+          }
+        ],
+        "min_wrong_pair_gap": "1/30",
+        "min_distinct_wrong_pair_gap": "1/30"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Consider a manufacturer. Revenue is 800 million dollars; reported EBITDA of 80 million dollars includes a one-off expense of 35 million dollars and an asset-sale gain of 15 million dollars. Depreciation is 30 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 15,
+        "depreciation": 30,
+        "one_off_expense": 35,
+        "reported_ebitda": 80,
+        "revenue": 800
+      },
+      "answer": "1/8",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Revenue is eight hundred million dollars; reported EBITDA of eighty million dollars includes a one-off expense of thirty-five million dollars and an asset-sale gain of fifteen million dollars. Depreciation is thirty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "13/80",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "7/80",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "100"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "1/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/80",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "3/80",
+            "relative_gap": "3/10"
+          }
+        ],
+        "min_wrong_pair_gap": "3/40",
+        "min_distinct_wrong_pair_gap": "3/40"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Consider a distributor. Revenue is 1.8 billion dollars; reported EBITDA of 90 million dollars includes a one-off expense of 35 million dollars and an asset-sale gain of 40 million dollars. Depreciation is 5 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 40,
+        "depreciation": 5,
+        "one_off_expense": 35,
+        "reported_ebitda": 90,
+        "revenue": 1800
+      },
+      "answer": "17/360",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Revenue is one point eight billion dollars; reported EBITDA of ninety million dollars includes a one-off expense of thirty-five million dollars and an asset-sale gain of forty million dollars. Depreciation is five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "11/120",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "2/45",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "85"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "17/360"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/45",
+            "relative_gap": "16/17"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/360",
+            "relative_gap": "1/17"
+          }
+        ],
+        "min_wrong_pair_gap": "17/360",
+        "min_distinct_wrong_pair_gap": "17/360"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Consider a publisher. Revenue is 700 million dollars; reported EBITDA of 130 million dollars includes a one-off expense of 15 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 25 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 25,
+        "one_off_expense": 15,
+        "reported_ebitda": 130,
+        "revenue": 700
+      },
+      "answer": "5/28",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Revenue is seven hundred million dollars; reported EBITDA of one hundred and thirty million dollars includes a one-off expense of fifteen million dollars and an asset-sale gain of twenty million dollars. Depreciation is twenty-five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "33/140",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "1/7",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "125"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "5/28"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/35",
+            "relative_gap": "8/25"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/28",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "13/140",
+        "min_distinct_wrong_pair_gap": "13/140"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Consider a wholesaler. Revenue is 900 million dollars; reported EBITDA of 240 million dollars includes a one-off expense of 15 million dollars and an asset-sale gain of 5 million dollars. Depreciation is 40 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 5,
+        "depreciation": 40,
+        "one_off_expense": 15,
+        "reported_ebitda": 240,
+        "revenue": 900
+      },
+      "answer": "5/18",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Revenue is nine hundred million dollars; reported EBITDA of two hundred and forty million dollars includes a one-off expense of fifteen million dollars and an asset-sale gain of five million dollars. Depreciation is forty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "13/45",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "7/30",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "250"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "5/18"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/90",
+            "relative_gap": "1/25"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "2/45",
+            "relative_gap": "4/25"
+          }
+        ],
+        "min_wrong_pair_gap": "1/18",
+        "min_distinct_wrong_pair_gap": "1/18"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Consider a retailer. Revenue is 500 million dollars; reported EBITDA of 240 million dollars includes a one-off expense of 40 million dollars and an asset-sale gain of 5 million dollars. Depreciation is 30 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 5,
+        "depreciation": 30,
+        "one_off_expense": 40,
+        "reported_ebitda": 240,
+        "revenue": 500
+      },
+      "answer": "11/20",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Revenue is five hundred million dollars; reported EBITDA of two hundred and forty million dollars includes a one-off expense of forty million dollars and an asset-sale gain of five million dollars. Depreciation is thirty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "57/100",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "49/100",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "275"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "11/20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/50",
+            "relative_gap": "2/55"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "3/50",
+            "relative_gap": "6/55"
+          }
+        ],
+        "min_wrong_pair_gap": "2/25",
+        "min_distinct_wrong_pair_gap": "2/25"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Consider a manufacturer. Revenue is 800 million dollars; reported EBITDA of 220 million dollars includes a one-off expense of 20 million dollars and an asset-sale gain of 5 million dollars. Depreciation is 30 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 5,
+        "depreciation": 30,
+        "one_off_expense": 20,
+        "reported_ebitda": 220,
+        "revenue": 800
+      },
+      "answer": "47/160",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Revenue is eight hundred million dollars; reported EBITDA of two hundred and twenty million dollars includes a one-off expense of twenty million dollars and an asset-sale gain of five million dollars. Depreciation is thirty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "49/160",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "41/160",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "235"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "47/160"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/80",
+            "relative_gap": "2/47"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "3/80",
+            "relative_gap": "6/47"
+          }
+        ],
+        "min_wrong_pair_gap": "1/20",
+        "min_distinct_wrong_pair_gap": "1/20"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Consider a distributor. Revenue is 1.9 billion dollars; reported EBITDA of 160 million dollars includes a one-off expense of 30 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 10,
+        "one_off_expense": 30,
+        "reported_ebitda": 160,
+        "revenue": 1900
+      },
+      "answer": "17/190",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Revenue is one point nine billion dollars; reported EBITDA of one hundred and sixty million dollars includes a one-off expense of thirty million dollars and an asset-sale gain of twenty million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "21/190",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "8/95",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "170"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "17/190"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/95",
+            "relative_gap": "4/17"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/190",
+            "relative_gap": "1/17"
+          }
+        ],
+        "min_wrong_pair_gap": "1/38",
+        "min_distinct_wrong_pair_gap": "1/38"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Consider a publisher. Revenue is 1.7 billion dollars; reported EBITDA of 180 million dollars includes a one-off expense of 25 million dollars and an asset-sale gain of 30 million dollars. Depreciation is 20 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 30,
+        "depreciation": 20,
+        "one_off_expense": 25,
+        "reported_ebitda": 180,
+        "revenue": 1700
+      },
+      "answer": "7/68",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Revenue is one point seven billion dollars; reported EBITDA of one hundred and eighty million dollars includes a one-off expense of twenty-five million dollars and an asset-sale gain of thirty million dollars. Depreciation is twenty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "47/340",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "31/340",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "175"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "7/68"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/85",
+            "relative_gap": "12/35"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/85",
+            "relative_gap": "4/35"
+          }
+        ],
+        "min_wrong_pair_gap": "4/85",
+        "min_distinct_wrong_pair_gap": "4/85"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Consider a wholesaler. Revenue is 900 million dollars; reported EBITDA of 140 million dollars includes a one-off expense of 30 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 10,
+        "one_off_expense": 30,
+        "reported_ebitda": 140,
+        "revenue": 900
+      },
+      "answer": "1/6",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Revenue is nine hundred million dollars; reported EBITDA of one hundred and forty million dollars includes a one-off expense of thirty million dollars and an asset-sale gain of twenty million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "19/90",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "7/45",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "150"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "1/6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/45",
+            "relative_gap": "4/15"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/90",
+            "relative_gap": "1/15"
+          }
+        ],
+        "min_wrong_pair_gap": "1/18",
+        "min_distinct_wrong_pair_gap": "1/18"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Consider a retailer. Revenue is 1 billion dollars; reported EBITDA of 50 million dollars includes a one-off expense of 5 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 10,
+        "one_off_expense": 5,
+        "reported_ebitda": 50,
+        "revenue": 1000
+      },
+      "answer": "7/200",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Revenue is one billion dollars; reported EBITDA of fifty million dollars includes a one-off expense of five million dollars and an asset-sale gain of twenty million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 1,
+      "interview_friendly_basis": "clean_decimal_or_percent",
+      "wrong": [
+        {
+          "value": "3/40",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "1/40",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "35"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "7/200"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/25",
+            "relative_gap": "8/7"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/100",
+            "relative_gap": "2/7"
+          }
+        ],
+        "min_wrong_pair_gap": "1/20",
+        "min_distinct_wrong_pair_gap": "1/20"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Consider a manufacturer. Revenue is 1 billion dollars; reported EBITDA of 70 million dollars includes a one-off expense of 20 million dollars and an asset-sale gain of 5 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 5,
+        "depreciation": 10,
+        "one_off_expense": 20,
+        "reported_ebitda": 70,
+        "revenue": 1000
+      },
+      "answer": "17/200",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Revenue is one billion dollars; reported EBITDA of seventy million dollars includes a one-off expense of twenty million dollars and an asset-sale gain of five million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 1,
+      "interview_friendly_basis": "clean_decimal_or_percent",
+      "wrong": [
+        {
+          "value": "19/200",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "3/40",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "85"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "17/200"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/100",
+            "relative_gap": "2/17"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/100",
+            "relative_gap": "2/17"
+          }
+        ],
+        "min_wrong_pair_gap": "1/50",
+        "min_distinct_wrong_pair_gap": "1/50"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Consider a distributor. Revenue is 1.7 billion dollars; reported EBITDA of 210 million dollars includes a one-off expense of 40 million dollars and an asset-sale gain of 30 million dollars. Depreciation is 40 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 30,
+        "depreciation": 40,
+        "one_off_expense": 40,
+        "reported_ebitda": 210,
+        "revenue": 1700
+      },
+      "answer": "11/85",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Revenue is one point seven billion dollars; reported EBITDA of two hundred and ten million dollars includes a one-off expense of forty million dollars and an asset-sale gain of thirty million dollars. Depreciation is forty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "14/85",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "9/85",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "220"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "11/85"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/85",
+            "relative_gap": "3/11"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "2/85",
+            "relative_gap": "2/11"
+          }
+        ],
+        "min_wrong_pair_gap": "1/17",
+        "min_distinct_wrong_pair_gap": "1/17"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Consider a publisher. Revenue is 900 million dollars; reported EBITDA of 180 million dollars includes a one-off expense of 15 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 40 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 40,
+        "one_off_expense": 15,
+        "reported_ebitda": 180,
+        "revenue": 900
+      },
+      "answer": "7/36",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Revenue is nine hundred million dollars; reported EBITDA of one hundred and eighty million dollars includes a one-off expense of fifteen million dollars and an asset-sale gain of twenty million dollars. Depreciation is forty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "43/180",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "3/20",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "175"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "7/36"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/45",
+            "relative_gap": "8/35"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "2/45",
+            "relative_gap": "8/35"
+          }
+        ],
+        "min_wrong_pair_gap": "4/45",
+        "min_distinct_wrong_pair_gap": "4/45"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Consider a wholesaler. Revenue is 1.9 billion dollars; reported EBITDA of 50 million dollars includes a one-off expense of 40 million dollars and an asset-sale gain of 40 million dollars. Depreciation is 20 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 40,
+        "depreciation": 20,
+        "one_off_expense": 40,
+        "reported_ebitda": 50,
+        "revenue": 1900
+      },
+      "answer": "1/38",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Revenue is one point nine billion dollars; reported EBITDA of fifty million dollars includes a one-off expense of forty million dollars and an asset-sale gain of forty million dollars. Depreciation is twenty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "13/190",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "3/190",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "50"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "1/38"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "4/95",
+            "relative_gap": "8/5"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/95",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "1/19",
+        "min_distinct_wrong_pair_gap": "1/19"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Consider a retailer. Revenue is 1.7 billion dollars; reported EBITDA of 200 million dollars includes a one-off expense of 35 million dollars and an asset-sale gain of 35 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 35,
+        "depreciation": 10,
+        "one_off_expense": 35,
+        "reported_ebitda": 200,
+        "revenue": 1700
+      },
+      "answer": "2/17",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Revenue is one point seven billion dollars; reported EBITDA of two hundred million dollars includes a one-off expense of thirty-five million dollars and an asset-sale gain of thirty-five million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "27/170",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "19/170",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "200"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "2/17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "7/170",
+            "relative_gap": "7/20"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/170",
+            "relative_gap": "1/20"
+          }
+        ],
+        "min_wrong_pair_gap": "4/85",
+        "min_distinct_wrong_pair_gap": "4/85"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Consider a manufacturer. Revenue is 800 million dollars; reported EBITDA of 240 million dollars includes a one-off expense of 30 million dollars and an asset-sale gain of 15 million dollars. Depreciation is 15 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 15,
+        "depreciation": 15,
+        "one_off_expense": 30,
+        "reported_ebitda": 240,
+        "revenue": 800
+      },
+      "answer": "51/160",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Revenue is eight hundred million dollars; reported EBITDA of two hundred and forty million dollars includes a one-off expense of thirty million dollars and an asset-sale gain of fifteen million dollars. Depreciation is fifteen million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "57/160",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "3/10",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "255"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "51/160"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/80",
+            "relative_gap": "2/17"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "3/160",
+            "relative_gap": "1/17"
+          }
+        ],
+        "min_wrong_pair_gap": "9/160",
+        "min_distinct_wrong_pair_gap": "9/160"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Consider a distributor. Revenue is 1.6 billion dollars; reported EBITDA of 240 million dollars includes a one-off expense of 20 million dollars and an asset-sale gain of 25 million dollars. Depreciation is 40 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 25,
+        "depreciation": 40,
+        "one_off_expense": 20,
+        "reported_ebitda": 240,
+        "revenue": 1600
+      },
+      "answer": "47/320",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Revenue is one point six billion dollars; reported EBITDA of two hundred and forty million dollars includes a one-off expense of twenty million dollars and an asset-sale gain of twenty-five million dollars. Depreciation is forty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "57/320",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "39/320",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "235"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "47/320"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/32",
+            "relative_gap": "10/47"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/40",
+            "relative_gap": "8/47"
+          }
+        ],
+        "min_wrong_pair_gap": "9/160",
+        "min_distinct_wrong_pair_gap": "9/160"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Consider a publisher. Revenue is 1 billion dollars; reported EBITDA of 220 million dollars includes a one-off expense of 25 million dollars and an asset-sale gain of 5 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 5,
+        "depreciation": 10,
+        "one_off_expense": 25,
+        "reported_ebitda": 220,
+        "revenue": 1000
+      },
+      "answer": "6/25",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Revenue is one billion dollars; reported EBITDA of two hundred and twenty million dollars includes a one-off expense of twenty-five million dollars and an asset-sale gain of five million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1/4",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "23/100",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "240"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "6/25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/100",
+            "relative_gap": "1/24"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/100",
+            "relative_gap": "1/24"
+          }
+        ],
+        "min_wrong_pair_gap": "1/50",
+        "min_distinct_wrong_pair_gap": "1/50"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Consider a wholesaler. Revenue is 1.9 billion dollars; reported EBITDA of 110 million dollars includes a one-off expense of 20 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 40 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 40,
+        "one_off_expense": 20,
+        "reported_ebitda": 110,
+        "revenue": 1900
+      },
+      "answer": "11/190",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Revenue is one point nine billion dollars; reported EBITDA of one hundred and ten million dollars includes a one-off expense of twenty million dollars and an asset-sale gain of twenty million dollars. Depreciation is forty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "3/38",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "7/190",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "110"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "11/190"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/95",
+            "relative_gap": "4/11"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "2/95",
+            "relative_gap": "4/11"
+          }
+        ],
+        "min_wrong_pair_gap": "4/95",
+        "min_distinct_wrong_pair_gap": "4/95"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Consider a retailer. Revenue is 900 million dollars; reported EBITDA of 60 million dollars includes a one-off expense of 30 million dollars and an asset-sale gain of 20 million dollars. Depreciation is 20 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 20,
+        "depreciation": 20,
+        "one_off_expense": 30,
+        "reported_ebitda": 60,
+        "revenue": 900
+      },
+      "answer": "7/90",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Revenue is nine hundred million dollars; reported EBITDA of sixty million dollars includes a one-off expense of thirty million dollars and an asset-sale gain of twenty million dollars. Depreciation is twenty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "11/90",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "1/18",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "70"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "7/90"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "2/45",
+            "relative_gap": "4/7"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/45",
+            "relative_gap": "2/7"
+          }
+        ],
+        "min_wrong_pair_gap": "1/15",
+        "min_distinct_wrong_pair_gap": "1/15"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Consider a manufacturer. Revenue is 1.9 billion dollars; reported EBITDA of 160 million dollars includes a one-off expense of 35 million dollars and an asset-sale gain of 40 million dollars. Depreciation is 35 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 40,
+        "depreciation": 35,
+        "one_off_expense": 35,
+        "reported_ebitda": 160,
+        "revenue": 1900
+      },
+      "answer": "31/380",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Revenue is one point nine billion dollars; reported EBITDA of one hundred and sixty million dollars includes a one-off expense of thirty-five million dollars and an asset-sale gain of forty million dollars. Depreciation is thirty-five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "47/380",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "6/95",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "155"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "31/380"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "4/95",
+            "relative_gap": "16/31"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "7/380",
+            "relative_gap": "7/31"
+          }
+        ],
+        "min_wrong_pair_gap": "23/380",
+        "min_distinct_wrong_pair_gap": "23/380"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Consider a distributor. Revenue is 1.2 billion dollars; reported EBITDA of 70 million dollars includes a one-off expense of 40 million dollars and an asset-sale gain of 25 million dollars. Depreciation is 5 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 25,
+        "depreciation": 5,
+        "one_off_expense": 40,
+        "reported_ebitda": 70,
+        "revenue": 1200
+      },
+      "answer": "17/240",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Revenue is one point two billion dollars; reported EBITDA of seventy million dollars includes a one-off expense of forty million dollars and an asset-sale gain of twenty-five million dollars. Depreciation is five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "9/80",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "1/15",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "85"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "17/240"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/24",
+            "relative_gap": "10/17"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/240",
+            "relative_gap": "1/17"
+          }
+        ],
+        "min_wrong_pair_gap": "11/240",
+        "min_distinct_wrong_pair_gap": "11/240"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Consider a publisher. Revenue is 900 million dollars; reported EBITDA of 130 million dollars includes a one-off expense of 20 million dollars and an asset-sale gain of 10 million dollars. Depreciation is 40 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 10,
+        "depreciation": 40,
+        "one_off_expense": 20,
+        "reported_ebitda": 130,
+        "revenue": 900
+      },
+      "answer": "7/45",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Revenue is nine hundred million dollars; reported EBITDA of one hundred and thirty million dollars includes a one-off expense of twenty million dollars and an asset-sale gain of ten million dollars. Depreciation is forty million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "8/45",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "1/9",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "140"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "7/45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/45",
+            "relative_gap": "1/7"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "2/45",
+            "relative_gap": "2/7"
+          }
+        ],
+        "min_wrong_pair_gap": "1/15",
+        "min_distinct_wrong_pair_gap": "1/15"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Consider a wholesaler. Revenue is 900 million dollars; reported EBITDA of 160 million dollars includes a one-off expense of 25 million dollars and an asset-sale gain of 30 million dollars. Depreciation is 15 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 30,
+        "depreciation": 15,
+        "one_off_expense": 25,
+        "reported_ebitda": 160,
+        "revenue": 900
+      },
+      "answer": "31/180",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Revenue is nine hundred million dollars; reported EBITDA of one hundred and sixty million dollars includes a one-off expense of twenty-five million dollars and an asset-sale gain of thirty million dollars. Depreciation is fifteen million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "43/180",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "7/45",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "155"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "31/180"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/15",
+            "relative_gap": "12/31"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/60",
+            "relative_gap": "3/31"
+          }
+        ],
+        "min_wrong_pair_gap": "1/12",
+        "min_distinct_wrong_pair_gap": "1/12"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Consider a retailer. Revenue is 700 million dollars; reported EBITDA of 180 million dollars includes a one-off expense of 30 million dollars and an asset-sale gain of 30 million dollars. Depreciation is 10 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 30,
+        "depreciation": 10,
+        "one_off_expense": 30,
+        "reported_ebitda": 180,
+        "revenue": 700
+      },
+      "answer": "9/35",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a retailer. Revenue is seven hundred million dollars; reported EBITDA of one hundred and eighty million dollars includes a one-off expense of thirty million dollars and an asset-sale gain of thirty million dollars. Depreciation is ten million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "12/35",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "17/70",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "180"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "9/35"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/35",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/70",
+            "relative_gap": "1/18"
+          }
+        ],
+        "min_wrong_pair_gap": "1/10",
+        "min_distinct_wrong_pair_gap": "1/10"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Consider a manufacturer. Revenue is 500 million dollars; reported EBITDA of 180 million dollars includes a one-off expense of 20 million dollars and an asset-sale gain of 30 million dollars. Depreciation is 35 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 30,
+        "depreciation": 35,
+        "one_off_expense": 20,
+        "reported_ebitda": 180,
+        "revenue": 500
+      },
+      "answer": "17/50",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a manufacturer. Revenue is five hundred million dollars; reported EBITDA of one hundred and eighty million dollars includes a one-off expense of twenty million dollars and an asset-sale gain of thirty million dollars. Depreciation is thirty-five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "23/50",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "27/100",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "170"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "17/50"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/25",
+            "relative_gap": "6/17"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "7/100",
+            "relative_gap": "7/34"
+          }
+        ],
+        "min_wrong_pair_gap": "19/100",
+        "min_distinct_wrong_pair_gap": "19/100"
+      },
+      "follow_up": {
+        "question": "Why not deduct depreciation to compute this margin?",
+        "reference": "EBITDA excludes depreciation by definition. Deducting it would produce an EBIT margin instead."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Consider a distributor. Revenue is 1.9 billion dollars; reported EBITDA of 250 million dollars includes a one-off expense of 10 million dollars and an asset-sale gain of 30 million dollars. Depreciation is 25 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 30,
+        "depreciation": 25,
+        "one_off_expense": 10,
+        "reported_ebitda": 250,
+        "revenue": 1900
+      },
+      "answer": "23/190",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a distributor. Revenue is one point nine billion dollars; reported EBITDA of two hundred and fifty million dollars includes a one-off expense of ten million dollars and an asset-sale gain of thirty million dollars. Depreciation is twenty-five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "29/190",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "41/380",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "230"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "23/190"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/95",
+            "relative_gap": "6/23"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/76",
+            "relative_gap": "5/46"
+          }
+        ],
+        "min_wrong_pair_gap": "17/380",
+        "min_distinct_wrong_pair_gap": "17/380"
+      },
+      "follow_up": {
+        "question": "What if the adjustment also changed reported revenue?",
+        "reference": "Restate both the earnings numerator and the revenue denominator consistently. Adjusting only EBITDA could create a misleading margin."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Consider a publisher. Revenue is 1.1 billion dollars; reported EBITDA of 210 million dollars includes a one-off expense of 35 million dollars and an asset-sale gain of 5 million dollars. Depreciation is 5 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 5,
+        "depreciation": 5,
+        "one_off_expense": 35,
+        "reported_ebitda": 210,
+        "revenue": 1100
+      },
+      "answer": "12/55",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a publisher. Revenue is one point one billion dollars; reported EBITDA of two hundred and ten million dollars includes a one-off expense of thirty-five million dollars and an asset-sale gain of five million dollars. Depreciation is five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5/22",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "47/220",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "240"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "12/55"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "1/110",
+            "relative_gap": "1/24"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/220",
+            "relative_gap": "1/48"
+          }
+        ],
+        "min_wrong_pair_gap": "3/220",
+        "min_distinct_wrong_pair_gap": "3/220"
+      },
+      "follow_up": {
+        "question": "Why add back the one-off expense but subtract the asset-sale gain?",
+        "reference": "The expense reduced reported EBITDA and the gain increased it. Reversing both removes their opposite effects from recurring earnings."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Consider a wholesaler. Revenue is 1.1 billion dollars; reported EBITDA of 130 million dollars includes a one-off expense of 25 million dollars and an asset-sale gain of 30 million dollars. Depreciation is 5 million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "params": {
+        "asset_sale_gain": 30,
+        "depreciation": 5,
+        "one_off_expense": 25,
+        "reported_ebitda": 130,
+        "revenue": 1100
+      },
+      "answer": "5/44",
+      "tolerance": "0",
+      "topic": "Financial statement analysis",
+      "source_topic": "Normalized EBITDA margin",
+      "difficulty": "Medium",
+      "spoken_text": "Consider a wholesaler. Revenue is one point one billion dollars; reported EBITDA of one hundred and thirty million dollars includes a one-off expense of twenty-five million dollars and an asset-sale gain of thirty million dollars. Depreciation is five million dollars. What is adjusted EBITDA margin, as a percentage?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "37/220",
+          "misconceptions": [
+            "adds_the_asset_sale_gain_to_normalized_earnings"
+          ]
+        },
+        {
+          "value": "6/55",
+          "misconceptions": [
+            "uses_adjusted_ebit_instead_of_ebitda"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "adjusted_ebitda",
+          "value": "125"
+        },
+        {
+          "name": "adjusted_ebitda_margin",
+          "value": "5/44"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "adds_the_asset_sale_gain_to_normalized_earnings",
+            "absolute_gap": "3/55",
+            "relative_gap": "12/25"
+          },
+          {
+            "misconception": "uses_adjusted_ebit_instead_of_ebitda",
+            "absolute_gap": "1/220",
+            "relative_gap": "1/25"
+          }
+        ],
+        "min_wrong_pair_gap": "13/220",
+        "min_distinct_wrong_pair_gap": "13/220"
+      },
+      "follow_up": {
+        "question": "When would you reject a supposedly one-off expense adjustment?",
+        "reference": "Reject it if similar costs recur or are necessary to sustain operations. Normalized earnings should reflect the economic cost base rather than a favorable label."
+      }
+    }
+  ]
+}

@@ -77,6 +77,22 @@ def public(spec: dict) -> dict:
 
 # --- Exact judging -------------------------------------------------------------------
 
+def canonical(text: str) -> str | None:
+    """A list as canonical JSON (whitespace normalised), or None if it isn't one."""
+    try:
+        value = json.loads(text)
+    except (TypeError, ValueError):
+        return None
+    return json.dumps(value, separators=(",", ":")) if isinstance(value, list) else None
+
+
+def list_of(result) -> str | None:
+    """A returned list, for a list-answer spec: compared by exact JSON equality."""
+    if not isinstance(result, dict) or not result.get("ok") or not isinstance(result.get("value"), str):
+        return None
+    return canonical(result["value"])
+
+
 def value_of(result) -> Fraction | None:
     """A returned value as an exact number: ints, decimals as written ("0.5"), fractions.
     Booleans, text, errors and timeouts are never numbers."""
@@ -137,6 +153,8 @@ def case_right(spec: dict, r, expected) -> bool:
     if spec.get("kind") == "class":
         values = r.get("values") if isinstance(r, dict) and r.get("ok") else None
         return isinstance(values, list) and len(values) == len(expected) and all(same_value(e, v) for e, v in zip(expected, values))
+    if str(spec.get("return_type", "")).startswith("list"):
+        return list_of(r) is not None and list_of(r) == canonical(expected)
     v = value_of(r)
     return v is not None and v == Fraction(expected)
 
@@ -144,14 +162,16 @@ def case_right(spec: dict, r, expected) -> bool:
 def judge(spec: dict, outputs: list) -> dict:
     if spec.get("kind") == "class":
         return judge_class(spec, outputs)
-    expected = [Fraction(x) for x in spec["expected"]]
-    got = [value_of(r) for r in outputs] if isinstance(outputs, list) and len(outputs) == len(expected) else [None] * len(expected)
+    lists = str(spec.get("return_type", "")).startswith("list")  # decision log 30: list answers, exact JSON
+    read, stored = (list_of, canonical) if lists else (value_of, Fraction)
+    expected = [stored(x) for x in spec["expected"]]
+    got = [read(r) for r in outputs] if isinstance(outputs, list) and len(outputs) == len(expected) else [None] * len(expected)
     passed = [g is not None and g == e for g, e in zip(got, expected)]
     failing = [i for i, ok in enumerate(passed) if not ok]
     named = None
     if failing:
         for method in spec.get("wrong_methods", []):
-            theirs = [Fraction(x) for x in method["outputs"]]
+            theirs = [stored(x) for x in method["outputs"]]
             if all(g is not None and g == t for g, t in zip(got, theirs)):
                 named = method["name"]
                 break

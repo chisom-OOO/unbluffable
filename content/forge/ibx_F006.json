@@ -1,0 +1,3244 @@
+{
+  "template_id": "ibx_F006",
+  "pack": "ib",
+  "topic": "Precedent transactions",
+  "topics": [
+    "Precedent transactions"
+  ],
+  "source_topic": "EBIT-based equity purchase value",
+  "difficulty": "Hard",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "Why does this precedent require subtracting depreciation first?",
+    "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Consider a retailer. A precedent values the target at 13 times EBIT. Target EBITDA is 130 million dollars, depreciation is 5 million dollars, debt is 325 million dollars, and cash is 70 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 70,
+        "debt": 325,
+        "depreciation": 5,
+        "ebit_multiple": "13",
+        "ebitda": 130
+      },
+      "answer": "1370",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. A precedent values the target at thirteen times EBIT. Target EBITDA is one hundred and thirty million dollars, depreciation is five million dollars, debt is three hundred and twenty-five million dollars, and cash is seventy million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1435",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1300",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "125"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1625"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "65",
+            "relative_gap": "13/274"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "70",
+            "relative_gap": "7/137"
+          }
+        ],
+        "min_wrong_pair_gap": "135",
+        "min_distinct_wrong_pair_gap": "135"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Consider a manufacturer. A precedent values the target at 13.5 times EBIT. Target EBITDA is 70 million dollars, depreciation is 30 million dollars, debt is 50 million dollars, and cash is 40 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 40,
+        "debt": 50,
+        "depreciation": 30,
+        "ebit_multiple": "27/2",
+        "ebitda": 70
+      },
+      "answer": "530",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. A precedent values the target at thirteen point five times EBIT. Target EBITDA is seventy million dollars, depreciation is thirty million dollars, debt is fifty million dollars, and cash is forty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "935",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "490",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "40"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "540"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "405",
+            "relative_gap": "81/106"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "40",
+            "relative_gap": "4/53"
+          }
+        ],
+        "min_wrong_pair_gap": "445",
+        "min_distinct_wrong_pair_gap": "445"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Consider a distributor. A precedent values the target at 12.5 times EBIT. Target EBITDA is 140 million dollars, depreciation is 30 million dollars, debt is 250 million dollars, and cash is 110 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 110,
+        "debt": 250,
+        "depreciation": 30,
+        "ebit_multiple": "25/2",
+        "ebitda": 140
+      },
+      "answer": "1235",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. A precedent values the target at twelve point five times EBIT. Target EBITDA is one hundred and forty million dollars, depreciation is thirty million dollars, debt is two hundred and fifty million dollars, and cash is one hundred and ten million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1610",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1125",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "110"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1375"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "375",
+            "relative_gap": "75/247"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "110",
+            "relative_gap": "22/247"
+          }
+        ],
+        "min_wrong_pair_gap": "485",
+        "min_distinct_wrong_pair_gap": "485"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Consider a publisher. A precedent values the target at 9 times EBIT. Target EBITDA is 190 million dollars, depreciation is 25 million dollars, debt is 75 million dollars, and cash is 10 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 10,
+        "debt": 75,
+        "depreciation": 25,
+        "ebit_multiple": "9",
+        "ebitda": 190
+      },
+      "answer": "1420",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. A precedent values the target at nine times EBIT. Target EBITDA is one hundred and ninety million dollars, depreciation is twenty-five million dollars, debt is seventy-five million dollars, and cash is ten million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1645",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1410",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "165"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1485"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "225",
+            "relative_gap": "45/284"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "10",
+            "relative_gap": "1/142"
+          }
+        ],
+        "min_wrong_pair_gap": "235",
+        "min_distinct_wrong_pair_gap": "235"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Consider a wholesaler. A precedent values the target at 13 times EBIT. Target EBITDA is 60 million dollars, depreciation is 25 million dollars, debt is 50 million dollars, and cash is 90 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 90,
+        "debt": 50,
+        "depreciation": 25,
+        "ebit_multiple": "13",
+        "ebitda": 60
+      },
+      "answer": "495",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. A precedent values the target at thirteen times EBIT. Target EBITDA is sixty million dollars, depreciation is twenty-five million dollars, debt is fifty million dollars, and cash is ninety million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "820",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "405",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "35"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "455"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "325",
+            "relative_gap": "65/99"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "90",
+            "relative_gap": "2/11"
+          }
+        ],
+        "min_wrong_pair_gap": "415",
+        "min_distinct_wrong_pair_gap": "415"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Consider a retailer. A precedent values the target at 10.5 times EBIT. Target EBITDA is 140 million dollars, depreciation is 35 million dollars, debt is 100 million dollars, and cash is 30 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 30,
+        "debt": 100,
+        "depreciation": 35,
+        "ebit_multiple": "21/2",
+        "ebitda": 140
+      },
+      "answer": "2065/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. A precedent values the target at ten point five times EBIT. Target EBITDA is one hundred and forty million dollars, depreciation is thirty-five million dollars, debt is one hundred million dollars, and cash is thirty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1400",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "2005/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "105"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2205/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "735/2",
+            "relative_gap": "21/59"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "30",
+            "relative_gap": "12/413"
+          }
+        ],
+        "min_wrong_pair_gap": "795/2",
+        "min_distinct_wrong_pair_gap": "795/2"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Consider a manufacturer. A precedent values the target at 5.5 times EBIT. Target EBITDA is 170 million dollars, depreciation is 30 million dollars, debt is 225 million dollars, and cash is 130 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 130,
+        "debt": 225,
+        "depreciation": 30,
+        "ebit_multiple": "11/2",
+        "ebitda": 170
+      },
+      "answer": "675",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. A precedent values the target at five point five times EBIT. Target EBITDA is one hundred and seventy million dollars, depreciation is thirty million dollars, debt is two hundred and twenty-five million dollars, and cash is one hundred and thirty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "840",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "545",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "140"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "770"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "165",
+            "relative_gap": "11/45"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "130",
+            "relative_gap": "26/135"
+          }
+        ],
+        "min_wrong_pair_gap": "295",
+        "min_distinct_wrong_pair_gap": "295"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Consider a distributor. A precedent values the target at 15 times EBIT. Target EBITDA is 90 million dollars, depreciation is 15 million dollars, debt is 350 million dollars, and cash is 120 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 120,
+        "debt": 350,
+        "depreciation": 15,
+        "ebit_multiple": "15",
+        "ebitda": 90
+      },
+      "answer": "895",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. A precedent values the target at fifteen times EBIT. Target EBITDA is ninety million dollars, depreciation is fifteen million dollars, debt is three hundred and fifty million dollars, and cash is one hundred and twenty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1120",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "775",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "75"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1125"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "225",
+            "relative_gap": "45/179"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "120",
+            "relative_gap": "24/179"
+          }
+        ],
+        "min_wrong_pair_gap": "345",
+        "min_distinct_wrong_pair_gap": "345"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Consider a publisher. A precedent values the target at 8.5 times EBIT. Target EBITDA is 130 million dollars, depreciation is 5 million dollars, debt is 200 million dollars, and cash is 70 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 70,
+        "debt": 200,
+        "depreciation": 5,
+        "ebit_multiple": "17/2",
+        "ebitda": 130
+      },
+      "answer": "1865/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. A precedent values the target at eight point five times EBIT. Target EBITDA is one hundred and thirty million dollars, depreciation is five million dollars, debt is two hundred million dollars, and cash is seventy million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "975",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1725/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "125"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2125/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "85/2",
+            "relative_gap": "17/373"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "70",
+            "relative_gap": "28/373"
+          }
+        ],
+        "min_wrong_pair_gap": "225/2",
+        "min_distinct_wrong_pair_gap": "225/2"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Consider a wholesaler. A precedent values the target at 10 times EBIT. Target EBITDA is 90 million dollars, depreciation is 25 million dollars, debt is 50 million dollars, and cash is 40 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 40,
+        "debt": 50,
+        "depreciation": 25,
+        "ebit_multiple": "10",
+        "ebitda": 90
+      },
+      "answer": "640",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. A precedent values the target at ten times EBIT. Target EBITDA is ninety million dollars, depreciation is twenty-five million dollars, debt is fifty million dollars, and cash is forty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "890",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "600",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "65"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "650"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "250",
+            "relative_gap": "25/64"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "40",
+            "relative_gap": "1/16"
+          }
+        ],
+        "min_wrong_pair_gap": "290",
+        "min_distinct_wrong_pair_gap": "290"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Consider a retailer. A precedent values the target at 8 times EBIT. Target EBITDA is 130 million dollars, depreciation is 5 million dollars, debt is 125 million dollars, and cash is 120 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 120,
+        "debt": 125,
+        "depreciation": 5,
+        "ebit_multiple": "8",
+        "ebitda": 130
+      },
+      "answer": "995",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. A precedent values the target at eight times EBIT. Target EBITDA is one hundred and thirty million dollars, depreciation is five million dollars, debt is one hundred and twenty-five million dollars, and cash is one hundred and twenty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1035",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "875",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "125"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1000"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "40",
+            "relative_gap": "8/199"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "120",
+            "relative_gap": "24/199"
+          }
+        ],
+        "min_wrong_pair_gap": "160",
+        "min_distinct_wrong_pair_gap": "160"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Consider a manufacturer. A precedent values the target at 5 times EBIT. Target EBITDA is 90 million dollars, depreciation is 5 million dollars, debt is 325 million dollars, and cash is 20 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 20,
+        "debt": 325,
+        "depreciation": 5,
+        "ebit_multiple": "5",
+        "ebitda": 90
+      },
+      "answer": "120",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. A precedent values the target at five times EBIT. Target EBITDA is ninety million dollars, depreciation is five million dollars, debt is three hundred and twenty-five million dollars, and cash is twenty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "145",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "100",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "85"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "425"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "25",
+            "relative_gap": "5/24"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "20",
+            "relative_gap": "1/6"
+          }
+        ],
+        "min_wrong_pair_gap": "45",
+        "min_distinct_wrong_pair_gap": "45"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Consider a distributor. A precedent values the target at 15 times EBIT. Target EBITDA is 170 million dollars, depreciation is 20 million dollars, debt is 300 million dollars, and cash is 100 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 100,
+        "debt": 300,
+        "depreciation": 20,
+        "ebit_multiple": "15",
+        "ebitda": 170
+      },
+      "answer": "2050",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. A precedent values the target at fifteen times EBIT. Target EBITDA is one hundred and seventy million dollars, depreciation is twenty million dollars, debt is three hundred million dollars, and cash is one hundred million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2350",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1950",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "150"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2250"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "300",
+            "relative_gap": "6/41"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "100",
+            "relative_gap": "2/41"
+          }
+        ],
+        "min_wrong_pair_gap": "400",
+        "min_distinct_wrong_pair_gap": "400"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Consider a publisher. A precedent values the target at 14 times EBIT. Target EBITDA is 190 million dollars, depreciation is 5 million dollars, debt is 50 million dollars, and cash is 120 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 120,
+        "debt": 50,
+        "depreciation": 5,
+        "ebit_multiple": "14",
+        "ebitda": 190
+      },
+      "answer": "2660",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. A precedent values the target at fourteen times EBIT. Target EBITDA is one hundred and ninety million dollars, depreciation is five million dollars, debt is fifty million dollars, and cash is one hundred and twenty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2730",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "2540",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "185"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2590"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "70",
+            "relative_gap": "1/38"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "120",
+            "relative_gap": "6/133"
+          }
+        ],
+        "min_wrong_pair_gap": "190",
+        "min_distinct_wrong_pair_gap": "190"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Consider a wholesaler. A precedent values the target at 9.5 times EBIT. Target EBITDA is 140 million dollars, depreciation is 30 million dollars, debt is 250 million dollars, and cash is 60 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 60,
+        "debt": 250,
+        "depreciation": 30,
+        "ebit_multiple": "19/2",
+        "ebitda": 140
+      },
+      "answer": "855",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. A precedent values the target at nine point five times EBIT. Target EBITDA is one hundred and forty million dollars, depreciation is thirty million dollars, debt is two hundred and fifty million dollars, and cash is sixty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1140",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "795",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "110"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1045"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "285",
+            "relative_gap": "1/3"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "60",
+            "relative_gap": "4/57"
+          }
+        ],
+        "min_wrong_pair_gap": "345",
+        "min_distinct_wrong_pair_gap": "345"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Consider a retailer. A precedent values the target at 6.5 times EBIT. Target EBITDA is 150 million dollars, depreciation is 35 million dollars, debt is 350 million dollars, and cash is 60 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 60,
+        "debt": 350,
+        "depreciation": 35,
+        "ebit_multiple": "13/2",
+        "ebitda": 150
+      },
+      "answer": "915/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. A precedent values the target at six point five times EBIT. Target EBITDA is one hundred and fifty million dollars, depreciation is thirty-five million dollars, debt is three hundred and fifty million dollars, and cash is sixty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "685",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "795/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "115"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1495/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "455/2",
+            "relative_gap": "91/183"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "60",
+            "relative_gap": "8/61"
+          }
+        ],
+        "min_wrong_pair_gap": "575/2",
+        "min_distinct_wrong_pair_gap": "575/2"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Consider a manufacturer. A precedent values the target at 7 times EBIT. Target EBITDA is 120 million dollars, depreciation is 35 million dollars, debt is 75 million dollars, and cash is 90 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 90,
+        "debt": 75,
+        "depreciation": 35,
+        "ebit_multiple": "7",
+        "ebitda": 120
+      },
+      "answer": "610",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. A precedent values the target at seven times EBIT. Target EBITDA is one hundred and twenty million dollars, depreciation is thirty-five million dollars, debt is seventy-five million dollars, and cash is ninety million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "855",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "520",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "85"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "595"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "245",
+            "relative_gap": "49/122"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "90",
+            "relative_gap": "9/61"
+          }
+        ],
+        "min_wrong_pair_gap": "335",
+        "min_distinct_wrong_pair_gap": "335"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Consider a distributor. A precedent values the target at 6.5 times EBIT. Target EBITDA is 150 million dollars, depreciation is 15 million dollars, debt is 175 million dollars, and cash is 80 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 80,
+        "debt": 175,
+        "depreciation": 15,
+        "ebit_multiple": "13/2",
+        "ebitda": 150
+      },
+      "answer": "1565/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. A precedent values the target at six point five times EBIT. Target EBITDA is one hundred and fifty million dollars, depreciation is fifteen million dollars, debt is one hundred and seventy-five million dollars, and cash is eighty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "880",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1405/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "135"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1755/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "195/2",
+            "relative_gap": "39/313"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "80",
+            "relative_gap": "32/313"
+          }
+        ],
+        "min_wrong_pair_gap": "355/2",
+        "min_distinct_wrong_pair_gap": "355/2"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Consider a publisher. A precedent values the target at 12 times EBIT. Target EBITDA is 200 million dollars, depreciation is 30 million dollars, debt is 300 million dollars, and cash is 100 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 100,
+        "debt": 300,
+        "depreciation": 30,
+        "ebit_multiple": "12",
+        "ebitda": 200
+      },
+      "answer": "1840",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. A precedent values the target at twelve times EBIT. Target EBITDA is two hundred million dollars, depreciation is thirty million dollars, debt is three hundred million dollars, and cash is one hundred million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2200",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1740",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "170"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2040"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "360",
+            "relative_gap": "9/46"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "100",
+            "relative_gap": "5/92"
+          }
+        ],
+        "min_wrong_pair_gap": "460",
+        "min_distinct_wrong_pair_gap": "460"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Consider a wholesaler. A precedent values the target at 7.5 times EBIT. Target EBITDA is 80 million dollars, depreciation is 25 million dollars, debt is 100 million dollars, and cash is 40 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 40,
+        "debt": 100,
+        "depreciation": 25,
+        "ebit_multiple": "15/2",
+        "ebitda": 80
+      },
+      "answer": "705/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. A precedent values the target at seven point five times EBIT. Target EBITDA is eighty million dollars, depreciation is twenty-five million dollars, debt is one hundred million dollars, and cash is forty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "540",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "625/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "55"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "825/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "375/2",
+            "relative_gap": "25/47"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "40",
+            "relative_gap": "16/141"
+          }
+        ],
+        "min_wrong_pair_gap": "455/2",
+        "min_distinct_wrong_pair_gap": "455/2"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Consider a retailer. A precedent values the target at 5.5 times EBIT. Target EBITDA is 190 million dollars, depreciation is 35 million dollars, debt is 275 million dollars, and cash is 130 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 130,
+        "debt": 275,
+        "depreciation": 35,
+        "ebit_multiple": "11/2",
+        "ebitda": 190
+      },
+      "answer": "1415/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. A precedent values the target at five point five times EBIT. Target EBITDA is one hundred and ninety million dollars, depreciation is thirty-five million dollars, debt is two hundred and seventy-five million dollars, and cash is one hundred and thirty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "900",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1155/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "155"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1705/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "385/2",
+            "relative_gap": "77/283"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "130",
+            "relative_gap": "52/283"
+          }
+        ],
+        "min_wrong_pair_gap": "645/2",
+        "min_distinct_wrong_pair_gap": "645/2"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Consider a manufacturer. A precedent values the target at 11.5 times EBIT. Target EBITDA is 140 million dollars, depreciation is 15 million dollars, debt is 225 million dollars, and cash is 110 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 110,
+        "debt": 225,
+        "depreciation": 15,
+        "ebit_multiple": "23/2",
+        "ebitda": 140
+      },
+      "answer": "2645/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. A precedent values the target at eleven point five times EBIT. Target EBITDA is one hundred and forty million dollars, depreciation is fifteen million dollars, debt is two hundred and twenty-five million dollars, and cash is one hundred and ten million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1495",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "2425/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "125"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2875/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "345/2",
+            "relative_gap": "3/23"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "110",
+            "relative_gap": "44/529"
+          }
+        ],
+        "min_wrong_pair_gap": "565/2",
+        "min_distinct_wrong_pair_gap": "565/2"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Consider a distributor. A precedent values the target at 5.5 times EBIT. Target EBITDA is 60 million dollars, depreciation is 5 million dollars, debt is 400 million dollars, and cash is 100 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 100,
+        "debt": 400,
+        "depreciation": 5,
+        "ebit_multiple": "11/2",
+        "ebitda": 60
+      },
+      "answer": "5/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. A precedent values the target at five point five times EBIT. Target EBITDA is sixty million dollars, depreciation is five million dollars, debt is four hundred million dollars, and cash is one hundred million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "-195/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "55"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "605/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "55/2",
+            "relative_gap": "11"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "100",
+            "relative_gap": "40"
+          }
+        ],
+        "min_wrong_pair_gap": "255/2",
+        "min_distinct_wrong_pair_gap": "255/2"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Consider a publisher. A precedent values the target at 6.5 times EBIT. Target EBITDA is 120 million dollars, depreciation is 15 million dollars, debt is 400 million dollars, and cash is 140 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 140,
+        "debt": 400,
+        "depreciation": 15,
+        "ebit_multiple": "13/2",
+        "ebitda": 120
+      },
+      "answer": "845/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. A precedent values the target at six point five times EBIT. Target EBITDA is one hundred and twenty million dollars, depreciation is fifteen million dollars, debt is four hundred million dollars, and cash is one hundred and forty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "520",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "565/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "105"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1365/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "195/2",
+            "relative_gap": "3/13"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "140",
+            "relative_gap": "56/169"
+          }
+        ],
+        "min_wrong_pair_gap": "475/2",
+        "min_distinct_wrong_pair_gap": "475/2"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Consider a wholesaler. A precedent values the target at 7.5 times EBIT. Target EBITDA is 140 million dollars, depreciation is 25 million dollars, debt is 175 million dollars, and cash is 60 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 60,
+        "debt": 175,
+        "depreciation": 25,
+        "ebit_multiple": "15/2",
+        "ebitda": 140
+      },
+      "answer": "1495/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. A precedent values the target at seven point five times EBIT. Target EBITDA is one hundred and forty million dollars, depreciation is twenty-five million dollars, debt is one hundred and seventy-five million dollars, and cash is sixty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "935",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1375/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "115"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1725/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "375/2",
+            "relative_gap": "75/299"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "60",
+            "relative_gap": "24/299"
+          }
+        ],
+        "min_wrong_pair_gap": "495/2",
+        "min_distinct_wrong_pair_gap": "495/2"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Consider a retailer. A precedent values the target at 15 times EBIT. Target EBITDA is 160 million dollars, depreciation is 5 million dollars, debt is 375 million dollars, and cash is 150 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 150,
+        "debt": 375,
+        "depreciation": 5,
+        "ebit_multiple": "15",
+        "ebitda": 160
+      },
+      "answer": "2100",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. A precedent values the target at fifteen times EBIT. Target EBITDA is one hundred and sixty million dollars, depreciation is five million dollars, debt is three hundred and seventy-five million dollars, and cash is one hundred and fifty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2175",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1950",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "155"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2325"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "75",
+            "relative_gap": "1/28"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "150",
+            "relative_gap": "1/14"
+          }
+        ],
+        "min_wrong_pair_gap": "225",
+        "min_distinct_wrong_pair_gap": "225"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Consider a manufacturer. A precedent values the target at 10.5 times EBIT. Target EBITDA is 140 million dollars, depreciation is 15 million dollars, debt is 250 million dollars, and cash is 20 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 20,
+        "debt": 250,
+        "depreciation": 15,
+        "ebit_multiple": "21/2",
+        "ebitda": 140
+      },
+      "answer": "2165/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. A precedent values the target at ten point five times EBIT. Target EBITDA is one hundred and forty million dollars, depreciation is fifteen million dollars, debt is two hundred and fifty million dollars, and cash is twenty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1240",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "2125/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "125"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2625/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "315/2",
+            "relative_gap": "63/433"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "20",
+            "relative_gap": "8/433"
+          }
+        ],
+        "min_wrong_pair_gap": "355/2",
+        "min_distinct_wrong_pair_gap": "355/2"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Consider a distributor. A precedent values the target at 5 times EBIT. Target EBITDA is 180 million dollars, depreciation is 20 million dollars, debt is 325 million dollars, and cash is 100 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 100,
+        "debt": 325,
+        "depreciation": 20,
+        "ebit_multiple": "5",
+        "ebitda": 180
+      },
+      "answer": "575",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. A precedent values the target at five times EBIT. Target EBITDA is one hundred and eighty million dollars, depreciation is twenty million dollars, debt is three hundred and twenty-five million dollars, and cash is one hundred million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "675",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "475",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "160"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "800"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "100",
+            "relative_gap": "4/23"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "100",
+            "relative_gap": "4/23"
+          }
+        ],
+        "min_wrong_pair_gap": "200",
+        "min_distinct_wrong_pair_gap": "200"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Consider a publisher. A precedent values the target at 6.5 times EBIT. Target EBITDA is 50 million dollars, depreciation is 5 million dollars, debt is 75 million dollars, and cash is 30 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 30,
+        "debt": 75,
+        "depreciation": 5,
+        "ebit_multiple": "13/2",
+        "ebitda": 50
+      },
+      "answer": "495/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. A precedent values the target at six point five times EBIT. Target EBITDA is fifty million dollars, depreciation is five million dollars, debt is seventy-five million dollars, and cash is thirty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "280",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "435/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "45"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "585/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "65/2",
+            "relative_gap": "13/99"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "30",
+            "relative_gap": "4/33"
+          }
+        ],
+        "min_wrong_pair_gap": "125/2",
+        "min_distinct_wrong_pair_gap": "125/2"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Consider a wholesaler. A precedent values the target at 13.5 times EBIT. Target EBITDA is 200 million dollars, depreciation is 10 million dollars, debt is 275 million dollars, and cash is 50 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 50,
+        "debt": 275,
+        "depreciation": 10,
+        "ebit_multiple": "27/2",
+        "ebitda": 200
+      },
+      "answer": "2340",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. A precedent values the target at thirteen point five times EBIT. Target EBITDA is two hundred million dollars, depreciation is ten million dollars, debt is two hundred and seventy-five million dollars, and cash is fifty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2475",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "2290",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "190"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2565"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "135",
+            "relative_gap": "3/52"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "50",
+            "relative_gap": "5/234"
+          }
+        ],
+        "min_wrong_pair_gap": "185",
+        "min_distinct_wrong_pair_gap": "185"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Consider a retailer. A precedent values the target at 14.5 times EBIT. Target EBITDA is 160 million dollars, depreciation is 5 million dollars, debt is 400 million dollars, and cash is 40 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 40,
+        "debt": 400,
+        "depreciation": 5,
+        "ebit_multiple": "29/2",
+        "ebitda": 160
+      },
+      "answer": "3775/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. A precedent values the target at fourteen point five times EBIT. Target EBITDA is one hundred and sixty million dollars, depreciation is five million dollars, debt is four hundred million dollars, and cash is forty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1960",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "3695/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "155"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "4495/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "145/2",
+            "relative_gap": "29/755"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "40",
+            "relative_gap": "16/755"
+          }
+        ],
+        "min_wrong_pair_gap": "225/2",
+        "min_distinct_wrong_pair_gap": "225/2"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Consider a manufacturer. A precedent values the target at 13.5 times EBIT. Target EBITDA is 130 million dollars, depreciation is 15 million dollars, debt is 100 million dollars, and cash is 110 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 110,
+        "debt": 100,
+        "depreciation": 15,
+        "ebit_multiple": "27/2",
+        "ebitda": 130
+      },
+      "answer": "3125/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. A precedent values the target at thirteen point five times EBIT. Target EBITDA is one hundred and thirty million dollars, depreciation is fifteen million dollars, debt is one hundred million dollars, and cash is one hundred and ten million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1765",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "2905/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "115"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "3105/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "405/2",
+            "relative_gap": "81/625"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "110",
+            "relative_gap": "44/625"
+          }
+        ],
+        "min_wrong_pair_gap": "625/2",
+        "min_distinct_wrong_pair_gap": "625/2"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Consider a distributor. A precedent values the target at 11 times EBIT. Target EBITDA is 50 million dollars, depreciation is 25 million dollars, debt is 350 million dollars, and cash is 140 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 140,
+        "debt": 350,
+        "depreciation": 25,
+        "ebit_multiple": "11",
+        "ebitda": 50
+      },
+      "answer": "65",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. A precedent values the target at eleven times EBIT. Target EBITDA is fifty million dollars, depreciation is twenty-five million dollars, debt is three hundred and fifty million dollars, and cash is one hundred and forty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "340",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "-75",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "25"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "275"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "275",
+            "relative_gap": "55/13"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "140",
+            "relative_gap": "28/13"
+          }
+        ],
+        "min_wrong_pair_gap": "415",
+        "min_distinct_wrong_pair_gap": "415"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Consider a publisher. A precedent values the target at 8.5 times EBIT. Target EBITDA is 100 million dollars, depreciation is 35 million dollars, debt is 325 million dollars, and cash is 90 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 90,
+        "debt": 325,
+        "depreciation": 35,
+        "ebit_multiple": "17/2",
+        "ebitda": 100
+      },
+      "answer": "635/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. A precedent values the target at eight point five times EBIT. Target EBITDA is one hundred million dollars, depreciation is thirty-five million dollars, debt is three hundred and twenty-five million dollars, and cash is ninety million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "615",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "455/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "65"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1105/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "595/2",
+            "relative_gap": "119/127"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "90",
+            "relative_gap": "36/127"
+          }
+        ],
+        "min_wrong_pair_gap": "775/2",
+        "min_distinct_wrong_pair_gap": "775/2"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Consider a wholesaler. A precedent values the target at 14.5 times EBIT. Target EBITDA is 140 million dollars, depreciation is 5 million dollars, debt is 50 million dollars, and cash is 50 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 50,
+        "debt": 50,
+        "depreciation": 5,
+        "ebit_multiple": "29/2",
+        "ebitda": 140
+      },
+      "answer": "3915/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. A precedent values the target at fourteen point five times EBIT. Target EBITDA is one hundred and forty million dollars, depreciation is five million dollars, debt is fifty million dollars, and cash is fifty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2030",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "3815/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "135"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "3915/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "145/2",
+            "relative_gap": "1/27"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "50",
+            "relative_gap": "20/783"
+          }
+        ],
+        "min_wrong_pair_gap": "245/2",
+        "min_distinct_wrong_pair_gap": "245/2"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Consider a retailer. A precedent values the target at 8 times EBIT. Target EBITDA is 60 million dollars, depreciation is 5 million dollars, debt is 375 million dollars, and cash is 100 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 100,
+        "debt": 375,
+        "depreciation": 5,
+        "ebit_multiple": "8",
+        "ebitda": 60
+      },
+      "answer": "165",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. A precedent values the target at eight times EBIT. Target EBITDA is sixty million dollars, depreciation is five million dollars, debt is three hundred and seventy-five million dollars, and cash is one hundred million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "205",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "65",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "55"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "440"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "40",
+            "relative_gap": "8/33"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "100",
+            "relative_gap": "20/33"
+          }
+        ],
+        "min_wrong_pair_gap": "140",
+        "min_distinct_wrong_pair_gap": "140"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Consider a manufacturer. A precedent values the target at 13 times EBIT. Target EBITDA is 140 million dollars, depreciation is 15 million dollars, debt is 250 million dollars, and cash is 90 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 90,
+        "debt": 250,
+        "depreciation": 15,
+        "ebit_multiple": "13",
+        "ebitda": 140
+      },
+      "answer": "1465",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. A precedent values the target at thirteen times EBIT. Target EBITDA is one hundred and forty million dollars, depreciation is fifteen million dollars, debt is two hundred and fifty million dollars, and cash is ninety million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1660",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1375",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "125"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1625"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "195",
+            "relative_gap": "39/293"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "90",
+            "relative_gap": "18/293"
+          }
+        ],
+        "min_wrong_pair_gap": "285",
+        "min_distinct_wrong_pair_gap": "285"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Consider a distributor. A precedent values the target at 5 times EBIT. Target EBITDA is 200 million dollars, depreciation is 20 million dollars, debt is 50 million dollars, and cash is 110 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 110,
+        "debt": 50,
+        "depreciation": 20,
+        "ebit_multiple": "5",
+        "ebitda": 200
+      },
+      "answer": "960",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. A precedent values the target at five times EBIT. Target EBITDA is two hundred million dollars, depreciation is twenty million dollars, debt is fifty million dollars, and cash is one hundred and ten million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1060",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "850",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "180"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "900"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "100",
+            "relative_gap": "5/48"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "110",
+            "relative_gap": "11/96"
+          }
+        ],
+        "min_wrong_pair_gap": "210",
+        "min_distinct_wrong_pair_gap": "210"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Consider a publisher. A precedent values the target at 6 times EBIT. Target EBITDA is 130 million dollars, depreciation is 40 million dollars, debt is 400 million dollars, and cash is 140 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 140,
+        "debt": 400,
+        "depreciation": 40,
+        "ebit_multiple": "6",
+        "ebitda": 130
+      },
+      "answer": "280",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. A precedent values the target at six times EBIT. Target EBITDA is one hundred and thirty million dollars, depreciation is forty million dollars, debt is four hundred million dollars, and cash is one hundred and forty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "520",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "140",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "90"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "540"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "240",
+            "relative_gap": "6/7"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "140",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "380",
+        "min_distinct_wrong_pair_gap": "380"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Consider a wholesaler. A precedent values the target at 11 times EBIT. Target EBITDA is 170 million dollars, depreciation is 35 million dollars, debt is 225 million dollars, and cash is 20 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 20,
+        "debt": 225,
+        "depreciation": 35,
+        "ebit_multiple": "11",
+        "ebitda": 170
+      },
+      "answer": "1280",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. A precedent values the target at eleven times EBIT. Target EBITDA is one hundred and seventy million dollars, depreciation is thirty-five million dollars, debt is two hundred and twenty-five million dollars, and cash is twenty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1665",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1260",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "135"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1485"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "385",
+            "relative_gap": "77/256"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "20",
+            "relative_gap": "1/64"
+          }
+        ],
+        "min_wrong_pair_gap": "405",
+        "min_distinct_wrong_pair_gap": "405"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Consider a retailer. A precedent values the target at 15 times EBIT. Target EBITDA is 140 million dollars, depreciation is 10 million dollars, debt is 300 million dollars, and cash is 40 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 40,
+        "debt": 300,
+        "depreciation": 10,
+        "ebit_multiple": "15",
+        "ebitda": 140
+      },
+      "answer": "1690",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. A precedent values the target at fifteen times EBIT. Target EBITDA is one hundred and forty million dollars, depreciation is ten million dollars, debt is three hundred million dollars, and cash is forty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1840",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1650",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "130"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1950"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "150",
+            "relative_gap": "15/169"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "40",
+            "relative_gap": "4/169"
+          }
+        ],
+        "min_wrong_pair_gap": "190",
+        "min_distinct_wrong_pair_gap": "190"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Consider a manufacturer. A precedent values the target at 11.5 times EBIT. Target EBITDA is 140 million dollars, depreciation is 15 million dollars, debt is 50 million dollars, and cash is 120 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 120,
+        "debt": 50,
+        "depreciation": 15,
+        "ebit_multiple": "23/2",
+        "ebitda": 140
+      },
+      "answer": "3015/2",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. A precedent values the target at eleven point five times EBIT. Target EBITDA is one hundred and forty million dollars, depreciation is fifteen million dollars, debt is fifty million dollars, and cash is one hundred and twenty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1680",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "2775/2",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "125"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2875/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "345/2",
+            "relative_gap": "23/201"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "120",
+            "relative_gap": "16/201"
+          }
+        ],
+        "min_wrong_pair_gap": "585/2",
+        "min_distinct_wrong_pair_gap": "585/2"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Consider a distributor. A precedent values the target at 12 times EBIT. Target EBITDA is 150 million dollars, depreciation is 35 million dollars, debt is 275 million dollars, and cash is 20 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 20,
+        "debt": 275,
+        "depreciation": 35,
+        "ebit_multiple": "12",
+        "ebitda": 150
+      },
+      "answer": "1125",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. A precedent values the target at twelve times EBIT. Target EBITDA is one hundred and fifty million dollars, depreciation is thirty-five million dollars, debt is two hundred and seventy-five million dollars, and cash is twenty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1545",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1105",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "115"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1380"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "420",
+            "relative_gap": "28/75"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "20",
+            "relative_gap": "4/225"
+          }
+        ],
+        "min_wrong_pair_gap": "440",
+        "min_distinct_wrong_pair_gap": "440"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Consider a publisher. A precedent values the target at 10.5 times EBIT. Target EBITDA is 170 million dollars, depreciation is 10 million dollars, debt is 50 million dollars, and cash is 130 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 130,
+        "debt": 50,
+        "depreciation": 10,
+        "ebit_multiple": "21/2",
+        "ebitda": 170
+      },
+      "answer": "1760",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. A precedent values the target at ten point five times EBIT. Target EBITDA is one hundred and seventy million dollars, depreciation is ten million dollars, debt is fifty million dollars, and cash is one hundred and thirty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1865",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1630",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "160"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1680"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "105",
+            "relative_gap": "21/352"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "130",
+            "relative_gap": "13/176"
+          }
+        ],
+        "min_wrong_pair_gap": "235",
+        "min_distinct_wrong_pair_gap": "235"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Consider a wholesaler. A precedent values the target at 14 times EBIT. Target EBITDA is 120 million dollars, depreciation is 30 million dollars, debt is 200 million dollars, and cash is 120 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 120,
+        "debt": 200,
+        "depreciation": 30,
+        "ebit_multiple": "14",
+        "ebitda": 120
+      },
+      "answer": "1180",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. A precedent values the target at fourteen times EBIT. Target EBITDA is one hundred and twenty million dollars, depreciation is thirty million dollars, debt is two hundred million dollars, and cash is one hundred and twenty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1600",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1060",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "90"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1260"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "420",
+            "relative_gap": "21/59"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "120",
+            "relative_gap": "6/59"
+          }
+        ],
+        "min_wrong_pair_gap": "540",
+        "min_distinct_wrong_pair_gap": "540"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Consider a retailer. A precedent values the target at 12 times EBIT. Target EBITDA is 170 million dollars, depreciation is 25 million dollars, debt is 200 million dollars, and cash is 90 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 90,
+        "debt": 200,
+        "depreciation": 25,
+        "ebit_multiple": "12",
+        "ebitda": 170
+      },
+      "answer": "1630",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. A precedent values the target at twelve times EBIT. Target EBITDA is one hundred and seventy million dollars, depreciation is twenty-five million dollars, debt is two hundred million dollars, and cash is ninety million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1930",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "1540",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "145"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "1740"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "300",
+            "relative_gap": "30/163"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "90",
+            "relative_gap": "9/163"
+          }
+        ],
+        "min_wrong_pair_gap": "390",
+        "min_distinct_wrong_pair_gap": "390"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Consider a manufacturer. A precedent values the target at 15 times EBIT. Target EBITDA is 170 million dollars, depreciation is 15 million dollars, debt is 175 million dollars, and cash is 80 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 80,
+        "debt": 175,
+        "depreciation": 15,
+        "ebit_multiple": "15",
+        "ebitda": 170
+      },
+      "answer": "2230",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. A precedent values the target at fifteen times EBIT. Target EBITDA is one hundred and seventy million dollars, depreciation is fifteen million dollars, debt is one hundred and seventy-five million dollars, and cash is eighty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2455",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "2150",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "155"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "2325"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "225",
+            "relative_gap": "45/446"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "80",
+            "relative_gap": "8/223"
+          }
+        ],
+        "min_wrong_pair_gap": "305",
+        "min_distinct_wrong_pair_gap": "305"
+      },
+      "follow_up": {
+        "question": "Why compare depreciation policies before using an EBIT precedent?",
+        "reference": "Different useful lives and capitalization policies change EBIT even for similar cash operations. Normalize those policies before interpreting a multiple difference."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Consider a distributor. A precedent values the target at 11.5 times EBIT. Target EBITDA is 90 million dollars, depreciation is 10 million dollars, debt is 175 million dollars, and cash is 70 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 70,
+        "debt": 175,
+        "depreciation": 10,
+        "ebit_multiple": "23/2",
+        "ebitda": 90
+      },
+      "answer": "815",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. A precedent values the target at eleven point five times EBIT. Target EBITDA is ninety million dollars, depreciation is ten million dollars, debt is one hundred and seventy-five million dollars, and cash is seventy million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "930",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "745",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "80"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "920"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "115",
+            "relative_gap": "23/163"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "70",
+            "relative_gap": "14/163"
+          }
+        ],
+        "min_wrong_pair_gap": "185",
+        "min_distinct_wrong_pair_gap": "185"
+      },
+      "follow_up": {
+        "question": "Should a transaction multiple automatically apply to a standalone trading value?",
+        "reference": "Transactions can embed control benefits, synergies and different market conditions. Assess whether those features transfer to the target before applying the precedent."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Consider a publisher. A precedent values the target at 9 times EBIT. Target EBITDA is 60 million dollars, depreciation is 30 million dollars, debt is 200 million dollars, and cash is 140 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 140,
+        "debt": 200,
+        "depreciation": 30,
+        "ebit_multiple": "9",
+        "ebitda": 60
+      },
+      "answer": "210",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. A precedent values the target at nine times EBIT. Target EBITDA is sixty million dollars, depreciation is thirty million dollars, debt is two hundred million dollars, and cash is one hundred and forty million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "480",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "70",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "30"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "270"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "270",
+            "relative_gap": "9/7"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "140",
+            "relative_gap": "2/3"
+          }
+        ],
+        "min_wrong_pair_gap": "410",
+        "min_distinct_wrong_pair_gap": "410"
+      },
+      "follow_up": {
+        "question": "Why does this precedent require subtracting depreciation first?",
+        "reference": "The quoted transaction multiple is based on EBIT. Applying it to EBITDA would value a larger earnings number under the wrong definition."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Consider a wholesaler. A precedent values the target at 6.5 times EBIT. Target EBITDA is 100 million dollars, depreciation is 40 million dollars, debt is 75 million dollars, and cash is 70 million dollars. What is the equity purchase price, in millions of dollars?",
+      "params": {
+        "cash": 70,
+        "debt": 75,
+        "depreciation": 40,
+        "ebit_multiple": "13/2",
+        "ebitda": 100
+      },
+      "answer": "385",
+      "tolerance": "0",
+      "topic": "Precedent transactions",
+      "source_topic": "EBIT-based equity purchase value",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. A precedent values the target at six point five times EBIT. Target EBITDA is one hundred million dollars, depreciation is forty million dollars, debt is seventy-five million dollars, and cash is seventy million dollars. What is the equity purchase price, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "645",
+          "misconceptions": [
+            "applies_an_ebit_multiple_to_ebitda"
+          ]
+        },
+        {
+          "value": "315",
+          "misconceptions": [
+            "omits_cash_from_the_equity_bridge"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "ebit",
+          "value": "60"
+        },
+        {
+          "name": "enterprise_value",
+          "value": "390"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "applies_an_ebit_multiple_to_ebitda",
+            "absolute_gap": "260",
+            "relative_gap": "52/77"
+          },
+          {
+            "misconception": "omits_cash_from_the_equity_bridge",
+            "absolute_gap": "70",
+            "relative_gap": "2/11"
+          }
+        ],
+        "min_wrong_pair_gap": "330",
+        "min_distinct_wrong_pair_gap": "330"
+      },
+      "follow_up": {
+        "question": "Would a cash-free, debt-free purchase change the headline equity cheque?",
+        "reference": "Yes, settlement would exclude or separately resolve those balance-sheet items. The quoted enterprise value could stay the same while the equity cheque changes."
+      }
+    }
+  ]
+}

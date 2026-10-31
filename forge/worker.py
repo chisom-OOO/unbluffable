@@ -94,7 +94,26 @@ def inspect_code(code, mode):
     return tree
 
 
+def plain_list(value, depth=0):
+    """A list answer as plain JSON values: ints, strings, bools and nested lists (a whole
+    Fraction becomes its int; any other number is refused, so equality stays exact)."""
+    if depth > 8:
+        raise PolicyError("list_too_deep")
+    if isinstance(value, (list, tuple)):
+        return [plain_list(v, depth + 1) for v in value]
+    if isinstance(value, (bool, str)) or (isinstance(value, int)):
+        return value
+    if isinstance(value, Fraction) and value.denominator == 1:
+        return int(value)
+    raise TypeError("solver_not_exact")
+
+
 def exact(value):
+    if isinstance(value, (list, tuple)):  # canonical JSON: compared by exact equality
+        text = json.dumps(plain_list(value), separators=(",", ":"))
+        if len(text) > 4096:
+            raise PolicyError("list_output_too_large")
+        return text
     if isinstance(value, bool) or not isinstance(value, (int, Fraction)):
         raise TypeError("solver_not_exact")
     value = Fraction(value)

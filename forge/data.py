@@ -147,6 +147,29 @@ def numeric_parts(text):
     return token, percent, implied
 
 
+def list_answer(text):
+    """A list answer ("[106, 110]", "[8,18,13]") as canonical JSON, or None for any other
+    answer. Lists compare by exact JSON equality after normalising whitespace."""
+    t = str(text or "").strip()
+    if not t.startswith("["):
+        return None
+    try:
+        value = json.loads(t, parse_constant=lambda c: (_ for _ in ()).throw(ValueError(c)))
+    except ValueError:
+        raise Reject("answer", "invalid_list") from None
+
+    def ok(v):
+        return isinstance(v, (str, bool, int)) or (isinstance(v, list) and all(ok(x) for x in v))
+    if not isinstance(value, list) or not ok(value):
+        raise Reject("answer", "invalid_list")
+    return json.dumps(value, separators=(",", ":"))
+
+
+def answer_value(text):
+    """A family answer: its canonical list JSON (a coding-only family), else the exact number."""
+    return list_answer(text) or number(text)
+
+
 def number(text):
     token, percent, _ = numeric_parts(text)
     try:

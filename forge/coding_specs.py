@@ -27,7 +27,7 @@ from fractions import Fraction
 from pathlib import Path
 
 from forge import schemas
-from forge.data import number
+from forge.data import answer_value, number
 from forge.errors import BudgetStop, Reject, ReplayMissing, ResumeBlocked
 from forge.models import DEFAULT_PRICES, Models, State, atomic_json
 from forge.sandbox import Sandbox
@@ -50,7 +50,8 @@ Return a function signature for the candidate to implement and a short problem s
 - parameters: one per instance parameter, in a natural order. name: snake_case argument name.
   type: one of int, float, str, bool, list[int], list[float], list[str], list[bool],
   list[list[int]], list[list[str]], list[list[float]]. param: the exact instance parameter key it receives.
-- return_type: int, float, str or bool, matching the answer.
+- return_type: int, float, str or bool, matching the answer; when the answers are lists
+  (like [106, 110]), the matching list type, e.g. list[int].
 - statement: 2-5 plain sentences describing the task in general terms using the argument
   names; no specific numbers from the examples, no hints at the method, no solution.
 The forge's verified solver is included only so the mapping and types are right; never
@@ -91,13 +92,16 @@ def plain(value):
     return [plain(v) for v in value] if isinstance(value, (list, tuple)) else value
 
 
-def answer_of(result) -> Fraction:
-    return number(result["answer"] if isinstance(result, dict) else result)
+def answer_of(result) -> Fraction | str:
+    """A solver's answer: an exact number, or a list answer as canonical JSON."""
+    return answer_value(result["answer"] if isinstance(result, dict) else result)
 
 
 def verify(spec: dict, family: dict, solver: str, wrong: list[dict], sandbox) -> dict:
     """Raise Reject unless the spec is sound; return what ships."""
-    if not IDENT.fullmatch(spec.get("function_name", "")) or spec.get("return_type") not in {"int", "float", "str", "bool"}:
+    lists = isinstance(answer_value(family["instances"][0]["answer"]), str)  # a list-answer (coding-only) family
+    returns = {t for t in TYPES if t.startswith("list[")} if lists else {"int", "float", "str", "bool"}
+    if not IDENT.fullmatch(spec.get("function_name", "")) or spec.get("return_type") not in returns:
         raise Reject("spec", "invalid_name_or_return_type")
     params = spec.get("parameters") or []
     names = [p["name"] for p in params]
@@ -116,7 +120,7 @@ def verify(spec: dict, family: dict, solver: str, wrong: list[dict], sandbox) ->
         for p in params:
             if not check_type(inst["params"][p["param"]], p["type"]):
                 raise Reject("spec", "type_mismatch", {"variant_index": i})
-    expected = [number(inst["answer"]) for inst in instances]
+    expected = [answer_value(inst["answer"]) for inst in instances]
     if spec["return_type"] == "int" and any(x.denominator != 1 for x in expected):
         raise Reject("spec", "answers_are_not_integers")
     points = [inst["params"] for inst in instances]

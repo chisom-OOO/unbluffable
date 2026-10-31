@@ -1,0 +1,3444 @@
+{
+  "template_id": "ibx_F021",
+  "pack": "ib",
+  "topic": "Capital structure and financing",
+  "topics": [
+    "Capital structure and financing"
+  ],
+  "source_topic": "Debt capacity under a coverage floor",
+  "difficulty": "Hard",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "Why deduct existing interest before sizing new borrowing?",
+    "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Consider a retailer. EBIT is 200 million dollars, existing debt is 350 million dollars at 8 percent, new debt costs 5 percent, and minimum EBIT interest coverage is 4 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 200,
+        "minimum_coverage": "4",
+        "new_rate": "1/20",
+        "old_debt": 350,
+        "old_rate": "2/25"
+      },
+      "answer": "440",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is two hundred million dollars, existing debt is three hundred and fifty million dollars at eight percent, new debt costs five percent, and minimum EBIT interest coverage is four times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1000",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "15440",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "50"
+        },
+        {
+          "name": "existing_interest",
+          "value": "28"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "22"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "560",
+            "relative_gap": "14/11"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "15000",
+            "relative_gap": "375/11"
+          }
+        ],
+        "min_wrong_pair_gap": "14440",
+        "min_distinct_wrong_pair_gap": "14440"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Consider a manufacturer. EBIT is 100 million dollars, existing debt is 150 million dollars at 8 percent, new debt costs 6 percent, and minimum EBIT interest coverage is 3 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 100,
+        "minimum_coverage": "3",
+        "new_rate": "3/50",
+        "old_debt": 150,
+        "old_rate": "2/25"
+      },
+      "answer": "3200/9",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred million dollars, existing debt is one hundred and fifty million dollars at eight percent, new debt costs six percent, and minimum EBIT interest coverage is three times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5000/9",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "4800",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "100/3"
+        },
+        {
+          "name": "existing_interest",
+          "value": "12"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "64/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "200",
+            "relative_gap": "9/16"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "40000/9",
+            "relative_gap": "25/2"
+          }
+        ],
+        "min_wrong_pair_gap": "38200/9",
+        "min_distinct_wrong_pair_gap": "38200/9"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Consider a distributor. EBIT is 160 million dollars, existing debt is 350 million dollars at 5 percent, new debt costs 6 percent, and minimum EBIT interest coverage is 2 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 160,
+        "minimum_coverage": "2",
+        "new_rate": "3/50",
+        "old_debt": 350,
+        "old_rate": "1/20"
+      },
+      "answer": "3125/3",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred and sixty million dollars, existing debt is three hundred and fifty million dollars at five percent, new debt costs six percent, and minimum EBIT interest coverage is two times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4000/3",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "15125/3",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "80"
+        },
+        {
+          "name": "existing_interest",
+          "value": "35/2"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "125/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "875/3",
+            "relative_gap": "7/25"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "4000",
+            "relative_gap": "96/25"
+          }
+        ],
+        "min_wrong_pair_gap": "11125/3",
+        "min_distinct_wrong_pair_gap": "11125/3"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Consider a publisher. EBIT is 110 million dollars, existing debt is 350 million dollars at 5 percent, new debt costs 7 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 110,
+        "minimum_coverage": "7/2",
+        "new_rate": "7/100",
+        "old_debt": 350,
+        "old_rate": "1/20"
+      },
+      "answer": "9750/49",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is one hundred and ten million dollars, existing debt is three hundred and fifty million dollars at five percent, new debt costs seven percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "22000/49",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "5250",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "220/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "35/2"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "195/14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "250",
+            "relative_gap": "49/39"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "247500/49",
+            "relative_gap": "330/13"
+          }
+        ],
+        "min_wrong_pair_gap": "235250/49",
+        "min_distinct_wrong_pair_gap": "235250/49"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Consider a wholesaler. EBIT is 170 million dollars, existing debt is 350 million dollars at 5 percent, new debt costs 10 percent, and minimum EBIT interest coverage is 3 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 170,
+        "minimum_coverage": "3",
+        "new_rate": "1/10",
+        "old_debt": 350,
+        "old_rate": "1/20"
+      },
+      "answer": "1175/3",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and seventy million dollars, existing debt is three hundred and fifty million dollars at five percent, new debt costs ten percent, and minimum EBIT interest coverage is three times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1700/3",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "4925",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "170/3"
+        },
+        {
+          "name": "existing_interest",
+          "value": "35/2"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "235/6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "175",
+            "relative_gap": "21/47"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "13600/3",
+            "relative_gap": "544/47"
+          }
+        ],
+        "min_wrong_pair_gap": "13075/3",
+        "min_distinct_wrong_pair_gap": "13075/3"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Consider a retailer. EBIT is 220 million dollars, existing debt is 400 million dollars at 6 percent, new debt costs 7 percent, and minimum EBIT interest coverage is 5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 220,
+        "minimum_coverage": "5",
+        "new_rate": "7/100",
+        "old_debt": 400,
+        "old_rate": "3/50"
+      },
+      "answer": "2000/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is two hundred and twenty million dollars, existing debt is four hundred million dollars at six percent, new debt costs seven percent, and minimum EBIT interest coverage is five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4400/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "107600/7",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "44"
+        },
+        {
+          "name": "existing_interest",
+          "value": "24"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "2400/7",
+            "relative_gap": "6/5"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "105600/7",
+            "relative_gap": "264/5"
+          }
+        ],
+        "min_wrong_pair_gap": "103200/7",
+        "min_distinct_wrong_pair_gap": "103200/7"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Consider a manufacturer. EBIT is 100 million dollars, existing debt is 350 million dollars at 4 percent, new debt costs 6 percent, and minimum EBIT interest coverage is 3 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 100,
+        "minimum_coverage": "3",
+        "new_rate": "3/50",
+        "old_debt": 350,
+        "old_rate": "1/25"
+      },
+      "answer": "2900/9",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred million dollars, existing debt is three hundred and fifty million dollars at four percent, new debt costs six percent, and minimum EBIT interest coverage is three times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5000/9",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "14300/3",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "100/3"
+        },
+        {
+          "name": "existing_interest",
+          "value": "14"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "58/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "700/3",
+            "relative_gap": "21/29"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "40000/9",
+            "relative_gap": "400/29"
+          }
+        ],
+        "min_wrong_pair_gap": "37900/9",
+        "min_distinct_wrong_pair_gap": "37900/9"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Consider a distributor. EBIT is 170 million dollars, existing debt is 250 million dollars at 6 percent, new debt costs 5 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 170,
+        "minimum_coverage": "7/2",
+        "new_rate": "1/20",
+        "old_debt": 250,
+        "old_rate": "3/50"
+      },
+      "answer": "4700/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred and seventy million dollars, existing debt is two hundred and fifty million dollars at six percent, new debt costs five percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "6800/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "11600",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "340/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "15"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "235/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "300",
+            "relative_gap": "21/47"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "76500/7",
+            "relative_gap": "765/47"
+          }
+        ],
+        "min_wrong_pair_gap": "74400/7",
+        "min_distinct_wrong_pair_gap": "74400/7"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Consider a publisher. EBIT is 240 million dollars, existing debt is 250 million dollars at 4 percent, new debt costs 7 percent, and minimum EBIT interest coverage is 2.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 240,
+        "minimum_coverage": "5/2",
+        "new_rate": "7/100",
+        "old_debt": 250,
+        "old_rate": "1/25"
+      },
+      "answer": "8600/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is two hundred and forty million dollars, existing debt is two hundred and fifty million dollars at four percent, new debt costs seven percent, and minimum EBIT interest coverage is two point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "9600/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "59000/7",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "96"
+        },
+        {
+          "name": "existing_interest",
+          "value": "10"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "86"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "1000/7",
+            "relative_gap": "5/43"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "7200",
+            "relative_gap": "252/43"
+          }
+        ],
+        "min_wrong_pair_gap": "49400/7",
+        "min_distinct_wrong_pair_gap": "49400/7"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Consider a wholesaler. EBIT is 170 million dollars, existing debt is 500 million dollars at 6 percent, new debt costs 7 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 170,
+        "minimum_coverage": "7/2",
+        "new_rate": "7/100",
+        "old_debt": 500,
+        "old_rate": "3/50"
+      },
+      "answer": "13000/49",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and seventy million dollars, existing debt is five hundred million dollars at six percent, new debt costs seven percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "34000/49",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "56500/7",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "340/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "30"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "130/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "3000/7",
+            "relative_gap": "21/13"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "382500/49",
+            "relative_gap": "765/26"
+          }
+        ],
+        "min_wrong_pair_gap": "361500/49",
+        "min_distinct_wrong_pair_gap": "361500/49"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Consider a retailer. EBIT is 200 million dollars, existing debt is 100 million dollars at 6 percent, new debt costs 8 percent, and minimum EBIT interest coverage is 4 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 200,
+        "minimum_coverage": "4",
+        "new_rate": "2/25",
+        "old_debt": 100,
+        "old_rate": "3/50"
+      },
+      "answer": "550",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is two hundred million dollars, existing debt is one hundred million dollars at six percent, new debt costs eight percent, and minimum EBIT interest coverage is four times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "625",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "9925",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "50"
+        },
+        {
+          "name": "existing_interest",
+          "value": "6"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "44"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "75",
+            "relative_gap": "3/22"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "9375",
+            "relative_gap": "375/22"
+          }
+        ],
+        "min_wrong_pair_gap": "9300",
+        "min_distinct_wrong_pair_gap": "9300"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Consider a manufacturer. EBIT is 120 million dollars, existing debt is 300 million dollars at 8 percent, new debt costs 10 percent, and minimum EBIT interest coverage is 4.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 120,
+        "minimum_coverage": "9/2",
+        "new_rate": "1/10",
+        "old_debt": 300,
+        "old_rate": "2/25"
+      },
+      "answer": "80/3",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred and twenty million dollars, existing debt is three hundred million dollars at eight percent, new debt costs ten percent, and minimum EBIT interest coverage is four point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "800/3",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "5160",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "80/3"
+        },
+        {
+          "name": "existing_interest",
+          "value": "24"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "8/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "240",
+            "relative_gap": "9"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "15400/3",
+            "relative_gap": "385/2"
+          }
+        ],
+        "min_wrong_pair_gap": "14680/3",
+        "min_distinct_wrong_pair_gap": "14680/3"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Consider a distributor. EBIT is 170 million dollars, existing debt is 350 million dollars at 5 percent, new debt costs 7 percent, and minimum EBIT interest coverage is 2.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 170,
+        "minimum_coverage": "5/2",
+        "new_rate": "7/100",
+        "old_debt": 350,
+        "old_rate": "1/20"
+      },
+      "answer": "5050/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred and seventy million dollars, existing debt is three hundred and fifty million dollars at five percent, new debt costs seven percent, and minimum EBIT interest coverage is two point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "6800/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "40750/7",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "68"
+        },
+        {
+          "name": "existing_interest",
+          "value": "35/2"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "101/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "250",
+            "relative_gap": "35/101"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "5100",
+            "relative_gap": "714/101"
+          }
+        ],
+        "min_wrong_pair_gap": "4850",
+        "min_distinct_wrong_pair_gap": "4850"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Consider a publisher. EBIT is 240 million dollars, existing debt is 150 million dollars at 5 percent, new debt costs 8 percent, and minimum EBIT interest coverage is 2 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 240,
+        "minimum_coverage": "2",
+        "new_rate": "2/25",
+        "old_debt": 150,
+        "old_rate": "1/20"
+      },
+      "answer": "5625/4",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is two hundred and forty million dollars, existing debt is one hundred and fifty million dollars at five percent, new debt costs eight percent, and minimum EBIT interest coverage is two times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1500",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "23625/4",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "120"
+        },
+        {
+          "name": "existing_interest",
+          "value": "15/2"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "225/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "375/4",
+            "relative_gap": "1/15"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "4500",
+            "relative_gap": "16/5"
+          }
+        ],
+        "min_wrong_pair_gap": "17625/4",
+        "min_distinct_wrong_pair_gap": "17625/4"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Consider a wholesaler. EBIT is 190 million dollars, existing debt is 400 million dollars at 4 percent, new debt costs 8 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 190,
+        "minimum_coverage": "7/2",
+        "new_rate": "2/25",
+        "old_debt": 400,
+        "old_rate": "1/25"
+      },
+      "answer": "3350/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and ninety million dollars, existing debt is four hundred million dollars at four percent, new debt costs eight percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4750/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "16225/2",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "380/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "16"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "268/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "200",
+            "relative_gap": "28/67"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "106875/14",
+            "relative_gap": "4275/268"
+          }
+        ],
+        "min_wrong_pair_gap": "104075/14",
+        "min_distinct_wrong_pair_gap": "104075/14"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Consider a retailer. EBIT is 90 million dollars, existing debt is 300 million dollars at 5 percent, new debt costs 10 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 90,
+        "minimum_coverage": "7/2",
+        "new_rate": "1/10",
+        "old_debt": 300,
+        "old_rate": "1/20"
+      },
+      "answer": "750/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is ninety million dollars, existing debt is three hundred million dollars at five percent, new debt costs ten percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1800/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "3000",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "180/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "15"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "75/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "150",
+            "relative_gap": "7/5"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "20250/7",
+            "relative_gap": "27"
+          }
+        ],
+        "min_wrong_pair_gap": "19200/7",
+        "min_distinct_wrong_pair_gap": "19200/7"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Consider a manufacturer. EBIT is 190 million dollars, existing debt is 250 million dollars at 8 percent, new debt costs 10 percent, and minimum EBIT interest coverage is 5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 190,
+        "minimum_coverage": "5",
+        "new_rate": "1/10",
+        "old_debt": 250,
+        "old_rate": "2/25"
+      },
+      "answer": "180",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred and ninety million dollars, existing debt is two hundred and fifty million dollars at eight percent, new debt costs ten percent, and minimum EBIT interest coverage is five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "380",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "9300",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "38"
+        },
+        {
+          "name": "existing_interest",
+          "value": "20"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "18"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "200",
+            "relative_gap": "10/9"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "9120",
+            "relative_gap": "152/3"
+          }
+        ],
+        "min_wrong_pair_gap": "8920",
+        "min_distinct_wrong_pair_gap": "8920"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Consider a distributor. EBIT is 220 million dollars, existing debt is 150 million dollars at 6 percent, new debt costs 8 percent, and minimum EBIT interest coverage is 4.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 220,
+        "minimum_coverage": "9/2",
+        "new_rate": "2/25",
+        "old_debt": 150,
+        "old_rate": "3/50"
+      },
+      "answer": "8975/18",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is two hundred and twenty million dollars, existing debt is one hundred and fifty million dollars at six percent, new debt costs eight percent, and minimum EBIT interest coverage is four point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5500/9",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "24525/2",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "440/9"
+        },
+        {
+          "name": "existing_interest",
+          "value": "9"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "359/9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "225/2",
+            "relative_gap": "81/359"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "105875/9",
+            "relative_gap": "8470/359"
+          }
+        ],
+        "min_wrong_pair_gap": "209725/18",
+        "min_distinct_wrong_pair_gap": "209725/18"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Consider a publisher. EBIT is 150 million dollars, existing debt is 100 million dollars at 6 percent, new debt costs 10 percent, and minimum EBIT interest coverage is 2 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 150,
+        "minimum_coverage": "2",
+        "new_rate": "1/10",
+        "old_debt": 100,
+        "old_rate": "3/50"
+      },
+      "answer": "690",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is one hundred and fifty million dollars, existing debt is one hundred million dollars at six percent, new debt costs ten percent, and minimum EBIT interest coverage is two times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "750",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "2940",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "75"
+        },
+        {
+          "name": "existing_interest",
+          "value": "6"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "69"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "60",
+            "relative_gap": "2/23"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "2250",
+            "relative_gap": "75/23"
+          }
+        ],
+        "min_wrong_pair_gap": "2190",
+        "min_distinct_wrong_pair_gap": "2190"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Consider a wholesaler. EBIT is 180 million dollars, existing debt is 450 million dollars at 4 percent, new debt costs 10 percent, and minimum EBIT interest coverage is 3 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 180,
+        "minimum_coverage": "3",
+        "new_rate": "1/10",
+        "old_debt": 450,
+        "old_rate": "1/25"
+      },
+      "answer": "420",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and eighty million dollars, existing debt is four hundred and fifty million dollars at four percent, new debt costs ten percent, and minimum EBIT interest coverage is three times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "600",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "5220",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "60"
+        },
+        {
+          "name": "existing_interest",
+          "value": "18"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "42"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "180",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "4800",
+            "relative_gap": "80/7"
+          }
+        ],
+        "min_wrong_pair_gap": "4620",
+        "min_distinct_wrong_pair_gap": "4620"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Consider a retailer. EBIT is 140 million dollars, existing debt is 350 million dollars at 6 percent, new debt costs 5 percent, and minimum EBIT interest coverage is 2 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 140,
+        "minimum_coverage": "2",
+        "new_rate": "1/20",
+        "old_debt": 350,
+        "old_rate": "3/50"
+      },
+      "answer": "980",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred and forty million dollars, existing debt is three hundred and fifty million dollars at six percent, new debt costs five percent, and minimum EBIT interest coverage is two times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1400",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "5180",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "70"
+        },
+        {
+          "name": "existing_interest",
+          "value": "21"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "49"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "420",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "4200",
+            "relative_gap": "30/7"
+          }
+        ],
+        "min_wrong_pair_gap": "3780",
+        "min_distinct_wrong_pair_gap": "3780"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Consider a manufacturer. EBIT is 250 million dollars, existing debt is 100 million dollars at 5 percent, new debt costs 7 percent, and minimum EBIT interest coverage is 5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 250,
+        "minimum_coverage": "5",
+        "new_rate": "7/100",
+        "old_debt": 100,
+        "old_rate": "1/20"
+      },
+      "answer": "4500/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is two hundred and fifty million dollars, existing debt is one hundred million dollars at five percent, new debt costs seven percent, and minimum EBIT interest coverage is five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5000/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "124500/7",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "50"
+        },
+        {
+          "name": "existing_interest",
+          "value": "5"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "500/7",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "120000/7",
+            "relative_gap": "80/3"
+          }
+        ],
+        "min_wrong_pair_gap": "119500/7",
+        "min_distinct_wrong_pair_gap": "119500/7"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Consider a distributor. EBIT is 80 million dollars, existing debt is 250 million dollars at 6 percent, new debt costs 6 percent, and minimum EBIT interest coverage is 4.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 80,
+        "minimum_coverage": "9/2",
+        "new_rate": "3/50",
+        "old_debt": 250,
+        "old_rate": "3/50"
+      },
+      "answer": "1250/27",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is eighty million dollars, existing debt is two hundred and fifty million dollars at six percent, new debt costs six percent, and minimum EBIT interest coverage is four point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "8000/27",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "5750",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "160/9"
+        },
+        {
+          "name": "existing_interest",
+          "value": "15"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "25/9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "250",
+            "relative_gap": "27/5"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "154000/27",
+            "relative_gap": "616/5"
+          }
+        ],
+        "min_wrong_pair_gap": "147250/27",
+        "min_distinct_wrong_pair_gap": "147250/27"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Consider a publisher. EBIT is 150 million dollars, existing debt is 350 million dollars at 4 percent, new debt costs 10 percent, and minimum EBIT interest coverage is 4 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 150,
+        "minimum_coverage": "4",
+        "new_rate": "1/10",
+        "old_debt": 350,
+        "old_rate": "1/25"
+      },
+      "answer": "235",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is one hundred and fifty million dollars, existing debt is three hundred and fifty million dollars at four percent, new debt costs ten percent, and minimum EBIT interest coverage is four times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "375",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "5860",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "75/2"
+        },
+        {
+          "name": "existing_interest",
+          "value": "14"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "47/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "140",
+            "relative_gap": "28/47"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "5625",
+            "relative_gap": "1125/47"
+          }
+        ],
+        "min_wrong_pair_gap": "5485",
+        "min_distinct_wrong_pair_gap": "5485"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Consider a wholesaler. EBIT is 150 million dollars, existing debt is 100 million dollars at 5 percent, new debt costs 8 percent, and minimum EBIT interest coverage is 3 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 150,
+        "minimum_coverage": "3",
+        "new_rate": "2/25",
+        "old_debt": 100,
+        "old_rate": "1/20"
+      },
+      "answer": "1125/2",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and fifty million dollars, existing debt is one hundred million dollars at five percent, new debt costs eight percent, and minimum EBIT interest coverage is three times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "625",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "11125/2",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "50"
+        },
+        {
+          "name": "existing_interest",
+          "value": "5"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "125/2",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "5000",
+            "relative_gap": "80/9"
+          }
+        ],
+        "min_wrong_pair_gap": "9875/2",
+        "min_distinct_wrong_pair_gap": "9875/2"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Consider a retailer. EBIT is 160 million dollars, existing debt is 200 million dollars at 4 percent, new debt costs 5 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 160,
+        "minimum_coverage": "7/2",
+        "new_rate": "1/20",
+        "old_debt": 200,
+        "old_rate": "1/25"
+      },
+      "answer": "5280/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred and sixty million dollars, existing debt is two hundred million dollars at four percent, new debt costs five percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "6400/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "11040",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "320/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "8"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "264/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "160",
+            "relative_gap": "7/33"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "72000/7",
+            "relative_gap": "150/11"
+          }
+        ],
+        "min_wrong_pair_gap": "70880/7",
+        "min_distinct_wrong_pair_gap": "70880/7"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Consider a manufacturer. EBIT is 130 million dollars, existing debt is 350 million dollars at 6 percent, new debt costs 5 percent, and minimum EBIT interest coverage is 4.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 130,
+        "minimum_coverage": "9/2",
+        "new_rate": "1/20",
+        "old_debt": 350,
+        "old_rate": "3/50"
+      },
+      "answer": "1420/9",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is one hundred and thirty million dollars, existing debt is three hundred and fifty million dollars at six percent, new debt costs five percent, and minimum EBIT interest coverage is four point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5200/9",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "11280",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "260/9"
+        },
+        {
+          "name": "existing_interest",
+          "value": "21"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "71/9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "420",
+            "relative_gap": "189/71"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "100100/9",
+            "relative_gap": "5005/71"
+          }
+        ],
+        "min_wrong_pair_gap": "96320/9",
+        "min_distinct_wrong_pair_gap": "96320/9"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Consider a distributor. EBIT is 190 million dollars, existing debt is 300 million dollars at 5 percent, new debt costs 5 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 190,
+        "minimum_coverage": "7/2",
+        "new_rate": "1/20",
+        "old_debt": 300,
+        "old_rate": "1/20"
+      },
+      "answer": "5500/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred and ninety million dollars, existing debt is three hundred million dollars at five percent, new debt costs five percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "7600/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "13000",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "380/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "15"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "275/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "300",
+            "relative_gap": "21/55"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "85500/7",
+            "relative_gap": "171/11"
+          }
+        ],
+        "min_wrong_pair_gap": "83400/7",
+        "min_distinct_wrong_pair_gap": "83400/7"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Consider a publisher. EBIT is 190 million dollars, existing debt is 300 million dollars at 5 percent, new debt costs 8 percent, and minimum EBIT interest coverage is 4.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 190,
+        "minimum_coverage": "9/2",
+        "new_rate": "2/25",
+        "old_debt": 300,
+        "old_rate": "1/20"
+      },
+      "answer": "6125/18",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is one hundred and ninety million dollars, existing debt is three hundred million dollars at five percent, new debt costs eight percent, and minimum EBIT interest coverage is four point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4750/9",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "10500",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "380/9"
+        },
+        {
+          "name": "existing_interest",
+          "value": "15"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "245/9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "375/2",
+            "relative_gap": "27/49"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "182875/18",
+            "relative_gap": "209/7"
+          }
+        ],
+        "min_wrong_pair_gap": "89750/9",
+        "min_distinct_wrong_pair_gap": "89750/9"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Consider a wholesaler. EBIT is 150 million dollars, existing debt is 100 million dollars at 6 percent, new debt costs 5 percent, and minimum EBIT interest coverage is 2.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 150,
+        "minimum_coverage": "5/2",
+        "new_rate": "1/20",
+        "old_debt": 100,
+        "old_rate": "3/50"
+      },
+      "answer": "1080",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and fifty million dollars, existing debt is one hundred million dollars at six percent, new debt costs five percent, and minimum EBIT interest coverage is two point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1200",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "7380",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "60"
+        },
+        {
+          "name": "existing_interest",
+          "value": "6"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "54"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "120",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "6300",
+            "relative_gap": "35/6"
+          }
+        ],
+        "min_wrong_pair_gap": "6180",
+        "min_distinct_wrong_pair_gap": "6180"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Consider a retailer. EBIT is 130 million dollars, existing debt is 350 million dollars at 8 percent, new debt costs 7 percent, and minimum EBIT interest coverage is 3 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 130,
+        "minimum_coverage": "3",
+        "new_rate": "7/100",
+        "old_debt": 350,
+        "old_rate": "2/25"
+      },
+      "answer": "4600/21",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred and thirty million dollars, existing debt is three hundred and fifty million dollars at eight percent, new debt costs seven percent, and minimum EBIT interest coverage is three times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "13000/21",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "36200/7",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "130/3"
+        },
+        {
+          "name": "existing_interest",
+          "value": "28"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "46/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "400",
+            "relative_gap": "42/23"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "104000/21",
+            "relative_gap": "520/23"
+          }
+        ],
+        "min_wrong_pair_gap": "95600/21",
+        "min_distinct_wrong_pair_gap": "95600/21"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Consider a manufacturer. EBIT is 250 million dollars, existing debt is 200 million dollars at 4 percent, new debt costs 10 percent, and minimum EBIT interest coverage is 2.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 250,
+        "minimum_coverage": "5/2",
+        "new_rate": "1/10",
+        "old_debt": 200,
+        "old_rate": "1/25"
+      },
+      "answer": "920",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is two hundred and fifty million dollars, existing debt is two hundred million dollars at four percent, new debt costs ten percent, and minimum EBIT interest coverage is two point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1000",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "6170",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "100"
+        },
+        {
+          "name": "existing_interest",
+          "value": "8"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "92"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "80",
+            "relative_gap": "2/23"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "5250",
+            "relative_gap": "525/92"
+          }
+        ],
+        "min_wrong_pair_gap": "5170",
+        "min_distinct_wrong_pair_gap": "5170"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Consider a distributor. EBIT is 60 million dollars, existing debt is 200 million dollars at 4 percent, new debt costs 10 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 60,
+        "minimum_coverage": "7/2",
+        "new_rate": "1/10",
+        "old_debt": 200,
+        "old_rate": "1/25"
+      },
+      "answer": "640/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is sixty million dollars, existing debt is two hundred million dollars at four percent, new debt costs ten percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1200/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "2020",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "120/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "8"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "64/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "80",
+            "relative_gap": "7/8"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "13500/7",
+            "relative_gap": "675/32"
+          }
+        ],
+        "min_wrong_pair_gap": "12940/7",
+        "min_distinct_wrong_pair_gap": "12940/7"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Consider a publisher. EBIT is 160 million dollars, existing debt is 150 million dollars at 6 percent, new debt costs 6 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 160,
+        "minimum_coverage": "7/2",
+        "new_rate": "3/50",
+        "old_debt": 150,
+        "old_rate": "3/50"
+      },
+      "answer": "12850/21",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is one hundred and sixty million dollars, existing debt is one hundred and fifty million dollars at six percent, new debt costs six percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "16000/21",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "27550/3",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "320/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "9"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "257/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "150",
+            "relative_gap": "63/257"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "60000/7",
+            "relative_gap": "3600/257"
+          }
+        ],
+        "min_wrong_pair_gap": "58950/7",
+        "min_distinct_wrong_pair_gap": "58950/7"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Consider a wholesaler. EBIT is 200 million dollars, existing debt is 250 million dollars at 6 percent, new debt costs 6 percent, and minimum EBIT interest coverage is 3 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 200,
+        "minimum_coverage": "3",
+        "new_rate": "3/50",
+        "old_debt": 250,
+        "old_rate": "3/50"
+      },
+      "answer": "7750/9",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is two hundred million dollars, existing debt is two hundred and fifty million dollars at six percent, new debt costs six percent, and minimum EBIT interest coverage is three times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "10000/9",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "9750",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "200/3"
+        },
+        {
+          "name": "existing_interest",
+          "value": "15"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "155/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "250",
+            "relative_gap": "9/31"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "80000/9",
+            "relative_gap": "320/31"
+          }
+        ],
+        "min_wrong_pair_gap": "77750/9",
+        "min_distinct_wrong_pair_gap": "77750/9"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Consider a retailer. EBIT is 120 million dollars, existing debt is 300 million dollars at 6 percent, new debt costs 6 percent, and minimum EBIT interest coverage is 4.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 120,
+        "minimum_coverage": "9/2",
+        "new_rate": "3/50",
+        "old_debt": 300,
+        "old_rate": "3/50"
+      },
+      "answer": "1300/9",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred and twenty million dollars, existing debt is three hundred million dollars at six percent, new debt costs six percent, and minimum EBIT interest coverage is four point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4000/9",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "8700",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "80/3"
+        },
+        {
+          "name": "existing_interest",
+          "value": "18"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "26/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "300",
+            "relative_gap": "27/13"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "77000/9",
+            "relative_gap": "770/13"
+          }
+        ],
+        "min_wrong_pair_gap": "74300/9",
+        "min_distinct_wrong_pair_gap": "74300/9"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Consider a manufacturer. EBIT is 50 million dollars, existing debt is 250 million dollars at 4 percent, new debt costs 10 percent, and minimum EBIT interest coverage is 3 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 50,
+        "minimum_coverage": "3",
+        "new_rate": "1/10",
+        "old_debt": 250,
+        "old_rate": "1/25"
+      },
+      "answer": "200/3",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is fifty million dollars, existing debt is two hundred and fifty million dollars at four percent, new debt costs ten percent, and minimum EBIT interest coverage is three times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "500/3",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "1400",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "50/3"
+        },
+        {
+          "name": "existing_interest",
+          "value": "10"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "20/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "100",
+            "relative_gap": "3/2"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "4000/3",
+            "relative_gap": "20"
+          }
+        ],
+        "min_wrong_pair_gap": "3700/3",
+        "min_distinct_wrong_pair_gap": "3700/3"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Consider a distributor. EBIT is 140 million dollars, existing debt is 300 million dollars at 4 percent, new debt costs 7 percent, and minimum EBIT interest coverage is 2 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 140,
+        "minimum_coverage": "2",
+        "new_rate": "7/100",
+        "old_debt": 300,
+        "old_rate": "1/25"
+      },
+      "answer": "5800/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is one hundred and forty million dollars, existing debt is three hundred million dollars at four percent, new debt costs seven percent, and minimum EBIT interest coverage is two times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1000",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "26800/7",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "70"
+        },
+        {
+          "name": "existing_interest",
+          "value": "12"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "58"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "1200/7",
+            "relative_gap": "6/29"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "3000",
+            "relative_gap": "105/29"
+          }
+        ],
+        "min_wrong_pair_gap": "19800/7",
+        "min_distinct_wrong_pair_gap": "19800/7"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Consider a publisher. EBIT is 200 million dollars, existing debt is 250 million dollars at 6 percent, new debt costs 8 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 200,
+        "minimum_coverage": "7/2",
+        "new_rate": "2/25",
+        "old_debt": 250,
+        "old_rate": "3/50"
+      },
+      "answer": "7375/14",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is two hundred million dollars, existing debt is two hundred and fifty million dollars at six percent, new debt costs eight percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "5000/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "17125/2",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "400/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "15"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "295/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "375/2",
+            "relative_gap": "21/59"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "56250/7",
+            "relative_gap": "900/59"
+          }
+        ],
+        "min_wrong_pair_gap": "109875/14",
+        "min_distinct_wrong_pair_gap": "109875/14"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Consider a wholesaler. EBIT is 210 million dollars, existing debt is 500 million dollars at 8 percent, new debt costs 8 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 210,
+        "minimum_coverage": "7/2",
+        "new_rate": "2/25",
+        "old_debt": 500,
+        "old_rate": "2/25"
+      },
+      "answer": "250",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is two hundred and ten million dollars, existing debt is five hundred million dollars at eight percent, new debt costs eight percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "750",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "17375/2",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "60"
+        },
+        {
+          "name": "existing_interest",
+          "value": "40"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "500",
+            "relative_gap": "2"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "16875/2",
+            "relative_gap": "135/4"
+          }
+        ],
+        "min_wrong_pair_gap": "15875/2",
+        "min_distinct_wrong_pair_gap": "15875/2"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Consider a retailer. EBIT is 240 million dollars, existing debt is 200 million dollars at 4 percent, new debt costs 5 percent, and minimum EBIT interest coverage is 2 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 240,
+        "minimum_coverage": "2",
+        "new_rate": "1/20",
+        "old_debt": 200,
+        "old_rate": "1/25"
+      },
+      "answer": "2240",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is two hundred and forty million dollars, existing debt is two hundred million dollars at four percent, new debt costs five percent, and minimum EBIT interest coverage is two times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2400",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "9440",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "120"
+        },
+        {
+          "name": "existing_interest",
+          "value": "8"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "112"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "160",
+            "relative_gap": "1/14"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "7200",
+            "relative_gap": "45/14"
+          }
+        ],
+        "min_wrong_pair_gap": "7040",
+        "min_distinct_wrong_pair_gap": "7040"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Consider a manufacturer. EBIT is 200 million dollars, existing debt is 150 million dollars at 5 percent, new debt costs 8 percent, and minimum EBIT interest coverage is 2 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 200,
+        "minimum_coverage": "2",
+        "new_rate": "2/25",
+        "old_debt": 150,
+        "old_rate": "1/20"
+      },
+      "answer": "4625/4",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is two hundred million dollars, existing debt is one hundred and fifty million dollars at five percent, new debt costs eight percent, and minimum EBIT interest coverage is two times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1250",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "19625/4",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "100"
+        },
+        {
+          "name": "existing_interest",
+          "value": "15/2"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "185/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "375/4",
+            "relative_gap": "3/37"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "3750",
+            "relative_gap": "120/37"
+          }
+        ],
+        "min_wrong_pair_gap": "14625/4",
+        "min_distinct_wrong_pair_gap": "14625/4"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Consider a distributor. EBIT is 200 million dollars, existing debt is 150 million dollars at 5 percent, new debt costs 7 percent, and minimum EBIT interest coverage is 2 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 200,
+        "minimum_coverage": "2",
+        "new_rate": "7/100",
+        "old_debt": 150,
+        "old_rate": "1/20"
+      },
+      "answer": "9250/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is two hundred million dollars, existing debt is one hundred and fifty million dollars at five percent, new debt costs seven percent, and minimum EBIT interest coverage is two times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "10000/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "39250/7",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "100"
+        },
+        {
+          "name": "existing_interest",
+          "value": "15/2"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "185/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "750/7",
+            "relative_gap": "3/37"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "30000/7",
+            "relative_gap": "120/37"
+          }
+        ],
+        "min_wrong_pair_gap": "29250/7",
+        "min_distinct_wrong_pair_gap": "29250/7"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Consider a publisher. EBIT is 100 million dollars, existing debt is 300 million dollars at 5 percent, new debt costs 6 percent, and minimum EBIT interest coverage is 2 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 100,
+        "minimum_coverage": "2",
+        "new_rate": "3/50",
+        "old_debt": 300,
+        "old_rate": "1/20"
+      },
+      "answer": "1750/3",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is one hundred million dollars, existing debt is three hundred million dollars at five percent, new debt costs six percent, and minimum EBIT interest coverage is two times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2500/3",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "9250/3",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "50"
+        },
+        {
+          "name": "existing_interest",
+          "value": "15"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "35"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "250",
+            "relative_gap": "3/7"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "2500",
+            "relative_gap": "30/7"
+          }
+        ],
+        "min_wrong_pair_gap": "2250",
+        "min_distinct_wrong_pair_gap": "2250"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Consider a wholesaler. EBIT is 120 million dollars, existing debt is 300 million dollars at 4 percent, new debt costs 6 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 120,
+        "minimum_coverage": "7/2",
+        "new_rate": "3/50",
+        "old_debt": 300,
+        "old_rate": "1/25"
+      },
+      "answer": "2600/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is one hundred and twenty million dollars, existing debt is three hundred million dollars at four percent, new debt costs six percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4000/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "6800",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "240/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "12"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "156/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "200",
+            "relative_gap": "7/13"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "45000/7",
+            "relative_gap": "225/13"
+          }
+        ],
+        "min_wrong_pair_gap": "43600/7",
+        "min_distinct_wrong_pair_gap": "43600/7"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Consider a retailer. EBIT is 100 million dollars, existing debt is 100 million dollars at 4 percent, new debt costs 8 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 100,
+        "minimum_coverage": "7/2",
+        "new_rate": "2/25",
+        "old_debt": 100,
+        "old_rate": "1/25"
+      },
+      "answer": "2150/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a retailer. EBIT is one hundred million dollars, existing debt is one hundred million dollars at four percent, new debt costs eight percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2500/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "4325",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "200/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "4"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "172/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "50",
+            "relative_gap": "7/43"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "28125/7",
+            "relative_gap": "1125/86"
+          }
+        ],
+        "min_wrong_pair_gap": "27775/7",
+        "min_distinct_wrong_pair_gap": "27775/7"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Consider a manufacturer. EBIT is 80 million dollars, existing debt is 450 million dollars at 5 percent, new debt costs 10 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 80,
+        "minimum_coverage": "7/2",
+        "new_rate": "1/10",
+        "old_debt": 450,
+        "old_rate": "1/20"
+      },
+      "answer": "25/7",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a manufacturer. EBIT is eighty million dollars, existing debt is four hundred and fifty million dollars at five percent, new debt costs ten percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1600/7",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "2575",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "160/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "45/2"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "5/14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "225",
+            "relative_gap": "63"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "18000/7",
+            "relative_gap": "720"
+          }
+        ],
+        "min_wrong_pair_gap": "16425/7",
+        "min_distinct_wrong_pair_gap": "16425/7"
+      },
+      "follow_up": {
+        "question": "How would a higher new debt rate affect capacity?",
+        "reference": "The same remaining interest allowance would support less principal. Capacity falls in inverse proportion to the new rate when other inputs stay fixed."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Consider a distributor. EBIT is 230 million dollars, existing debt is 150 million dollars at 6 percent, new debt costs 8 percent, and minimum EBIT interest coverage is 5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 230,
+        "minimum_coverage": "5",
+        "new_rate": "2/25",
+        "old_debt": 150,
+        "old_rate": "3/50"
+      },
+      "answer": "925/2",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a distributor. EBIT is two hundred and thirty million dollars, existing debt is one hundred and fifty million dollars at six percent, new debt costs eight percent, and minimum EBIT interest coverage is five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "575",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "28525/2",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "46"
+        },
+        {
+          "name": "existing_interest",
+          "value": "9"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "37"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "225/2",
+            "relative_gap": "9/37"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "13800",
+            "relative_gap": "1104/37"
+          }
+        ],
+        "min_wrong_pair_gap": "27375/2",
+        "min_distinct_wrong_pair_gap": "27375/2"
+      },
+      "follow_up": {
+        "question": "Does meeting this coverage floor guarantee that the borrowing is feasible?",
+        "reference": "No, other covenants, liquidity needs and lender appetite can impose tighter limits. This calculation isolates only the stated coverage constraint."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Consider a publisher. EBIT is 170 million dollars, existing debt is 500 million dollars at 8 percent, new debt costs 7 percent, and minimum EBIT interest coverage is 3.5 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 170,
+        "minimum_coverage": "7/2",
+        "new_rate": "7/100",
+        "old_debt": 500,
+        "old_rate": "2/25"
+      },
+      "answer": "6000/49",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a publisher. EBIT is one hundred and seventy million dollars, existing debt is five hundred million dollars at eight percent, new debt costs seven percent, and minimum EBIT interest coverage is three point five times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "34000/49",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "55500/7",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "340/7"
+        },
+        {
+          "name": "existing_interest",
+          "value": "40"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "60/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "4000/7",
+            "relative_gap": "14/3"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "382500/49",
+            "relative_gap": "255/4"
+          }
+        ],
+        "min_wrong_pair_gap": "354500/49",
+        "min_distinct_wrong_pair_gap": "354500/49"
+      },
+      "follow_up": {
+        "question": "Why deduct existing interest before sizing new borrowing?",
+        "reference": "The coverage floor limits total interest, not just interest on new debt. Existing lenders already use part of the permitted interest capacity."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Consider a wholesaler. EBIT is 240 million dollars, existing debt is 250 million dollars at 8 percent, new debt costs 6 percent, and minimum EBIT interest coverage is 2 times. What is the maximum additional debt, in millions of dollars?",
+      "params": {
+        "ebit": 240,
+        "minimum_coverage": "2",
+        "new_rate": "3/50",
+        "old_debt": 250,
+        "old_rate": "2/25"
+      },
+      "answer": "5000/3",
+      "tolerance": "0",
+      "topic": "Capital structure and financing",
+      "source_topic": "Debt capacity under a coverage floor",
+      "difficulty": "Hard",
+      "spoken_text": "Consider a wholesaler. EBIT is two hundred and forty million dollars, existing debt is two hundred and fifty million dollars at eight percent, new debt costs six percent, and minimum EBIT interest coverage is two times. What is the maximum additional debt, in millions of dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2000",
+          "misconceptions": [
+            "ignores_existing_interest"
+          ]
+        },
+        {
+          "value": "23000/3",
+          "misconceptions": [
+            "multiplies_ebit_by_the_coverage_floor"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "maximum_allowed_interest",
+          "value": "120"
+        },
+        {
+          "name": "existing_interest",
+          "value": "20"
+        },
+        {
+          "name": "remaining_interest_capacity",
+          "value": "100"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_existing_interest",
+            "absolute_gap": "1000/3",
+            "relative_gap": "1/5"
+          },
+          {
+            "misconception": "multiplies_ebit_by_the_coverage_floor",
+            "absolute_gap": "6000",
+            "relative_gap": "18/5"
+          }
+        ],
+        "min_wrong_pair_gap": "17000/3",
+        "min_distinct_wrong_pair_gap": "17000/3"
+      },
+      "follow_up": {
+        "question": "What if new borrowing also changed EBIT?",
+        "reference": "The fixed-EBIT capacity equation would no longer be sufficient. Model the operating earnings effect and solve the coverage constraint jointly."
+      }
+    }
+  ]
+}
