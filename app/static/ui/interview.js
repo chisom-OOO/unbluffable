@@ -7,6 +7,7 @@
 // and what to do. "Can't use a camera or mic?" switches to typed practice, labelled "Not exam
 // conditions"; so does a microphone that fails after Start. Done is a fallback for noisy rooms.
 document.addEventListener("DOMContentLoaded", () => {
+  if (window.UB.desktopOnly()) return;  // decision log 26: laptop or desktop only
   const { highlight, escapeHtml, reducedMotion, receiptHtml, trackCard } = window.UB;
   const voice = window.UBVoice;
   const $ = (id) => document.getElementById(id);

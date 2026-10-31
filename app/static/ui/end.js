@@ -2,6 +2,7 @@
 // without a session there is nothing to show. The four labels below are the only verdict
 // vocabulary (spec/01).
 document.addEventListener("DOMContentLoaded", () => {
+  if (window.UB.desktopOnly()) return;  // decision log 26: laptop or desktop only
   const { escapeHtml, receiptHtml } = window.UB;
   const $ = (id) => document.getElementById(id);
   const sessionId = new URLSearchParams(location.search).get("session");

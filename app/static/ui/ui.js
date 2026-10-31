@@ -183,9 +183,44 @@
       + `</dl><p class="receipt-note"><a href="/ui/forge">Every family in the question bank</a></p></div></div></details>`;
   }
 
-  window.UB = { store, photoFromBlob, provenanceHtml, rankedVoices, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
+  // Decision log 26: the interview, setup, profile and report run on a laptop or desktop.
+  // Screens under 900 px wide, or touch-only devices, get a friendly screen instead (with a
+  // Copy link button); page scripts check desktopOnly() and do not start.
+  const tooSmall = () => window.innerWidth < 900
+    || (matchMedia("(pointer: coarse)").matches && !matchMedia("(any-pointer: fine)").matches);
+  const desktopOnly = () => document.body?.dataset.desktopOnly === "true" && tooSmall();
+  function initDesktopGate() {
+    if (document.body.dataset.desktopOnly !== "true") return;
+    const blocked = tooSmall();
+    addEventListener("resize", () => { if (tooSmall() !== blocked) location.reload(); });
+    if (!blocked) return;
+    document.documentElement.classList.add("desktop-gated");
+    const gate = document.createElement("main");
+    gate.className = "desktop-gate";
+    gate.id = "gate-main";
+    gate.innerHTML = `<section class="panel" aria-labelledby="gate-title">
+      <svg class="gate-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></svg>
+      <h1 id="gate-title">Unbluffable runs on a laptop or desktop, like a real interview</h1>
+      <p class="muted">Open this link on a laptop or desktop with a camera and microphone.</p>
+      <label class="visually-hidden" for="gate-url">This page's link</label>
+      <input class="text-input gate-url" id="gate-url" type="text" readonly value="${escapeHtml(location.href)}">
+      <div class="welcome-actions">
+        <button class="btn" type="button" id="copy-link">Copy link</button>
+        <a class="btn secondary" href="/ui">See what Unbluffable is</a>
+      </div>
+      <p class="saved-note" id="copy-status" role="status" aria-live="polite"></p>
+    </section>`;
+    document.querySelector(".shell > header").after(gate);
+    const status = (t) => { document.getElementById("copy-status").textContent = t; };
+    document.getElementById("copy-link").addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(location.href); status("Link copied."); }
+      catch { const f = document.getElementById("gate-url"); f.focus(); f.select(); status("Select the link above and copy it."); }
+    });
+  }
+
+  window.UB = { store, photoFromBlob, provenanceHtml, rankedVoices, desktopOnly, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
                 refreshProfileLink: initProfileLink };
-  document.addEventListener("DOMContentLoaded", () => { initTheme(); initMute(); initProfileLink(); });
+  document.addEventListener("DOMContentLoaded", () => { initDesktopGate(); initTheme(); initMute(); initProfileLink(); });
   document.addEventListener("ub-account", initProfileLink);
   // Signed in, the profile is also kept with the account: say so wherever the page says where it lives.
   document.addEventListener("ub-account", (e) => {

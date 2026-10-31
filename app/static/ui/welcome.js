@@ -4,6 +4,7 @@
 // With accounts (Firebase): only after a first sign-in, "Make it yours" (name and photo) comes
 // first; guests are sent back, since nothing of theirs is kept before they sign in.
 document.addEventListener("DOMContentLoaded", () => window.UBAccount.whenReady.then((acct) => {
+  if (window.UB.desktopOnly()) return;  // decision log 26: laptop or desktop only
   const { escapeHtml } = window.UB;
   const P = window.UBProfile;
   const $ = (id) => document.getElementById(id);

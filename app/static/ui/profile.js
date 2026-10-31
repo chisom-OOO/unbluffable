@@ -1,6 +1,7 @@
 // Profile page (decision log 23): per-track rating estimate, strength radar ("Placement" and
 // "Now"), the same numbers as a table, past interviews, and export / import / clear.
 document.addEventListener("DOMContentLoaded", () => {
+  if (window.UB.desktopOnly()) return;  // decision log 26: laptop or desktop only
   const { escapeHtml } = window.UB;
   const P = window.UBProfile;
   const $ = (id) => document.getElementById(id);
