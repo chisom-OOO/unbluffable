@@ -122,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("name-form").addEventListener("submit", (e) => {
     e.preventDefault();
     profile.name = $("display-name").value.trim().slice(0, P.NAME_MAX);
+    profile.identity_at = new Date().toISOString();
     const kept = S.save(profile);
     editName(false);
     renderAbout();
@@ -133,26 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Escape") { e.preventDefault(); editName(false); }
   });
 
-  // A square crop, 256 px, JPEG; quality steps down until it is under 100 KB.
-  async function resized(file) {
-    let source;
-    try { source = await createImageBitmap(file); } catch {
-      source = await new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = URL.createObjectURL(file);
-      });
-    }
-    const w = source.width, h = source.height, side = Math.min(w, h);
-    const canvas = Object.assign(document.createElement("canvas"), { width: 256, height: 256 });
-    canvas.getContext("2d").drawImage(source, (w - side) / 2, (h - side) / 2, side, side, 0, 0, 256, 256);
-    for (const quality of [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3]) {
-      const url = canvas.toDataURL("image/jpeg", quality);
-      if (P.validPhoto(url)) return url;
-    }
-    throw new Error("too large");
-  }
   $("photo-choose").addEventListener("click", () => $("photo-input").click());
   $("avatar-button").addEventListener("click", () => $("photo-input").click());
   $("photo-input").addEventListener("change", async () => {
@@ -160,7 +141,8 @@ document.addEventListener("DOMContentLoaded", () => {
     $("photo-input").value = "";
     if (!file) return;
     try {
-      profile.photo = await resized(file);
+      profile.photo = await window.UB.photoFromBlob(file);
+      profile.identity_at = new Date().toISOString();
     } catch {
       photoStatus("That file isn't a picture this browser can read.");
       return;
@@ -173,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   $("photo-remove").addEventListener("click", () => {
     profile.photo = null;
+    profile.identity_at = new Date().toISOString();
     S.save(profile);
     renderAbout();
     window.UB.refreshProfileLink();
@@ -208,6 +191,35 @@ document.addEventListener("DOMContentLoaded", () => {
     S.save(profile);
     refresh();
     status("Your data was cleared.");
+  });
+
+  // ---------- Account (Firebase, when configured) ----------
+  function renderAccount(s) {
+    $("account-section").hidden = !s.enabled;
+    if (!s.enabled) return;
+    const signedIn = !!s.user;
+    $("account-line").textContent = signedIn ? `Signed in as ${s.user.email || s.user.name || "your account"} · synced across your devices`
+      : "You're not signed in, so this profile lasts only for this visit.";
+    $("signin-open").hidden = signedIn;
+    $("sign-out").hidden = $("delete-account").hidden = !signedIn;
+    $("avatar-note").textContent = signedIn ? "Synced to your account" : "Stays on this device.";
+  }
+  const account = window.UBAccount;
+  account.whenReady.then(() => { profile = S.load(); refresh(); renderAccount(account.state()); });
+  document.addEventListener("ub-account", (e) => { profile = S.load(); refresh(); renderAccount(e.detail); });
+  $("signin-open").addEventListener("click", () => account.openSignIn());
+  $("sign-out").addEventListener("click", async () => { await account.signOut(); location.href = "/ui"; });
+  $("delete-account").addEventListener("click", async () => {
+    if (!confirm("Delete your account? Your profile, ratings and history are removed from our database and this browser. This can't be undone.")) return;
+    const say = (t) => { $("account-status").textContent = t; $("account-status").hidden = !t; };
+    try {
+      await account.deleteAccount();
+      profile = P.empty();
+      refresh();
+      say("Your account was deleted.");
+    } catch (error) {
+      say(`Couldn't delete the account${error?.code ? ` (${error.code})` : ""}. Sign in again and retry.`);
+    }
   });
 
   rolesLine();

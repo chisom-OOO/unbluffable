@@ -4,10 +4,23 @@
 // each line appearing as it is spoken: the interviewer in one voice, the candidate in another
 // (or, with a single voice, at a different pitch and rate). The mute setting is respected.
 document.addEventListener("DOMContentLoaded", () => {
-  // First visit (decision log 23): the one-screen onboarding, unless storage is blocked
-  // (then a skip couldn't be remembered, so the page just works without a profile).
+  // First visit (decision log 23): without accounts, the one-screen onboarding, unless
+  // storage is blocked (then a skip couldn't be remembered). With accounts, guests are
+  // offered sign-in first; onboarding follows a first sign-in.
   const store = window.UB.profile();
-  if (store && store.ok && !store.load().onboarded) { location.replace("/ui/welcome"); return; }
+  const account = window.UBAccount;
+  const showAccount = (s) => {
+    const guest = s.enabled && !s.user;
+    document.getElementById("account-cta").hidden = !guest;
+    document.getElementById("prepare").hidden = guest;
+    if (s.enabled && s.user && account.firstTime) location.href = "/ui/welcome?first=1";
+  };
+  account.whenReady.then((s) => {
+    if (!s.enabled && store && store.ok && !store.load().onboarded) { location.replace("/ui/welcome"); return; }
+    showAccount(s);
+  });
+  document.addEventListener("ub-account", (e) => showAccount(e.detail));
+  document.getElementById("signin-cta").addEventListener("click", () => account.openSignIn());
 
   const data = window.UB_FAKE;
   const { highlight, escapeHtml, reducedMotion, trackCard, pickVoice } = window.UB;

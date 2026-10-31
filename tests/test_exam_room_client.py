@@ -21,3 +21,12 @@ def test_profile_rating_maths_and_storage():
     result = subprocess.run([node, str(Path(__file__).with_name("profile_unit.cjs"))],
                             capture_output=True, text=True, timeout=20)
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_accounts_merge_sync_and_delete_with_the_sdk_faked():
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("Node is unavailable for the isolated JavaScript unit check.")
+    result = subprocess.run([node, str(Path(__file__).with_name("account_unit.cjs"))],
+                            capture_output=True, text=True, timeout=20)
+    assert result.returncode == 0, result.stdout + result.stderr

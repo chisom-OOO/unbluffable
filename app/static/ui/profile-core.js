@@ -13,7 +13,7 @@
   ];
 
   const empty = () => ({ version: 1, onboarded: null, roles: [], other_text: "", default_track: null,
-                         name: "", photo: null, answers: [], history: [], placement: {} });
+                         name: "", photo: null, identity_at: "", roles_at: "", answers: [], history: [], placement: {} });
 
   // Display name and photo: only in this browser. The photo is a 256 px JPEG data URL,
   // kept under about 100 KB (PHOTO_MAX_CHARS of base64).
@@ -44,6 +44,8 @@
       default_track: str(p.default_track) ? p.default_track : null,
       name: str(p.name) ? p.name.trim().slice(0, NAME_MAX) : "",
       photo: validPhoto(p.photo) ? p.photo : null,
+      identity_at: str(p.identity_at) ? p.identity_at : "",  // when the name or photo last changed
+      roles_at: str(p.roles_at) ? p.roles_at : "",  // when the roles last changed
       answers: answers.map((a) => ({ s: a.s, t: a.t, a: a.a, v: a.v, p: !!a.p, d: str(a.d) ? a.d : "" })),
       history,
       placement: p.placement && typeof p.placement === "object" ? p.placement : {},
@@ -71,6 +73,30 @@
   }
 
   const exportJson = (p) => JSON.stringify(p, null, 2);
+
+  // Accounts: this browser's profile and the account's, merged. History and answers are a
+  // union by interview session; area estimates are recomputed from the answers whenever they
+  // are shown. The newer name and photo win, and the newer roles; placements keep the newer
+  // date per track. Interview answer text is never part of a profile.
+  function mergeProfiles(local, cloud) {
+    const a = normalise(local), b = cloud ? normalise(cloud) : null;
+    if (!b) return a;
+    const newer = (key) => ((b[key] || "") > (a[key] || "") ? b : a);
+    const id = newer("identity_at"), roles = newer("roles_at");
+    const history = [...b.history];
+    const known = new Set(history.map((h) => h.session));
+    a.history.forEach((h) => { if (!known.has(h.session)) { history.push(h); known.add(h.session); } });
+    const fromCloud = new Set(b.answers.map((x) => x.s));
+    const answers = [...b.answers, ...a.answers.filter((x) => !fromCloud.has(x.s))];
+    const placement = { ...a.placement };
+    for (const [track, entry] of Object.entries(b.placement)) {
+      if (!placement[track] || (entry?.date || "") >= (placement[track].date || "")) placement[track] = entry;
+    }
+    const onboarded = [a.onboarded, b.onboarded].includes("done") ? "done" : a.onboarded || b.onboarded;
+    return normalise({ version: 1, onboarded, roles: roles.roles, other_text: roles.other_text, roles_at: roles.roles_at,
+                       default_track: roles.default_track, name: id.name, photo: id.photo, identity_at: id.identity_at,
+                       answers, history, placement });
+  }
   const importJson = (text) => normalise(JSON.parse(text));
 
   // Area scores for a track: 100 x the mean of the last 10 answers. An area is assessed
@@ -178,7 +204,7 @@
     return { svg: `<svg class="radar" viewBox="-180 -135 360 270" role="img" aria-label="${esc(title)}">${parts.join("")}</svg>`, drawn, missing };
   }
 
-  const api = { KEY, WINDOW, ROLES, NAME_MAX, PHOTO_MAX_BYTES, validPhoto, initials, empty, normalise, store, exportJson, importJson, areaScores, overall,
+  const api = { KEY, WINDOW, ROLES, mergeProfiles, NAME_MAX, PHOTO_MAX_BYTES, validPhoto, initials, empty, normalise, store, exportJson, importJson, areaScores, overall,
                 shown, band, startLevel, defaultTrack, applyReport, radar, shortName };
   if (typeof module !== "undefined") module.exports = api;
   else window.UBProfile = api;

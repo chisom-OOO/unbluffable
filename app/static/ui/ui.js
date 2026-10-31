@@ -148,7 +148,37 @@
     link.setAttribute("aria-label", `${p.name ? `${p.name}'s profile` : "Profile"}${o ? `, rating estimate ${window.UBProfile.shown(o.rating)}` : ""}`);
   }
 
-  window.UB = { store, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
+  // A photo for the profile: a square crop, 256 px, JPEG; quality steps down until it is
+  // under 100 KB. `blob` is a file the candidate chose, or a fetched image (the Google photo).
+  async function photoFromBlob(blob) {
+    let source;
+    try { source = await createImageBitmap(blob); } catch {
+      source = await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = URL.createObjectURL(blob);
+      });
+    }
+    const w = source.width, h = source.height, side = Math.min(w, h);
+    const canvas = Object.assign(document.createElement("canvas"), { width: 256, height: 256 });
+    canvas.getContext("2d").drawImage(source, (w - side) / 2, (h - side) / 2, side, side, 0, 0, 256, 256);
+    for (const quality of [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3]) {
+      const url = canvas.toDataURL("image/jpeg", quality);
+      if (window.UBProfile.validPhoto(url)) return url;
+    }
+    throw new Error("too large");
+  }
+
+  window.UB = { store, photoFromBlob, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
                 refreshProfileLink: initProfileLink };
   document.addEventListener("DOMContentLoaded", () => { initTheme(); initMute(); initProfileLink(); });
+  document.addEventListener("ub-account", initProfileLink);
+  // Signed in, the profile is also kept with the account: say so wherever the page says where it lives.
+  document.addEventListener("ub-account", (e) => {
+    if (!e.detail.user) return;
+    document.querySelectorAll(".storage-line").forEach((el) => {
+      el.textContent = "Signed in: your profile is kept with your account and synced across your devices. Interview answer text is never stored there.";
+    });
+  });
 })();
