@@ -39,8 +39,8 @@ SMALL_CHECKS = 12
 
 def infer(spec: dict) -> dict | None:
     """The generator config for a spec's parameters, from its tests; None if not eligible."""
-    if spec.get("kind") == "class":
-        return None  # operation sequences: no large inputs
+    if spec.get("kind") == "class" or str(spec.get("return_type", "")).startswith("list"):
+        return None  # operation sequences and list answers: no large inputs (yet)
     params = spec["parameters"]
     if not all(p["type"] in {"list[int]", "int", "bool"} for p in params) or not any(p["type"] == "list[int]" for p in params):
         return None

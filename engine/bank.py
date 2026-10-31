@@ -259,7 +259,10 @@ def load_bank(directory: Path | str | None = None) -> Bank:
     directory = Path(directory) if directory is not None else DEFAULT_DIR
     for path in sorted(directory.glob("*.json")) if directory.is_dir() else []:
         try:
-            template = parse_template(json.loads(path.read_text(encoding="utf-8")), path.name)
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(raw, dict) and raw.get("coding_only"):
+                continue  # decision log 30: list-answer families are coding rounds only, never spoken
+            template = parse_template(raw, path.name)
             if template.template_id in bank.templates:
                 raise ForgeError(f"{path.name}: duplicate template_id {template.template_id}")
         except (ForgeError, ValueError) as error:

@@ -11,7 +11,21 @@ import json
 import sys
 from fractions import Fraction
 
+def _ub_plain(v):
+    if isinstance(v, (list, tuple)):
+        return [_ub_plain(x) for x in v]
+    if isinstance(v, (bool, int, str)) or v is None:
+        return v
+    if isinstance(v, Fraction) and v.denominator == 1:
+        return int(v)
+    raise TypeError("not a plain value")
+
 def _ub_value(v):
+    if isinstance(v, (list, tuple)):  # a list answer: canonical JSON, compared exactly
+        try:
+            return json.dumps(_ub_plain(v), separators=(",", ":"))[:4000]
+        except TypeError:
+            return repr(v)[:200]
     if isinstance(v, bool):
         return str(v)
     if isinstance(v, int):

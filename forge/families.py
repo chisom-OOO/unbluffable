@@ -12,7 +12,7 @@ import re
 
 from forge import schemas
 from forge.content import mental_arithmetic, spoken_text
-from forge.data import number
+from forge.data import answer_value, number
 from forge.errors import BudgetStop, Reject, ReplayMissing, ResumeBlocked
 from forge.models import atomic_json
 from forge.sandbox import Sandbox
@@ -47,7 +47,7 @@ class Variant:
     variant: str
     text: str
     params: dict
-    answer: Fraction
+    answer: Fraction | str  # str: a list answer as canonical JSON (coding-only family)
     tolerance: Fraction
     verification_result: str
     topic: str
@@ -85,7 +85,9 @@ def load_families(path):
                 status = row["verification_result"].strip()
                 if status not in {"PASS_EXACT", "PASS_NUMERICAL"}:
                     raise ValueError("Unverified source value")
-                answer = number(row["verified_value"])
+                answer = answer_value(row["verified_value"])
+                if isinstance(answer, str) and status != "PASS_EXACT":
+                    raise ValueError("List answers must be exact")
                 tolerance = number(row["verification_tolerance"]) if status == "PASS_NUMERICAL" else Fraction(0)
                 if status == "PASS_NUMERICAL" and tolerance <= 0:
                     raise ValueError("Numerical verification requires positive tolerance")
@@ -110,6 +112,12 @@ def load_families(path):
 
 
 def separation(answer, wrong):
+    if isinstance(answer, str):  # list answers: grouped by exact value, no numeric gaps
+        grouped = {}
+        for name, value in wrong:
+            grouped.setdefault(value, []).append(name)
+        return ([{"value": value, "misconceptions": names} for value, names in grouped.items()],
+                {"by_misconception": [], "min_wrong_pair_gap": None, "min_distinct_wrong_pair_gap": None})
     grouped, gaps, values = {}, [], []
     for name, value in wrong:
         value = Fraction(value)
@@ -201,7 +209,12 @@ class FamilyForge:
         solved = self.batch(draft["solver"], points)
         steps, errors = [], []
         for index, (row, result) in enumerate(zip(family.variants, solved)):
-            error = abs(number(result["answer"]) - row.answer)
+            if isinstance(row.answer, str):  # a list answer: exact JSON equality
+                if result["answer"] != row.answer:
+                    raise Reject("solver", "verified_value_mismatch", {"variant_index": index})
+                error = Fraction(0)
+            else:
+                error = abs(number(result["answer"]) - row.answer)
             if error > row.tolerance:
                 # Name the percent-points slip so the repair knows the fix; it is never accepted as correct.
                 scaled = PERCENT.search(row.text) and abs(number(result["answer"]) - 100 * row.answer) <= 100 * row.tolerance
@@ -222,8 +235,8 @@ class FamilyForge:
         for name, method in zip(method_names, methods):
             values = self.batch(method["code"], points)
             for index, (row, result) in enumerate(zip(family.variants, values)):
-                value = number(result["answer"])
-                if abs(value - row.answer) <= row.tolerance:
+                value = result["answer"] if isinstance(row.answer, str) else number(result["answer"])
+                if (value == row.answer) if isinstance(row.answer, str) else abs(value - row.answer) <= row.tolerance:
                     raise Reject("wrong_methods", "correct_answer_collision", {"variant_index": index})
                 per_variant[index].append((name, value))
         item["computed"] = []
@@ -305,7 +318,9 @@ class FamilyForge:
                          "answer": str(source.answer), "tolerance": str(source.tolerance),
                          "topic": source.topic, "source_topic": source.source_topic, "difficulty": source.difficulty,
                          "spoken_text": spoken_text(source.text, check_wording=False),
-                         **mental_arithmetic(source.answer), **computed, "follow_up": source.follow_up})
+                         **(mental_arithmetic(source.answer) if not isinstance(source.answer, str) else
+                            {"interview_friendly": False, "interview_friendly_score": 0, "interview_friendly_basis": "list"}),
+                         **computed, "follow_up": source.follow_up})
         first = family.variants[0]
         artifact = {"template_id": self.template_id(family), "pack": self.pack, "topic": first.topic,
             "topics": list(dict.fromkeys(row.topic for row in family.variants)), "source_topic": first.source_topic,
@@ -319,7 +334,9 @@ class FamilyForge:
                 "pending_reason": pending_reason, "all_variants_retained": True,
                 "rechecked_parameter_revision": item.get("rechecked_parameter_revision"),
                 "variant_followups": len({json.dumps(row.follow_up, sort_keys=True) for row in family.variants}) > 1},
-            "follow_up": first.follow_up, "review_status": "pending_builder_review", "instances": rows}
+            "follow_up": first.follow_up, "review_status": "pending_builder_review", "instances": rows,
+            # Decision log 30: list answers ("[106,110]") are for coding rounds only, never spoken.
+            **({"answer_kind": "list", "coding_only": True} if isinstance(first.answer, str) else {})}
         atomic_json(self.output / (self.template_id(family) + ".json"), artifact)
         item["exported"] = True
         self.state.data["mapping"][self.template_id(family)] = {"family_id": family.family_id,
