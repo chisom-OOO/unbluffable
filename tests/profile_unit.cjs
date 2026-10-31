@@ -104,4 +104,25 @@ assert.equal(P.defaultTrack([]), null);
   assert.deepEqual(b.load().roles, ["software"], "this visit only");
   b.clear();
 }
+// --- Radar: only areas assessed in at least one series; fewer than 3, no shape ---
+{
+  const areas = ["Probability", "Expectations", "Combinatorics", "Statistics", "Stochastic processes"];
+  const r = P.radar(areas, [
+    { key: "placement", name: "Placement", values: { Probability: 60, Expectations: 80, Statistics: 40 } },
+    { key: "now", name: "Now", values: { Probability: 60, Expectations: 85, Statistics: null, "Stochastic processes": 50 } },
+  ], "t");
+  assert.deepEqual(r.drawn, ["Probability", "Expectations", "Statistics", "Stochastic processes"]);
+  assert.deepEqual(r.missing, ["Combinatorics"]);
+  assert.equal((r.svg.match(/<line class="axis"/g) || []).length, 4, "no axis for an area assessed nowhere");
+  assert.ok(!/Combinatorics/.test(r.svg));
+  assert.ok(r.svg.indexOf("series-now") < r.svg.indexOf("series-placement"), "placement drawn on top of now");
+  assert.equal((r.svg.match(/class="dot dot-now"/g) || []).length, 3);
+  assert.equal((r.svg.match(/class="dot dot-placement"/g) || []).length, 3);
+  // Ring labels sit between the first two axes, never on one.
+  const labels = [...r.svg.matchAll(/class="ring-label" x="([-\d.]+)" y="([-\d.]+)"/g)].map((m) => [+m[1], +m[2]]);
+  assert.equal(labels.length, 4);
+  assert.ok(labels.every(([x]) => Math.abs(x) > 1), "off the top axis");
+  const few = P.radar(areas, [{ key: "now", name: "Now", values: { Probability: 50, Statistics: 70 } }], "t");
+  assert.deepEqual([few.svg, few.drawn.length, few.missing.length], ["", 2, 3]);
+}
 console.log("profile ok");

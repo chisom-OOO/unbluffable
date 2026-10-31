@@ -122,40 +122,50 @@
     return entry;
   }
 
-  // Radar chart as an SVG string: 0-100 rings, one axis per area, and one filled shape per
-  // series ({ key: "now" | "placement", name, values: { area: score | null } }). Unassessed
-  // areas are left out of a shape rather than drawn as zero; the table carries every number.
+  // Radar chart: 0-100 rings, one axis per area assessed in at least one series, and one
+  // shape per series ({ key: "now" | "placement", name, values: { area: score | null } }).
+  // Areas assessed in neither are not drawn (a point at the centre would read as 0); they come
+  // back in `missing`. With fewer than 3 drawable areas there is no shape: `svg` is "".
+  // "Now" is filled; "Placement" is drawn on top as a dashed outline so both stay visible.
   const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const shortName = (area) => area.split(/, | & /)[0];
-  function radarSvg(areas, series, title) {
-    const n = areas.length, R = 100;
+  const has = (v) => v !== null && v !== undefined;
+  function radar(areas, series, title) {
+    const drawn = areas.filter((area) => series.some((s) => has(s.values[area])));
+    const missing = areas.filter((area) => !drawn.includes(area));
+    if (drawn.length < 3) return { svg: "", drawn, missing };
+    const n = drawn.length, R = 100;
     const at = (i, r) => {
       const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
       return [+(r * Math.cos(a)).toFixed(2), +(r * Math.sin(a)).toFixed(2)];
     };
-    const ring = (v) => (n >= 3 ? `<polygon class="ring" points="${areas.map((_, i) => at(i, (R * v) / 100).join(",")).join(" ")}"/>`
-      : `<circle class="ring" r="${(R * v) / 100}"/>`);
     const parts = [`<title>${esc(title)}</title>`];
-    [25, 50, 75, 100].forEach((v) => parts.push(ring(v)));
-    areas.forEach((area, i) => {
+    [25, 50, 75, 100].forEach((v) => parts.push(`<polygon class="ring" points="${drawn.map((_, i) => at(i, v).join(",")).join(" ")}"/>`));
+    drawn.forEach((area, i) => {
       const [x, y] = at(i, R), [lx, ly] = at(i, R + 14);
       const anchor = Math.abs(lx) < 4 ? "middle" : lx > 0 ? "start" : "end";
       parts.push(`<line class="axis" x1="0" y1="0" x2="${x}" y2="${y}"/>`);
       parts.push(`<text class="axis-label" x="${lx}" y="${(ly + (ly > 4 ? 9 : ly < -4 ? -2 : 4)).toFixed(2)}" text-anchor="${anchor}">${esc(shortName(area))}</text>`);
     });
-    [25, 50, 75, 100].forEach((v) => parts.push(`<text class="ring-label" x="3" y="${-(R * v) / 100 + 9}">${v}</text>`));
-    for (const s of series) {
-      const pts = areas.map((area, i) => [area, s.values[area]]).map(([area, v], i) => (v === null || v === undefined ? null : { area, v, xy: at(i, (R * v) / 100) }))
-        .filter(Boolean);
+    // Series: "Now" first, "Placement" on top.
+    const order = [...series].sort((a, b) => (a.key === "placement") - (b.key === "placement"));
+    for (const s of order) {
+      const pts = drawn.map((area, i) => (has(s.values[area]) ? { area, v: s.values[area], xy: at(i, s.values[area]) } : null)).filter(Boolean);
       if (pts.length >= 3) parts.push(`<polygon class="series series-${s.key}" points="${pts.map((p) => p.xy.join(",")).join(" ")}"/>`);
-      else if (pts.length === 2) parts.push(`<polyline class="series series-${s.key}" fill="none" points="${pts.map((p) => p.xy.join(",")).join(" ")}"/>`);
-      pts.forEach((p) => parts.push(`<circle class="dot dot-${s.key}" cx="${p.xy[0]}" cy="${p.xy[1]}" r="4"><title>${esc(p.area)}: ${esc(s.name)} ${Math.round(p.v)}</title></circle>`));
+      else if (pts.length === 2) parts.push(`<polyline class="series series-${s.key}" points="${pts.map((p) => p.xy.join(",")).join(" ")}"/>`);
+      pts.forEach((p) => parts.push(`<circle class="dot dot-${s.key}" cx="${p.xy[0]}" cy="${p.xy[1]}" r="${s.key === "placement" ? 3 : 4}"><title>${esc(p.area)}: ${esc(s.name)} ${Math.round(p.v)}</title></circle>`));
     }
-    return `<svg class="radar" viewBox="-180 -135 360 270" role="img" aria-label="${esc(title)}">${parts.join("")}</svg>`;
+    // Ring labels on the bisector between the first two axes, where no point can sit, over a halo.
+    const mid = -Math.PI / 2 + Math.PI / n;
+    [25, 50, 75, 100].forEach((v) => {
+      const x = +(v * Math.cos(mid)).toFixed(2), y = +(v * Math.sin(mid)).toFixed(2);
+      parts.push(`<text class="ring-label" x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle">${v}</text>`);
+    });
+    return { svg: `<svg class="radar" viewBox="-180 -135 360 270" role="img" aria-label="${esc(title)}">${parts.join("")}</svg>`, drawn, missing };
   }
 
   const api = { KEY, WINDOW, ROLES, empty, normalise, store, exportJson, importJson, areaScores, overall,
-                shown, band, startLevel, defaultTrack, applyReport, radarSvg, shortName };
+                shown, band, startLevel, defaultTrack, applyReport, radar, shortName };
   if (typeof module !== "undefined") module.exports = api;
   else window.UBProfile = api;
 })();

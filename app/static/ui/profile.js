@@ -41,10 +41,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const placed = profile.placement[current]?.scores || {};
     const now = Object.fromEntries(scores.map((s) => [s.area, s.score]));
-    $("radar").innerHTML = P.radarSvg(track.areas, [
+    const chart = P.radar(track.areas, [
       { key: "placement", name: "Placement", values: placed },
       { key: "now", name: "Now", values: now },
     ], `${track.name} strength areas: placement and now, 0 to 100`);
+    // Fewer than 3 assessed areas: no shape, the table below carries the numbers.
+    $("radar-figure").hidden = !chart.svg;
+    $("radar-empty").hidden = !!chart.svg;
+    $("radar").innerHTML = chart.svg;
+    $("radar-missing").hidden = !chart.missing.length;
+    $("radar-missing").textContent = chart.missing.length ? `Not assessed yet: ${chart.missing.join(", ")}.` : "";
     const cell = (v) => (v === null || v === undefined ? `<td class="num muted-cell">Not assessed yet</td>` : `<td class="num">${P.shown(v)}</td>`);
     $("area-rows").innerHTML = scores.map((s) =>
       `<tr><th scope="row">${escapeHtml(s.area)}</th>${cell(placed[s.area])}${cell(s.score)}<td class="num">${s.total}</td></tr>`).join("");

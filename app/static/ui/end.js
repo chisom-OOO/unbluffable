@@ -20,10 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Decision log 23: add this interview to the profile once, then show what changed.
   function showProgress(e) {
     const P = window.UBProfile, S = window.UB.profile();
-    if (!P || !S || !e.track || !Array.isArray(e.rating_items)) return;
+    if (!P || !S || !e.track || !Array.isArray(e.rating_items)) return null;
     const profile = S.load();
     const entry = P.applyReport(profile, e, sessionId, new Date().toISOString().slice(0, 10), null);
-    if (!entry) return;
+    if (!entry) return null;
     S.save(profile);
     const n = (x) => (x === null ? null : P.shown(x));
     const changes = entry.areas.map((a) => {
@@ -37,8 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (entry.placement && profile.placement[e.track]) {
       const areas = Object.keys(profile.placement[e.track].scores);
       if (areas.length) {
-        radar = `<figure class="radar-figure">${P.radarSvg(areas, [{ key: "placement", name: "Placement", values: profile.placement[e.track].scores }],
-          "Placement estimates by strength area, 0 to 100")}<ul class="legend"><li><span class="swatch swatch-placement" aria-hidden="true"></span>Placement</li></ul></figure>`;
+        const chart = P.radar(areas, [{ key: "placement", name: "Placement", values: profile.placement[e.track].scores }],
+          "Placement estimates by strength area, 0 to 100");
+        radar = chart.svg ? `<figure class="radar-figure">${chart.svg}<ul class="legend"><li><span class="swatch swatch-placement" aria-hidden="true"></span>Placement</li></ul></figure>`
+          : `<p class="muted">Answer a few more questions to see your shape.</p>`;
       }
     }
     $("progress-body").innerHTML = head + (changes ? `<ul class="change-list">${changes}</ul>` : "") + radar
@@ -49,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const link = document.querySelector("#profile-link .profile-rating");
     const o = P.overall(P.areaScores(profile, window.UB.headlineTrack(profile)));
     if (link && o) { link.hidden = false; link.textContent = String(P.shown(o.rating)); }
+    return entry;
   }
 
   function render(e) {
@@ -103,6 +106,15 @@ document.addEventListener("DOMContentLoaded", () => {
     $("tip-section").hidden = !e.tip;
     $("estimate-section").hidden = !(e.estimate && e.estimate.length);
 
+    // Each question's time against its guide, on its evidence card.
+    function timeLine(q) {
+      const t = (e.times || []).find((x) => x.q === q);
+      if (!t) return "";
+      const clock = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+      const over = t.seconds > t.guide;
+      return `<p class="qcard-time${over ? " over" : ""}">Time <span class="mono">${clock(t.seconds)}</span> · guide <span class="mono">${clock(t.guide)}</span>${over ? " · over" : ""}</p>`;
+    }
+
     // Evidence you can check: one card per question. Each answer is quoted here and only here,
     // beside the exact value and the receipt (its words are not repeated inside the receipt).
     // The receipt's span (the number you committed to) is marked where it was said.
@@ -118,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       : `<p class="check-line">No committed number; the exact value is <span class="mono">${escapeHtml(exact)}</span>.</p>`;
     $("evidence").innerHTML = (e.cards || []).map((c) =>
       `<article class="qcard" id="${escapeHtml(c.anchor)}" tabindex="-1"><header><h3>${escapeHtml(c.q)}</h3><span class="tag">${escapeHtml(c.outcome)}</span></header>` +
+      timeLine(c.q) +
       c.words.map((w) => `<p class="qcard-when">${escapeHtml(w.when)}</p>${quote(w.text, c.receipt)}`).join("") +
       numberLine(c.said, c.exact) + receiptHtml(c.receipt, { words: false }) +
       (c.part2 ? `<div class="qcard-extra"><p class="qcard-when">Part 2 · not scored</p><p class="fine">${escapeHtml(c.part2.question)}</p>` +
@@ -128,19 +141,25 @@ document.addEventListener("DOMContentLoaded", () => {
         receiptHtml(c.follow_up.receipt, { words: false }) + `</div>` : "") +
       `</article>`).join("");
 
-    const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
     // Numbers only: each question's outcome and words are on its evidence card.
-    $("stats").innerHTML = [
-      `<div class="stat"><dt>Questions</dt><dd>${e.questions}</dd></div>`,
-      `<div class="stat"><dt>Challenges</dt><dd>${e.challenges}</dd></div>`,
-      `<div class="stat"><dt>Nudges</dt><dd>${e.nudges}</dd></div>`,
-      `<div class="stat"><dt>Hints used</dt><dd>${e.hints.length}</dd></div>`,
-      ...e.times.map((t) => {
-        const over = t.seconds > t.guide;
-        return `<div class="stat"><dt>${escapeHtml(t.q)} vs guide</dt><dd class="${over ? "over" : ""}">${fmt(t.seconds)}<small>guide ${fmt(t.guide)}${over ? " · over" : ""}</small></dd></div>`;
-      }),
-      ...(e.level == null ? [] : [`<div class="stat"><dt>Level reached</dt><dd>${e.level} of ${e.levels}<small>Shown apart from the label</small></dd></div>`]),
-    ].join("");
+    // Numbers only, one row. Each question's time is on its evidence card.
+    const entry = showProgress(e);
+    const P = window.UBProfile;
+    const stat = (dt, dd, small) => `<div class="stat"><dt>${dt}</dt><dd>${dd}${small ? `<small>${small}</small>` : ""}</dd></div>`;
+    $("stats").innerHTML = (e.placement
+      ? [
+          stat("Questions", e.questions),
+          stat("Areas covered", new Set((e.rating_items || []).map((i) => i.area).filter(Boolean)).size),
+          stat("Starting rating", entry && entry.after !== null ? P.shown(entry.after) : "Not yet", "estimate"),
+          stat("Start level", entry && entry.after !== null ? P.startLevel(entry.after) : "Easy", "next interviews"),
+        ]
+      : [
+          stat("Questions", e.questions),
+          stat("Challenges", e.challenges),
+          stat("Nudges", e.nudges),
+          stat("Hints used", e.hints.length),
+          ...(e.level == null ? [] : [stat("Level reached", `${e.level} of ${e.levels}`, "Shown apart from the label")]),
+        ]).join("");
 
     $("hints").innerHTML = e.hints.length
       ? e.hints.map((h) => `<li><span class="tag tag-hint">Hint</span><p class="says">${escapeHtml(h.text)}</p></li>`).join("")
@@ -191,8 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
         select(to, true);
       });
     });
-
-    showProgress(e);
 
     $("estimate").innerHTML = e.estimate.map((r) =>
       `<tr><td>${escapeHtml(r.label)}</td><td class="mono num-col">${escapeHtml(r.p)}</td></tr>`).join("");
