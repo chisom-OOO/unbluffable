@@ -43,15 +43,25 @@ def test_caps_are_pinned():
 # --- Strength areas -----------------------------------------------------------------
 
 def test_every_topic_in_content_forge_has_an_area():
-    bank = load_bank()
-    assert bank.templates, "content/forge is empty"
-    missing = sorted({(t.pack, t.topic) for t in bank.templates.values() if area_for(t.pack, t.topic) is None})
-    assert missing == []
+    """Every family file, including coding-only (list-answer) families the spoken bank never loads."""
+    import json
+    from pathlib import Path
+    files = sorted((Path(__file__).resolve().parents[1] / "content" / "forge").glob("*.json"))
+    assert files, "content/forge is empty"
+    missing = set()
+    for path in files:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        pack = raw.get("pack", "quant")
+        for topic in [raw.get("topic")] + list(raw.get("topics") or []):
+            if topic and area_for(pack, topic) is None:
+                missing.add((pack, topic, path.stem))
+    assert sorted(missing) == []
+    assert load_bank().templates
 
 
 def test_areas_are_the_listed_axes_at_most_eight_per_track():
-    # Decision log 28 adds Market making to quant as a ninth area (the builder's request).
-    assert all(1 <= len(areas) <= (9 if track == "quant" else 8) for track, areas in AREAS.items())
+    # Decision log 28 adds Market making to quant, and the swf_ Fundamentals to software, as a ninth area.
+    assert all(1 <= len(areas) <= (9 if track in {"quant", "software"} else 8) for track, areas in AREAS.items())
     assert list(AREAS["quant"]) == [
         "Probability", "Expectations", "Combinatorics", "Statistics", "Stochastic processes",
         "Linear algebra & calculus", "Optimisation, decisions & pricing maths",
@@ -62,7 +72,9 @@ def test_areas_are_the_listed_axes_at_most_eight_per_track():
                                          "Market sizing", "Growth & investment", "Pricing & unit economics"]
     assert list(AREAS["software"]) == [
         "Dynamic programming", "Graphs & union-find", "Sliding window, two pointers & prefix sums", "Binary search",
-        "Heaps & greedy", "Intervals & monotonic stack", "Bit manipulation", "Backtracking & tries"]
+        "Heaps & greedy", "Intervals & monotonic stack", "Bit manipulation", "Backtracking & tries", "Fundamentals"]
+    assert area_for("software", "Hash maps and sets") == area_for("software", "Trees and binary search trees") == "Fundamentals"
+    assert area_for("quant_dev", "Exact probability by code") == "Coding" and area_for("quant_dev", "Unlisted topic") is None
     assert area_for("quant", "Conditional probability") == area_for("quant", "Bayesian statistics") == "Probability"
     assert area_for("ib", "Probability") is None  # areas are per track
 

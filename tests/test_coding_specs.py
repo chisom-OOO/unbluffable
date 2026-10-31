@@ -42,13 +42,13 @@ def test_a_sound_spec_ships_with_tests_wrong_outputs_and_the_solver_source():
     assert len(shipped["wrong_methods"][0]["outputs"]) == n
     assert any(o != e for o, e in zip(shipped["wrong_methods"][0]["outputs"], shipped["expected"]))
     assert shipped["solver_source"] == SOLVER and len(shipped["examples"]) == 2
-    assert shipped["verification"] == {"verified": True, "variants": n, "solver_reproduced": n, "wrong_methods_kept": 1, "wrong_methods_given": 2}
+    assert shipped["verification"] == {"verified": True, "variants": n, "solver_reproduced": n, "wrong_methods_kept": 1, "wrong_methods_given": 2,
+                                     "types_corrected_from_data": 0}
 
 
 @pytest.mark.parametrize("change, reason", [
     ({"parameters": [{"name": "gains", "type": "list[int]", "param": "numbers"}]}, "parameters_do_not_match"),
-    ({"parameters": [{"name": "gains", "type": "list[str]", "param": "values"}]}, "type_mismatch"),
-    ({"parameters": [{"name": "gains", "type": "dict", "param": "values"}]}, "unknown_type"),
+    ({"parameters": [{"name": "gains", "type": "set", "param": "values"}]}, "unknown_type"),
     ({"function_name": "Max-Gain"}, "invalid_name_or_return_type"),
     ({"statement": "Sum."}, "statement_length"),
 ])
@@ -56,6 +56,14 @@ def test_unsound_specs_are_refused(change, reason):
     with pytest.raises(Reject) as error:
         cs.verify({**SPEC, **change}, FAMILY, SOLVER, WRONG, Sandbox())
     assert error.value.reason == reason
+
+
+def test_a_declared_type_the_data_does_not_have_is_corrected_from_the_instances():
+    # list[str] for integer gains used to be refused (type_mismatch); the data decides now.
+    shipped = cs.verify({**SPEC, "parameters": [{"name": "gains", "type": "list[str]", "param": "values"}]},
+                        FAMILY, SOLVER, WRONG, Sandbox())
+    assert shipped["signature"] == "def max_consecutive_gain(gains: list[int]) -> int:"
+    assert shipped["verification"]["types_corrected_from_data"] == 1
 
 
 def test_the_solver_must_reproduce_every_stored_answer_through_the_signature():

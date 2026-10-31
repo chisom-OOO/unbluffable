@@ -37,7 +37,10 @@ CONTENT = ROOT / "content" / "forge"
 OUT = ROOT / "content" / "coding"
 IDENT = re.compile(r"[a-z_][a-z0-9_]{0,40}")
 TYPES = {"int", "float", "str", "bool", "list[int]", "list[float]", "list[str]", "list[bool]",
-         "list[list[int]]", "list[list[str]]", "list[list[float]]"}
+         "list[list[int]]", "list[list[str]]", "list[list[float]]",
+         # Records (order-book events, fills, requests) and level-order trees with gaps.
+         "dict", "list[dict]", "list[int | None]", "list[str | None]"}
+PLAIN = (str, bool, int, float, type(None))
 SPEC = schemas.obj({
     "function_name": schemas.S,
     "parameters": schemas.arr(schemas.obj({"name": schemas.S, "type": schemas.S, "param": schemas.S})),
@@ -62,12 +65,35 @@ describe its method in the statement."""
 SPEC_TOKENS = (12000, 24000)
 
 
+def _json(value) -> bool:
+    if isinstance(value, dict):
+        return all(isinstance(k, str) and _json(v) for k, v in value.items())
+    if isinstance(value, list):
+        return all(_json(v) for v in value)
+    return isinstance(value, PLAIN)
+
+
 def check_type(value, annotation: str) -> bool:
+    annotation = annotation.strip()
     if annotation.startswith("list[") and annotation.endswith("]"):
         inner = annotation[5:-1]
         return isinstance(value, list) and all(check_type(v, inner) for v in value)
+    if " | " in annotation:  # e.g. "int | None": a level-order tree's gaps
+        return any(check_type(value, part) for part in annotation.split(" | "))
     return {"int": lambda v: isinstance(v, int) and not isinstance(v, bool), "float": lambda v: isinstance(v, (int, float)) and not isinstance(v, bool),
-            "str": lambda v: isinstance(v, str), "bool": lambda v: isinstance(v, bool)}.get(annotation, lambda v: False)(value)
+            "str": lambda v: isinstance(v, str), "bool": lambda v: isinstance(v, bool), "None": lambda v: v is None,
+            "dict": lambda v: isinstance(v, dict) and _json(v)}.get(annotation, lambda v: False)(value)
+
+
+def fitting_type(values: list) -> str | None:
+    """The one declared type that fits a parameter's value on every instance, or None.
+    Used when a draft declares a type the data doesn't have: the data decides."""
+    fits = [t for t in sorted(TYPES) if all(check_type(v, t) for v in values)]
+    # Prefer the narrowest: int before float, list[int] before list[int | None] or list[float].
+    order = ["bool", "int", "float", "str", "dict", "list[bool]", "list[int]", "list[int | None]", "list[float]", "list[str]",
+             "list[str | None]", "list[dict]", "list[list[int]]", "list[list[float]]", "list[list[str]]"]
+    ranked = [t for t in order if t in fits]
+    return ranked[0] if ranked else None
 
 
 def signature(spec: dict) -> str:
@@ -117,9 +143,19 @@ def verify(spec: dict, family: dict, solver: str, wrong: list[dict], sandbox) ->
     for i, inst in enumerate(instances):
         if sorted(inst["params"]) != sorted(keys):
             raise Reject("spec", "parameters_do_not_match", {"variant_index": i})
-        for p in params:
-            if not check_type(inst["params"][p["param"]], p["type"]):
-                raise Reject("spec", "type_mismatch", {"variant_index": i})
+    # A declared type the data doesn't have (records declared as list[str], a tree's gaps as
+    # list[int]) is corrected from the instances themselves when one type fits them all.
+    params = [dict(p) for p in params]
+    corrected = 0
+    for p in params:
+        values = [inst["params"][p["param"]] for inst in instances]
+        if not all(check_type(v, p["type"]) for v in values):
+            fitted = fitting_type(values)
+            if fitted is None:
+                bad = next(i for i, v in enumerate(values) if not check_type(v, p["type"]))
+                raise Reject("spec", "type_mismatch", {"variant_index": bad})
+            p["type"], corrected = fitted, corrected + 1
+    spec = {**spec, "parameters": params}
     expected = [answer_value(inst["answer"]) for inst in instances]
     if spec["return_type"] == "int" and any(x.denominator != 1 for x in expected):
         raise Reject("spec", "answers_are_not_integers")
@@ -150,7 +186,8 @@ def verify(spec: dict, family: dict, solver: str, wrong: list[dict], sandbox) ->
         "examples": examples, "tests": tests, "expected": [str(x) for x in expected],
         "wrong_methods": methods, "solver_source": solver,
         "verification": {"verified": True, "variants": len(instances), "solver_reproduced": len(instances),
-                         "wrong_methods_kept": len(methods), "wrong_methods_given": len(wrong)},
+                         "wrong_methods_kept": len(methods), "wrong_methods_given": len(wrong),
+                         "types_corrected_from_data": corrected},
     }
 
 
@@ -385,6 +422,17 @@ class CodingForge:
         return report
 
 
+def retry_families(state, ids: set[str]) -> set[str]:
+    """Failed or fallback families back to pending, so a run tries them again. Their drafts and
+    recorded model calls stay: an unchanged request replays from the record at no cost."""
+    for tid in ids:
+        item = state.data["items"].get(tid)
+        if item and item.get("status") in {"fallback", "failed"}:
+            item.update(status="pending", failure=None)
+    state.save()
+    return ids
+
+
 def main(argv=None) -> int:
     from llm.backends import get_backend
     from llm.client import MissingKey, _key
@@ -397,6 +445,8 @@ def main(argv=None) -> int:
     parser.add_argument("--families", default="", help="comma-separated template ids (default: all of the pack's families)")
     parser.add_argument("--pack", choices=("software", "quant_dev"), default="software")
     parser.add_argument("--prefix", default=None, help="only this batch's families (its file prefix, e.g. swc, qd)")
+    parser.add_argument("--retry-families", default="",
+                        help="comma-separated template ids to try again (failed or fallback); cached model calls are replayed")
     args = parser.parse_args(argv)
     if not args.work_dir.resolve().is_relative_to((ROOT / "data" / "forge").resolve()):
         parser.error("--work-dir must stay inside ignored data/forge")
@@ -412,6 +462,9 @@ def main(argv=None) -> int:
         state = State(args.work_dir)
         models = Models(state, mode=args.mode, budget_usd=args.budget_usd, prices=dict(DEFAULT_PRICES), author=author)
         only = {x.strip() for x in args.families.split(",") if x.strip()} or None
+        retry = retry_families(state, {x.strip() for x in args.retry_families.split(",") if x.strip()})
+        if retry:
+            only = (only or set()) | retry
         report = CodingForge(models, Sandbox(), pack=args.pack, prefix=args.prefix).run(family_items, only)
     except (OSError, ValueError, KeyError, MissingKey) as error:
         print(json.dumps({"status": "configuration_error", "type": type(error).__name__}))

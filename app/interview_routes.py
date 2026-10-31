@@ -178,7 +178,8 @@ def role_session(begin, send, listen, next_event, provider, deadline, coding_rou
             raise VoiceError("That format isn't available yet.")
     elif role.coding:  # Software: the chips filter coding problems; none = weighted by tier
         topics = sorted({t for tier, c in roles.topic_chips(role, chosen) for t in c.topics}) if chosen else None
-        session = coding_round(track, topics, deadline, None if chosen else roles.weights(role, roles.live_topics(bank(), role)))
+        session = coding_round(track, topics, deadline, None if chosen else roles.weights(role, roles.live_topics(bank(), role)),
+                               design_questions=role.design_questions)
     else:
         source, _ = roles.weighted_source(bank(), role, level, random.Random(), chosen or None, pack=track)
         session = ExamSession(send, listen, VoiceAnalyzer(provider), Interview(source=source), deadline=deadline)
@@ -361,7 +362,7 @@ async def interview_socket(socket: WebSocket):
                     continue
                 # interviewer_speaking and other controls outside a capture: nothing to do
 
-        def coding_round(track, topics, deadline, weights=None):
+        def coding_round(track, topics, deadline, weights=None, design_questions=1):
             """A coding interview (decision log 29): up to three problems from the track's specs;
             `weights`: a role-weighted mix over topics (setup redesign)."""
             def steps_for(spec):
@@ -376,7 +377,8 @@ async def interview_socket(socket: WebSocket):
             round_ = coding.CodingSession(socket.send_json, listen, next_event, provider, spec, track, deadline=deadline,
                                           steps=steps_for(spec), more=more)
             if track == "software" and conversational.enabled() and conversational.load("software"):
-                round_.design = conversational.ConversationalSession(socket.send_json, listen, provider, "software", count=1)
+                round_.design = conversational.ConversationalSession(socket.send_json, listen, provider, "software",
+                                                                     count=design_questions, deadline=deadline)
                 round_.design.ends_session = False
             return round_
 
