@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import re
 
+from engine.checker import is_sentinel
 from forge import schemas
 from forge.content import mental_arithmetic, spoken_text
 from forge.data import answer_value, number
@@ -121,6 +122,8 @@ def separation(answer, wrong):
     grouped, gaps, values = {}, [], []
     for name, value in wrong:
         value = Fraction(value)
+        if is_sentinel(value, answer):  # an "unreachable" stand-in (e.g. 10**18), not a mistake
+            continue
         grouped.setdefault(str(value), []).append(name)
         gap = abs(value - answer)
         gaps.append({"misconception": name, "absolute_gap": str(gap),

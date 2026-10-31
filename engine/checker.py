@@ -101,6 +101,18 @@ def parse_exact(value) -> Fraction:
     return sign * (result / 100 if m.group(5) else result)
 
 
+# Values a solver returns for "unreachable" or "no answer" (an infinity stand-in), never a
+# number a candidate would say: powers of ten from 10**9 and the usual integer limits.
+SENTINELS = frozenset({Fraction(10) ** k for k in range(9, 31)}
+                      | {Fraction(2 ** k + d) for k in (31, 32, 53, 63, 64) for d in (-1, 0)})
+
+
+def is_sentinel(value: Fraction, answer: Fraction) -> bool:
+    """A sentinel wrong value: one of SENTINELS, and at least 1000 times the right answer's
+    size (so a genuinely large wrong value next to a large answer is kept)."""
+    return abs(value) in SENTINELS and abs(value) >= 1000 * max(abs(answer), 1)
+
+
 MIN_FIGURES = 2
 
 

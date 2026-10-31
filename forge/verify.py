@@ -7,6 +7,7 @@ import string
 from difflib import SequenceMatcher
 from fractions import Fraction
 
+from engine.checker import is_sentinel
 from forge.data import number
 from forge.errors import Reject
 from forge.content import mental_arithmetic, spoken_text, validate_wording
@@ -189,6 +190,8 @@ def instances(variant, points, simulator, sandbox, tolerance, trials, *, limit=2
         collision = False
         for method in variant["wrong"]:
             value = number(run_code(sandbox, method["code"], "solve", params)["answer"])
+            if is_sentinel(value, answer):  # an "unreachable" stand-in (e.g. 10**18), not a mistake
+                continue
             gap = abs(value - answer)
             if gap <= tolerance:
                 collision = True
@@ -203,7 +206,7 @@ def instances(variant, points, simulator, sandbox, tolerance, trials, *, limit=2
         for row in wrong:
             grouped.setdefault(row["value"], []).append(row["misconception"])
         wrong = [{"value": value, "misconceptions": names} for value, names in grouped.items()]
-        pair_gap = min(abs(a - b) for a, b in itertools.combinations(values, 2))
+        pair_gap = min((abs(a - b) for a, b in itertools.combinations(values, 2)), default=None)
         distinct_gap = min((abs(Fraction(a) - Fraction(b)) for a, b in itertools.combinations(grouped, 2)), default=None)
         text = render(variant["text"], params)
         speech = spoken_text(text)
@@ -218,7 +221,8 @@ def instances(variant, points, simulator, sandbox, tolerance, trials, *, limit=2
                    "trials": sampled["trials"], "draws": sampled["draws"]})
         result.append({"text": text, "spoken_text": speech, **mental_arithmetic(answer), "params": params, "answer": str(answer),
                        "tolerance": str(tolerance), "wrong": wrong, "steps": steps,
-                       "separation": {"by_misconception": gaps, "min_wrong_pair_gap": str(pair_gap),
+                       "separation": {"by_misconception": gaps,
+                                      "min_wrong_pair_gap": str(pair_gap) if pair_gap is not None else None,
                                       "min_distinct_wrong_pair_gap": str(distinct_gap) if distinct_gap is not None else None}})
         if limit is not None and len(result) >= limit and sum(row["interview_friendly"] for row in result) >= 10:
             break
