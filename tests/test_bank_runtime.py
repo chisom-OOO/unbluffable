@@ -484,7 +484,7 @@ def test_topics_list_forge_topics_and_mixed(monkeypatch, bank):
     assert [(t["id"], t["available"], [o["id"] for o in t["topics"]]) for t in rest] == [
         ("ib", True, ["Behavioural"]), ("consulting", True, ["Behavioural"]), ("software", False, [])]
     assert [(t["id"], t["count"]) for t in track["topics"]] == [
-        ("Mixed", 3), ("Percentages", 1), ("Probability", 1), ("Statistics", 1)]
+        ("Mixed", 3), ("Percentages", 1), ("Probability", 1), ("Statistics", 1), ("Market making", 8)]  # decision log 28
 
 
 def test_without_templates_only_behavioural_tracks_open_and_no_forge_interview_starts(monkeypatch, tmp_path):
@@ -1194,7 +1194,7 @@ def test_topic_route_groups_topics_by_track_and_marks_empty_tracks(monkeypatch):
         ("quant", "Quant", 1, True), ("ib", "Investment banking", 1, True), ("consulting", "Consulting", 1, True),
         ("software", "Software engineering", 0, False)]  # no software templates: "Being added"
     topics = {t["id"]: [(o["id"], o["count"]) for o in t["topics"]] for t in data["tracks"]}
-    assert topics == {"quant": [("Mixed", 1), ("Probability", 1)],
+    assert topics == {"quant": [("Mixed", 1), ("Probability", 1), ("Market making", 8)],
                       "ib": [("Mixed", 1), ("Valuation", 1), ("Behavioural", 25)],
                       "consulting": [("Mixed", 1), ("Market sizing", 1), ("Behavioural", 25)], "software": []}
 
@@ -1397,4 +1397,4 @@ def test_cached_topics_follow_a_new_bank(monkeypatch):
     one = interview_routes.topics()
     assert interview_routes.topics() is one  # cached
     monkeypatch.setattr(interview_routes, "_BANK", _packed_bank(("a", None, "Statistics")))
-    assert [o["id"] for o in interview_routes.topics()["tracks"][0]["topics"]] == ["Mixed", "Statistics"]
+    assert [o["id"] for o in interview_routes.topics()["tracks"][0]["topics"]] == ["Mixed", "Statistics", "Market making"]

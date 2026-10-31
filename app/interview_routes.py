@@ -15,7 +15,7 @@ from contextlib import suppress
 
 from fastapi import APIRouter, HTTPException, Response, WebSocket, WebSocketDisconnect
 
-from app import behavioural, coding, interview_report, voice_routes
+from app import behavioural, coding, interview_report, market, voice_routes
 from app.areas import AREAS
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
@@ -76,6 +76,8 @@ def _build_topics() -> dict:
         asked = behavioural.rows_for(pack)  # decision log 24: IB and Consulting
         if asked:
             options.append({"id": behavioural.BEHAVIOURAL, "name": behavioural.BEHAVIOURAL, "count": len(asked)})
+        if pack == "quant" and found and market.enabled():  # decision log 28: runs on its own, exact
+            options.append({"id": market.MARKET, "name": market.MARKET, "count": 8})
         tracks.append({"id": pack, "name": name, "count": count, "available": bool(options),
                        "topics": options, "default": options[0]["id"] if options else None,
                        "areas": list(AREAS[pack]),
@@ -105,11 +107,13 @@ def selection(pack, topic) -> tuple[dict, str | tuple[str, ...]]:
         raise VoiceError("Choose at least one topic.")
     if not all(isinstance(t, str) and t in known for t in chosen):
         raise VoiceError("Choose topics from this track.")
-    if behavioural.BEHAVIOURAL in chosen:
-        if len(chosen) > 1:
-            raise VoiceError("Behavioural questions run on their own; choose them without other topics.")
-        return track, behavioural.BEHAVIOURAL
-    forge = known - {MIXED, behavioural.BEHAVIOURAL}
+    for solo in (behavioural.BEHAVIOURAL, market.MARKET):
+        if solo in chosen:
+            if len(chosen) > 1:
+                raise VoiceError("Behavioural questions run on their own; choose them without other topics."
+                                 if solo == behavioural.BEHAVIOURAL else f"{solo} runs on its own; choose it without other topics.")
+            return track, solo
+    forge = known - {MIXED, behavioural.BEHAVIOURAL, market.MARKET}
     if MIXED in chosen or set(chosen) == forge:
         return track, MIXED
     return track, tuple(dict.fromkeys(chosen))
@@ -130,8 +134,8 @@ def topic_label(pack, topic) -> str:
 def interview_for(pack, topic, level) -> Interview:
     """A forge interview on the chosen track and topics."""
     track, chosen = selection(pack, topic)
-    if chosen == behavioural.BEHAVIOURAL:
-        raise VoiceError("Behavioural questions are not a forge interview.")
+    if chosen in {behavioural.BEHAVIOURAL, market.MARKET}:
+        raise VoiceError(f"{chosen} is not a forge interview.")
     if level not in DIFFICULTIES:
         raise VoiceError("Choose a starting level: Easy, Medium or Hard.")
     return Interview(source=BankSource(bank(), chosen, level, pack=track["id"]))
@@ -193,6 +197,8 @@ def report(session_id: str):
         return coding.report(session)
     if isinstance(session, behavioural.BehaviouralSession):
         return behavioural.report(session)
+    if isinstance(session, market.MarketSession):
+        return market.report(session)
     return interview_report.build(session, bank().templates)
 
 
@@ -295,6 +301,9 @@ async def interview_socket(socket: WebSocket):
             steps = [s.name for s in family.instances[0].steps] if family and family.instances else []
             session = coding.CodingSession(socket.send_json, listen, next_event, provider, spec, track, deadline=deadline,
                                            steps=steps)
+        elif selection(begin.get("pack"), begin["topics"] if begin.get("topics") is not None else begin.get("topic"))[1]                 == market.MARKET:
+            # Decision log 28: market making, graded exactly; no engine label.
+            session = market.MarketSession(socket.send_json, listen, provider, deadline=deadline)
         elif selection(begin.get("pack"), begin["topics"] if begin.get("topics") is not None else begin.get("topic"))[1]                 == behavioural.BEHAVIOURAL:
             # Decision log 24: model-judged, not exact; no engine label.
             track = selection(begin.get("pack"), behavioural.BEHAVIOURAL)[0]["id"]

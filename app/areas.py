@@ -18,6 +18,7 @@ AREAS: dict[str, dict[str, tuple[str, ...]]] = {
                                                     "Pricing-model mathematics"),
         "Number theory, sequences, geometry & arithmetic": ("Number theory", "Sequences and recurrences", "Geometry",
                                                             "Quantitative arithmetic", "Percentages"),
+        "Market making": ("Market making",),  # decision log 28: exact scorecard, outside the Bayesian label
     },
     "ib": {
         "Accounting": ("Accounting and three-statement linkages", "Accounting"),

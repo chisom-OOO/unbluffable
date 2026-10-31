@@ -160,8 +160,57 @@ document.addEventListener("DOMContentLoaded", () => {
     if (again) { again.textContent = "Another coding round →"; again.href = "/ui/interview?track=software"; }
   }
 
+  // Decision log 28: market making, one card per game.
+  function renderMarket(e) {
+    $("end-eyebrow").textContent = "Market making report";
+    $("end-title").textContent = "How your markets did";
+    const scores = e.market.map((r) => r.scorecard.score_float);
+    $("result-tag").textContent = e.market.length ? `Score ${Math.round(100 * scores.reduce((a, b) => a + b, 0) / scores.length)}/100` : "No market quoted";
+    $("end-sub").textContent = "Scored in code from your quotes: fair value inside your market, width against the spread, and the direction of each update.";
+    $("conditions").hidden = !e.conditions;
+    $("conditions").textContent = e.conditions || "";
+    $("conditions").classList.toggle("warn", !!e.conditions && !/^Exam/.test(e.conditions));
+    $("topics-line").hidden = false;
+    $("topics-line").textContent = e.topics;
+    document.querySelectorAll(".section:not(#progress), .end-verdict, #stats").forEach((el) => { el.hidden = true; });
+    const signed = (x) => (String(x).startsWith("-") ? `−${String(x).slice(1)}` : `+${x}`);
+    const pct = (f) => `${Math.round(100 * Number(fractionValue(f)))}%`;
+    $("market").innerHTML = e.market.map((r) => {
+      const quotes = r.quotes.map((q, i) => `<tr><td>${i > 0 && r.quotes[i - 1].stage === q.stage ? "Tightened" : q.stage === 0 ? "Opening" : `After reveal ${q.stage}`}</td>`
+        + `<td class="mono">${escapeHtml(q.bid)} at ${escapeHtml(q.ask)}</td><td class="mono">${escapeHtml(q.ev)}</td>`
+        + `<td class="mono">${q.sd}</td><td>${q.contains ? "Inside" : "Outside"}${q.wide ? " · wide" : ""}</td></tr>`).join("");
+      const updates = r.updates.map((u) => `<li>Reveal ${u.stage}: fair value moved <span class="mono">${signed(u.ev_change)}</span>,`
+        + ` your mid <span class="mono">${signed(u.mid_change)}</span> · ${u.direction_right ? "right direction" : "wrong direction"}`
+        + `${u.size_ratio == null ? "" : ` · ${u.size_ratio}× the change`}</li>`).join("");
+      const trades = r.trades.map((t) => `<li>${t.side > 0 ? "Bought" : "Sold"} at <span class="mono">${escapeHtml(t.price)}</span>`
+        + ` (fair <span class="mono">${escapeHtml(t.ev)}</span>${Number(fractionValue(t.edge_given)) > 0 ? `; gave away <span class="mono">${escapeHtml(t.edge_given)}</span>` : ""})</li>`).join("");
+      return `<article class="qcard"><header><h3>Market ${r.n}</h3><span class="tag">${escapeHtml(r.difficulty)} · score ${Math.round(100 * r.scorecard.score_float)}/100</span></header>`
+        + `<p class="bq-question">${escapeHtml(r.game)}</p>`
+        + (r.reveals.length ? `<p class="fine">${r.reveals.map(escapeHtml).join(" ")}</p>` : "")
+        + `<table class="market-quotes"><thead><tr><th scope="col">When</th><th scope="col">Your market</th><th scope="col">Fair value</th>`
+        + `<th scope="col">SD</th><th scope="col">Check</th></tr></thead><tbody>${quotes}</tbody></table>`
+        + `<p class="check-line">Fair value inside ${pct(r.scorecard.contains)} of your markets · not wider than 1.5 SD ${pct(r.scorecard.tight)}`
+        + ` · updates in the right direction ${pct(r.scorecard.direction)}</p>`
+        + (updates ? `<h4>Updates</h4><ul class="see-list">${updates}</ul>` : "")
+        + `<h4>Trades</h4>${trades ? `<ul class="see-list">${trades}</ul>` : `<p class="fine">No trades.</p>`}`
+        + `<dl class="market-book"><div><dt>Edge given away</dt><dd class="mono">${escapeHtml(r.edge_given)}</dd></div>`
+        + `<div><dt>Position</dt><dd>${r.position === 0 ? "Flat" : `${r.position > 0 ? "Long" : "Short"} ${Math.abs(r.position)}`}</dd></div>`
+        + `<div><dt>Settlement</dt><dd class="mono">${escapeHtml(r.settlement.payoff)}</dd></div>`
+        + `<div><dt>P&amp;L</dt><dd class="mono">${signed(r.realised_pnl)} realised · ${signed(r.expected_pnl)} expected</dd></div></dl>`
+        + (r.question ? `<h4>${escapeHtml(r.question.question)} <span class="tag">quoted, not scored</span></h4>`
+          + `<blockquote class="evidence"><p>“${escapeHtml(r.question.answer)}”</p></blockquote>` : "")
+        + `</article>`;
+    }).join("") || `<p class="fine">No market was quoted.</p>`;
+    $("market-section").hidden = false;
+    const again = document.querySelector(".end-actions .btn:not(.secondary)");
+    if (again) { again.textContent = "Make more markets →"; again.href = "/ui/interview?track=quant"; }
+  }
+  // "3/4" or "1" as a number (the scorecard's exact fractions).
+  function fractionValue(f) { const [a, b] = String(f).split("/"); return Number(a) / (b ? Number(b) : 1); }
+
   function render(e) {
     if (e.coding) { showProgress(e); renderCoding(e); return; }
+    if (e.market) { showProgress(e); renderMarket(e); return; }
     if (e.behavioural) { showProgress(e); renderBehavioural(e); return; }
 
     const ICON = {

@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const typePanel = $("type-panel"), typeAnswer = $("type-answer");
   const mute = $("mute"), consent = $("consent"), headphones = $("headphones"), status = $("status");
 
-  const KIND_TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint" };
+  const KIND_TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint", trade: "Trade", reveal: "Reveal" };
   const reduced = reducedMotion();
   const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   // Pace for revealing an interviewer line when the voice sends no word boundaries.
@@ -193,6 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
     behavioural_judged: "Quotes for each step (model-judged)",
     coding_plan: "Your approach, quoted", coding_question: "A question about your code",
     coding_follow_up: "The follow-up question", coding_judge: "Your follow-up answer (model-judged)",
+    market_quote: "Your bid and offer, read from your words", market_question: "Which question to ask about your logic",
   };
   function modelRow(model, job) {
     if (!model || !model.model) return;
@@ -206,6 +207,21 @@ document.addEventListener("DOMContentLoaded", () => {
       `<small>${escapeHtml(JOBS[job] || job)}</small></div>` +
       `<div class="nums mono">${[time, cost].filter(Boolean).join("<br>")}</div>`;
     rows.appendChild(row);
+  }
+
+  // ---------- Market making (decision log 28): the market panel beside the transcript ----------
+  // Fair value is never shown during a round; P&L appears at settlement.
+  const signed = (x) => (String(x).startsWith("-") ? `−${String(x).slice(1)}` : `+${x}`);
+  function marketState(e) {
+    $("market-revealed").innerHTML = e.revealed.length ? `<ul>${e.revealed.map((r) => `<li>${escapeHtml(r)}</li>`).join("")}</ul>`
+      : `<p class="fine">Nothing revealed yet.</p>`;
+    $("market-quotes").innerHTML = e.quotes.length ? e.quotes.map((q, i) =>
+      `<tr${i === e.quotes.length - 1 ? ' class="latest"' : ""}><td>${i > 0 && e.quotes[i - 1].stage === q.stage ? "Tightened" : q.stage === 0 ? "Opening" : `After reveal ${q.stage}`}</td>`
+      + `<td class="mono">${escapeHtml(q.bid)}</td><td class="mono">${escapeHtml(q.ask)}</td></tr>`).join("")
+      : `<tr><td colspan="3" class="empty">No quote yet.</td></tr>`;
+    $("market-trades").textContent = e.trades.length ? e.trades.map((t) => `${t.side > 0 ? "Bought" : "Sold"} at ${t.price}`).join(" · ") : "None yet";
+    $("market-position").textContent = e.position === 0 ? "Flat" : `${e.position > 0 ? "Long" : "Short"} ${Math.abs(e.position)}`;
+    $("market-pnl").textContent = "At settlement";
   }
 
   // ---------- Turns ----------
@@ -301,7 +317,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         $("puzzle").textContent = event.text;
         $("provenance").innerHTML = window.UB.provenanceHtml(event.provenance_rows);
+        $("market-panel").hidden = event.kind !== "market";
         $("puzzle-eyebrow").textContent = (event.kind === "check" ? "Drill check"
+          : event.kind === "market" ? `Market ${event.number} of ${event.market.rounds}`
           : event.kind === "behavioural" ? `Behavioural question ${event.number} of 2`
           : event.kind === "coding" ? "Coding round"
           : event.kind === "drill" ? `Drill question ${event.number} of up to 3`
@@ -309,6 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
           + ` · guide ${fmt(event.guide_seconds)}`;
         $("puzzle-kind").textContent = ({ twin: "Same puzzle, new numbers", drill: "Aimed at one mistake",
                                           check: "New numbers, no help", coding: "Python · code while you talk",
+                                          market: "Market making · graded exactly",
                                           behavioural: `${event.behavioural_type === "situational" ? "What would you do" : "Tell me about a time"} · model-judged, not exact` }[event.kind] || "New puzzle")
           + (event.difficulty ? ` · ${event.difficulty}` : "");
         finishReveals();
@@ -338,6 +357,16 @@ document.addEventListener("DOMContentLoaded", () => {
       case "interviewer_line":
         addInterviewer(event.text, event.kind, event.receipt, event.speech);
         if (event.counts) counts(event.counts);
+        break;
+      case "market_state":
+        marketState(event);
+        break;
+      case "market_settle":
+        $("market-pnl").textContent = `${signed(event.realised_pnl)} realised · ${signed(event.expected_pnl)} expected`;
+        $("market-revealed").insertAdjacentHTML("beforeend", `<p class="market-settle"><strong>Settled at ${escapeHtml(event.payoff)}</strong> (${escapeHtml(event.draws)})</p>`);
+        break;
+      case "market_model":
+        modelRow(event.model, event.job);
         break;
       case "state":
         if (event.value === "listening" && pendingCode) {  // the code message waited for the capture to close
@@ -852,7 +881,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let tracks = [], chosenTrack = null, chosenTopics = new Set(), topicsKnown = false, picking = true;
   const trackTopics = () => (tracks.find((t) => t.id === chosenTrack)?.topics || []).filter((o) => o.id !== "Mixed");
   const BEHAVIOURAL = "Behavioural";  // decision log 24: runs on its own, model-judged
-  const forgeTopics = () => trackTopics().filter((o) => o.id !== BEHAVIOURAL).map((o) => o.id);
+  const MARKET = "Market making";  // decision log 28: runs on its own, graded exactly
+  const SOLO = new Set([BEHAVIOURAL, MARKET]);
+  const forgeTopics = () => trackTopics().filter((o) => !SOLO.has(o.id)).map((o) => o.id);
   const allTopics = () => new Set(forgeTopics().length ? forgeTopics() : trackTopics().map((o) => o.id));
   // Topics sent with Start: null (the server's default) when the list failed or there are none.
   const sentTopics = () => (topicsKnown && trackTopics().length ? [...chosenTopics] : null);
@@ -864,19 +895,21 @@ document.addEventListener("DOMContentLoaded", () => {
     try { saved = JSON.parse(window.UB.store.get(topicKey()) || "null"); } catch { saved = null; }
     const ids = new Set(trackTopics().map((o) => o.id));
     const kept = Array.isArray(saved) ? saved.filter((id) => ids.has(id)) : [];
-    if (kept.includes(BEHAVIOURAL)) return new Set([BEHAVIOURAL]);
+    const solo = kept.find((id) => SOLO.has(id));
+    if (solo) return new Set([solo]);
     return kept.length ? new Set(kept) : allTopics();
   }
   function saveTopics() { window.UB.store.set(topicKey(), JSON.stringify([...chosenTopics])); }
   function syncTopics() {
     topicBox.querySelectorAll("button.topic-chip").forEach((b) => b.setAttribute("aria-pressed", String(chosenTopics.has(b.dataset.topic))));
     const n = chosenTopics.size, all = forgeTopics().length;
-    const behaviouralOn = chosenTopics.has(BEHAVIOURAL);
+    const behaviouralOn = chosenTopics.has(BEHAVIOURAL), marketOn = chosenTopics.has(MARKET);
     $("topics-note").textContent = n === 0 ? "Choose at least one topic."
       : behaviouralOn ? "Behavioural: two questions, each with one follow-up. Model-judged, not exact; kept out of your rating."
+      : marketOn ? "Market making: two games. Quote a bid and an offer; the interviewer trades against you. Graded exactly."
       : n === all ? "All topics selected." : `${n} of ${all} topics selected.`;
     $("topics-note").classList.toggle("bad", n === 0);
-    $("levels").hidden = placement || behaviouralOn || codingChosen();  // no ladder for behavioural or coding rounds
+    $("levels").hidden = placement || behaviouralOn || marketOn || codingChosen();  // no ladder for these rounds
     updateGate();
   }
   function showTopics() {
@@ -899,8 +932,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!id) return;
     let next = new Set(chosenTopics);
     if (next.has(id)) next.delete(id);
-    else if (id === BEHAVIOURAL) next = new Set([BEHAVIOURAL]);  // runs on its own
-    else { next.delete(BEHAVIOURAL); next.add(id); }
+    else if (SOLO.has(id)) next = new Set([id]);  // runs on its own
+    else { SOLO.forEach((s) => next.delete(s)); next.add(id); }
     setTopics(next);
   });
   $("topics-all").addEventListener("click", selectAllTopics);
@@ -920,7 +953,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   // Decision log 27: a track with coding specs (Software) is always a coding round.
   const codingChosen = () => !placement && !drill && !!tracks.find((t) => t.id === chosenTrack)?.coding;
-  function syncFormat() { $("levels").hidden = placement || codingChosen() || chosenTopics.has?.("Behavioural"); }
+  function syncFormat() { $("levels").hidden = placement || codingChosen() || [...SOLO].some((s) => chosenTopics.has?.(s)); }
 
   // Decision log 23: the start level follows this track's rating estimate (< 40 Easy,
   // 40-69 Medium, 70+ Hard); it can still be changed here.

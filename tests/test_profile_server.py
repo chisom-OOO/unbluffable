@@ -50,11 +50,12 @@ def test_every_topic_in_content_forge_has_an_area():
 
 
 def test_areas_are_the_listed_axes_at_most_eight_per_track():
-    assert all(1 <= len(areas) <= 8 for areas in AREAS.values())
+    # Decision log 28 adds Market making to quant as a ninth area (the builder's request).
+    assert all(1 <= len(areas) <= (9 if track == "quant" else 8) for track, areas in AREAS.items())
     assert list(AREAS["quant"]) == [
         "Probability", "Expectations", "Combinatorics", "Statistics", "Stochastic processes",
         "Linear algebra & calculus", "Optimisation, decisions & pricing maths",
-        "Number theory, sequences, geometry & arithmetic"]
+        "Number theory, sequences, geometry & arithmetic", "Market making"]
     assert list(AREAS["ib"]) == ["Accounting", "DCF", "LBO", "Valuation multiples", "WACC",
                                  "M&A & accretion/dilution", "EV bridge & share count"]
     assert list(AREAS["consulting"]) == ["Profitability", "Operations", "Mix & weighted averages", "Breakeven",
