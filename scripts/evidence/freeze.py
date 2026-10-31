@@ -53,6 +53,8 @@ def main(argv=None) -> int:
     print(f"Slip items are labelled {itemcheck.SLIP_LABEL!r}.")
     print("Live run (4 arms x 3 runs x 40 items):")
     print(f"  {command(args.items, digest)}")
+    print("With the careful arm and Unbluffable also on Muse Spark Open (separate rows):")
+    print(f"  {command(args.items, digest)} --open-weights")
     return 0
 
 

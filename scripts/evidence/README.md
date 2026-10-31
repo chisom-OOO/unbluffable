@@ -23,6 +23,15 @@ A live run refuses uncommitted changes to the prompts, `harness.py` or `stats.py
 records the commit, the item file's sha256 and each prompt's sha256. Calls are recorded
 under `recordings/evidence/` (git-ignored). Tests use fakes and replay only.
 
+## Muse Spark Open rows (optional)
+
+`--open-weights` also runs the careful arm and Unbluffable on Muse Spark Open (backend
+`open_weights`), on the same items and runs, reported as separate rows with their own
+exact McNemar (Unbluffable on Open vs careful Open; Unbluffable vs Unbluffable on Open).
+They are not pre-registered: the four arms above and the headline rule are unchanged.
+`dry_run.py --open-weights` estimates them at 600 more calls (about USD 1.47, upper bound
+USD 10.39 at the token cap, at the forge budgeting prices).
+
 ## Making the items (freeze Saturday 14:00)
 
 ```

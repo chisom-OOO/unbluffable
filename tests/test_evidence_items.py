@@ -158,3 +158,23 @@ def test_dry_run_runs_every_arm_with_a_fake_model_and_estimates_cost(tmp_path, i
     assert 0 < float(cost["usd_estimate"]) < float(cost["usd_upper_bound"])
     assert set(out["results"]["arms"]) == {"plain", "careful", "careful_answers", "unbluffable"}
     assert itemcheck.read(path) == items  # the draft itself is untouched
+
+
+def test_open_weights_rows_run_careful_and_unbluffable_on_a_second_provider(tmp_path, items):
+    import harness
+    path = tmp_path / "draft.json"
+    itemcheck.write(path, items)
+    out = dry_run.dry_run(path, runs=3, open_weights=True)
+    arms = out["results"]["arms"]
+    assert set(arms) == {"plain", "careful", "careful_answers", "unbluffable", "careful_open_weights", "unbluffable_open_weights"}
+    # The pre-registered arms and headline rule are unchanged; the new rows are separate.
+    assert set(out["results"]["mcnemar_vs_unbluffable"]) == {"plain", "careful", "careful_answers"}
+    assert set(out["results"]["open_weights"]) == {"unbluffable_open_weights_vs_careful_open_weights",
+                                                   "unbluffable_vs_unbluffable_open_weights"}
+    assert out["cost"]["calls"] == 840  # the main backend's calls are the same as before
+    assert out["cost_open_weights"]["calls_by_kind"] == {"evidence_careful": 120, "minimal": 240, "extraction": 240}
+    results = {**out["results"], "runs": 3, "backend": "meta_api", "model": "fake", "git_commit": "x", "items_file": "f",
+               "items_sha256": "h", "prompt_sha256": {}, "created_at": "now"}
+    md = harness.markdown(results)
+    assert "## Muse Spark Open (backend open_weights; separate rows, not pre-registered)" in md
+    assert "| Unbluffable on Muse Spark Open |" in md and "| Careful Muse Spark Open |" in md
