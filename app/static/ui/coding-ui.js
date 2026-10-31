@@ -350,7 +350,7 @@
       document.getElementById("room").classList.add("coding");
       $("coding-pane").hidden = false;
       if (!laidOut) { layout(); laidOut = true; }
-      $("ws-title").textContent = `Software · Coding round (Python) · Problem ${problemNumber}`;
+      $("ws-title").textContent = `Problem ${problemNumber} · Software coding round (Python)`;
       problem(spec);
       showExamples(null);
       showOutput("");
@@ -380,7 +380,7 @@
         spec = { ...event.coding, problem: problemNumber };
         problem(spec);
         $("ws-statement").insertAdjacentHTML("afterbegin", `<p class="ws-part2"><strong>This one is harder. It's fine to take hints.</strong></p>`);
-        showExamples(null);
+        // The console keeps Part 2's result until the next run.
       }
       lastOutputs = null;
       selectLeft($("tab-problem"));
