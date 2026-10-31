@@ -1,0 +1,237 @@
+{
+  "template_id": "sw_F022",
+  "pack": "software",
+  "topic": "Bit manipulation",
+  "difficulty": "Easy",
+  "function_name": "count_total_one_bits",
+  "signature": "def count_total_one_bits(limit: int) -> int:",
+  "parameters": [
+    {
+      "name": "limit",
+      "type": "int",
+      "param": "limit"
+    }
+  ],
+  "return_type": "int",
+  "statement": "You are given the integer limit. Consider every integer from zero through limit inclusive and write each in ordinary binary notation without leading zeros. Count the total number of one bits that appear across all of these representations and return the count as a whole number.",
+  "examples": [
+    0,
+    1
+  ],
+  "tests": [
+    [
+      23
+    ],
+    [
+      33
+    ],
+    [
+      10
+    ],
+    [
+      16
+    ],
+    [
+      34
+    ],
+    [
+      45
+    ],
+    [
+      15
+    ],
+    [
+      67
+    ],
+    [
+      26
+    ],
+    [
+      29
+    ],
+    [
+      32
+    ],
+    [
+      27
+    ],
+    [
+      36
+    ],
+    [
+      8
+    ],
+    [
+      50
+    ],
+    [
+      48
+    ],
+    [
+      60
+    ],
+    [
+      44
+    ],
+    [
+      41
+    ],
+    [
+      40
+    ],
+    [
+      56
+    ],
+    [
+      57
+    ],
+    [
+      54
+    ],
+    [
+      53
+    ],
+    [
+      37
+    ],
+    [
+      65
+    ],
+    [
+      49
+    ],
+    [
+      25
+    ],
+    [
+      64
+    ],
+    [
+      46
+    ],
+    [
+      22
+    ],
+    [
+      5
+    ],
+    [
+      13
+    ],
+    [
+      38
+    ],
+    [
+      42
+    ],
+    [
+      12
+    ],
+    [
+      6
+    ],
+    [
+      63
+    ],
+    [
+      59
+    ],
+    [
+      66
+    ],
+    [
+      31
+    ],
+    [
+      24
+    ],
+    [
+      30
+    ],
+    [
+      58
+    ],
+    [
+      39
+    ],
+    [
+      51
+    ],
+    [
+      19
+    ],
+    [
+      14
+    ],
+    [
+      52
+    ],
+    [
+      7
+    ]
+  ],
+  "expected": [
+    "52",
+    "83",
+    "17",
+    "33",
+    "85",
+    "119",
+    "32",
+    "200",
+    "60",
+    "71",
+    "81",
+    "64",
+    "90",
+    "13",
+    "136",
+    "130",
+    "176",
+    "115",
+    "105",
+    "102",
+    "159",
+    "163",
+    "151",
+    "147",
+    "93",
+    "195",
+    "133",
+    "57",
+    "193",
+    "123",
+    "48",
+    "7",
+    "25",
+    "96",
+    "108",
+    "22",
+    "9",
+    "192",
+    "172",
+    "197",
+    "80",
+    "54",
+    "75",
+    "167",
+    "100",
+    "140",
+    "40",
+    "28",
+    "143",
+    "12"
+  ],
+  "wrong_methods": [],
+  "solver_source": "def solve(params):\n    from fractions import Fraction\n    limit = params[\"limit\"]\n    n = limit + 1\n    total = 0\n    k = 0\n    while (1 << k) <= limit:\n        cycle = 1 << (k + 1)\n        half = 1 << k\n        full = n // cycle\n        rem = n % cycle\n        extra = rem - half\n        if extra < 0:\n            extra = 0\n        cnt = full * half + extra\n        total += cnt\n        k += 1\n    highest_bit = k - 1 if k > 0 else 0\n    steps = {\"inclusive_count\": Fraction(n), \"highest_bit_index\": Fraction(highest_bit), \"total_one_bits\": Fraction(total)}\n    return {\"answer\": Fraction(total), \"steps\": steps}",
+  "verification": {
+    "verified": true,
+    "variants": 50,
+    "solver_reproduced": 50,
+    "wrong_methods_kept": 0,
+    "wrong_methods_given": 0
+  },
+  "models": {
+    "spec_author": "meta-models/muse-spark-open-1026"
+  }
+}
