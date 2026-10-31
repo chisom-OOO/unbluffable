@@ -141,7 +141,7 @@ async def replay_realtime(browser, provider, start, silence_s, speed=1):
 
 
 async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=1, connect=None, silence_check=None,
-                          turn_policy=None):
+                          turn_policy=None, keywords=()):
     if not math.isfinite(silence_s) or silence_s <= 0:
         raise VoiceError("Silence threshold must be finite and positive.")
     if provider.mode == "replay":
@@ -151,7 +151,8 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
     rate = start.get("sample_rate", 16000)
     key = api_key()
     settings = {"model": ASR, "audioEncoding": f"PCM_{rate // 1000}KHZ", "mode": "ENDPOINTING",
-                "partialMode": "CUMULATIVE", "keywords": KEYWORDS, "emitAudioProgress": False}
+                "partialMode": "CUMULATIVE", "keywords": list(dict.fromkeys([*KEYWORDS, *keywords])),
+                "emitAudioProgress": False}
     record = provider.store.create("realtime", {**settings, "silence_s": silence_s}, key)
     merger = AnswerMerger(silence_s)
     merger.paused = bool(start.get("interviewer_speaking")) and not start.get("headphones", False)

@@ -40,6 +40,8 @@ MAX_ROUNDS = 4
 SESSION_SECONDS = 600
 GUIDE_SECONDS = {"new": 120, "twin": 60, "drill": 60}  # drill: app.drill (decision log 16)
 _DECLINE = re.compile(r"^\s*(?:no|nope|not really|no thanks|no thank you|i'?m (?:fine|ok|okay|good))\W*$", re.I)
+_YES = re.compile(r"^\s*(?:yes|yeah|yep|yup|correct|right|that'?s right|that is right|exactly|i did)\b", re.I)
+_NO = re.compile(r"^\s*(?:no|nope|not quite|not exactly|that'?s not (?:it|right|what i said))\b[\s,.!]*", re.I)
 
 
 class SessionClosed(Exception):
@@ -86,6 +88,20 @@ class Analysis:
     stated: StatedNumber | None = None
     span: str | None = None
     quote: str | None = None  # first verbatim reasoning quote, for the report
+    confirm: bool = False  # the number may be misheard: confirm it before grading (decision log 27)
+
+
+def unclear(span: str | None, stated: StatedNumber | None) -> bool:
+    """True when the committed number isn't clearly what the span says: two or more numbers
+    in it ("5 7", "five seven") with no pair that forms the value ("five sevenths",
+    "18 out of 117")."""
+    if not span or stated is None:
+        return False
+    nums = numbers_in(span)
+    if len(nums) < 2:
+        return False
+    v = stated.value
+    return not any(b and (a / b == v or a / b == v * 100) for a, b in zip(nums, nums[1:]))
 
 
 class VoiceAnalyzer:
@@ -152,12 +168,39 @@ class VoiceAnalyzer:
 
         quick, scored = await asyncio.gather(fast(), full())
         if scored is not None:
-            return Analysis(*scored)
+            analysis = Analysis(*scored)
+            # Low confidence: the two lanes heard different numbers, or the span is unclear.
+            disagree = quick is not None and quick[0] is not None and analysis.stated is not None \
+                and quick[0].value != analysis.stated.value
+            analysis.confirm = disagree or unclear(analysis.span, analysis.stated)
+            return analysis
         if quick is not None:
             # No reasoning check: the number alone can show a wrong answer, never Correct.
             stated, span = quick
-            return Analysis(code_answer(puzzle, stated, "vague"), stated, span)
+            return Analysis(code_answer(puzzle, stated, "vague"), stated, span, confirm=unclear(span, stated))
         return Analysis(None)
+
+
+# --- Transcription keywords (decision log 27) ---------------------------------
+
+_STOP = set("""about above after again against because before being below between could does doing during
+each every from further having here itself just more most other over same should some such than that their
+them then there these they this those through under until very what when where which while with would your
+yours answer question probability expected value equal equals percent""".split())
+KEYWORD_LIMIT = 12
+
+
+def question_terms(puzzle: Puzzle) -> list[str]:
+    """Distinctive words from the question and its solution steps (at most 12), in order."""
+    out = []
+    for name in [s.name.replace("_", " ") for s in getattr(puzzle, "steps", ())]:
+        if name not in out and not re.search(r"\d", name):
+            out.append(name)
+    for word in re.findall(r"[A-Za-z][A-Za-z'-]{4,}", mathtext.spoken(puzzle.text)):
+        w = word.lower().strip("'-")
+        if w not in _STOP and w not in out:
+            out.append(w)
+    return out[:KEYWORD_LIMIT]
 
 
 # --- Numbers the candidate has said (for the solution-map position) --------
@@ -375,8 +418,9 @@ class ExamSession:
         question = self.interview.next_question()
         rounds = 0
         challenged = False
+        pending = None  # a corrected answer given in reply to "did you say...?"
         while True:
-            text = await self.listen()
+            text, pending = (pending, None) if pending else (await self.listen(), None)
             q.said.append(text)
             q.numbers += numbers_in(text)
             self._note_population(q)
@@ -393,6 +437,14 @@ class ExamSession:
             await self.state("checking")
             analysis = await self.analyzer.analyse(q.puzzle, text, self.send)
             await self.send({"type": "analysis_complete"})
+            if analysis.confirm and analysis.stated is not None and self.conditions == "exam":
+                corrected = await self.confirm_number(analysis.stated)
+                if corrected is not None:
+                    q.said.pop()  # the misheard words are not the candidate's
+                    pending = corrected or None
+                    if not pending:
+                        await self.line("prompt", say.REOPEN)
+                    continue
             obs = analysis.observation
             answer = self._answer(q.puzzle, text, analysis)
             if not q.asked_digit and coarse(q.puzzle, analysis):
@@ -430,6 +482,24 @@ class ExamSession:
                                 receipt=receipts.redacted(answer.receipt))
             else:
                 await self.nudge(q, obs)
+
+    async def confirm_number(self, stated: StatedNumber) -> str | None:
+        """Decision log 27: "Just to check, did you say five sevenths?" None when confirmed;
+        otherwise what to treat as the reopened answer ("" for a bare "no")."""
+        shown, spoken = say.number_said(stated)
+        await self.line("prompt", say.CONFIRM.format(number=shown), speech=say.CONFIRM.format(number=spoken))
+        reply = await self.listen()
+        if _YES.match(reply):
+            return None
+        no = _NO.match(reply)
+        if no is None and not numbers_in(reply):
+            return None  # neither a "no" nor a number: taken as a yes
+        return reply[no.end():].strip() if no else reply.strip()
+
+    def keywords(self) -> list[str]:
+        """The current question's terms, to bias live transcription (`keywords`, spec/03)."""
+        q = self.questions[-1] if self.questions else None
+        return question_terms(q.puzzle) if q else []
 
     async def ask_part2(self, q: QuestionLog, puzzle: Puzzle) -> None:
         """One checked answer to the follow-up; a clarifying question repeats it and help
