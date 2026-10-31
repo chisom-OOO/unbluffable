@@ -17,7 +17,7 @@ from typing import Awaitable, Callable
 
 from app import exam_text as say
 from app import provenance as forge_provenance
-from app import follow_up, receipts
+from app import follow_up, hint_ladder, receipts
 from engine.answers import StatedNumber, matches, normalise_numbers, parse_number
 from engine import mathtext
 from engine.bank import ForgePuzzle
@@ -236,6 +236,8 @@ class Part2Log:
     answers: list[Answer] = field(default_factory=list)
     outcome: str | None = None
     asked_digit: bool = False
+    help_lines: list[str] = field(default_factory=list)  # hints given on this part (the ladder)
+    last_target: int | None = None
 
 
 @dataclass
@@ -254,6 +256,7 @@ class QuestionLog:
     numbers: list[Fraction] = field(default_factory=list)
     said: list[str] = field(default_factory=list)  # the candidate's own words, for written help
     help_lines: list[tuple[str, str]] = field(default_factory=list)  # (challenge|nudge|hint, text)
+    last_target: int | None = None  # the step the last nudge or hint went to (the ladder)
     population: int | None = None  # round population, once the candidate or a hint has one
     first_wrong: tuple[Observation, str | None] | None = None
     scored: str | None = None
@@ -441,8 +444,12 @@ class ExamSession:
                 await self.say_question(puzzle, say.REPEAT_INTRO)
                 continue
             if cue is not None and cue.kind == "help":
-                steps = puzzle.steps
-                await self.line("hint", say.forge_step_prompt(steps[0].name) if steps else say.FORGE_NUDGE)
+                said = q.numbers + numbers_in(text)
+                target, hint = hint_ladder.next_help(puzzle, position(puzzle, said), q.part2.last_target, q.part2.help_lines,
+                                                     lambda t: leak(puzzle, t, said, None) is None)
+                q.part2.last_target, _ = target or q.part2.last_target, q.part2.help_lines.append(hint)
+                await self.send({"type": "interviewer_line", "kind": "hint", "text": hint, "target_step": target,
+                                 "counts": self._counts(), "receipt": None})
                 continue
             if _DECLINE.match(text):
                 continue
@@ -519,16 +526,6 @@ class ExamSession:
             return say.ASK_WHY
         return say.challenge(q.puzzle, analysis.stated, analysis.span, obs.misconception)
 
-    def _next_step(self, q: QuestionLog, at: int) -> tuple[int | None, str]:
-        """Plain step prompt for the step after `at` (spec/01: the fallback when no model text)."""
-        steps = q.puzzle.steps
-        if at >= len(steps):
-            return None, say.ASK_WHY
-        text = say.forge_step_prompt(steps[at].name)
-        if leak(q.puzzle, text, q.numbers, None) is not None:
-            return None, say.FORGE_NUDGE  # a step name that states a new number is not spoken
-        return at + 1, text
-
     async def nudge(self, q: QuestionLog, obs: Observation) -> None:
         """Rounds 2-4: aimed at the candidate's next step; its strength counts toward H."""
         q.nudges += 1
@@ -545,17 +542,22 @@ class ExamSession:
         await self.help(q, "hint")
 
     async def help(self, q: QuestionLog, kind: str, receipt: dict | None = None) -> None:
+        """The hint ladder (decision log 27): one step further than the last help, from the
+        furthest step the candidate has shown, never repeating an earlier line."""
         at = q.position
-        target, text = self._next_step(q, at)
+        earlier = [t for _, t in q.help_lines]
+        allowed = lambda t: leak(q.puzzle, t, q.numbers, q.population) is None  # noqa: E731
+        target, text = hint_ladder.next_help(q.puzzle, at, q.last_target, earlier, allowed)
         draft = await self.writer(q.puzzle, kind, list(q.said), at) if self.writer else None
         if draft is not None:
             drafted, step = draft
             last = len(q.puzzle.steps)
-            valid_step = step is None or 1 <= step <= last
-            if valid_step and drafted.strip() and leak(q.puzzle, drafted, q.numbers, q.population) is None:
+            valid_step = step is None if target is None else step is not None and target <= step <= last
+            if valid_step and drafted.strip() and allowed(drafted) and not hint_ladder.repeats(drafted, earlier):
                 target, text = step, drafted.strip()
         if target is not None:
             q.help_load += strength(target, at)
+            q.last_target = target
         await self.line(kind, text, target, receipt)
 
     def _note_population(self, q: QuestionLog) -> None:
