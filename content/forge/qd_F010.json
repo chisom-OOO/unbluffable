@@ -1,0 +1,3694 @@
+{
+  "template_id": "qd_F010",
+  "pack": "quant_dev",
+  "topic": "Time series",
+  "topics": [
+    "Time series"
+  ],
+  "source_topic": "Trade-size VWAP",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "What if total executed volume is zero?",
+    "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Share trades are 10 at 110, 3 at 104, 7 at 97, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 110,
+            "qty": 10
+          },
+          {
+            "price": 104,
+            "qty": 3
+          },
+          {
+            "price": 97,
+            "qty": 7
+          }
+        ]
+      },
+      "answer": "2091/20",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are ten at one hundred and ten, three at one hundred and four, seven at ninety-seven, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "311/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "697",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2091"
+        },
+        {
+          "name": "total_shares",
+          "value": "20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "53/60",
+            "relative_gap": "53/6273"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "11849/20",
+            "relative_gap": "17/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1780/3",
+        "min_distinct_wrong_pair_gap": "1780/3"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Share trades are 12 at 91, 8 at 113, 10 at 93, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 91,
+            "qty": 12
+          },
+          {
+            "price": 113,
+            "qty": 8
+          },
+          {
+            "price": 93,
+            "qty": 10
+          }
+        ]
+      },
+      "answer": "1463/15",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are twelve at ninety-one, eight at one hundred and thirteen, ten at ninety-three, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "99",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2926/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2926"
+        },
+        {
+          "name": "total_shares",
+          "value": "30"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "22/15",
+            "relative_gap": "2/133"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "4389/5",
+            "relative_gap": "9"
+          }
+        ],
+        "min_wrong_pair_gap": "2629/3",
+        "min_distinct_wrong_pair_gap": "2629/3"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Share trades are 11 at 104, 6 at 105, 13 at 102, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 104,
+            "qty": 11
+          },
+          {
+            "price": 105,
+            "qty": 6
+          },
+          {
+            "price": 102,
+            "qty": 13
+          }
+        ]
+      },
+      "answer": "310/3",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are eleven at one hundred and four, six at one hundred and five, thirteen at one hundred and two, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "311/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "3100/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3100"
+        },
+        {
+          "name": "total_shares",
+          "value": "30"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "1/3",
+            "relative_gap": "1/310"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "930",
+            "relative_gap": "9"
+          }
+        ],
+        "min_wrong_pair_gap": "2789/3",
+        "min_distinct_wrong_pair_gap": "2789/3"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Share trades are 11 at 100, 14 at 110, 12 at 106, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 100,
+            "qty": 11
+          },
+          {
+            "price": 110,
+            "qty": 14
+          },
+          {
+            "price": 106,
+            "qty": 12
+          }
+        ]
+      },
+      "answer": "3912/37",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are eleven at one hundred, fourteen at one hundred and ten, twelve at one hundred and six, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "316/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1304",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3912"
+        },
+        {
+          "name": "total_shares",
+          "value": "37"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "44/111",
+            "relative_gap": "11/2934"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "44336/37",
+            "relative_gap": "34/3"
+          }
+        ],
+        "min_wrong_pair_gap": "3596/3",
+        "min_distinct_wrong_pair_gap": "3596/3"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Share trades are 3 at 109, 9 at 99, 12 at 104, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 109,
+            "qty": 3
+          },
+          {
+            "price": 99,
+            "qty": 9
+          },
+          {
+            "price": 104,
+            "qty": 12
+          }
+        ]
+      },
+      "answer": "411/4",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are three at one hundred and nine, nine at ninety-nine, twelve at one hundred and four, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "104",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "822",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2466"
+        },
+        {
+          "name": "total_shares",
+          "value": "24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "5/4",
+            "relative_gap": "5/411"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "2877/4",
+            "relative_gap": "7"
+          }
+        ],
+        "min_wrong_pair_gap": "718",
+        "min_distinct_wrong_pair_gap": "718"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Share trades are 13 at 93, 12 at 113, 13 at 99, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 93,
+            "qty": 13
+          },
+          {
+            "price": 113,
+            "qty": 12
+          },
+          {
+            "price": 99,
+            "qty": 13
+          }
+        ]
+      },
+      "answer": "1926/19",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are thirteen at ninety-three, twelve at one hundred and thirteen, thirteen at ninety-nine, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "305/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1284",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3852"
+        },
+        {
+          "name": "total_shares",
+          "value": "38"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "17/57",
+            "relative_gap": "17/5778"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "22470/19",
+            "relative_gap": "35/3"
+          }
+        ],
+        "min_wrong_pair_gap": "3547/3",
+        "min_distinct_wrong_pair_gap": "3547/3"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Share trades are 8 at 114, 3 at 109, 8 at 115, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 114,
+            "qty": 8
+          },
+          {
+            "price": 109,
+            "qty": 3
+          },
+          {
+            "price": 115,
+            "qty": 8
+          }
+        ]
+      },
+      "answer": "2159/19",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are eight at one hundred and fourteen, three at one hundred and nine, eight at one hundred and fifteen, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "338/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2159/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2159"
+        },
+        {
+          "name": "total_shares",
+          "value": "19"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "55/57",
+            "relative_gap": "55/6477"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "34544/57",
+            "relative_gap": "16/3"
+          }
+        ],
+        "min_wrong_pair_gap": "607",
+        "min_distinct_wrong_pair_gap": "607"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Share trades are 10 at 112, 8 at 96, 8 at 113, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 112,
+            "qty": 10
+          },
+          {
+            "price": 96,
+            "qty": 8
+          },
+          {
+            "price": 113,
+            "qty": 8
+          }
+        ]
+      },
+      "answer": "1396/13",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are ten at one hundred and twelve, eight at ninety-six, eight at one hundred and thirteen, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "107",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2792/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2792"
+        },
+        {
+          "name": "total_shares",
+          "value": "26"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "5/13",
+            "relative_gap": "5/1396"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "32108/39",
+            "relative_gap": "23/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2471/3",
+        "min_distinct_wrong_pair_gap": "2471/3"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Share trades are 8 at 110, 4 at 97, 5 at 95, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 110,
+            "qty": 8
+          },
+          {
+            "price": 97,
+            "qty": 4
+          },
+          {
+            "price": 95,
+            "qty": 5
+          }
+        ]
+      },
+      "answer": "1743/17",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are eight at one hundred and ten, four at ninety-seven, five at ninety-five, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "302/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "581",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "1743"
+        },
+        {
+          "name": "total_shares",
+          "value": "17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "95/51",
+            "relative_gap": "95/5229"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "8134/17",
+            "relative_gap": "14/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1441/3",
+        "min_distinct_wrong_pair_gap": "1441/3"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Share trades are 6 at 96, 11 at 115, 8 at 93, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 96,
+            "qty": 6
+          },
+          {
+            "price": 115,
+            "qty": 11
+          },
+          {
+            "price": 93,
+            "qty": 8
+          }
+        ]
+      },
+      "answer": "517/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are six at ninety-six, eleven at one hundred and fifteen, eight at ninety-three, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "304/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2585/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2585"
+        },
+        {
+          "name": "total_shares",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "31/15",
+            "relative_gap": "31/1551"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "11374/15",
+            "relative_gap": "22/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2281/3",
+        "min_distinct_wrong_pair_gap": "2281/3"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Share trades are 4 at 104, 3 at 105, 5 at 91, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 104,
+            "qty": 4
+          },
+          {
+            "price": 105,
+            "qty": 3
+          },
+          {
+            "price": 91,
+            "qty": 5
+          }
+        ]
+      },
+      "answer": "593/6",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are four at one hundred and four, three at one hundred and five, five at ninety-one, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "100",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1186/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "1186"
+        },
+        {
+          "name": "total_shares",
+          "value": "12"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "7/6",
+            "relative_gap": "7/593"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "593/2",
+            "relative_gap": "3"
+          }
+        ],
+        "min_wrong_pair_gap": "886/3",
+        "min_distinct_wrong_pair_gap": "886/3"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Share trades are 10 at 110, 14 at 98, 2 at 106, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 110,
+            "qty": 10
+          },
+          {
+            "price": 98,
+            "qty": 14
+          },
+          {
+            "price": 106,
+            "qty": 2
+          }
+        ]
+      },
+      "answer": "1342/13",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are ten at one hundred and ten, fourteen at ninety-eight, two at one hundred and six, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "314/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2684/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2684"
+        },
+        {
+          "name": "total_shares",
+          "value": "26"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "56/39",
+            "relative_gap": "28/2013"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "30866/39",
+            "relative_gap": "23/3"
+          }
+        ],
+        "min_wrong_pair_gap": "790",
+        "min_distinct_wrong_pair_gap": "790"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Share trades are 11 at 102, 8 at 103, 3 at 110, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 102,
+            "qty": 11
+          },
+          {
+            "price": 103,
+            "qty": 8
+          },
+          {
+            "price": 110,
+            "qty": 3
+          }
+        ]
+      },
+      "answer": "1138/11",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are eleven at one hundred and two, eight at one hundred and three, three at one hundred and ten, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "105",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2276/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2276"
+        },
+        {
+          "name": "total_shares",
+          "value": "22"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "17/11",
+            "relative_gap": "17/1138"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "21622/33",
+            "relative_gap": "19/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1961/3",
+        "min_distinct_wrong_pair_gap": "1961/3"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Share trades are 7 at 107, 14 at 105, 6 at 109, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 107,
+            "qty": 7
+          },
+          {
+            "price": 105,
+            "qty": 14
+          },
+          {
+            "price": 109,
+            "qty": 6
+          }
+        ]
+      },
+      "answer": "2873/27",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are seven at one hundred and seven, fourteen at one hundred and five, six at one hundred and nine, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "107",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2873/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2873"
+        },
+        {
+          "name": "total_shares",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "16/27",
+            "relative_gap": "16/2873"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "22984/27",
+            "relative_gap": "8"
+          }
+        ],
+        "min_wrong_pair_gap": "2552/3",
+        "min_distinct_wrong_pair_gap": "2552/3"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Share trades are 14 at 91, 12 at 96, 13 at 98, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 91,
+            "qty": 14
+          },
+          {
+            "price": 96,
+            "qty": 12
+          },
+          {
+            "price": 98,
+            "qty": 13
+          }
+        ]
+      },
+      "answer": "3700/39",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are fourteen at ninety-one, twelve at ninety-six, thirteen at ninety-eight, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "95",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "3700/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3700"
+        },
+        {
+          "name": "total_shares",
+          "value": "39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "5/39",
+            "relative_gap": "1/740"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "14800/13",
+            "relative_gap": "12"
+          }
+        ],
+        "min_wrong_pair_gap": "3415/3",
+        "min_distinct_wrong_pair_gap": "3415/3"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Share trades are 13 at 96, 8 at 102, 12 at 90, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 96,
+            "qty": 13
+          },
+          {
+            "price": 102,
+            "qty": 8
+          },
+          {
+            "price": 90,
+            "qty": 12
+          }
+        ]
+      },
+      "answer": "1048/11",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are thirteen at ninety-six, eight at one hundred and two, twelve at ninety, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "96",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1048",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3144"
+        },
+        {
+          "name": "total_shares",
+          "value": "33"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "8/11",
+            "relative_gap": "1/131"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "10480/11",
+            "relative_gap": "10"
+          }
+        ],
+        "min_wrong_pair_gap": "952",
+        "min_distinct_wrong_pair_gap": "952"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Share trades are 2 at 113, 7 at 114, 8 at 105, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 113,
+            "qty": 2
+          },
+          {
+            "price": 114,
+            "qty": 7
+          },
+          {
+            "price": 105,
+            "qty": 8
+          }
+        ]
+      },
+      "answer": "1864/17",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are two at one hundred and thirteen, seven at one hundred and fourteen, eight at one hundred and five, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "332/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1864/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "1864"
+        },
+        {
+          "name": "total_shares",
+          "value": "17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "52/51",
+            "relative_gap": "13/1398"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "26096/51",
+            "relative_gap": "14/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1532/3",
+        "min_distinct_wrong_pair_gap": "1532/3"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Share trades are 13 at 106, 12 at 100, 5 at 114, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 106,
+            "qty": 13
+          },
+          {
+            "price": 100,
+            "qty": 12
+          },
+          {
+            "price": 114,
+            "qty": 5
+          }
+        ]
+      },
+      "answer": "1574/15",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are thirteen at one hundred and six, twelve at one hundred, five at one hundred and fourteen, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "320/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "3148/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3148"
+        },
+        {
+          "name": "total_shares",
+          "value": "30"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "26/15",
+            "relative_gap": "13/787"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "4722/5",
+            "relative_gap": "9"
+          }
+        ],
+        "min_wrong_pair_gap": "2828/3",
+        "min_distinct_wrong_pair_gap": "2828/3"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Share trades are 3 at 98, 9 at 104, 13 at 96, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 98,
+            "qty": 3
+          },
+          {
+            "price": 104,
+            "qty": 9
+          },
+          {
+            "price": 96,
+            "qty": 13
+          }
+        ]
+      },
+      "answer": "2478/25",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are three at ninety-eight, nine at one hundred and four, thirteen at ninety-six, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "298/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "826",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2478"
+        },
+        {
+          "name": "total_shares",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "16/75",
+            "relative_gap": "8/3717"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "18172/25",
+            "relative_gap": "22/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2180/3",
+        "min_distinct_wrong_pair_gap": "2180/3"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Share trades are 2 at 100, 4 at 102, 10 at 95, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 100,
+            "qty": 2
+          },
+          {
+            "price": 102,
+            "qty": 4
+          },
+          {
+            "price": 95,
+            "qty": 10
+          }
+        ]
+      },
+      "answer": "779/8",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are two at one hundred, four at one hundred and two, ten at ninety-five, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "99",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1558/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "1558"
+        },
+        {
+          "name": "total_shares",
+          "value": "16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "13/8",
+            "relative_gap": "13/779"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "10127/24",
+            "relative_gap": "13/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1261/3",
+        "min_distinct_wrong_pair_gap": "1261/3"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Share trades are 11 at 103, 12 at 115, 9 at 90, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 103,
+            "qty": 11
+          },
+          {
+            "price": 115,
+            "qty": 12
+          },
+          {
+            "price": 90,
+            "qty": 9
+          }
+        ]
+      },
+      "answer": "3323/32",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are eleven at one hundred and three, twelve at one hundred and fifteen, nine at ninety, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "308/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "3323/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3323"
+        },
+        {
+          "name": "total_shares",
+          "value": "32"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "113/96",
+            "relative_gap": "113/9969"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "96367/96",
+            "relative_gap": "29/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1005",
+        "min_distinct_wrong_pair_gap": "1005"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Share trades are 6 at 108, 13 at 104, 8 at 102, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 108,
+            "qty": 6
+          },
+          {
+            "price": 104,
+            "qty": 13
+          },
+          {
+            "price": 102,
+            "qty": 8
+          }
+        ]
+      },
+      "answer": "2816/27",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are six at one hundred and eight, thirteen at one hundred and four, eight at one hundred and two, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "314/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2816/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2816"
+        },
+        {
+          "name": "total_shares",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "10/27",
+            "relative_gap": "5/1408"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "22528/27",
+            "relative_gap": "8"
+          }
+        ],
+        "min_wrong_pair_gap": "834",
+        "min_distinct_wrong_pair_gap": "834"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Share trades are 5 at 99, 8 at 112, 3 at 97, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 99,
+            "qty": 5
+          },
+          {
+            "price": 112,
+            "qty": 8
+          },
+          {
+            "price": 97,
+            "qty": 3
+          }
+        ]
+      },
+      "answer": "841/8",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are five at ninety-nine, eight at one hundred and twelve, three at ninety-seven, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "308/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1682/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "1682"
+        },
+        {
+          "name": "total_shares",
+          "value": "16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "59/24",
+            "relative_gap": "59/2523"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "10933/24",
+            "relative_gap": "13/3"
+          }
+        ],
+        "min_wrong_pair_gap": "458",
+        "min_distinct_wrong_pair_gap": "458"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Share trades are 12 at 92, 11 at 110, 3 at 115, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 92,
+            "qty": 12
+          },
+          {
+            "price": 110,
+            "qty": 11
+          },
+          {
+            "price": 115,
+            "qty": 3
+          }
+        ]
+      },
+      "answer": "2659/26",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are twelve at ninety-two, eleven at one hundred and ten, three at one hundred and fifteen, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "317/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2659/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2659"
+        },
+        {
+          "name": "total_shares",
+          "value": "26"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "265/78",
+            "relative_gap": "265/7977"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "61157/78",
+            "relative_gap": "23/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2342/3",
+        "min_distinct_wrong_pair_gap": "2342/3"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Share trades are 11 at 91, 4 at 112, 11 at 98, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 91,
+            "qty": 11
+          },
+          {
+            "price": 112,
+            "qty": 4
+          },
+          {
+            "price": 98,
+            "qty": 11
+          }
+        ]
+      },
+      "answer": "2527/26",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are eleven at ninety-one, four at one hundred and twelve, eleven at ninety-eight, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "301/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2527/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2527"
+        },
+        {
+          "name": "total_shares",
+          "value": "26"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "245/78",
+            "relative_gap": "35/1083"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "58121/78",
+            "relative_gap": "23/3"
+          }
+        ],
+        "min_wrong_pair_gap": "742",
+        "min_distinct_wrong_pair_gap": "742"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Share trades are 2 at 100, 10 at 98, 2 at 99, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 100,
+            "qty": 2
+          },
+          {
+            "price": 98,
+            "qty": 10
+          },
+          {
+            "price": 99,
+            "qty": 2
+          }
+        ]
+      },
+      "answer": "689/7",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are two at one hundred, ten at ninety-eight, two at ninety-nine, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "99",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1378/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "1378"
+        },
+        {
+          "name": "total_shares",
+          "value": "14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "4/7",
+            "relative_gap": "4/689"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "7579/21",
+            "relative_gap": "11/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1081/3",
+        "min_distinct_wrong_pair_gap": "1081/3"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Share trades are 7 at 90, 12 at 105, 14 at 95, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 90,
+            "qty": 7
+          },
+          {
+            "price": 105,
+            "qty": 12
+          },
+          {
+            "price": 95,
+            "qty": 14
+          }
+        ]
+      },
+      "answer": "3220/33",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are seven at ninety, twelve at one hundred and five, fourteen at ninety-five, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "290/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "3220/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3220"
+        },
+        {
+          "name": "total_shares",
+          "value": "33"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "10/11",
+            "relative_gap": "3/322"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "32200/33",
+            "relative_gap": "10"
+          }
+        ],
+        "min_wrong_pair_gap": "2930/3",
+        "min_distinct_wrong_pair_gap": "2930/3"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Share trades are 2 at 112, 15 at 100, 10 at 109, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 112,
+            "qty": 2
+          },
+          {
+            "price": 100,
+            "qty": 15
+          },
+          {
+            "price": 109,
+            "qty": 10
+          }
+        ]
+      },
+      "answer": "938/9",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are two at one hundred and twelve, fifteen at one hundred, ten at one hundred and nine, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "107",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "938",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2814"
+        },
+        {
+          "name": "total_shares",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "25/9",
+            "relative_gap": "25/938"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "7504/9",
+            "relative_gap": "8"
+          }
+        ],
+        "min_wrong_pair_gap": "831",
+        "min_distinct_wrong_pair_gap": "831"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Share trades are 2 at 101, 9 at 99, 3 at 100, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 101,
+            "qty": 2
+          },
+          {
+            "price": 99,
+            "qty": 9
+          },
+          {
+            "price": 100,
+            "qty": 3
+          }
+        ]
+      },
+      "answer": "199/2",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are two at one hundred and one, nine at ninety-nine, three at one hundred, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "100",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1393/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "1393"
+        },
+        {
+          "name": "total_shares",
+          "value": "14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "1/2",
+            "relative_gap": "1/199"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "2189/6",
+            "relative_gap": "11/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1093/3",
+        "min_distinct_wrong_pair_gap": "1093/3"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Share trades are 9 at 99, 4 at 93, 8 at 98, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 99,
+            "qty": 9
+          },
+          {
+            "price": 93,
+            "qty": 4
+          },
+          {
+            "price": 98,
+            "qty": 8
+          }
+        ]
+      },
+      "answer": "2047/21",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are nine at ninety-nine, four at ninety-three, eight at ninety-eight, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "290/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2047/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2047"
+        },
+        {
+          "name": "total_shares",
+          "value": "21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "17/21",
+            "relative_gap": "17/2047"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "4094/7",
+            "relative_gap": "6"
+          }
+        ],
+        "min_wrong_pair_gap": "1757/3",
+        "min_distinct_wrong_pair_gap": "1757/3"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Share trades are 10 at 101, 15 at 107, 4 at 106, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 101,
+            "qty": 10
+          },
+          {
+            "price": 107,
+            "qty": 15
+          },
+          {
+            "price": 106,
+            "qty": 4
+          }
+        ]
+      },
+      "answer": "3039/29",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are ten at one hundred and one, fifteen at one hundred and seven, four at one hundred and six, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "314/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1013",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3039"
+        },
+        {
+          "name": "total_shares",
+          "value": "29"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "11/87",
+            "relative_gap": "11/9117"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "26338/29",
+            "relative_gap": "26/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2725/3",
+        "min_distinct_wrong_pair_gap": "2725/3"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Share trades are 10 at 108, 2 at 114, 9 at 100, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 108,
+            "qty": 10
+          },
+          {
+            "price": 114,
+            "qty": 2
+          },
+          {
+            "price": 100,
+            "qty": 9
+          }
+        ]
+      },
+      "answer": "736/7",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are ten at one hundred and eight, two at one hundred and fourteen, nine at one hundred, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "322/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "736",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2208"
+        },
+        {
+          "name": "total_shares",
+          "value": "21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "46/21",
+            "relative_gap": "1/48"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "4416/7",
+            "relative_gap": "6"
+          }
+        ],
+        "min_wrong_pair_gap": "1886/3",
+        "min_distinct_wrong_pair_gap": "1886/3"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Share trades are 2 at 103, 13 at 90, 8 at 106, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 103,
+            "qty": 2
+          },
+          {
+            "price": 90,
+            "qty": 13
+          },
+          {
+            "price": 106,
+            "qty": 8
+          }
+        ]
+      },
+      "answer": "2224/23",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are two at one hundred and three, thirteen at ninety, eight at one hundred and six, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "299/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2224/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2224"
+        },
+        {
+          "name": "total_shares",
+          "value": "23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "205/69",
+            "relative_gap": "205/6672"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "44480/69",
+            "relative_gap": "20/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1925/3",
+        "min_distinct_wrong_pair_gap": "1925/3"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Share trades are 14 at 103, 10 at 97, 10 at 90, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 103,
+            "qty": 14
+          },
+          {
+            "price": 97,
+            "qty": 10
+          },
+          {
+            "price": 90,
+            "qty": 10
+          }
+        ]
+      },
+      "answer": "1656/17",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are fourteen at one hundred and three, ten at ninety-seven, ten at ninety, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "290/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1104",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3312"
+        },
+        {
+          "name": "total_shares",
+          "value": "34"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "38/51",
+            "relative_gap": "19/2484"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "17112/17",
+            "relative_gap": "31/3"
+          }
+        ],
+        "min_wrong_pair_gap": "3022/3",
+        "min_distinct_wrong_pair_gap": "3022/3"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Share trades are 2 at 113, 15 at 104, 5 at 103, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 113,
+            "qty": 2
+          },
+          {
+            "price": 104,
+            "qty": 15
+          },
+          {
+            "price": 103,
+            "qty": 5
+          }
+        ]
+      },
+      "answer": "2301/22",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are two at one hundred and thirteen, fifteen at one hundred and four, five at one hundred and three, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "320/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "767",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2301"
+        },
+        {
+          "name": "total_shares",
+          "value": "22"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "137/66",
+            "relative_gap": "137/6903"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "14573/22",
+            "relative_gap": "19/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1981/3",
+        "min_distinct_wrong_pair_gap": "1981/3"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Share trades are 15 at 90, 8 at 112, 12 at 109, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 90,
+            "qty": 15
+          },
+          {
+            "price": 112,
+            "qty": 8
+          },
+          {
+            "price": 109,
+            "qty": 12
+          }
+        ]
+      },
+      "answer": "3554/35",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are fifteen at ninety, eight at one hundred and twelve, twelve at one hundred and nine, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "311/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "3554/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3554"
+        },
+        {
+          "name": "total_shares",
+          "value": "35"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "223/105",
+            "relative_gap": "223/10662"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "113728/105",
+            "relative_gap": "32/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1081",
+        "min_distinct_wrong_pair_gap": "1081"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Share trades are 12 at 95, 13 at 100, 3 at 107, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 95,
+            "qty": 12
+          },
+          {
+            "price": 100,
+            "qty": 13
+          },
+          {
+            "price": 107,
+            "qty": 3
+          }
+        ]
+      },
+      "answer": "2761/28",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are twelve at ninety-five, thirteen at one hundred, three at one hundred and seven, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "302/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2761/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2761"
+        },
+        {
+          "name": "total_shares",
+          "value": "28"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "173/84",
+            "relative_gap": "173/8283"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "69025/84",
+            "relative_gap": "25/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2459/3",
+        "min_distinct_wrong_pair_gap": "2459/3"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Share trades are 10 at 94, 14 at 91, 2 at 93, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 94,
+            "qty": 10
+          },
+          {
+            "price": 91,
+            "qty": 14
+          },
+          {
+            "price": 93,
+            "qty": 2
+          }
+        ]
+      },
+      "answer": "1200/13",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are ten at ninety-four, fourteen at ninety-one, two at ninety-three, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "278/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "800",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2400"
+        },
+        {
+          "name": "total_shares",
+          "value": "26"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "14/39",
+            "relative_gap": "7/1800"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "9200/13",
+            "relative_gap": "23/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2122/3",
+        "min_distinct_wrong_pair_gap": "2122/3"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Share trades are 4 at 93, 14 at 109, 11 at 115, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 93,
+            "qty": 4
+          },
+          {
+            "price": 109,
+            "qty": 14
+          },
+          {
+            "price": 115,
+            "qty": 11
+          }
+        ]
+      },
+      "answer": "3163/29",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are four at ninety-three, fourteen at one hundred and nine, eleven at one hundred and fifteen, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "317/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "3163/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3163"
+        },
+        {
+          "name": "total_shares",
+          "value": "29"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "296/87",
+            "relative_gap": "296/9489"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "82238/87",
+            "relative_gap": "26/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2846/3",
+        "min_distinct_wrong_pair_gap": "2846/3"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Share trades are 15 at 91, 8 at 95, 2 at 90, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 91,
+            "qty": 15
+          },
+          {
+            "price": 95,
+            "qty": 8
+          },
+          {
+            "price": 90,
+            "qty": 2
+          }
+        ]
+      },
+      "answer": "461/5",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are fifteen at ninety-one, eight at ninety-five, two at ninety, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "92",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2305/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2305"
+        },
+        {
+          "name": "total_shares",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "1/5",
+            "relative_gap": "1/461"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "10142/15",
+            "relative_gap": "22/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2029/3",
+        "min_distinct_wrong_pair_gap": "2029/3"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Share trades are 8 at 104, 10 at 101, 11 at 103, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 104,
+            "qty": 8
+          },
+          {
+            "price": 101,
+            "qty": 10
+          },
+          {
+            "price": 103,
+            "qty": 11
+          }
+        ]
+      },
+      "answer": "2975/29",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are eight at one hundred and four, ten at one hundred and one, eleven at one hundred and three, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "308/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2975/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2975"
+        },
+        {
+          "name": "total_shares",
+          "value": "29"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "7/87",
+            "relative_gap": "1/1275"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "77350/87",
+            "relative_gap": "26/3"
+          }
+        ],
+        "min_wrong_pair_gap": "889",
+        "min_distinct_wrong_pair_gap": "889"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Share trades are 4 at 95, 6 at 101, 12 at 100, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 95,
+            "qty": 4
+          },
+          {
+            "price": 101,
+            "qty": 6
+          },
+          {
+            "price": 100,
+            "qty": 12
+          }
+        ]
+      },
+      "answer": "1093/11",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are four at ninety-five, six at one hundred and one, twelve at one hundred, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "296/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2186/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2186"
+        },
+        {
+          "name": "total_shares",
+          "value": "22"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "23/33",
+            "relative_gap": "23/3279"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "20767/33",
+            "relative_gap": "19/3"
+          }
+        ],
+        "min_wrong_pair_gap": "630",
+        "min_distinct_wrong_pair_gap": "630"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Share trades are 3 at 103, 8 at 97, 9 at 101, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 103,
+            "qty": 3
+          },
+          {
+            "price": 97,
+            "qty": 8
+          },
+          {
+            "price": 101,
+            "qty": 9
+          }
+        ]
+      },
+      "answer": "997/10",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are three at one hundred and three, eight at ninety-seven, nine at one hundred and one, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "301/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1994/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "1994"
+        },
+        {
+          "name": "total_shares",
+          "value": "20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "19/30",
+            "relative_gap": "19/2991"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "16949/30",
+            "relative_gap": "17/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1693/3",
+        "min_distinct_wrong_pair_gap": "1693/3"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Share trades are 3 at 103, 5 at 101, 9 at 111, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 103,
+            "qty": 3
+          },
+          {
+            "price": 101,
+            "qty": 5
+          },
+          {
+            "price": 111,
+            "qty": 9
+          }
+        ]
+      },
+      "answer": "1813/17",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are three at one hundred and three, five at one hundred and one, nine at one hundred and eleven, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "105",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1813/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "1813"
+        },
+        {
+          "name": "total_shares",
+          "value": "17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "28/17",
+            "relative_gap": "4/259"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "25382/51",
+            "relative_gap": "14/3"
+          }
+        ],
+        "min_wrong_pair_gap": "1498/3",
+        "min_distinct_wrong_pair_gap": "1498/3"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Share trades are 12 at 93, 13 at 94, 14 at 109, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 93,
+            "qty": 12
+          },
+          {
+            "price": 94,
+            "qty": 13
+          },
+          {
+            "price": 109,
+            "qty": 14
+          }
+        ]
+      },
+      "answer": "1288/13",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are twelve at ninety-three, thirteen at ninety-four, fourteen at one hundred and nine, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "296/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "1288",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "3864"
+        },
+        {
+          "name": "total_shares",
+          "value": "39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "16/39",
+            "relative_gap": "2/483"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "15456/13",
+            "relative_gap": "12"
+          }
+        ],
+        "min_wrong_pair_gap": "3568/3",
+        "min_distinct_wrong_pair_gap": "3568/3"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Share trades are 3 at 91, 5 at 110, 15 at 107, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 91,
+            "qty": 3
+          },
+          {
+            "price": 110,
+            "qty": 5
+          },
+          {
+            "price": 107,
+            "qty": 15
+          }
+        ]
+      },
+      "answer": "2428/23",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are three at ninety-one, five at one hundred and ten, fifteen at one hundred and seven, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "308/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2428/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2428"
+        },
+        {
+          "name": "total_shares",
+          "value": "23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "200/69",
+            "relative_gap": "50/1821"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "48560/69",
+            "relative_gap": "20/3"
+          }
+        ],
+        "min_wrong_pair_gap": "2120/3",
+        "min_distinct_wrong_pair_gap": "2120/3"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Share trades are 7 at 105, 14 at 102, 7 at 91, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 105,
+            "qty": 7
+          },
+          {
+            "price": 102,
+            "qty": 14
+          },
+          {
+            "price": 91,
+            "qty": 7
+          }
+        ]
+      },
+      "answer": "100",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are seven at one hundred and five, fourteen at one hundred and two, seven at ninety-one, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "298/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2800/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2800"
+        },
+        {
+          "name": "total_shares",
+          "value": "28"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "2/3",
+            "relative_gap": "1/150"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "2500/3",
+            "relative_gap": "25/3"
+          }
+        ],
+        "min_wrong_pair_gap": "834",
+        "min_distinct_wrong_pair_gap": "834"
+      },
+      "follow_up": {
+        "question": "How could you combine VWAP summaries from two disjoint intervals?",
+        "reference": "Add their notionals and volumes, then divide the combined notional by combined volume. Averaging the two VWAPs without volume weights is generally incorrect."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Share trades are 8 at 93, 8 at 94, 11 at 111, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 93,
+            "qty": 8
+          },
+          {
+            "price": 94,
+            "qty": 8
+          },
+          {
+            "price": 111,
+            "qty": 11
+          }
+        ]
+      },
+      "answer": "2717/27",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are eight at ninety-three, eight at ninety-four, eleven at one hundred and eleven, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "298/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2717/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2717"
+        },
+        {
+          "name": "total_shares",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "35/27",
+            "relative_gap": "35/2717"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "21736/27",
+            "relative_gap": "8"
+          }
+        ],
+        "min_wrong_pair_gap": "2419/3",
+        "min_distinct_wrong_pair_gap": "2419/3"
+      },
+      "follow_up": {
+        "question": "What aggregates are sufficient for streaming VWAP?",
+        "reference": "Keep total executed notional and total executed volume in consistent units. Use sufficient integer range or exact arithmetic to avoid overflow and precision loss."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Share trades are 8 at 104, 13 at 103, 2 at 97, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 104,
+            "qty": 8
+          },
+          {
+            "price": 103,
+            "qty": 13
+          },
+          {
+            "price": 97,
+            "qty": 2
+          }
+        ]
+      },
+      "answer": "2365/23",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are eight at one hundred and four, thirteen at one hundred and three, two at ninety-seven, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "304/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2365/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2365"
+        },
+        {
+          "name": "total_shares",
+          "value": "23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "103/69",
+            "relative_gap": "103/7095"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "47300/69",
+            "relative_gap": "20/3"
+          }
+        ],
+        "min_wrong_pair_gap": "687",
+        "min_distinct_wrong_pair_gap": "687"
+      },
+      "follow_up": {
+        "question": "What if total executed volume is zero?",
+        "reference": "VWAP is undefined with a zero denominator. Return a documented missing value or reject the input rather than dividing by zero."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Share trades are 4 at 107, 14 at 94, 9 at 95, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 107,
+            "qty": 4
+          },
+          {
+            "price": 94,
+            "qty": 14
+          },
+          {
+            "price": 95,
+            "qty": 9
+          }
+        ]
+      },
+      "answer": "2599/27",
+      "tolerance": "0",
+      "topic": "Time series",
+      "source_topic": "Trade-size VWAP",
+      "difficulty": "Medium",
+      "spoken_text": "Share trades are four at one hundred and seven, fourteen at ninety-four, nine at ninety-five, in quantity-then-price order. What is the volume-weighted average price in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "296/3",
+          "misconceptions": [
+            "uses_an_unweighted_price_mean"
+          ]
+        },
+        {
+          "value": "2599/3",
+          "misconceptions": [
+            "divides_notional_by_fill_count"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_notional",
+          "value": "2599"
+        },
+        {
+          "name": "total_shares",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_an_unweighted_price_mean",
+            "absolute_gap": "65/27",
+            "relative_gap": "65/2599"
+          },
+          {
+            "misconception": "divides_notional_by_fill_count",
+            "absolute_gap": "20792/27",
+            "relative_gap": "8"
+          }
+        ],
+        "min_wrong_pair_gap": "2303/3",
+        "min_distinct_wrong_pair_gap": "2303/3"
+      },
+      "follow_up": {
+        "question": "Why can the simple average equal VWAP in some examples?",
+        "reference": "Equal fill quantities make the weights equal, and other accidental balances can also occur. The algorithm must still use executed size for general inputs."
+      }
+    }
+  ]
+}

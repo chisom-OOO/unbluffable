@@ -1,0 +1,1011 @@
+{
+  "template_id": "qd_F008",
+  "pack": "quant_dev",
+  "topic": "Position and P&L accounting",
+  "difficulty": "Hard",
+  "function_name": "calculate_total_profit",
+  "signature": "def calculate_total_profit(fee_cents: int, fills: list[dict], mark: int) -> str:",
+  "parameters": [
+    {
+      "name": "fee_cents",
+      "type": "int",
+      "param": "fee_cents"
+    },
+    {
+      "name": "fills",
+      "type": "list[dict]",
+      "param": "fills"
+    },
+    {
+      "name": "mark",
+      "type": "int",
+      "param": "mark"
+    }
+  ],
+  "return_type": "str",
+  "statement": "Calculate total profit including unrealized profit for a position starting flat. Given fee_cents charged per executed share, fills describing each trade's side, price and quantity, and mark for valuing remaining inventory, compute cash flows from fills net of fees plus the marked value of any remaining position. Return the total profit as a string.",
+  "examples": [
+    0,
+    1
+  ],
+  "tests": [
+    [
+      25,
+      [
+        {
+          "price": 108,
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "price": 108,
+          "qty": 3,
+          "side": "sell"
+        }
+      ],
+      109
+    ],
+    [
+      10,
+      [
+        {
+          "price": 105,
+          "qty": 7,
+          "side": "buy"
+        },
+        {
+          "price": 106,
+          "qty": 1,
+          "side": "sell"
+        }
+      ],
+      103
+    ],
+    [
+      20,
+      [
+        {
+          "price": 98,
+          "qty": 24,
+          "side": "buy"
+        },
+        {
+          "price": 105,
+          "qty": 15,
+          "side": "sell"
+        }
+      ],
+      94
+    ],
+    [
+      10,
+      [
+        {
+          "price": 105,
+          "qty": 25,
+          "side": "buy"
+        },
+        {
+          "price": 114,
+          "qty": 4,
+          "side": "sell"
+        }
+      ],
+      101
+    ],
+    [
+      5,
+      [
+        {
+          "price": 94,
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "price": 95,
+          "qty": 6,
+          "side": "sell"
+        }
+      ],
+      92
+    ],
+    [
+      25,
+      [
+        {
+          "price": 94,
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "price": 91,
+          "qty": 16,
+          "side": "sell"
+        }
+      ],
+      88
+    ],
+    [
+      20,
+      [
+        {
+          "price": 101,
+          "qty": 22,
+          "side": "buy"
+        },
+        {
+          "price": 96,
+          "qty": 19,
+          "side": "sell"
+        }
+      ],
+      109
+    ],
+    [
+      50,
+      [
+        {
+          "price": 92,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "price": 100,
+          "qty": 5,
+          "side": "sell"
+        }
+      ],
+      97
+    ],
+    [
+      25,
+      [
+        {
+          "price": 100,
+          "qty": 21,
+          "side": "buy"
+        },
+        {
+          "price": 100,
+          "qty": 19,
+          "side": "sell"
+        }
+      ],
+      101
+    ],
+    [
+      20,
+      [
+        {
+          "price": 99,
+          "qty": 18,
+          "side": "buy"
+        },
+        {
+          "price": 106,
+          "qty": 11,
+          "side": "sell"
+        }
+      ],
+      97
+    ],
+    [
+      20,
+      [
+        {
+          "price": 101,
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "price": 99,
+          "qty": 16,
+          "side": "sell"
+        }
+      ],
+      95
+    ],
+    [
+      50,
+      [
+        {
+          "price": 94,
+          "qty": 14,
+          "side": "buy"
+        },
+        {
+          "price": 101,
+          "qty": 8,
+          "side": "sell"
+        }
+      ],
+      99
+    ],
+    [
+      5,
+      [
+        {
+          "price": 102,
+          "qty": 14,
+          "side": "buy"
+        },
+        {
+          "price": 101,
+          "qty": 9,
+          "side": "sell"
+        }
+      ],
+      110
+    ],
+    [
+      20,
+      [
+        {
+          "price": 99,
+          "qty": 20,
+          "side": "buy"
+        },
+        {
+          "price": 105,
+          "qty": 14,
+          "side": "sell"
+        }
+      ],
+      93
+    ],
+    [
+      20,
+      [
+        {
+          "price": 98,
+          "qty": 30,
+          "side": "buy"
+        },
+        {
+          "price": 99,
+          "qty": 1,
+          "side": "sell"
+        }
+      ],
+      103
+    ],
+    [
+      10,
+      [
+        {
+          "price": 108,
+          "qty": 28,
+          "side": "buy"
+        },
+        {
+          "price": 118,
+          "qty": 26,
+          "side": "sell"
+        }
+      ],
+      106
+    ],
+    [
+      5,
+      [
+        {
+          "price": 100,
+          "qty": 28,
+          "side": "buy"
+        },
+        {
+          "price": 110,
+          "qty": 9,
+          "side": "sell"
+        }
+      ],
+      96
+    ],
+    [
+      5,
+      [
+        {
+          "price": 94,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "price": 94,
+          "qty": 3,
+          "side": "sell"
+        }
+      ],
+      95
+    ],
+    [
+      10,
+      [
+        {
+          "price": 98,
+          "qty": 22,
+          "side": "buy"
+        },
+        {
+          "price": 103,
+          "qty": 1,
+          "side": "sell"
+        }
+      ],
+      92
+    ],
+    [
+      5,
+      [
+        {
+          "price": 101,
+          "qty": 30,
+          "side": "buy"
+        },
+        {
+          "price": 101,
+          "qty": 27,
+          "side": "sell"
+        }
+      ],
+      99
+    ],
+    [
+      20,
+      [
+        {
+          "price": 91,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "price": 94,
+          "qty": 13,
+          "side": "sell"
+        }
+      ],
+      87
+    ],
+    [
+      10,
+      [
+        {
+          "price": 93,
+          "qty": 11,
+          "side": "buy"
+        },
+        {
+          "price": 103,
+          "qty": 3,
+          "side": "sell"
+        }
+      ],
+      96
+    ],
+    [
+      10,
+      [
+        {
+          "price": 103,
+          "qty": 30,
+          "side": "buy"
+        },
+        {
+          "price": 113,
+          "qty": 13,
+          "side": "sell"
+        }
+      ],
+      104
+    ],
+    [
+      50,
+      [
+        {
+          "price": 93,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "price": 102,
+          "qty": 1,
+          "side": "sell"
+        }
+      ],
+      101
+    ],
+    [
+      50,
+      [
+        {
+          "price": 98,
+          "qty": 5,
+          "side": "buy"
+        },
+        {
+          "price": 97,
+          "qty": 4,
+          "side": "sell"
+        }
+      ],
+      101
+    ],
+    [
+      10,
+      [
+        {
+          "price": 90,
+          "qty": 23,
+          "side": "buy"
+        },
+        {
+          "price": 92,
+          "qty": 10,
+          "side": "sell"
+        }
+      ],
+      93
+    ],
+    [
+      5,
+      [
+        {
+          "price": 100,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "price": 104,
+          "qty": 2,
+          "side": "sell"
+        }
+      ],
+      96
+    ],
+    [
+      50,
+      [
+        {
+          "price": 102,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "price": 108,
+          "qty": 5,
+          "side": "sell"
+        }
+      ],
+      96
+    ],
+    [
+      10,
+      [
+        {
+          "price": 106,
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "price": 116,
+          "qty": 6,
+          "side": "sell"
+        }
+      ],
+      111
+    ],
+    [
+      25,
+      [
+        {
+          "price": 90,
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "price": 99,
+          "qty": 5,
+          "side": "sell"
+        }
+      ],
+      93
+    ],
+    [
+      25,
+      [
+        {
+          "price": 99,
+          "qty": 21,
+          "side": "buy"
+        },
+        {
+          "price": 96,
+          "qty": 18,
+          "side": "sell"
+        }
+      ],
+      97
+    ],
+    [
+      25,
+      [
+        {
+          "price": 105,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "price": 109,
+          "qty": 11,
+          "side": "sell"
+        }
+      ],
+      110
+    ],
+    [
+      5,
+      [
+        {
+          "price": 100,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "price": 100,
+          "qty": 10,
+          "side": "sell"
+        }
+      ],
+      98
+    ],
+    [
+      5,
+      [
+        {
+          "price": 94,
+          "qty": 26,
+          "side": "buy"
+        },
+        {
+          "price": 99,
+          "qty": 7,
+          "side": "sell"
+        }
+      ],
+      97
+    ],
+    [
+      25,
+      [
+        {
+          "price": 92,
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "price": 100,
+          "qty": 3,
+          "side": "sell"
+        }
+      ],
+      86
+    ],
+    [
+      10,
+      [
+        {
+          "price": 105,
+          "qty": 19,
+          "side": "buy"
+        },
+        {
+          "price": 103,
+          "qty": 5,
+          "side": "sell"
+        }
+      ],
+      106
+    ],
+    [
+      50,
+      [
+        {
+          "price": 105,
+          "qty": 7,
+          "side": "buy"
+        },
+        {
+          "price": 102,
+          "qty": 1,
+          "side": "sell"
+        }
+      ],
+      101
+    ],
+    [
+      10,
+      [
+        {
+          "price": 98,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "price": 98,
+          "qty": 14,
+          "side": "sell"
+        }
+      ],
+      101
+    ],
+    [
+      50,
+      [
+        {
+          "price": 90,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "price": 89,
+          "qty": 1,
+          "side": "sell"
+        }
+      ],
+      84
+    ],
+    [
+      25,
+      [
+        {
+          "price": 90,
+          "qty": 27,
+          "side": "buy"
+        },
+        {
+          "price": 90,
+          "qty": 20,
+          "side": "sell"
+        }
+      ],
+      93
+    ],
+    [
+      20,
+      [
+        {
+          "price": 101,
+          "qty": 25,
+          "side": "buy"
+        },
+        {
+          "price": 109,
+          "qty": 3,
+          "side": "sell"
+        }
+      ],
+      104
+    ],
+    [
+      25,
+      [
+        {
+          "price": 106,
+          "qty": 22,
+          "side": "buy"
+        },
+        {
+          "price": 110,
+          "qty": 6,
+          "side": "sell"
+        }
+      ],
+      109
+    ],
+    [
+      10,
+      [
+        {
+          "price": 103,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "price": 102,
+          "qty": 2,
+          "side": "sell"
+        }
+      ],
+      106
+    ],
+    [
+      10,
+      [
+        {
+          "price": 104,
+          "qty": 7,
+          "side": "buy"
+        },
+        {
+          "price": 109,
+          "qty": 6,
+          "side": "sell"
+        }
+      ],
+      109
+    ],
+    [
+      25,
+      [
+        {
+          "price": 100,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "price": 106,
+          "qty": 3,
+          "side": "sell"
+        }
+      ],
+      103
+    ],
+    [
+      25,
+      [
+        {
+          "price": 97,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "price": 95,
+          "qty": 8,
+          "side": "sell"
+        }
+      ],
+      100
+    ],
+    [
+      5,
+      [
+        {
+          "price": 109,
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "price": 105,
+          "qty": 4,
+          "side": "sell"
+        }
+      ],
+      114
+    ],
+    [
+      5,
+      [
+        {
+          "price": 105,
+          "qty": 30,
+          "side": "buy"
+        },
+        {
+          "price": 105,
+          "qty": 11,
+          "side": "sell"
+        }
+      ],
+      101
+    ],
+    [
+      10,
+      [
+        {
+          "price": 94,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "price": 102,
+          "qty": 5,
+          "side": "sell"
+        }
+      ],
+      102
+    ],
+    [
+      50,
+      [
+        {
+          "price": 94,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "price": 102,
+          "qty": 13,
+          "side": "sell"
+        }
+      ],
+      92
+    ]
+  ],
+  "expected": [
+    "15/4",
+    "-59/5",
+    "306/5",
+    "-509/10",
+    "-14/5",
+    "-249/4",
+    "-396/5",
+    "169/2",
+    "-8",
+    "286/5",
+    "-223/5",
+    "75",
+    "597/20",
+    "206/5",
+    "699/5",
+    "1253/5",
+    "243/20",
+    "51/20",
+    "-1233/10",
+    "-177/20",
+    "106/5",
+    "263/5",
+    "1427/10",
+    "91/2",
+    "-11/2",
+    "557/10",
+    "-897/20",
+    "-1",
+    "392/5",
+    "225/4",
+    "-279/4",
+    "115/2",
+    "-45/4",
+    "1807/20",
+    "-35/4",
+    "8/5",
+    "-31",
+    "1/10",
+    "-199/2",
+    "37/4",
+    "422/5",
+    "65",
+    "191/5",
+    "337/10",
+    "99/4",
+    "-69/4",
+    "133/10",
+    "-1561/20",
+    "469/10",
+    "86"
+  ],
+  "wrong_methods": [
+    {
+      "name": "omits fees on both sides",
+      "outputs": [
+        "7",
+        "-11",
+        "69",
+        "-48",
+        "-2",
+        "-54",
+        "-71",
+        "95",
+        "2",
+        "63",
+        "-38",
+        "86",
+        "31",
+        "48",
+        "146",
+        "256",
+        "14",
+        "3",
+        "-121",
+        "-6",
+        "27",
+        "54",
+        "147",
+        "49",
+        "-1",
+        "59",
+        "-44",
+        "6",
+        "80",
+        "60",
+        "-60",
+        "64",
+        "-10",
+        "92",
+        "-6",
+        "4",
+        "-27",
+        "3",
+        "-91",
+        "21",
+        "90",
+        "72",
+        "40",
+        "35",
+        "27",
+        "-13",
+        "14",
+        "-76",
+        "48",
+        "100"
+      ],
+      "source": "from fractions import Fraction\ndef solve(params):\n    fills=params['fills']\n    mark=params['mark']\n    total_buy_cost=Fraction(0)\n    total_sell_proceeds=Fraction(0)\n    total_buy_qty=Fraction(0)\n    total_sell_qty=Fraction(0)\n    for f in fills:\n        price=Fraction(f['price'])\n        qty=Fraction(f['qty'])\n        if f['side']=='buy':\n            total_buy_cost+=price*qty\n            total_buy_qty+=qty\n        else:\n            total_sell_proceeds+=price*qty\n            total_sell_qty+=qty\n    remaining=total_buy_qty-total_sell_qty\n    return total_sell_proceeds - total_buy_cost + remaining*Fraction(mark)\n"
+    },
+    {
+      "name": "omits unrealized profit on the remainder",
+      "outputs": [
+        "-13/4",
+        "1/5",
+        "486/5",
+        "331/10",
+        "26/5",
+        "-225/4",
+        "-516/5",
+        "59/2",
+        "-10",
+        "356/5",
+        "-193/5",
+        "45",
+        "-203/20",
+        "386/5",
+        "-26/5",
+        "1273/5",
+        "1763/20",
+        "-9/20",
+        "27/10",
+        "-57/20",
+        "166/5",
+        "143/5",
+        "1257/10",
+        "11/2",
+        "-17/2",
+        "167/10",
+        "143/20",
+        "23",
+        "292/5",
+        "165/4",
+        "-255/4",
+        "75/2",
+        "-5/4",
+        "667/20",
+        "85/4",
+        "-62/5",
+        "-7",
+        "-29/10",
+        "-19/2",
+        "-47/4",
+        "92/5",
+        "17",
+        "-19/5",
+        "287/10",
+        "63/4",
+        "-81/4",
+        "-167/10",
+        "-41/20",
+        "389/10",
+        "90"
+      ],
+      "source": "from fractions import Fraction\ndef solve(params):\n    fee_cents=params['fee_cents']\n    fills=params['fills']\n    total_buy_cost=Fraction(0)\n    total_sell_proceeds=Fraction(0)\n    total_buy_qty=Fraction(0)\n    total_sell_qty=Fraction(0)\n    fees=Fraction(0)\n    for f in fills:\n        price=Fraction(f['price'])\n        qty=Fraction(f['qty'])\n        fees+= qty*Fraction(fee_cents,100)\n        if f['side']=='buy':\n            total_buy_cost+=price*qty\n            total_buy_qty+=qty\n        else:\n            total_sell_proceeds+=price*qty\n            total_sell_qty+=qty\n    if total_buy_qty!=0:\n        avg_cost=total_buy_cost/total_buy_qty\n    else:\n        avg_cost=Fraction(0)\n    sold_qty=min(total_buy_qty,total_sell_qty)\n    realized=total_sell_proceeds - sold_qty*avg_cost\n    return realized - fees\n"
+    }
+  ],
+  "solver_source": "from fractions import Fraction\ndef solve(params):\n    fee_cents=params['fee_cents']\n    fills=params['fills']\n    mark=params['mark']\n    total_buy_cost=Fraction(0)\n    total_sell_proceeds=Fraction(0)\n    total_buy_qty=0\n    total_sell_qty=0\n    fees=Fraction(0)\n    for f in fills:\n        price=Fraction(f['price'])\n        qty=Fraction(f['qty'])\n        fees+= qty * Fraction(fee_cents, 100)\n        if f['side']=='buy':\n            total_buy_cost+= price*qty\n            total_buy_qty+= qty\n        else:\n            total_sell_proceeds+= price*qty\n            total_sell_qty+= qty\n    remaining = total_buy_qty - total_sell_qty\n    mark_p=Fraction(mark)\n    # For steps: compute realized and unrealized using average cost / FIFO invariant via total method\n    # realized = sell proceeds - cost basis of sold shares (average cost)\n    # To get general realized/unrealized split that sums to cash flow + mark, use average cost\n    if total_buy_qty != 0:\n        avg_cost = total_buy_cost / total_buy_qty\n    else:\n        avg_cost = Fraction(0)\n    sold_qty = min(total_buy_qty, total_sell_qty)\n    # If short sales possible, handle symmetrically: realized still proceeds - cost, but cost for shorts is sale price? Simpler: use cash flow definition for steps\n    # Use cash-flow decomposition: realized = proceeds from closed qty - cost of closed qty\n    # closed qty = min(buy,sell)\n    # unrealized = remaining * (mark - avg_cost) if long remaining else remaining*...\n    # For pure long case this matches examples. For generalization ensure sum = proceeds - cost + remaining*mark\n    if total_buy_qty >= total_sell_qty:\n        realized = total_sell_proceeds - sold_qty * avg_cost\n        unrealized = remaining * (mark_p - avg_cost)\n    else:\n        # net short: avg sell price\n        avg_sell = total_sell_proceeds / total_sell_qty if total_sell_qty!=0 else Fraction(0)\n        realized = sold_qty * avg_sell - sold_qty * (total_buy_cost / sold_qty if sold_qty!=0 else Fraction(0)) if sold_qty!=0 else Fraction(0)\n        # Simpler fallback: realized as above still works if we define realized = sold_qty*(avg_sell - avg_cost)\n        if total_sell_qty !=0:\n            avg_sell = total_sell_proceeds/total_sell_qty\n            realized = sold_qty * (avg_sell - avg_cost) if sold_qty!=0 else Fraction(0)\n        else:\n            realized=Fraction(0)\n        unrealized = remaining * (mark_p - avg_sell) if total_sell_qty!=0 else remaining*mark_p\n        # Ensure total consistency: total = total_sell_proceeds - total_buy_cost + remaining*mark_p\n        # Adjust unrealized to satisfy\n        total_no_fee = total_sell_proceeds - total_buy_cost + remaining*mark_p\n        unrealized = total_no_fee - realized\n    total_no_fee = total_sell_proceeds - total_buy_cost + remaining*mark_p\n    answer = total_no_fee - fees\n    return {\"answer\": answer, \"steps\": {\"realized_profit_dollars\": realized, \"unrealized_profit_dollars\": unrealized, \"total_fees_dollars\": fees}}\n",
+  "verification": {
+    "verified": true,
+    "variants": 50,
+    "solver_reproduced": 50,
+    "wrong_methods_kept": 2,
+    "wrong_methods_given": 2,
+    "types_corrected_from_data": 1
+  },
+  "models": {
+    "spec_author": "meta-models/muse-spark-open-1026"
+  }
+}

@@ -1,0 +1,2001 @@
+{
+  "template_id": "qd_F001",
+  "pack": "quant_dev",
+  "topic": "Order book and matching",
+  "difficulty": "Easy",
+  "function_name": "get_best_bid_ask",
+  "signature": "def get_best_bid_ask(events: list[dict]) -> list[int]:",
+  "parameters": [
+    {
+      "name": "events",
+      "type": "list[dict]",
+      "param": "events"
+    }
+  ],
+  "return_type": "list[int]",
+  "statement": "You are given events that describe operations on an empty limit order book, including adding, canceling, and modifying orders. Process the events in order to maintain the set of live buy and sell orders. After all events have been applied, return the best bid and best ask prices as a two-element list containing the best bid followed by the best ask.",
+  "examples": [
+    0,
+    1
+  ],
+  "tests": [
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 144,
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 143,
+          "qty": 12,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 146,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 147,
+          "qty": 8,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 152,
+          "qty": 2,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 148,
+          "qty": 18,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 157,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 160,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 144,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 141,
+          "qty": 7,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 146,
+          "qty": 16,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 150,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 108,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 106,
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 110,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 113,
+          "qty": 20,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 97,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 96,
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 99,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 100,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 134,
+          "qty": 11,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 133,
+          "qty": 5,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 137,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 138,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 83,
+          "qty": 20,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 80,
+          "qty": 5,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 86,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 90,
+          "qty": 10,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 159,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 157,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 164,
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 168,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 135,
+          "qty": 13,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 131,
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 137,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 138,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 123,
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 119,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 127,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 131,
+          "qty": 17,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 119,
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 118,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 122,
+          "qty": 19,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 126,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 118,
+          "qty": 4,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 114,
+          "qty": 3,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 123,
+          "qty": 13,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 126,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 129,
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 126,
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 133,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 134,
+          "qty": 8,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 83,
+          "qty": 2,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 82,
+          "qty": 7,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 85,
+          "qty": 19,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 86,
+          "qty": 3,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 131,
+          "qty": 18,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 130,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 133,
+          "qty": 11,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 135,
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 159,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 155,
+          "qty": 5,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 163,
+          "qty": 19,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 166,
+          "qty": 19,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 93,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 90,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 96,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 100,
+          "qty": 17,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 102,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 99,
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 107,
+          "qty": 2,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 109,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 139,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 138,
+          "qty": 19,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 141,
+          "qty": 16,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 144,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 163,
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 159,
+          "qty": 4,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 166,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 169,
+          "qty": 19,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 109,
+          "qty": 4,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 108,
+          "qty": 4,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 112,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 116,
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 148,
+          "qty": 5,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 144,
+          "qty": 3,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 150,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 151,
+          "qty": 13,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 138,
+          "qty": 18,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 134,
+          "qty": 4,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 143,
+          "qty": 20,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 147,
+          "qty": 20,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 104,
+          "qty": 13,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 103,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 106,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 107,
+          "qty": 16,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 87,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 85,
+          "qty": 5,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 89,
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 91,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 126,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 122,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 131,
+          "qty": 17,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 134,
+          "qty": 17,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 155,
+          "qty": 12,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 152,
+          "qty": 20,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 157,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 160,
+          "qty": 20,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 95,
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 94,
+          "qty": 11,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 100,
+          "qty": 2,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 102,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 140,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 139,
+          "qty": 7,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 144,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 146,
+          "qty": 11,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 155,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 154,
+          "qty": 18,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 157,
+          "qty": 11,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 159,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 132,
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 128,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 135,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 137,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 102,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 100,
+          "qty": 19,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 104,
+          "qty": 3,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 107,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 93,
+          "qty": 5,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 92,
+          "qty": 3,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 95,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 96,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 137,
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 136,
+          "qty": 13,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 142,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 145,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 107,
+          "qty": 2,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 104,
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 112,
+          "qty": 13,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 116,
+          "qty": 10,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 120,
+          "qty": 7,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 116,
+          "qty": 2,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 122,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 124,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 87,
+          "qty": 13,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 83,
+          "qty": 3,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 91,
+          "qty": 19,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 92,
+          "qty": 13,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 126,
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 124,
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 131,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 133,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 112,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 109,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 117,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 121,
+          "qty": 16,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 153,
+          "qty": 19,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 150,
+          "qty": 4,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 158,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 159,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 105,
+          "qty": 12,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 101,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 109,
+          "qty": 16,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 111,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 90,
+          "qty": 18,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 86,
+          "qty": 20,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 95,
+          "qty": 11,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 96,
+          "qty": 13,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 99,
+          "qty": 14,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 98,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 102,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 103,
+          "qty": 11,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 99,
+          "qty": 14,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 95,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 103,
+          "qty": 16,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 105,
+          "qty": 17,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 91,
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 88,
+          "qty": 18,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 95,
+          "qty": 8,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 98,
+          "qty": 2,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 114,
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 113,
+          "qty": 19,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 116,
+          "qty": 13,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 118,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 114,
+          "qty": 18,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 111,
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 117,
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 119,
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 147,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 146,
+          "qty": 13,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 149,
+          "qty": 3,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 152,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 151,
+          "qty": 20,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 147,
+          "qty": 2,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 154,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 158,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 124,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 121,
+          "qty": 2,
+          "side": "buy"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 127,
+          "qty": 16,
+          "side": "sell"
+        },
+        {
+          "id": "D",
+          "kind": "add",
+          "price": 130,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        }
+      ]
+    ]
+  ],
+  "expected": [
+    "[143,146]",
+    "[148,157]",
+    "[141,146]",
+    "[106,110]",
+    "[96,99]",
+    "[133,137]",
+    "[80,86]",
+    "[157,164]",
+    "[131,137]",
+    "[119,127]",
+    "[118,122]",
+    "[114,123]",
+    "[126,133]",
+    "[82,85]",
+    "[130,133]",
+    "[155,163]",
+    "[90,96]",
+    "[99,107]",
+    "[138,141]",
+    "[159,166]",
+    "[108,112]",
+    "[144,150]",
+    "[134,143]",
+    "[103,106]",
+    "[85,89]",
+    "[122,131]",
+    "[152,157]",
+    "[94,100]",
+    "[139,144]",
+    "[154,157]",
+    "[128,135]",
+    "[100,104]",
+    "[92,95]",
+    "[136,142]",
+    "[104,112]",
+    "[116,122]",
+    "[83,91]",
+    "[124,131]",
+    "[109,117]",
+    "[150,158]",
+    "[101,109]",
+    "[86,95]",
+    "[98,102]",
+    "[95,103]",
+    "[88,95]",
+    "[113,116]",
+    "[111,117]",
+    "[146,149]",
+    "[147,154]",
+    "[121,127]"
+  ],
+  "wrong_methods": [
+    {
+      "name": "ignores the cancel event",
+      "outputs": [
+        "[144,146]",
+        "[152,157]",
+        "[144,146]",
+        "[108,110]",
+        "[97,99]",
+        "[134,137]",
+        "[83,86]",
+        "[159,164]",
+        "[135,137]",
+        "[123,127]",
+        "[119,122]",
+        "[118,123]",
+        "[129,133]",
+        "[83,85]",
+        "[131,133]",
+        "[159,163]",
+        "[93,96]",
+        "[102,107]",
+        "[139,141]",
+        "[163,166]",
+        "[109,112]",
+        "[148,150]",
+        "[138,143]",
+        "[104,106]",
+        "[87,89]",
+        "[126,131]",
+        "[155,157]",
+        "[95,100]",
+        "[140,144]",
+        "[155,157]",
+        "[132,135]",
+        "[102,104]",
+        "[93,95]",
+        "[137,142]",
+        "[107,112]",
+        "[120,122]",
+        "[87,91]",
+        "[126,131]",
+        "[112,117]",
+        "[153,158]",
+        "[105,109]",
+        "[90,95]",
+        "[99,102]",
+        "[99,103]",
+        "[91,95]",
+        "[114,116]",
+        "[114,117]",
+        "[147,149]",
+        "[151,154]",
+        "[124,127]"
+      ],
+      "source": "def solve(params):\n    events=params[\"events\"]\n    live={}\n    for e in events:\n        if e[\"kind\"]==\"add\":\n            live[e[\"id\"]]={\"price\":e[\"price\"],\"side\":e[\"side\"]}\n        # ignore cancel\n    bids=[v[\"price\"] for v in live.values() if v[\"side\"]==\"buy\"]\n    asks=[v[\"price\"] for v in live.values() if v[\"side\"]==\"sell\"]\n    best_bid=max(bids) if bids else None\n    best_ask=min(asks) if asks else None\n    return [best_bid,best_ask]\n"
+    },
+    {
+      "name": "takes the highest ask instead of lowest",
+      "outputs": [
+        "[143,147]",
+        "[148,160]",
+        "[141,150]",
+        "[106,113]",
+        "[96,100]",
+        "[133,138]",
+        "[80,90]",
+        "[157,168]",
+        "[131,138]",
+        "[119,131]",
+        "[118,126]",
+        "[114,126]",
+        "[126,134]",
+        "[82,86]",
+        "[130,135]",
+        "[155,166]",
+        "[90,100]",
+        "[99,109]",
+        "[138,144]",
+        "[159,169]",
+        "[108,116]",
+        "[144,151]",
+        "[134,147]",
+        "[103,107]",
+        "[85,91]",
+        "[122,134]",
+        "[152,160]",
+        "[94,102]",
+        "[139,146]",
+        "[154,159]",
+        "[128,137]",
+        "[100,107]",
+        "[92,96]",
+        "[136,145]",
+        "[104,116]",
+        "[116,124]",
+        "[83,92]",
+        "[124,133]",
+        "[109,121]",
+        "[150,159]",
+        "[101,111]",
+        "[86,96]",
+        "[98,103]",
+        "[95,105]",
+        "[88,98]",
+        "[113,118]",
+        "[111,119]",
+        "[146,152]",
+        "[147,158]",
+        "[121,130]"
+      ],
+      "source": "def solve(params):\n    events=params[\"events\"]\n    live={}\n    for e in events:\n        kind=e[\"kind\"]\n        oid=e[\"id\"]\n        if kind==\"add\":\n            live[oid]={\"price\":e[\"price\"],\"side\":e[\"side\"]}\n        elif kind==\"cancel\":\n            if oid in live:\n                del live[oid]\n    bids=[v[\"price\"] for v in live.values() if v[\"side\"]==\"buy\"]\n    asks=[v[\"price\"] for v in live.values() if v[\"side\"]==\"sell\"]\n    best_bid=max(bids) if bids else None\n    best_ask=max(asks) if asks else None\n    return [best_bid,best_ask]\n"
+    }
+  ],
+  "solver_source": "def solve(params):\n    from fractions import Fraction\n    events = params[\"events\"]\n    live = {}\n    for e in events:\n        kind = e[\"kind\"]\n        oid = e[\"id\"]\n        if kind == \"add\":\n            live[oid] = {\"price\": e[\"price\"], \"side\": e[\"side\"]}\n        elif kind == \"cancel\":\n            if oid in live:\n                del live[oid]\n        elif kind == \"modify\":\n            if oid in live:\n                if \"price\" in e:\n                    live[oid][\"price\"] = e[\"price\"]\n                if \"side\" in e:\n                    live[oid][\"side\"] = e[\"side\"]\n    bids = [v[\"price\"] for v in live.values() if v[\"side\"] == \"buy\"]\n    asks = [v[\"price\"] for v in live.values() if v[\"side\"] == \"sell\"]\n    best_bid = max(bids) if bids else None\n    best_ask = min(asks) if asks else None\n    answer = [best_bid, best_ask]\n    steps = {\"best_bid\": best_bid, \"best_ask\": best_ask}\n    return {\"answer\": answer, \"steps\": steps}\n",
+  "verification": {
+    "verified": true,
+    "variants": 50,
+    "solver_reproduced": 50,
+    "wrong_methods_kept": 2,
+    "wrong_methods_given": 2,
+    "types_corrected_from_data": 1
+  },
+  "models": {
+    "spec_author": "meta-models/muse-spark-open-1026"
+  }
+}

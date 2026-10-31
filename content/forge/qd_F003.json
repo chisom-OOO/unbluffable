@@ -1,0 +1,4639 @@
+{
+  "template_id": "qd_F003",
+  "pack": "quant_dev",
+  "topic": "Order book and matching",
+  "topics": [
+    "Order book and matching"
+  ],
+  "source_topic": "Market fill with canceled liquidity",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "Should an unmatched market remainder become a new limit order?",
+    "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Start with an empty book. Limits: A sell 14 at 109; B sell 5 at 111; C buy 15 at 106. Cancel A, then market buy 25. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 109,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 111,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 106,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 25,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell fourteen at one hundred and nine; B sell five at one hundred and eleven; C buy fifteen at one hundred and six. Cancel A, then market buy twenty-five. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "20",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "5"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "25"
+        },
+        {
+          "name": "filled_qty",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "14",
+            "relative_gap": "14/5"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "15",
+            "relative_gap": "3"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Begin with no resting orders. Limits: A sell 8 at 90; B sell 59 at 91; C buy 27 at 87. Cancel A, then market buy 62. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 90,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 91,
+            "qty": 59,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 87,
+            "qty": 27,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 62,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "59",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell eight at ninety; B sell fifty-nine at ninety-one; C buy twenty-seven at eighty-seven. Cancel A, then market buy sixty-two. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "62",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "59"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "62"
+        },
+        {
+          "name": "filled_qty",
+          "value": "59"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "3",
+            "relative_gap": "3/59"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "3",
+            "relative_gap": "3/59"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Replay into an empty book. Limits: A sell 22 at 92; B sell 62 at 96; C buy 26 at 90. Cancel A, then market buy 82. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 92,
+            "qty": 22,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 96,
+            "qty": 62,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 90,
+            "qty": 26,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 82,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "62",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell twenty-two at ninety-two; B sell sixty-two at ninety-six; C buy twenty-six at ninety. Cancel A, then market buy eighty-two. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "82",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "62"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "82"
+        },
+        {
+          "name": "filled_qty",
+          "value": "62"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "20",
+            "relative_gap": "10/31"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "20",
+            "relative_gap": "10/31"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Use an initially empty book. Limits: A sell 8 at 94; B sell 46 at 95; C buy 24 at 91. Cancel A, then market buy 63. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 94,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 95,
+            "qty": 46,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 91,
+            "qty": 24,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 63,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "46",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell eight at ninety-four; B sell forty-six at ninety-five; C buy twenty-four at ninety-one. Cancel A, then market buy sixty-three. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "54",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "63",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "46"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "63"
+        },
+        {
+          "name": "filled_qty",
+          "value": "46"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "8",
+            "relative_gap": "4/23"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "17",
+            "relative_gap": "17/46"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Begin with an empty book. Limits: A sell 18 at 106; B sell 17 at 110; C buy 29 at 103. Cancel A, then market buy 33. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 106,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 110,
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 103,
+            "qty": 29,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 33,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "17",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell eighteen at one hundred and six; B sell seventeen at one hundred and ten; C buy twenty-nine at one hundred and three. Cancel A, then market buy thirty-three. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "33",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "17"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "33"
+        },
+        {
+          "name": "filled_qty",
+          "value": "17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "16",
+            "relative_gap": "16/17"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "16",
+            "relative_gap": "16/17"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Start with an empty book. Limits: A sell 3 at 97; B sell 8 at 99; C buy 4 at 96. Cancel A, then market buy 21. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 97,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 99,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 96,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 21,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "8",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell three at ninety-seven; B sell eight at ninety-nine; C buy four at ninety-six. Cancel A, then market buy twenty-one. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "12",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "8"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "21"
+        },
+        {
+          "name": "filled_qty",
+          "value": "8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "3",
+            "relative_gap": "3/8"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "4",
+            "relative_gap": "1/2"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Begin with no resting orders. Limits: A sell 15 at 94; B sell 13 at 98; C buy 27 at 91. Cancel A, then market buy 17. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 94,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 98,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 91,
+            "qty": 27,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 17,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "13",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell fifteen at ninety-four; B sell thirteen at ninety-eight; C buy twenty-seven at ninety-one. Cancel A, then market buy seventeen. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "17",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "13"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "17"
+        },
+        {
+          "name": "filled_qty",
+          "value": "13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "4",
+            "relative_gap": "4/13"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "4",
+            "relative_gap": "4/13"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Replay into an empty book. Limits: A sell 20 at 106; B sell 53 at 109; C buy 8 at 102. Cancel A, then market buy 66. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 106,
+            "qty": 20,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 109,
+            "qty": 53,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 102,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 66,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "53",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell twenty at one hundred and six; B sell fifty-three at one hundred and nine; C buy eight at one hundred and two. Cancel A, then market buy sixty-six. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "66",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "61",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "53"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "66"
+        },
+        {
+          "name": "filled_qty",
+          "value": "53"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "13",
+            "relative_gap": "13/53"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "8",
+            "relative_gap": "8/53"
+          }
+        ],
+        "min_wrong_pair_gap": "5",
+        "min_distinct_wrong_pair_gap": "5"
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Use an initially empty book. Limits: A sell 17 at 102; B sell 4 at 103; C buy 9 at 101. Cancel A, then market buy 9. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 102,
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 103,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 101,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell seventeen at one hundred and two; B sell four at one hundred and three; C buy nine at one hundred and one. Cancel A, then market buy nine. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "4"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "9"
+        },
+        {
+          "name": "filled_qty",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "5",
+            "relative_gap": "5/4"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "5",
+            "relative_gap": "5/4"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Begin with an empty book. Limits: A sell 23 at 108; B sell 34 at 109; C buy 27 at 104. Cancel A, then market buy 39. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 108,
+            "qty": 23,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 109,
+            "qty": 34,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 104,
+            "qty": 27,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 39,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "34",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell twenty-three at one hundred and eight; B sell thirty-four at one hundred and nine; C buy twenty-seven at one hundred and four. Cancel A, then market buy thirty-nine. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "39",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "34"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "39"
+        },
+        {
+          "name": "filled_qty",
+          "value": "34"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "5",
+            "relative_gap": "5/34"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "5",
+            "relative_gap": "5/34"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Start with an empty book. Limits: A sell 6 at 97; B sell 63 at 98; C buy 10 at 96. Cancel A, then market buy 65. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 97,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 98,
+            "qty": 63,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 96,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 65,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "63",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell six at ninety-seven; B sell sixty-three at ninety-eight; C buy ten at ninety-six. Cancel A, then market buy sixty-five. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "65",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "63"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "65"
+        },
+        {
+          "name": "filled_qty",
+          "value": "63"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "2",
+            "relative_gap": "2/63"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "2",
+            "relative_gap": "2/63"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Begin with no resting orders. Limits: A sell 18 at 99; B sell 19 at 103; C buy 19 at 96. Cancel A, then market buy 38. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 99,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 103,
+            "qty": 19,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 96,
+            "qty": 19,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 38,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "19",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell eighteen at ninety-nine; B sell nineteen at one hundred and three; C buy nineteen at ninety-six. Cancel A, then market buy thirty-eight. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "37",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "38",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "19"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "38"
+        },
+        {
+          "name": "filled_qty",
+          "value": "19"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "18",
+            "relative_gap": "18/19"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "19",
+            "relative_gap": "1"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Replay into an empty book. Limits: A sell 24 at 109; B sell 20 at 110; C buy 20 at 107. Cancel A, then market buy 28. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 109,
+            "qty": 24,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 110,
+            "qty": 20,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 107,
+            "qty": 20,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 28,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "20",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell twenty-four at one hundred and nine; B sell twenty at one hundred and ten; C buy twenty at one hundred and seven. Cancel A, then market buy twenty-eight. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "20"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "28"
+        },
+        {
+          "name": "filled_qty",
+          "value": "20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "8",
+            "relative_gap": "2/5"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "8",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Use an initially empty book. Limits: A sell 18 at 102; B sell 11 at 106; C buy 30 at 101. Cancel A, then market buy 23. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 102,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 106,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 101,
+            "qty": 30,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 23,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "11",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell eighteen at one hundred and two; B sell eleven at one hundred and six; C buy thirty at one hundred and one. Cancel A, then market buy twenty-three. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "11"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "23"
+        },
+        {
+          "name": "filled_qty",
+          "value": "11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "12",
+            "relative_gap": "12/11"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "12",
+            "relative_gap": "12/11"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Begin with an empty book. Limits: A sell 21 at 98; B sell 21 at 102; C buy 16 at 96. Cancel A, then market buy 27. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 98,
+            "qty": 21,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 102,
+            "qty": 21,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 96,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 27,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "21",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell twenty-one at ninety-eight; B sell twenty-one at one hundred and two; C buy sixteen at ninety-six. Cancel A, then market buy twenty-seven. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "21"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "27"
+        },
+        {
+          "name": "filled_qty",
+          "value": "21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "6",
+            "relative_gap": "2/7"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "6",
+            "relative_gap": "2/7"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Start with an empty book. Limits: A sell 7 at 95; B sell 81 at 96; C buy 4 at 92. Cancel A, then market buy 102. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 95,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 96,
+            "qty": 81,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 92,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 102,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "81",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell seven at ninety-five; B sell eighty-one at ninety-six; C buy four at ninety-two. Cancel A, then market buy one hundred and two. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "88",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "85",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "81"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "102"
+        },
+        {
+          "name": "filled_qty",
+          "value": "81"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "7",
+            "relative_gap": "7/81"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "4",
+            "relative_gap": "4/81"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Begin with no resting orders. Limits: A sell 14 at 108; B sell 41 at 112; C buy 29 at 104. Cancel A, then market buy 49. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 108,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 112,
+            "qty": 41,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 104,
+            "qty": 29,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 49,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "41",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell fourteen at one hundred and eight; B sell forty-one at one hundred and twelve; C buy twenty-nine at one hundred and four. Cancel A, then market buy forty-nine. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "49",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "41"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "49"
+        },
+        {
+          "name": "filled_qty",
+          "value": "41"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "8",
+            "relative_gap": "8/41"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "8",
+            "relative_gap": "8/41"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Replay into an empty book. Limits: A sell 9 at 100; B sell 30 at 104; C buy 26 at 98. Cancel A, then market buy 48. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 100,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 104,
+            "qty": 30,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 98,
+            "qty": 26,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 48,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "30",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell nine at one hundred; B sell thirty at one hundred and four; C buy twenty-six at ninety-eight. Cancel A, then market buy forty-eight. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "39",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "48",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "30"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "48"
+        },
+        {
+          "name": "filled_qty",
+          "value": "30"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "9",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "18",
+            "relative_gap": "3/5"
+          }
+        ],
+        "min_wrong_pair_gap": "9",
+        "min_distinct_wrong_pair_gap": "9"
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Use an initially empty book. Limits: A sell 22 at 94; B sell 91 at 97; C buy 28 at 91. Cancel A, then market buy 110. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 94,
+            "qty": 22,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 97,
+            "qty": 91,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 91,
+            "qty": 28,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 110,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "91",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell twenty-two at ninety-four; B sell ninety-one at ninety-seven; C buy twenty-eight at ninety-one. Cancel A, then market buy one hundred and ten. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "110",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "91"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "110"
+        },
+        {
+          "name": "filled_qty",
+          "value": "91"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "19",
+            "relative_gap": "19/91"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "19",
+            "relative_gap": "19/91"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Begin with an empty book. Limits: A sell 17 at 104; B sell 55 at 107; C buy 16 at 102. Cancel A, then market buy 69. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 104,
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 107,
+            "qty": 55,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 102,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 69,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "55",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell seventeen at one hundred and four; B sell fifty-five at one hundred and seven; C buy sixteen at one hundred and two. Cancel A, then market buy sixty-nine. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "69",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "55"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "69"
+        },
+        {
+          "name": "filled_qty",
+          "value": "55"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "14",
+            "relative_gap": "14/55"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "14",
+            "relative_gap": "14/55"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Start with an empty book. Limits: A sell 24 at 92; B sell 78 at 93; C buy 6 at 88. Cancel A, then market buy 86. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 92,
+            "qty": 24,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 93,
+            "qty": 78,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 88,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 86,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "78",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell twenty-four at ninety-two; B sell seventy-eight at ninety-three; C buy six at eighty-eight. Cancel A, then market buy eighty-six. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "86",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "84",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "78"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "86"
+        },
+        {
+          "name": "filled_qty",
+          "value": "78"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "8",
+            "relative_gap": "4/39"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "6",
+            "relative_gap": "1/13"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Begin with no resting orders. Limits: A sell 18 at 98; B sell 88 at 100; C buy 20 at 95. Cancel A, then market buy 106. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 98,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 100,
+            "qty": 88,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 95,
+            "qty": 20,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 106,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "88",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell eighteen at ninety-eight; B sell eighty-eight at one hundred; C buy twenty at ninety-five. Cancel A, then market buy one hundred and six. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "106",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "88"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "106"
+        },
+        {
+          "name": "filled_qty",
+          "value": "88"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "18",
+            "relative_gap": "9/44"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "18",
+            "relative_gap": "9/44"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Replay into an empty book. Limits: A sell 16 at 93; B sell 67 at 97; C buy 4 at 92. Cancel A, then market buy 68. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 93,
+            "qty": 16,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 97,
+            "qty": 67,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 92,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 68,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "67",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell sixteen at ninety-three; B sell sixty-seven at ninety-seven; C buy four at ninety-two. Cancel A, then market buy sixty-eight. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "68",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "67"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "68"
+        },
+        {
+          "name": "filled_qty",
+          "value": "67"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "1",
+            "relative_gap": "1/67"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "1",
+            "relative_gap": "1/67"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Use an initially empty book. Limits: A sell 24 at 101; B sell 51 at 103; C buy 6 at 100. Cancel A, then market buy 52. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 101,
+            "qty": 24,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 103,
+            "qty": 51,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 100,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 52,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "51",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell twenty-four at one hundred and one; B sell fifty-one at one hundred and three; C buy six at one hundred. Cancel A, then market buy fifty-two. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "52",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "51"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "52"
+        },
+        {
+          "name": "filled_qty",
+          "value": "51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "1",
+            "relative_gap": "1/51"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "1",
+            "relative_gap": "1/51"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Begin with an empty book. Limits: A sell 23 at 103; B sell 93 at 107; C buy 13 at 99. Cancel A, then market buy 102. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 103,
+            "qty": 23,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 107,
+            "qty": 93,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 99,
+            "qty": 13,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 102,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "93",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell twenty-three at one hundred and three; B sell ninety-three at one hundred and seven; C buy thirteen at ninety-nine. Cancel A, then market buy one hundred and two. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "102",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "93"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "102"
+        },
+        {
+          "name": "filled_qty",
+          "value": "93"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "9",
+            "relative_gap": "3/31"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "9",
+            "relative_gap": "3/31"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Start with an empty book. Limits: A sell 6 at 98; B sell 60 at 102; C buy 29 at 95. Cancel A, then market buy 61. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 98,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 102,
+            "qty": 60,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 95,
+            "qty": 29,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 61,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "60",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell six at ninety-eight; B sell sixty at one hundred and two; C buy twenty-nine at ninety-five. Cancel A, then market buy sixty-one. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "61",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "60"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "61"
+        },
+        {
+          "name": "filled_qty",
+          "value": "60"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "1",
+            "relative_gap": "1/60"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "1",
+            "relative_gap": "1/60"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Begin with no resting orders. Limits: A sell 14 at 91; B sell 95 at 92; C buy 2 at 88. Cancel A, then market buy 120. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 91,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 92,
+            "qty": 95,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 88,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 120,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "95",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell fourteen at ninety-one; B sell ninety-five at ninety-two; C buy two at eighty-eight. Cancel A, then market buy one hundred and twenty. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "109",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "97",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "95"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "120"
+        },
+        {
+          "name": "filled_qty",
+          "value": "95"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "14",
+            "relative_gap": "14/95"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "2",
+            "relative_gap": "2/95"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Replay into an empty book. Limits: A sell 13 at 90; B sell 15 at 94; C buy 30 at 87. Cancel A, then market buy 36. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 90,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 94,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 87,
+            "qty": 30,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 36,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "15",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell thirteen at ninety; B sell fifteen at ninety-four; C buy thirty at eighty-seven. Cancel A, then market buy thirty-six. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "15"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "36"
+        },
+        {
+          "name": "filled_qty",
+          "value": "15"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "13",
+            "relative_gap": "13/15"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "21",
+            "relative_gap": "7/5"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Use an initially empty book. Limits: A sell 20 at 99; B sell 44 at 102; C buy 26 at 97. Cancel A, then market buy 58. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 99,
+            "qty": 20,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 102,
+            "qty": 44,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 97,
+            "qty": 26,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 58,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "44",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell twenty at ninety-nine; B sell forty-four at one hundred and two; C buy twenty-six at ninety-seven. Cancel A, then market buy fifty-eight. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "58",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "44"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "58"
+        },
+        {
+          "name": "filled_qty",
+          "value": "44"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "14",
+            "relative_gap": "7/22"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "14",
+            "relative_gap": "7/22"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Begin with an empty book. Limits: A sell 14 at 109; B sell 29 at 112; C buy 26 at 108. Cancel A, then market buy 30. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 109,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 112,
+            "qty": 29,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 108,
+            "qty": 26,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 30,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "29",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell fourteen at one hundred and nine; B sell twenty-nine at one hundred and twelve; C buy twenty-six at one hundred and eight. Cancel A, then market buy thirty. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "29"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "30"
+        },
+        {
+          "name": "filled_qty",
+          "value": "29"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "1",
+            "relative_gap": "1/29"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "1",
+            "relative_gap": "1/29"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Start with an empty book. Limits: A sell 5 at 91; B sell 42 at 95; C buy 17 at 90. Cancel A, then market buy 55. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 91,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 95,
+            "qty": 42,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 90,
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 55,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "42",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell five at ninety-one; B sell forty-two at ninety-five; C buy seventeen at ninety. Cancel A, then market buy fifty-five. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "47",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "42"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "55"
+        },
+        {
+          "name": "filled_qty",
+          "value": "42"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "5",
+            "relative_gap": "5/42"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "13",
+            "relative_gap": "13/42"
+          }
+        ],
+        "min_wrong_pair_gap": "8",
+        "min_distinct_wrong_pair_gap": "8"
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Begin with no resting orders. Limits: A sell 22 at 90; B sell 84 at 92; C buy 25 at 87. Cancel A, then market buy 103. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 90,
+            "qty": 22,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 92,
+            "qty": 84,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 87,
+            "qty": 25,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 103,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "84",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell twenty-two at ninety; B sell eighty-four at ninety-two; C buy twenty-five at eighty-seven. Cancel A, then market buy one hundred and three. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "103",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "84"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "103"
+        },
+        {
+          "name": "filled_qty",
+          "value": "84"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "19",
+            "relative_gap": "19/84"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "19",
+            "relative_gap": "19/84"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Replay into an empty book. Limits: A sell 21 at 100; B sell 65 at 103; C buy 22 at 99. Cancel A, then market buy 82. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 100,
+            "qty": 21,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 103,
+            "qty": 65,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 99,
+            "qty": 22,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 82,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "65",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell twenty-one at one hundred; B sell sixty-five at one hundred and three; C buy twenty-two at ninety-nine. Cancel A, then market buy eighty-two. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "82",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "65"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "82"
+        },
+        {
+          "name": "filled_qty",
+          "value": "65"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "17",
+            "relative_gap": "17/65"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "17",
+            "relative_gap": "17/65"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Use an initially empty book. Limits: A sell 5 at 109; B sell 9 at 111; C buy 24 at 106. Cancel A, then market buy 14. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 109,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 111,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 106,
+            "qty": 24,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 14,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell five at one hundred and nine; B sell nine at one hundred and eleven; C buy twenty-four at one hundred and six. Cancel A, then market buy fourteen. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "14",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "9"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "14"
+        },
+        {
+          "name": "filled_qty",
+          "value": "9"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "5",
+            "relative_gap": "5/9"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "5",
+            "relative_gap": "5/9"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Begin with an empty book. Limits: A sell 15 at 99; B sell 36 at 102; C buy 21 at 97. Cancel A, then market buy 39. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 99,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 102,
+            "qty": 36,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 97,
+            "qty": 21,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 39,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "36",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell fifteen at ninety-nine; B sell thirty-six at one hundred and two; C buy twenty-one at ninety-seven. Cancel A, then market buy thirty-nine. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "39",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "36"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "39"
+        },
+        {
+          "name": "filled_qty",
+          "value": "36"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "3",
+            "relative_gap": "1/12"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "3",
+            "relative_gap": "1/12"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Start with an empty book. Limits: A sell 10 at 98; B sell 74 at 100; C buy 27 at 94. Cancel A, then market buy 78. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 98,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 100,
+            "qty": 74,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 94,
+            "qty": 27,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 78,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "74",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell ten at ninety-eight; B sell seventy-four at one hundred; C buy twenty-seven at ninety-four. Cancel A, then market buy seventy-eight. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "78",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "74"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "78"
+        },
+        {
+          "name": "filled_qty",
+          "value": "74"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "4",
+            "relative_gap": "2/37"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "4",
+            "relative_gap": "2/37"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Begin with no resting orders. Limits: A sell 8 at 105; B sell 48 at 107; C buy 12 at 101. Cancel A, then market buy 57. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 105,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 107,
+            "qty": 48,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 101,
+            "qty": 12,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 57,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "48",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell eight at one hundred and five; B sell forty-eight at one hundred and seven; C buy twelve at one hundred and one. Cancel A, then market buy fifty-seven. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "56",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "57",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "48"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "57"
+        },
+        {
+          "name": "filled_qty",
+          "value": "48"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "8",
+            "relative_gap": "1/6"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "9",
+            "relative_gap": "3/16"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Replay into an empty book. Limits: A sell 21 at 97; B sell 69 at 98; C buy 24 at 93. Cancel A, then market buy 82. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 97,
+            "qty": 21,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 98,
+            "qty": 69,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 93,
+            "qty": 24,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 82,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "69",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell twenty-one at ninety-seven; B sell sixty-nine at ninety-eight; C buy twenty-four at ninety-three. Cancel A, then market buy eighty-two. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "82",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "69"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "82"
+        },
+        {
+          "name": "filled_qty",
+          "value": "69"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "13",
+            "relative_gap": "13/69"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "13",
+            "relative_gap": "13/69"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Use an initially empty book. Limits: A sell 7 at 91; B sell 72 at 95; C buy 24 at 87. Cancel A, then market buy 81. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 91,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 95,
+            "qty": 72,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 87,
+            "qty": 24,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 81,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "72",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell seven at ninety-one; B sell seventy-two at ninety-five; C buy twenty-four at eighty-seven. Cancel A, then market buy eighty-one. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "79",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "81",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "72"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "81"
+        },
+        {
+          "name": "filled_qty",
+          "value": "72"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "7",
+            "relative_gap": "7/72"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "9",
+            "relative_gap": "1/8"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Begin with an empty book. Limits: A sell 21 at 104; B sell 23 at 107; C buy 25 at 103. Cancel A, then market buy 28. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 104,
+            "qty": 21,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 107,
+            "qty": 23,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 103,
+            "qty": 25,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 28,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "23",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell twenty-one at one hundred and four; B sell twenty-three at one hundred and seven; C buy twenty-five at one hundred and three. Cancel A, then market buy twenty-eight. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "28",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "23"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "28"
+        },
+        {
+          "name": "filled_qty",
+          "value": "23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "5",
+            "relative_gap": "5/23"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "5",
+            "relative_gap": "5/23"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Start with an empty book. Limits: A sell 7 at 99; B sell 86 at 101; C buy 16 at 96. Cancel A, then market buy 94. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 99,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 101,
+            "qty": 86,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 96,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 94,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "86",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell seven at ninety-nine; B sell eighty-six at one hundred and one; C buy sixteen at ninety-six. Cancel A, then market buy ninety-four. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "93",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "94",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "86"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "94"
+        },
+        {
+          "name": "filled_qty",
+          "value": "86"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "7",
+            "relative_gap": "7/86"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "8",
+            "relative_gap": "4/43"
+          }
+        ],
+        "min_wrong_pair_gap": "1",
+        "min_distinct_wrong_pair_gap": "1"
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Begin with no resting orders. Limits: A sell 21 at 104; B sell 38 at 105; C buy 6 at 103. Cancel A, then market buy 51. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 104,
+            "qty": 21,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 105,
+            "qty": 38,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 103,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 51,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "38",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell twenty-one at one hundred and four; B sell thirty-eight at one hundred and five; C buy six at one hundred and three. Cancel A, then market buy fifty-one. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "51",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "44",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "38"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "51"
+        },
+        {
+          "name": "filled_qty",
+          "value": "38"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "13",
+            "relative_gap": "13/38"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "6",
+            "relative_gap": "3/19"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Replay into an empty book. Limits: A sell 18 at 103; B sell 1 at 106; C buy 27 at 101. Cancel A, then market buy 22. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 103,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 106,
+            "qty": 1,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 101,
+            "qty": 27,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 22,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell eighteen at one hundred and three; B sell one at one hundred and six; C buy twenty-seven at one hundred and one. Cancel A, then market buy twenty-two. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "22",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "1"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "22"
+        },
+        {
+          "name": "filled_qty",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "18",
+            "relative_gap": "18"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "21",
+            "relative_gap": "21"
+          }
+        ],
+        "min_wrong_pair_gap": "3",
+        "min_distinct_wrong_pair_gap": "3"
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Use an initially empty book. Limits: A sell 19 at 92; B sell 27 at 93; C buy 19 at 90. Cancel A, then market buy 47. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 92,
+            "qty": 19,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 93,
+            "qty": 27,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 90,
+            "qty": 19,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 47,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "27",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell nineteen at ninety-two; B sell twenty-seven at ninety-three; C buy nineteen at ninety. Cancel A, then market buy forty-seven. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "46",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "27"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "47"
+        },
+        {
+          "name": "filled_qty",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "19",
+            "relative_gap": "19/27"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "19",
+            "relative_gap": "19/27"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Begin with an empty book. Limits: A sell 25 at 107; B sell 76 at 108; C buy 27 at 106. Cancel A, then market buy 83. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 107,
+            "qty": 25,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 108,
+            "qty": 76,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 106,
+            "qty": 27,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 83,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "76",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell twenty-five at one hundred and seven; B sell seventy-six at one hundred and eight; C buy twenty-seven at one hundred and six. Cancel A, then market buy eighty-three. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "83",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "76"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "83"
+        },
+        {
+          "name": "filled_qty",
+          "value": "76"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "7",
+            "relative_gap": "7/76"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "7",
+            "relative_gap": "7/76"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Start with an empty book. Limits: A sell 4 at 109; B sell 25 at 111; C buy 5 at 108. Cancel A, then market buy 26. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 109,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 111,
+            "qty": 25,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 108,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 26,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "25",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell four at one hundred and nine; B sell twenty-five at one hundred and eleven; C buy five at one hundred and eight. Cancel A, then market buy twenty-six. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "26",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "25"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "26"
+        },
+        {
+          "name": "filled_qty",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "1",
+            "relative_gap": "1/25"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "1",
+            "relative_gap": "1/25"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Begin with no resting orders. Limits: A sell 11 at 99; B sell 83 at 101; C buy 23 at 95. Cancel A, then market buy 107. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 99,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 101,
+            "qty": 83,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 95,
+            "qty": 23,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 107,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "83",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell eleven at ninety-nine; B sell eighty-three at one hundred and one; C buy twenty-three at ninety-five. Cancel A, then market buy one hundred and seven. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "94",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "106",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "83"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "107"
+        },
+        {
+          "name": "filled_qty",
+          "value": "83"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "11",
+            "relative_gap": "11/83"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "23",
+            "relative_gap": "23/83"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "How would partial cancellation change the state model?",
+        "reference": "Track remaining quantity per order and reduce only the canceled amount. Remove the record or price level only when its live quantity reaches zero."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Replay into an empty book. Limits: A sell 17 at 103; B sell 57 at 106; C buy 28 at 102. Cancel A, then market buy 67. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 103,
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 106,
+            "qty": 57,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 102,
+            "qty": 28,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 67,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "57",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell seventeen at one hundred and three; B sell fifty-seven at one hundred and six; C buy twenty-eight at one hundred and two. Cancel A, then market buy sixty-seven. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "67",
+          "misconceptions": [
+            "fills_against_a_canceled_order",
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "57"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "67"
+        },
+        {
+          "name": "filled_qty",
+          "value": "57"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "10",
+            "relative_gap": "10/57"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "10",
+            "relative_gap": "10/57"
+          }
+        ],
+        "min_wrong_pair_gap": "0",
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you prevent stale canceled liquidity from being matched at scale?",
+        "reference": "Use an authoritative ID-indexed live-order state and update matching queues consistently. If using lazy deletion, check liveness before consuming a queued entry."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Use an initially empty book. Limits: A sell 4 at 108; B sell 70 at 110; C buy 14 at 104. Cancel A, then market buy 89. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 108,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 110,
+            "qty": 70,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 104,
+            "qty": 14,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 89,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "70",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell four at one hundred and eight; B sell seventy at one hundred and ten; C buy fourteen at one hundred and four. Cancel A, then market buy eighty-nine. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "74",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "84",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "70"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "89"
+        },
+        {
+          "name": "filled_qty",
+          "value": "70"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "4",
+            "relative_gap": "2/35"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "14",
+            "relative_gap": "1/5"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "Should an unmatched market remainder become a new limit order?",
+        "reference": "No, this model leaves it unfilled. Resting the remainder would require a different order type and an explicit limit price."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Begin with an empty book. Limits: A sell 2 at 105; B sell 32 at 109; C buy 8 at 104. Cancel A, then market buy 40. How many shares actually fill?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 105,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 109,
+            "qty": 32,
+            "side": "sell"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 104,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          },
+          {
+            "kind": "market",
+            "qty": 40,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "32",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Market fill with canceled liquidity",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell two at one hundred and five; B sell thirty-two at one hundred and nine; C buy eight at one hundred and four. Cancel A, then market buy forty. How many shares actually fill?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "34",
+          "misconceptions": [
+            "fills_against_a_canceled_order"
+          ]
+        },
+        {
+          "value": "40",
+          "misconceptions": [
+            "counts_bid_liquidity_for_a_market_buy"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "live_opposite_liquidity",
+          "value": "32"
+        },
+        {
+          "name": "requested_market_qty",
+          "value": "40"
+        },
+        {
+          "name": "filled_qty",
+          "value": "32"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "fills_against_a_canceled_order",
+            "absolute_gap": "2",
+            "relative_gap": "1/16"
+          },
+          {
+            "misconception": "counts_bid_liquidity_for_a_market_buy",
+            "absolute_gap": "8",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "6",
+        "min_distinct_wrong_pair_gap": "6"
+      },
+      "follow_up": {
+        "question": "Why does bid quantity not help fill a market buy?",
+        "reference": "The market buy needs sellers. Existing bids are other buyers and cannot supply the required opposing shares."
+      }
+    }
+  ]
+}

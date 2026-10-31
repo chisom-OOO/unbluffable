@@ -1,0 +1,4096 @@
+{
+  "template_id": "qd_F002",
+  "pack": "quant_dev",
+  "topic": "Order book and matching",
+  "topics": [
+    "Order book and matching"
+  ],
+  "source_topic": "Best ask after a market sweep",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "What happens if the market order is larger than all live asks?",
+    "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Start with an empty book. Limits: A sell 16 at 95; B sell 8 at 92. Market buy 9. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 95,
+            "qty": 16,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 92,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[95,15]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell sixteen at ninety-five; B sell eight at ninety-two. Market buy nine. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[92,8]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[95,16]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "92"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "8"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "9"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "95"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "15"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Begin with no resting orders. Limits: A sell 62 at 116; B sell 4 at 115. Market buy 12. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 116,
+            "qty": 62,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 115,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 12,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[116,54]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell sixty-two at one hundred and sixteen; B sell four at one hundred and fifteen. Market buy twelve. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[115,4]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[116,62]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "115"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "4"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "12"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "116"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "54"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Replay into an empty book. Limits: A sell 35 at 107; B sell 15 at 104. Market buy 26. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 107,
+            "qty": 35,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 104,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 26,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[107,24]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell thirty-five at one hundred and seven; B sell fifteen at one hundred and four. Market buy twenty-six. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[104,15]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[107,35]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "104"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "15"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "26"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "107"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Use an initially empty book. Limits: A sell 74 at 99; B sell 14 at 96. Market buy 24. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 99,
+            "qty": 74,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 96,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 24,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[99,64]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell seventy-four at ninety-nine; B sell fourteen at ninety-six. Market buy twenty-four. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[96,14]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[99,74]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "96"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "14"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "24"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "99"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "64"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Begin with an empty book. Limits: A sell 50 at 108; B sell 12 at 105. Market buy 17. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 108,
+            "qty": 50,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 105,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 17,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[108,45]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell fifty at one hundred and eight; B sell twelve at one hundred and five. Market buy seventeen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[105,12]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[108,50]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "105"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "12"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "17"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "108"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Start with an empty book. Limits: A sell 32 at 98; B sell 9 at 93. Market buy 12. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 98,
+            "qty": 32,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 93,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 12,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[98,29]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell thirty-two at ninety-eight; B sell nine at ninety-three. Market buy twelve. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[93,9]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[98,32]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "93"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "9"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "12"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "98"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "29"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Begin with no resting orders. Limits: A sell 61 at 92; B sell 9 at 91. Market buy 19. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 92,
+            "qty": 61,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 91,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 19,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[92,51]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell sixty-one at ninety-two; B sell nine at ninety-one. Market buy nineteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[91,9]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[92,61]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "91"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "9"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "19"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "92"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Replay into an empty book. Limits: A sell 17 at 114; B sell 4 at 110. Market buy 9. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 114,
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 110,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[114,12]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell seventeen at one hundred and fourteen; B sell four at one hundred and ten. Market buy nine. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[110,4]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[114,17]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "110"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "4"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "9"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "114"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "12"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Use an initially empty book. Limits: A sell 29 at 103; B sell 4 at 100. Market buy 13. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 103,
+            "qty": 29,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 100,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 13,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[103,20]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell twenty-nine at one hundred and three; B sell four at one hundred. Market buy thirteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[100,4]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[103,29]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "100"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "4"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "13"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "103"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Begin with an empty book. Limits: A sell 46 at 95; B sell 9 at 90. Market buy 10. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 95,
+            "qty": 46,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 90,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 10,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[95,45]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell forty-six at ninety-five; B sell nine at ninety. Market buy ten. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[90,9]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[95,46]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "90"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "9"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "10"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "95"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Start with an empty book. Limits: A sell 38 at 117; B sell 10 at 113. Market buy 13. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 117,
+            "qty": 38,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 113,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 13,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[117,35]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell thirty-eight at one hundred and seventeen; B sell ten at one hundred and thirteen. Market buy thirteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[113,10]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[117,38]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "113"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "10"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "13"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "117"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "35"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Begin with no resting orders. Limits: A sell 38 at 112; B sell 5 at 111. Market buy 7. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 112,
+            "qty": 38,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 111,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 7,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[112,36]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell thirty-eight at one hundred and twelve; B sell five at one hundred and eleven. Market buy seven. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[111,5]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[112,38]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "111"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "5"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "7"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "112"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "36"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Replay into an empty book. Limits: A sell 56 at 98; B sell 7 at 94. Market buy 9. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 98,
+            "qty": 56,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 94,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[98,54]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell fifty-six at ninety-eight; B sell seven at ninety-four. Market buy nine. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[94,7]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[98,56]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "94"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "7"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "9"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "98"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "54"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Use an initially empty book. Limits: A sell 28 at 102; B sell 14 at 98. Market buy 24. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 102,
+            "qty": 28,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 98,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 24,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[102,18]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell twenty-eight at one hundred and two; B sell fourteen at ninety-eight. Market buy twenty-four. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[98,14]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[102,28]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "98"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "14"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "24"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "102"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "18"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Begin with an empty book. Limits: A sell 26 at 97; B sell 14 at 95. Market buy 18. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 97,
+            "qty": 26,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 95,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 18,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[97,22]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell twenty-six at ninety-seven; B sell fourteen at ninety-five. Market buy eighteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[95,14]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[97,26]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "95"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "14"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "18"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "97"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "22"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Start with an empty book. Limits: A sell 35 at 109; B sell 13 at 105. Market buy 22. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 109,
+            "qty": 35,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 105,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 22,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[109,26]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell thirty-five at one hundred and nine; B sell thirteen at one hundred and five. Market buy twenty-two. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[105,13]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[109,35]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "105"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "13"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "22"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "109"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "26"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Begin with no resting orders. Limits: A sell 37 at 99; B sell 3 at 96. Market buy 10. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 99,
+            "qty": 37,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 96,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 10,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[99,30]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell thirty-seven at ninety-nine; B sell three at ninety-six. Market buy ten. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[96,3]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[99,37]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "96"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "3"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "10"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "99"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "30"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Replay into an empty book. Limits: A sell 42 at 100; B sell 3 at 97. Market buy 7. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 100,
+            "qty": 42,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 97,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 7,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[100,38]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell forty-two at one hundred; B sell three at ninety-seven. Market buy seven. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[97,3]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[100,42]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "97"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "3"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "7"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "100"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "38"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Use an initially empty book. Limits: A sell 12 at 119; B sell 4 at 115. Market buy 10. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 119,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 115,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 10,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[119,6]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell twelve at one hundred and nineteen; B sell four at one hundred and fifteen. Market buy ten. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[115,4]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[119,12]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "115"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "4"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "10"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "119"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "6"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Begin with an empty book. Limits: A sell 12 at 110; B sell 4 at 109. Market buy 9. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 110,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 109,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[110,7]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell twelve at one hundred and ten; B sell four at one hundred and nine. Market buy nine. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[109,4]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[110,12]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "109"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "4"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "9"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "110"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Start with an empty book. Limits: A sell 60 at 104; B sell 4 at 100. Market buy 11. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 104,
+            "qty": 60,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 100,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 11,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[104,53]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell sixty at one hundred and four; B sell four at one hundred. Market buy eleven. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[100,4]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[104,60]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "100"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "4"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "11"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "104"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "53"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Begin with no resting orders. Limits: A sell 32 at 118; B sell 10 at 113. Market buy 21. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 118,
+            "qty": 32,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 113,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 21,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[118,21]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell thirty-two at one hundred and eighteen; B sell ten at one hundred and thirteen. Market buy twenty-one. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[113,10]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[118,32]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "113"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "10"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "21"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "118"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Replay into an empty book. Limits: A sell 28 at 104; B sell 10 at 100. Market buy 15. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 104,
+            "qty": 28,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 100,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 15,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[104,23]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell twenty-eight at one hundred and four; B sell ten at one hundred. Market buy fifteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[100,10]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[104,28]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "100"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "10"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "15"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "104"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "23"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Use an initially empty book. Limits: A sell 26 at 101; B sell 12 at 98. Market buy 23. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 101,
+            "qty": 26,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 98,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 23,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[101,15]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell twenty-six at one hundred and one; B sell twelve at ninety-eight. Market buy twenty-three. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[98,12]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[101,26]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "98"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "12"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "23"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "101"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "15"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Begin with an empty book. Limits: A sell 55 at 107; B sell 11 at 104. Market buy 14. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 107,
+            "qty": 55,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 104,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 14,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[107,52]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell fifty-five at one hundred and seven; B sell eleven at one hundred and four. Market buy fourteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[104,11]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[107,55]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "104"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "11"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "14"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "107"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "52"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Start with an empty book. Limits: A sell 26 at 119; B sell 12 at 115. Market buy 20. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 119,
+            "qty": 26,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 115,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 20,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[119,18]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell twenty-six at one hundred and nineteen; B sell twelve at one hundred and fifteen. Market buy twenty. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[115,12]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[119,26]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "115"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "12"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "20"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "119"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "18"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Begin with no resting orders. Limits: A sell 52 at 103; B sell 3 at 100. Market buy 9. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 103,
+            "qty": 52,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 100,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[103,46]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell fifty-two at one hundred and three; B sell three at one hundred. Market buy nine. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[100,3]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[103,52]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "100"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "3"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "9"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "103"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "46"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Replay into an empty book. Limits: A sell 46 at 110; B sell 5 at 105. Market buy 13. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 110,
+            "qty": 46,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 105,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 13,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[110,38]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell forty-six at one hundred and ten; B sell five at one hundred and five. Market buy thirteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[105,5]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[110,46]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "105"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "5"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "13"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "110"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "38"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Use an initially empty book. Limits: A sell 22 at 112; B sell 6 at 109. Market buy 16. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 112,
+            "qty": 22,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 109,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 16,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[112,12]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell twenty-two at one hundred and twelve; B sell six at one hundred and nine. Market buy sixteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[109,6]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[112,22]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "109"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "6"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "16"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "112"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "12"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Begin with an empty book. Limits: A sell 28 at 108; B sell 10 at 103. Market buy 16. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 108,
+            "qty": 28,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 103,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 16,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[108,22]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell twenty-eight at one hundred and eight; B sell ten at one hundred and three. Market buy sixteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[103,10]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[108,28]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "103"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "10"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "16"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "108"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "22"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Start with an empty book. Limits: A sell 39 at 96; B sell 12 at 95. Market buy 24. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 96,
+            "qty": 39,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 95,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 24,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[96,27]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell thirty-nine at ninety-six; B sell twelve at ninety-five. Market buy twenty-four. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[95,12]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[96,39]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "95"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "12"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "24"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "96"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Begin with no resting orders. Limits: A sell 54 at 97; B sell 10 at 93. Market buy 13. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 97,
+            "qty": 54,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 93,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 13,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[97,51]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell fifty-four at ninety-seven; B sell ten at ninety-three. Market buy thirteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[93,10]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[97,54]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "93"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "10"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "13"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "97"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Replay into an empty book. Limits: A sell 57 at 96; B sell 14 at 92. Market buy 17. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 96,
+            "qty": 57,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 92,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 17,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[96,54]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell fifty-seven at ninety-six; B sell fourteen at ninety-two. Market buy seventeen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[92,14]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[96,57]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "92"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "14"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "17"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "96"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "54"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Use an initially empty book. Limits: A sell 41 at 111; B sell 8 at 109. Market buy 15. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 111,
+            "qty": 41,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 109,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 15,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[111,34]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell forty-one at one hundred and eleven; B sell eight at one hundred and nine. Market buy fifteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[109,8]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[111,41]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "109"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "8"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "15"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "111"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "34"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Begin with an empty book. Limits: A sell 40 at 113; B sell 15 at 109. Market buy 16. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 113,
+            "qty": 40,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 109,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 16,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[113,39]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell forty at one hundred and thirteen; B sell fifteen at one hundred and nine. Market buy sixteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[109,15]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[113,40]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "109"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "15"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "16"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "113"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Start with an empty book. Limits: A sell 38 at 116; B sell 7 at 113. Market buy 19. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 116,
+            "qty": 38,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 113,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 19,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[116,26]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell thirty-eight at one hundred and sixteen; B sell seven at one hundred and thirteen. Market buy nineteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[113,7]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[116,38]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "113"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "7"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "19"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "116"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "26"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Begin with no resting orders. Limits: A sell 61 at 112; B sell 11 at 108. Market buy 14. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 112,
+            "qty": 61,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 108,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 14,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[112,58]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell sixty-one at one hundred and twelve; B sell eleven at one hundred and eight. Market buy fourteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[108,11]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[112,61]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "108"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "11"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "14"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "112"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "58"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Replay into an empty book. Limits: A sell 50 at 114; B sell 2 at 109. Market buy 7. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 114,
+            "qty": 50,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 109,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 7,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[114,45]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell fifty at one hundred and fourteen; B sell two at one hundred and nine. Market buy seven. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[109,2]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[114,50]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "109"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "2"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "7"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "114"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Use an initially empty book. Limits: A sell 59 at 109; B sell 15 at 104. Market buy 23. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 109,
+            "qty": 59,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 104,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 23,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[109,51]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell fifty-nine at one hundred and nine; B sell fifteen at one hundred and four. Market buy twenty-three. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[104,15]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[109,59]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "104"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "15"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "23"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "109"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Begin with an empty book. Limits: A sell 22 at 100; B sell 4 at 96. Market buy 16. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 100,
+            "qty": 22,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 96,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 16,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[100,10]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell twenty-two at one hundred; B sell four at ninety-six. Market buy sixteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[96,4]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[100,22]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "96"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "4"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "16"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "100"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Start with an empty book. Limits: A sell 57 at 101; B sell 13 at 97. Market buy 25. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 101,
+            "qty": 57,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 97,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 25,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[101,45]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell fifty-seven at one hundred and one; B sell thirteen at ninety-seven. Market buy twenty-five. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[97,13]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[101,57]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "97"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "13"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "25"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "101"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Begin with no resting orders. Limits: A sell 44 at 94; B sell 5 at 90. Market buy 17. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 94,
+            "qty": 44,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 90,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 17,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[94,32]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell forty-four at ninety-four; B sell five at ninety. Market buy seventeen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[90,5]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[94,44]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "90"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "5"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "17"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "94"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "32"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Replay into an empty book. Limits: A sell 48 at 105; B sell 11 at 103. Market buy 19. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 105,
+            "qty": 48,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 103,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 19,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[105,40]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell forty-eight at one hundred and five; B sell eleven at one hundred and three. Market buy nineteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[103,11]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[105,48]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "103"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "11"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "19"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "105"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "40"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Use an initially empty book. Limits: A sell 24 at 106; B sell 7 at 101. Market buy 19. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 106,
+            "qty": 24,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 101,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 19,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[106,12]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell twenty-four at one hundred and six; B sell seven at one hundred and one. Market buy nineteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[101,7]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[106,24]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "101"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "7"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "19"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "106"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "12"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Begin with an empty book. Limits: A sell 31 at 115; B sell 4 at 111. Market buy 11. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 115,
+            "qty": 31,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 111,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 11,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[115,24]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell thirty-one at one hundred and fifteen; B sell four at one hundred and eleven. Market buy eleven. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[111,4]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[115,31]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "111"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "4"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "11"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "115"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Start with an empty book. Limits: A sell 28 at 92; B sell 3 at 90. Market buy 15. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 92,
+            "qty": 28,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 90,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 15,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[92,16]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Start with an empty book. Limits: A sell twenty-eight at ninety-two; B sell three at ninety. Market buy fifteen. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[90,3]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[92,28]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "90"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "3"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "15"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "92"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Begin with no resting orders. Limits: A sell 46 at 102; B sell 6 at 97. Market buy 11. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 102,
+            "qty": 46,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 97,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 11,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[102,41]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no resting orders. Limits: A sell forty-six at one hundred and two; B sell six at ninety-seven. Market buy eleven. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[97,6]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[102,46]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "97"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "6"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "11"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "102"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "41"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Could price-level totals alone produce this output?",
+        "reference": "They can produce the best price and aggregate remaining quantity here. Per-order records are still needed if later cancellations or time-priority allocations matter."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Replay into an empty book. Limits: A sell 53 at 115; B sell 4 at 111. Market buy 6. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 115,
+            "qty": 53,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 111,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 6,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[115,51]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Replay into an empty book. Limits: A sell fifty-three at one hundred and fifteen; B sell four at one hundred and eleven. Market buy six. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[111,4]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[115,53]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "111"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "4"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "6"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "115"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you avoid sorting the whole book for every market order?",
+        "reference": "Keep asks ordered by price and maintain the current best level. Consume quantities directly from the front of each level and remove only exhausted levels."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Use an initially empty book. Limits: A sell 54 at 93; B sell 6 at 92. Market buy 12. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 93,
+            "qty": 54,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 92,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 12,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[93,48]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Use an initially empty book. Limits: A sell fifty-four at ninety-three; B sell six at ninety-two. Market buy twelve. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[92,6]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[93,54]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "92"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "6"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "12"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "93"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "48"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What happens if the market order is larger than all live asks?",
+        "reference": "Fill only the available ask quantity. The remaining market quantity is unfilled under this contract and does not become a resting order."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Begin with an empty book. Limits: A sell 55 at 106; B sell 2 at 103. Market buy 12. What are the remaining best ask price and quantity, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 106,
+            "qty": 55,
+            "side": "sell"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 103,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "kind": "market",
+            "qty": 12,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "[106,45]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best ask after a market sweep",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with an empty book. Limits: A sell fifty-five at one hundred and six; B sell two at one hundred and three. Market buy twelve. What are the remaining best ask price and quantity, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[103,2]",
+          "misconceptions": [
+            "matches_by_arrival_instead_of_price"
+          ]
+        },
+        {
+          "value": "[106,55]",
+          "misconceptions": [
+            "stops_after_the_first_price_level"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_ask_price_before_market",
+          "value": "103"
+        },
+        {
+          "name": "best_ask_qty_before_market",
+          "value": "2"
+        },
+        {
+          "name": "market_buy_qty",
+          "value": "12"
+        },
+        {
+          "name": "remaining_best_ask_price",
+          "value": "106"
+        },
+        {
+          "name": "remaining_best_ask_qty",
+          "value": "45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must a partially filled ask remain in the book?",
+        "reference": "Only executed shares are removed. Its unfilled remainder retains its price and original priority under the stated model."
+      }
+    }
+  ],
+  "answer_kind": "list",
+  "coding_only": true
+}

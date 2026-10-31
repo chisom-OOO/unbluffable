@@ -1,0 +1,1351 @@
+{
+  "template_id": "qd_F002",
+  "pack": "quant_dev",
+  "topic": "Order book and matching",
+  "difficulty": "Medium",
+  "function_name": "get_remaining_best_ask",
+  "signature": "def get_remaining_best_ask(events: list[dict]) -> list[int]:",
+  "parameters": [
+    {
+      "name": "events",
+      "type": "list[dict]",
+      "param": "events"
+    }
+  ],
+  "return_type": "list[int]",
+  "statement": "Given a sequence of order book events representing limit sell additions and market buy executions, determine the state of the ask side after processing all events in order. The events list contains the orders to be applied sequentially to an initially empty book. Return the price and total quantity at the best remaining ask level after all matching is complete.",
+  "examples": [
+    0,
+    1
+  ],
+  "tests": [
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 95,
+          "qty": 16,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 92,
+          "qty": 8,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 9,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 116,
+          "qty": 62,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 115,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 12,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 107,
+          "qty": 35,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 104,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 26,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 99,
+          "qty": 74,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 96,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 24,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 108,
+          "qty": 50,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 105,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 17,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 98,
+          "qty": 32,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 93,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 12,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 92,
+          "qty": 61,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 91,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 19,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 114,
+          "qty": 17,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 110,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 9,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 103,
+          "qty": 29,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 100,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 13,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 95,
+          "qty": 46,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 90,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 10,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 117,
+          "qty": 38,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 113,
+          "qty": 10,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 13,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 112,
+          "qty": 38,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 111,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 7,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 98,
+          "qty": 56,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 94,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 9,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 102,
+          "qty": 28,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 98,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 24,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 97,
+          "qty": 26,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 95,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 18,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 109,
+          "qty": 35,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 105,
+          "qty": 13,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 22,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 99,
+          "qty": 37,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 96,
+          "qty": 3,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 10,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 100,
+          "qty": 42,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 97,
+          "qty": 3,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 7,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 119,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 115,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 10,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 110,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 109,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 9,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 104,
+          "qty": 60,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 100,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 11,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 118,
+          "qty": 32,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 113,
+          "qty": 10,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 21,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 104,
+          "qty": 28,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 100,
+          "qty": 10,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 15,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 101,
+          "qty": 26,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 98,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 23,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 107,
+          "qty": 55,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 104,
+          "qty": 11,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 14,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 119,
+          "qty": 26,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 115,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 20,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 103,
+          "qty": 52,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 100,
+          "qty": 3,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 9,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 110,
+          "qty": 46,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 105,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 13,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 112,
+          "qty": 22,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 109,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 16,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 108,
+          "qty": 28,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 103,
+          "qty": 10,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 16,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 96,
+          "qty": 39,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 95,
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 24,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 97,
+          "qty": 54,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 93,
+          "qty": 10,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 13,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 96,
+          "qty": 57,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 92,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 17,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 111,
+          "qty": 41,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 109,
+          "qty": 8,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 15,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 113,
+          "qty": 40,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 109,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 16,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 116,
+          "qty": 38,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 113,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 19,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 112,
+          "qty": 61,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 108,
+          "qty": 11,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 14,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 114,
+          "qty": 50,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 109,
+          "qty": 2,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 7,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 109,
+          "qty": 59,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 104,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 23,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 100,
+          "qty": 22,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 96,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 16,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 101,
+          "qty": 57,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 97,
+          "qty": 13,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 25,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 94,
+          "qty": 44,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 90,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 17,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 105,
+          "qty": 48,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 103,
+          "qty": 11,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 19,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 106,
+          "qty": 24,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 101,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 19,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 115,
+          "qty": 31,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 111,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 11,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 92,
+          "qty": 28,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 90,
+          "qty": 3,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 15,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 102,
+          "qty": 46,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 97,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 11,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 115,
+          "qty": 53,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 111,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 6,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 93,
+          "qty": 54,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 92,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 12,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 106,
+          "qty": 55,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 103,
+          "qty": 2,
+          "side": "sell"
+        },
+        {
+          "kind": "market",
+          "qty": 12,
+          "side": "buy"
+        }
+      ]
+    ]
+  ],
+  "expected": [
+    "[95,15]",
+    "[116,54]",
+    "[107,24]",
+    "[99,64]",
+    "[108,45]",
+    "[98,29]",
+    "[92,51]",
+    "[114,12]",
+    "[103,20]",
+    "[95,45]",
+    "[117,35]",
+    "[112,36]",
+    "[98,54]",
+    "[102,18]",
+    "[97,22]",
+    "[109,26]",
+    "[99,30]",
+    "[100,38]",
+    "[119,6]",
+    "[110,7]",
+    "[104,53]",
+    "[118,21]",
+    "[104,23]",
+    "[101,15]",
+    "[107,52]",
+    "[119,18]",
+    "[103,46]",
+    "[110,38]",
+    "[112,12]",
+    "[108,22]",
+    "[96,27]",
+    "[97,51]",
+    "[96,54]",
+    "[111,34]",
+    "[113,39]",
+    "[116,26]",
+    "[112,58]",
+    "[114,45]",
+    "[109,51]",
+    "[100,10]",
+    "[101,45]",
+    "[94,32]",
+    "[105,40]",
+    "[106,12]",
+    "[115,24]",
+    "[92,16]",
+    "[102,41]",
+    "[115,51]",
+    "[93,48]",
+    "[106,45]"
+  ],
+  "wrong_methods": [
+    {
+      "name": "matches by arrival instead of price",
+      "outputs": [
+        "[92,8]",
+        "[115,4]",
+        "[104,15]",
+        "[96,14]",
+        "[105,12]",
+        "[93,9]",
+        "[91,9]",
+        "[110,4]",
+        "[100,4]",
+        "[90,9]",
+        "[113,10]",
+        "[111,5]",
+        "[94,7]",
+        "[98,14]",
+        "[95,14]",
+        "[105,13]",
+        "[96,3]",
+        "[97,3]",
+        "[115,4]",
+        "[109,4]",
+        "[100,4]",
+        "[113,10]",
+        "[100,10]",
+        "[98,12]",
+        "[104,11]",
+        "[115,12]",
+        "[100,3]",
+        "[105,5]",
+        "[109,6]",
+        "[103,10]",
+        "[95,12]",
+        "[93,10]",
+        "[92,14]",
+        "[109,8]",
+        "[109,15]",
+        "[113,7]",
+        "[108,11]",
+        "[109,2]",
+        "[104,15]",
+        "[96,4]",
+        "[97,13]",
+        "[90,5]",
+        "[103,11]",
+        "[101,7]",
+        "[111,4]",
+        "[90,3]",
+        "[97,6]",
+        "[111,4]",
+        "[92,6]",
+        "[103,2]"
+      ],
+      "source": "def solve(params):\n    events=tuple(params[\"events\"])\n    asks=[]\n    for e in events:\n        e=dict(e)\n        if e.get(\"kind\")==\"add\" and e.get(\"side\")==\"sell\":\n            asks.append([e[\"price\"], e[\"qty\"]])\n        elif e.get(\"kind\")==\"market\" and e.get(\"side\")==\"buy\":\n            qty=e[\"qty\"]\n            for lvl in asks:\n                if qty<=0:\n                    break\n                take=min(lvl[1], qty)\n                lvl[1]-=take\n                qty-=take\n            asks=[lvl for lvl in asks if lvl[1]>0]\n    if not asks:\n        return [None,0]\n    best=min(asks, key=lambda x: x[0]) if asks else [None,0]\n    return [best[0], best[1]]\n"
+    },
+    {
+      "name": "stops after the first price level",
+      "outputs": [
+        "[95,16]",
+        "[116,62]",
+        "[107,35]",
+        "[99,74]",
+        "[108,50]",
+        "[98,32]",
+        "[92,61]",
+        "[114,17]",
+        "[103,29]",
+        "[95,46]",
+        "[117,38]",
+        "[112,38]",
+        "[98,56]",
+        "[102,28]",
+        "[97,26]",
+        "[109,35]",
+        "[99,37]",
+        "[100,42]",
+        "[119,12]",
+        "[110,12]",
+        "[104,60]",
+        "[118,32]",
+        "[104,28]",
+        "[101,26]",
+        "[107,55]",
+        "[119,26]",
+        "[103,52]",
+        "[110,46]",
+        "[112,22]",
+        "[108,28]",
+        "[96,39]",
+        "[97,54]",
+        "[96,57]",
+        "[111,41]",
+        "[113,40]",
+        "[116,38]",
+        "[112,61]",
+        "[114,50]",
+        "[109,59]",
+        "[100,22]",
+        "[101,57]",
+        "[94,44]",
+        "[105,48]",
+        "[106,24]",
+        "[115,31]",
+        "[92,28]",
+        "[102,46]",
+        "[115,53]",
+        "[93,54]",
+        "[106,55]"
+      ],
+      "source": "def solve(params):\n    events=tuple(params[\"events\"])\n    asks=[]\n    for e in events:\n        e=dict(e)\n        if e.get(\"kind\")==\"add\" and e.get(\"side\")==\"sell\":\n            asks.append([e[\"price\"], e[\"qty\"]])\n        elif e.get(\"kind\")==\"market\" and e.get(\"side\")==\"buy\":\n            qty=e[\"qty\"]\n            if asks:\n                asks_sorted=sorted(asks, key=lambda x: x[0])\n                lvl=asks_sorted[0]\n                take=min(lvl[1], qty)\n                lvl[1]-=take\n                asks=[lvl for lvl in asks_sorted if lvl[1]>0]\n    if not asks:\n        return [None,0]\n    best=min(asks, key=lambda x: x[0])\n    return [best[0], best[1]]\n"
+    }
+  ],
+  "solver_source": "def solve(params):\n    from fractions import Fraction\n    events=tuple(params[\"events\"])\n    asks=[]\n    best_price_before=None\n    best_qty_before=None\n    market_qty=None\n    for e in events:\n        e=dict(e)\n        if e.get(\"kind\")==\"add\" and e.get(\"side\")==\"sell\":\n            asks.append([e[\"price\"], e[\"qty\"], e.get(\"id\")])\n        elif e.get(\"kind\")==\"market\" and e.get(\"side\")==\"buy\":\n            market_qty=e[\"qty\"]\n            if asks:\n                asks_sorted=sorted(asks, key=lambda x: x[0])\n                best_price_before=asks_sorted[0][0]\n                best_qty_before=asks_sorted[0][1]\n            qty_to_fill=market_qty\n            asks_sorted=sorted(asks, key=lambda x: x[0])\n            for lvl in asks_sorted:\n                if qty_to_fill<=0:\n                    break\n                take=min(lvl[1], qty_to_fill)\n                lvl[1]-=take\n                qty_to_fill-=take\n            asks=[lvl for lvl in asks_sorted if lvl[1]>0]\n    if not asks:\n        answer=[None, 0]\n        remaining_best_price=None\n        remaining_best_qty=0\n    else:\n        asks_sorted=sorted(asks, key=lambda x: x[0])\n        remaining_best_price=asks_sorted[0][0]\n        remaining_best_qty=asks_sorted[0][1]\n        answer=[remaining_best_price, remaining_best_qty]\n    steps={\"best_ask_price_before_market\": best_price_before if best_price_before is not None else 0, \"best_ask_qty_before_market\": best_qty_before if best_qty_before is not None else 0, \"market_buy_qty\": market_qty if market_qty is not None else 0, \"remaining_best_ask_price\": remaining_best_price if remaining_best_price is not None else 0, \"remaining_best_ask_qty\": remaining_best_qty}\n    return {\"answer\": answer, \"steps\": steps}\n",
+  "verification": {
+    "verified": true,
+    "variants": 50,
+    "solver_reproduced": 50,
+    "wrong_methods_kept": 2,
+    "wrong_methods_given": 2,
+    "types_corrected_from_data": 1
+  },
+  "models": {
+    "spec_author": "meta-models/muse-spark-open-1026"
+  }
+}

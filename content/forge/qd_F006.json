@@ -1,0 +1,4294 @@
+{
+  "template_id": "qd_F006",
+  "pack": "quant_dev",
+  "topic": "Position and P&L accounting",
+  "topics": [
+    "Position and P&L accounting"
+  ],
+  "source_topic": "Average cost after a partial sale",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "What if the sale closes the entire position before the final buy?",
+    "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Start flat. Buy 7 at 100; buy 9 at 110; sell 15 at 116; buy 10 at 114. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 100,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 116,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "price": 114,
+            "qty": 10,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "9965/88",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start flat. Buy seven at one hundred; buy nine at one hundred and ten; sell fifteen at one hundred and sixteen; buy ten at one hundred and fourteen. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1250/11",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1090/11",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "845/8"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "11"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "9965/8"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "35/88",
+            "relative_gap": "7/1993"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "1245/88",
+            "relative_gap": "249/1993"
+          }
+        ],
+        "min_wrong_pair_gap": "160/11",
+        "min_distinct_wrong_pair_gap": "160/11"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Begin with zero shares. Buy 9 at 106; buy 2 at 108; sell 8 at 123; buy 6 at 108. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 106,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 123,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "price": 108,
+            "qty": 6,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1182/11",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with zero shares. Buy nine at one hundred and six; buy two at one hundred and eight; sell eight at one hundred and twenty-three; buy six at one hundred and eight. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "970/9",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "278/3",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1170/11"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "9"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "10638/11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "32/99",
+            "relative_gap": "16/5319"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "488/33",
+            "relative_gap": "244/1773"
+          }
+        ],
+        "min_wrong_pair_gap": "136/9",
+        "min_distinct_wrong_pair_gap": "136/9"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Use no opening position. Buy 4 at 92; buy 7 at 99; sell 1 at 103; buy 9 at 93. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 92,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 99,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 1,
+            "side": "sell"
+          },
+          {
+            "price": 93,
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1043/11",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Use no opening position. Buy four at ninety-two; buy seven at ninety-nine; sell one at one hundred and three; buy nine at ninety-three. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1806/19",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1795/19",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1061/11"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "19"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "19817/11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "49/209",
+            "relative_gap": "7/2831"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "72/209",
+            "relative_gap": "72/19817"
+          }
+        ],
+        "min_wrong_pair_gap": "11/19",
+        "min_distinct_wrong_pair_gap": "11/19"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Begin with no position. Buy 10 at 104; buy 10 at 110; sell 4 at 121; buy 1 at 115. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 104,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 121,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "price": 115,
+            "qty": 1,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1827/17",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no position. Buy ten at one hundred and four; buy ten at one hundred and ten; sell four at one hundred and twenty-one; buy one at one hundred and fifteen. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1839/17",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1771/17",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "107"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "17"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "1827"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "12/17",
+            "relative_gap": "4/609"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "56/17",
+            "relative_gap": "8/261"
+          }
+        ],
+        "min_wrong_pair_gap": "4",
+        "min_distinct_wrong_pair_gap": "4"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Start with zero shares. Buy 6 at 99; buy 9 at 105; sell 10 at 113; buy 3 at 110. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 99,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 113,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "price": 110,
+            "qty": 3,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "843/8",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start with zero shares. Buy six at ninety-nine; buy nine at one hundred and five; sell ten at one hundred and thirteen; buy three at one hundred and ten. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "855/8",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "739/8",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "513/5"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "8"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "843"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "3/2",
+            "relative_gap": "4/281"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "13",
+            "relative_gap": "104/843"
+          }
+        ],
+        "min_wrong_pair_gap": "29/2",
+        "min_distinct_wrong_pair_gap": "29/2"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Start flat. Buy 2 at 101; buy 3 at 105; sell 4 at 121; buy 4 at 112. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 101,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 121,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "price": 112,
+            "qty": 4,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "2757/25",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start flat. Buy two at one hundred and one; buy three at one hundred and five; sell four at one hundred and twenty-one; buy four at one hundred and twelve. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "553/5",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "481/5",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "517/5"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "5"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "2757/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "8/25",
+            "relative_gap": "8/2757"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "352/25",
+            "relative_gap": "352/2757"
+          }
+        ],
+        "min_wrong_pair_gap": "72/5",
+        "min_distinct_wrong_pair_gap": "72/5"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Begin with zero shares. Buy 5 at 104; buy 10 at 107; sell 2 at 117; buy 7 at 112. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 104,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 117,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "price": 112,
+            "qty": 7,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1081/10",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with zero shares. Buy five at one hundred and four; buy ten at one hundred and seven; sell two at one hundred and seventeen; buy seven at one hundred and twelve. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1083/10",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "107",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "106"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "20"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "2162"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "1/5",
+            "relative_gap": "2/1081"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "11/10",
+            "relative_gap": "11/1081"
+          }
+        ],
+        "min_wrong_pair_gap": "13/10",
+        "min_distinct_wrong_pair_gap": "13/10"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Use no opening position. Buy 6 at 95; buy 9 at 101; sell 14 at 111; buy 5 at 102. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 95,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "price": 102,
+            "qty": 5,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "3043/30",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Use no opening position. Buy six at ninety-five; buy nine at one hundred and one; sell fourteen at one hundred and eleven; buy five at one hundred and two. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "611/6",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "145/2",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "493/5"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "6"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "3043/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "2/5",
+            "relative_gap": "12/3043"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "434/15",
+            "relative_gap": "868/3043"
+          }
+        ],
+        "min_wrong_pair_gap": "88/3",
+        "min_distinct_wrong_pair_gap": "88/3"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Begin with no position. Buy 9 at 91; buy 3 at 99; sell 3 at 107; buy 6 at 88. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 91,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 99,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "price": 88,
+            "qty": 6,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "91",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no position. Buy nine at ninety-one; buy three at ninety-nine; sell three at one hundred and seven; buy six at eighty-eight. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "457/5",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "441/5",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "93"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "15"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "1365"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "2/5",
+            "relative_gap": "2/455"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "14/5",
+            "relative_gap": "2/65"
+          }
+        ],
+        "min_wrong_pair_gap": "16/5",
+        "min_distinct_wrong_pair_gap": "16/5"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Start with zero shares. Buy 3 at 93; buy 10 at 96; sell 4 at 113; buy 7 at 106. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 93,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 96,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 113,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "price": 106,
+            "qty": 7,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "20797/208",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start with zero shares. Buy three at ninety-three; buy ten at ninety-six; sell four at one hundred and thirteen; buy seven at one hundred and six. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "803/8",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1529/16",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1239/13"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "16"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "20797/13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "81/208",
+            "relative_gap": "81/20797"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "115/26",
+            "relative_gap": "920/20797"
+          }
+        ],
+        "min_wrong_pair_gap": "77/16",
+        "min_distinct_wrong_pair_gap": "77/16"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Start flat. Buy 3 at 98; buy 2 at 106; sell 1 at 111; buy 8 at 102. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 98,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 1,
+            "side": "sell"
+          },
+          {
+            "price": 102,
+            "qty": 8,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1526/15",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start flat. Buy three at ninety-eight; buy two at one hundred and six; sell one at one hundred and eleven; buy eight at one hundred and two. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "102",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1211/12",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "506/5"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "12"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "6104/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "4/15",
+            "relative_gap": "2/763"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "49/60",
+            "relative_gap": "7/872"
+          }
+        ],
+        "min_wrong_pair_gap": "13/12",
+        "min_distinct_wrong_pair_gap": "13/12"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Begin with zero shares. Buy 6 at 90; buy 7 at 97; sell 10 at 108; buy 6 at 94. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 90,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 97,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "price": 94,
+            "qty": 6,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1221/13",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with zero shares. Buy six at ninety; buy seven at ninety-seven; sell ten at one hundred and eight; buy six at ninety-four. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "95",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "703/9",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1219/13"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "9"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "10989/13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "14/13",
+            "relative_gap": "14/1221"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "1850/117",
+            "relative_gap": "50/297"
+          }
+        ],
+        "min_wrong_pair_gap": "152/9",
+        "min_distinct_wrong_pair_gap": "152/9"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Use no opening position. Buy 6 at 101; buy 3 at 110; sell 2 at 112; buy 9 at 111. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 101,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 112,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "price": 111,
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1727/16",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Use no opening position. Buy six at one hundred and one; buy three at one hundred and ten; sell two at one hundred and twelve; buy nine at one hundred and eleven. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1733/16",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1711/16",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "104"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "16"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "1727"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "3/8",
+            "relative_gap": "6/1727"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "1",
+            "relative_gap": "16/1727"
+          }
+        ],
+        "min_wrong_pair_gap": "11/8",
+        "min_distinct_wrong_pair_gap": "11/8"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Begin with no position. Buy 6 at 96; buy 7 at 103; sell 3 at 114; buy 1 at 106. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 96,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "price": 106,
+            "qty": 1,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "14348/143",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no position. Buy six at ninety-six; buy seven at one hundred and three; sell three at one hundred and fourteen; buy one at one hundred and six. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "1115/11",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1061/11",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1297/13"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "11"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "14348/13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "147/143",
+            "relative_gap": "147/14348"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "555/143",
+            "relative_gap": "555/14348"
+          }
+        ],
+        "min_wrong_pair_gap": "54/11",
+        "min_distinct_wrong_pair_gap": "54/11"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Start with zero shares. Buy 10 at 109; buy 3 at 118; sell 9 at 121; buy 9 at 119. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 109,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 118,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 121,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "price": 119,
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "19699/169",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start with zero shares. Buy ten at one hundred and nine; buy three at one hundred and eighteen; sell nine at one hundred and twenty-one; buy nine at one hundred and nineteen. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "118",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1426/13",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1444/13"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "13"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "19699/13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "243/169",
+            "relative_gap": "243/19699"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "1161/169",
+            "relative_gap": "1161/19699"
+          }
+        ],
+        "min_wrong_pair_gap": "108/13",
+        "min_distinct_wrong_pair_gap": "108/13"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Start flat. Buy 5 at 100; buy 9 at 108; sell 13 at 114; buy 5 at 115. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 100,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "price": 115,
+            "qty": 5,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1587/14",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start flat. Buy five at one hundred; buy nine at one hundred and eight; sell thirteen at one hundred and fourteen; buy five at one hundred and fifteen. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "683/6",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "565/6",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "736/7"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "6"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "4761/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "10/21",
+            "relative_gap": "20/4761"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "403/21",
+            "relative_gap": "806/4761"
+          }
+        ],
+        "min_wrong_pair_gap": "59/3",
+        "min_distinct_wrong_pair_gap": "59/3"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Begin with zero shares. Buy 3 at 91; buy 6 at 101; sell 7 at 110; buy 2 at 95. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 91,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "price": 95,
+            "qty": 2,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "289/3",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with zero shares. Buy three at ninety-one; buy six at one hundred and one; sell seven at one hundred and ten; buy two at ninety-five. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "98",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "299/4",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "293/3"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "4"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "1156/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "5/3",
+            "relative_gap": "5/289"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "259/12",
+            "relative_gap": "259/1156"
+          }
+        ],
+        "min_wrong_pair_gap": "93/4",
+        "min_distinct_wrong_pair_gap": "93/4"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Use no opening position. Buy 4 at 108; buy 6 at 117; sell 7 at 119; buy 8 at 121. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 108,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 117,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 119,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "price": 121,
+            "qty": 8,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "6541/55",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Use no opening position. Buy four at one hundred and eight; buy six at one hundred and seventeen; sell seven at one hundred and nineteen; buy eight at one hundred and twenty-one. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1319/11",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1269/11",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "567/5"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "11"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "6541/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "54/55",
+            "relative_gap": "54/6541"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "196/55",
+            "relative_gap": "196/6541"
+          }
+        ],
+        "min_wrong_pair_gap": "50/11",
+        "min_distinct_wrong_pair_gap": "50/11"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Begin with no position. Buy 4 at 103; buy 9 at 112; sell 1 at 120; buy 8 at 102. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 103,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 112,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 120,
+            "qty": 1,
+            "side": "sell"
+          },
+          {
+            "price": 102,
+            "qty": 8,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "6912/65",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no position. Buy four at one hundred and three; buy nine at one hundred and twelve; sell one at one hundred and twenty; buy eight at one hundred and two. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "2133/20",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "529/5",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1420/13"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "20"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "27648/13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "81/260",
+            "relative_gap": "3/1024"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "7/13",
+            "relative_gap": "35/6912"
+          }
+        ],
+        "min_wrong_pair_gap": "17/20",
+        "min_distinct_wrong_pair_gap": "17/20"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Start with zero shares. Buy 5 at 99; buy 10 at 106; sell 8 at 112; buy 1 at 104. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 99,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 112,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "price": 104,
+            "qty": 1,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "2489/24",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start with zero shares. Buy five at ninety-nine; buy ten at one hundred and six; sell eight at one hundred and twelve; buy one at one hundred and four. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "423/4",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "763/8",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "311/3"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "8"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "2489/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "49/24",
+            "relative_gap": "49/2489"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "25/3",
+            "relative_gap": "200/2489"
+          }
+        ],
+        "min_wrong_pair_gap": "83/8",
+        "min_distinct_wrong_pair_gap": "83/8"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Start flat. Buy 5 at 90; buy 9 at 94; sell 7 at 109; buy 8 at 92. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 90,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 94,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "price": 92,
+            "qty": 8,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1384/15",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start flat. Buy five at ninety; buy nine at ninety-four; sell seven at one hundred and nine; buy eight at ninety-two. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1394/15",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "423/5",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "648/7"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "15"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "1384"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "2/3",
+            "relative_gap": "5/692"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "23/3",
+            "relative_gap": "115/1384"
+          }
+        ],
+        "min_wrong_pair_gap": "25/3",
+        "min_distinct_wrong_pair_gap": "25/3"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Begin with zero shares. Buy 8 at 94; buy 3 at 96; sell 6 at 109; buy 4 at 100. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 94,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 96,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "price": 100,
+            "qty": 4,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "3200/33",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with zero shares. Buy eight at ninety-four; buy three at ninety-six; sell six at one hundred and nine; buy four at one hundred. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "292/3",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "262/3",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1040/11"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "9"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "9600/11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "4/11",
+            "relative_gap": "3/800"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "106/11",
+            "relative_gap": "159/1600"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Use no opening position. Buy 1 at 93; buy 1 at 100; sell 1 at 110; buy 4 at 96. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 93,
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "price": 100,
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 1,
+            "side": "sell"
+          },
+          {
+            "price": 96,
+            "qty": 4,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "961/10",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Use no opening position. Buy one at ninety-three; buy one at one hundred; sell one at one hundred and ten; buy four at ninety-six. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "484/5",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "467/5",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "193/2"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "5"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "961/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "7/10",
+            "relative_gap": "7/961"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "27/10",
+            "relative_gap": "27/961"
+          }
+        ],
+        "min_wrong_pair_gap": "17/5",
+        "min_distinct_wrong_pair_gap": "17/5"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Begin with no position. Buy 4 at 110; buy 8 at 112; sell 10 at 124; buy 9 at 106. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 110,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 112,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 124,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "price": 106,
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "3530/33",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no position. Buy four at one hundred and ten; buy eight at one hundred and twelve; sell ten at one hundred and twenty-four; buy nine at one hundred and six. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1178/11",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1050/11",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "334/3"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "11"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "3530/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "4/33",
+            "relative_gap": "2/1765"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "380/33",
+            "relative_gap": "38/353"
+          }
+        ],
+        "min_wrong_pair_gap": "128/11",
+        "min_distinct_wrong_pair_gap": "128/11"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Start with zero shares. Buy 8 at 102; buy 9 at 107; sell 13 at 116; buy 6 at 101. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 102,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 116,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "price": 101,
+            "qty": 6,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "8709/85",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start with zero shares. Buy eight at one hundred and two; buy nine at one hundred and seven; sell thirteen at one hundred and sixteen; buy six at one hundred and one. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "517/5",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "877/10",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1779/17"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "10"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "17418/17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "16/17",
+            "relative_gap": "80/8709"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "2509/170",
+            "relative_gap": "2509/17418"
+          }
+        ],
+        "min_wrong_pair_gap": "157/10",
+        "min_distinct_wrong_pair_gap": "157/10"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Start flat. Buy 10 at 107; buy 3 at 116; sell 11 at 124; buy 4 at 116. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 107,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 116,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 124,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "price": 116,
+            "qty": 4,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1478/13",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start flat. Buy ten at one hundred and seven; buy three at one hundred and sixteen; sell eleven at one hundred and twenty-four; buy four at one hundred and sixteen. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "116",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "259/3",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1418/13"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "6"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "8868/13"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "30/13",
+            "relative_gap": "15/739"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "1067/39",
+            "relative_gap": "1067/4434"
+          }
+        ],
+        "min_wrong_pair_gap": "89/3",
+        "min_distinct_wrong_pair_gap": "89/3"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Begin with zero shares. Buy 1 at 104; buy 9 at 107; sell 9 at 119; buy 9 at 114. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 104,
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 119,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "price": 114,
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "11327/100",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with zero shares. Buy one at one hundred and four; buy nine at one hundred and seven; sell nine at one hundred and nineteen; buy nine at one hundred and fourteen. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1133/10",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "511/5",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1067/10"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "10"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "11327/10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "3/100",
+            "relative_gap": "3/11327"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "1107/100",
+            "relative_gap": "1107/11327"
+          }
+        ],
+        "min_wrong_pair_gap": "111/10",
+        "min_distinct_wrong_pair_gap": "111/10"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Use no opening position. Buy 5 at 90; buy 3 at 97; sell 6 at 104; buy 3 at 96. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 90,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 97,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 104,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "price": 96,
+            "qty": 3,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1893/20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Use no opening position. Buy five at ninety; buy three at ninety-seven; sell six at one hundred and four; buy three at ninety-six. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "482/5",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "81",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "741/8"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "5"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "1893/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "7/4",
+            "relative_gap": "35/1893"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "273/20",
+            "relative_gap": "91/631"
+          }
+        ],
+        "min_wrong_pair_gap": "77/5",
+        "min_distinct_wrong_pair_gap": "77/5"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Begin with no position. Buy 5 at 100; buy 9 at 107; sell 8 at 120; buy 1 at 102. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 100,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 120,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "price": 102,
+            "qty": 1,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "729/7",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no position. Buy five at one hundred; buy nine at one hundred and seven; sell eight at one hundred and twenty; buy one at one hundred and two. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "744/7",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "605/7",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "209/2"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "7"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "729"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "15/7",
+            "relative_gap": "5/243"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "124/7",
+            "relative_gap": "124/729"
+          }
+        ],
+        "min_wrong_pair_gap": "139/7",
+        "min_distinct_wrong_pair_gap": "139/7"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Start with zero shares. Buy 9 at 97; buy 7 at 105; sell 2 at 108; buy 6 at 98. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 97,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "price": 98,
+            "qty": 6,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "399/4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start with zero shares. Buy nine at ninety-seven; buy seven at one hundred and five; sell two at one hundred and eight; buy six at ninety-eight. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1001/10",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "99",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "201/2"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "20"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "1995"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "7/20",
+            "relative_gap": "1/285"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "3/4",
+            "relative_gap": "1/133"
+          }
+        ],
+        "min_wrong_pair_gap": "11/10",
+        "min_distinct_wrong_pair_gap": "11/10"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Start flat. Buy 9 at 96; buy 2 at 104; sell 10 at 109; buy 4 at 109. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 96,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 104,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "price": 109,
+            "qty": 4,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "5868/55",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start flat. Buy nine at ninety-six; buy two at one hundred and four; sell ten at one hundred and nine; buy four at one hundred and nine. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "108",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "418/5",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1072/11"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "5"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "5868/11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "72/55",
+            "relative_gap": "2/163"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "254/11",
+            "relative_gap": "635/2934"
+          }
+        ],
+        "min_wrong_pair_gap": "122/5",
+        "min_distinct_wrong_pair_gap": "122/5"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Begin with zero shares. Buy 4 at 96; buy 7 at 105; sell 6 at 111; buy 2 at 111. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 96,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "price": 111,
+            "qty": 2,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "8037/77",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with zero shares. Buy four at ninety-six; buy seven at one hundred and five; sell six at one hundred and eleven; buy two at one hundred and eleven. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "747/7",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "675/7",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1119/11"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "7"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "8037/11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "180/77",
+            "relative_gap": "20/893"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "612/77",
+            "relative_gap": "68/893"
+          }
+        ],
+        "min_wrong_pair_gap": "72/7",
+        "min_distinct_wrong_pair_gap": "72/7"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Use no opening position. Buy 4 at 100; buy 3 at 107; sell 5 at 117; buy 3 at 100. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 100,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 117,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "price": 100,
+            "qty": 3,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "506/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Use no opening position. Buy four at one hundred; buy three at one hundred and seven; sell five at one hundred and seventeen; buy three at one hundred. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "514/5",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "436/5",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "103"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "5"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "506"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "8/5",
+            "relative_gap": "4/253"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "14",
+            "relative_gap": "35/253"
+          }
+        ],
+        "min_wrong_pair_gap": "78/5",
+        "min_distinct_wrong_pair_gap": "78/5"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Begin with no position. Buy 5 at 103; buy 1 at 105; sell 1 at 118; buy 7 at 105. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 103,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "price": 118,
+            "qty": 1,
+            "side": "sell"
+          },
+          {
+            "price": 105,
+            "qty": 7,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "3755/36",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no position. Buy five at one hundred and three; buy one at one hundred and five; sell one at one hundred and eighteen; buy seven at one hundred and five. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "313/3",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1237/12",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "310/3"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "12"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "3755/3"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "1/36",
+            "relative_gap": "1/3755"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "11/9",
+            "relative_gap": "44/3755"
+          }
+        ],
+        "min_wrong_pair_gap": "5/4",
+        "min_distinct_wrong_pair_gap": "5/4"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Start with zero shares. Buy 1 at 97; buy 3 at 102; sell 3 at 115; buy 6 at 93. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 97,
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "price": 102,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 115,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "price": 93,
+            "qty": 6,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "2635/28",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start with zero shares. Buy one at ninety-seven; buy three at one hundred and two; sell three at one hundred and fifteen; buy six at ninety-three. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "660/7",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "88",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "403/4"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "7"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "2635/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "5/28",
+            "relative_gap": "1/527"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "171/28",
+            "relative_gap": "171/2635"
+          }
+        ],
+        "min_wrong_pair_gap": "44/7",
+        "min_distinct_wrong_pair_gap": "44/7"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Start flat. Buy 2 at 98; buy 5 at 105; sell 3 at 109; buy 4 at 97. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 98,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "price": 97,
+            "qty": 4,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "100",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start flat. Buy two at ninety-eight; buy five at one hundred and five; sell three at one hundred and nine; buy four at ninety-seven. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "101",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "391/4",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "103"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "8"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "800"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "1",
+            "relative_gap": "1/100"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "9/4",
+            "relative_gap": "9/400"
+          }
+        ],
+        "min_wrong_pair_gap": "13/4",
+        "min_distinct_wrong_pair_gap": "13/4"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Begin with zero shares. Buy 6 at 108; buy 9 at 110; sell 8 at 125; buy 5 at 111. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 108,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 125,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "price": 111,
+            "qty": 5,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "2199/20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with zero shares. Buy six at one hundred and eight; buy nine at one hundred and ten; sell eight at one hundred and twenty-five; buy five at one hundred and eleven. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1325/12",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1193/12",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "546/5"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "12"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "6597/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "7/15",
+            "relative_gap": "28/6597"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "158/15",
+            "relative_gap": "632/6597"
+          }
+        ],
+        "min_wrong_pair_gap": "11",
+        "min_distinct_wrong_pair_gap": "11"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Use no opening position. Buy 9 at 100; buy 6 at 106; sell 4 at 120; buy 1 at 101. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 100,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 120,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "price": 101,
+            "qty": 1,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "6137/60",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Use no opening position. Buy nine at one hundred; buy six at one hundred and six; sell four at one hundred and twenty; buy one at one hundred and one. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1237/12",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1157/12",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "512/5"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "12"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "6137/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "4/5",
+            "relative_gap": "48/6137"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "88/15",
+            "relative_gap": "352/6137"
+          }
+        ],
+        "min_wrong_pair_gap": "20/3",
+        "min_distinct_wrong_pair_gap": "20/3"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Begin with no position. Buy 9 at 91; buy 5 at 101; sell 12 at 110; buy 5 at 96. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 91,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "price": 96,
+            "qty": 5,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "4684/49",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no position. Buy nine at ninety-one; buy five at one hundred and one; sell twelve at one hundred and ten; buy five at ninety-six. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "682/7",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "484/7",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "662/7"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "7"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "4684/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "90/49",
+            "relative_gap": "45/2342"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "1296/49",
+            "relative_gap": "324/1171"
+          }
+        ],
+        "min_wrong_pair_gap": "198/7",
+        "min_distinct_wrong_pair_gap": "198/7"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Start with zero shares. Buy 1 at 98; buy 7 at 101; sell 2 at 118; buy 6 at 105. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 98,
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 118,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "price": 105,
+            "qty": 6,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "1645/16",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start with zero shares. Buy one at ninety-eight; buy seven at one hundred and one; sell two at one hundred and eighteen; buy six at one hundred and five. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "103",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1199/12",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "805/8"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "12"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "4935/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "3/16",
+            "relative_gap": "3/1645"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "139/48",
+            "relative_gap": "139/4935"
+          }
+        ],
+        "min_wrong_pair_gap": "37/12",
+        "min_distinct_wrong_pair_gap": "37/12"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Start flat. Buy 10 at 100; buy 2 at 106; sell 11 at 117; buy 6 at 112. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 100,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 117,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "price": 112,
+            "qty": 6,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "773/7",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start flat. Buy ten at one hundred; buy two at one hundred and six; sell eleven at one hundred and seventeen; buy six at one hundred and twelve. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "778/7",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "597/7",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "101"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "7"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "773"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "5/7",
+            "relative_gap": "5/773"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "176/7",
+            "relative_gap": "176/773"
+          }
+        ],
+        "min_wrong_pair_gap": "181/7",
+        "min_distinct_wrong_pair_gap": "181/7"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Begin with zero shares. Buy 9 at 106; buy 5 at 116; sell 5 at 121; buy 7 at 118. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 106,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 116,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 121,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "price": 118,
+            "qty": 7,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "12685/112",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with zero shares. Buy nine at one hundred and six; buy five at one hundred and sixteen; sell five at one hundred and twenty-one; buy seven at one hundred and eighteen. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "915/8",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1755/16",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "767/7"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "16"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "12685/7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "125/112",
+            "relative_gap": "25/2537"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "25/7",
+            "relative_gap": "80/2537"
+          }
+        ],
+        "min_wrong_pair_gap": "75/16",
+        "min_distinct_wrong_pair_gap": "75/16"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Use no opening position. Buy 2 at 93; buy 3 at 102; sell 4 at 113; buy 7 at 105. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 93,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 102,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 113,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "price": 105,
+            "qty": 7,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "4167/40",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Use no opening position. Buy two at ninety-three; buy three at one hundred and two; sell four at one hundred and thirteen; buy seven at one hundred and five. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "837/8",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "775/8",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "492/5"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "8"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "4167/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "9/20",
+            "relative_gap": "2/463"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "73/10",
+            "relative_gap": "292/4167"
+          }
+        ],
+        "min_wrong_pair_gap": "31/4",
+        "min_distinct_wrong_pair_gap": "31/4"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Begin with no position. Buy 1 at 101; buy 7 at 110; sell 4 at 114; buy 2 at 113. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 101,
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "price": 113,
+            "qty": 2,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "441/4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no position. Buy one at one hundred and one; buy seven at one hundred and ten; sell four at one hundred and fourteen; buy two at one hundred and thirteen. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "111",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "641/6",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "871/8"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "6"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "1323/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "3/4",
+            "relative_gap": "1/147"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "41/12",
+            "relative_gap": "41/1323"
+          }
+        ],
+        "min_wrong_pair_gap": "25/6",
+        "min_distinct_wrong_pair_gap": "25/6"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Start with zero shares. Buy 7 at 95; buy 5 at 98; sell 2 at 109; buy 2 at 96. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 95,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 98,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "price": 96,
+            "qty": 2,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "2309/24",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start with zero shares. Buy seven at ninety-five; buy five at ninety-eight; sell two at one hundred and nine; buy two at ninety-six. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1157/12",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1129/12",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "385/4"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "12"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "2309/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "5/24",
+            "relative_gap": "5/2309"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "17/8",
+            "relative_gap": "51/2309"
+          }
+        ],
+        "min_wrong_pair_gap": "7/3",
+        "min_distinct_wrong_pair_gap": "7/3"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Start flat. Buy 1 at 106; buy 10 at 110; sell 8 at 118; buy 8 at 110. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 106,
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 118,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "price": 110,
+            "qty": 8,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "13298/121",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start flat. Buy one at one hundred and six; buy ten at one hundred and ten; sell eight at one hundred and eighteen; buy eight at one hundred and ten. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "110",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1142/11",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1206/11"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "11"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "13298/11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "12/121",
+            "relative_gap": "6/6649"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "736/121",
+            "relative_gap": "368/6649"
+          }
+        ],
+        "min_wrong_pair_gap": "68/11",
+        "min_distinct_wrong_pair_gap": "68/11"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Begin with zero shares. Buy 5 at 90; buy 6 at 94; sell 10 at 105; buy 9 at 98. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 90,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 94,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "price": 98,
+            "qty": 9,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "5358/55",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with zero shares. Buy five at ninety; buy six at ninety-four; sell ten at one hundred and five; buy nine at ninety-eight. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "488/5",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "423/5",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1014/11"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "10"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "10716/11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "2/11",
+            "relative_gap": "5/2679"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "141/11",
+            "relative_gap": "5/38"
+          }
+        ],
+        "min_wrong_pair_gap": "13",
+        "min_distinct_wrong_pair_gap": "13"
+      },
+      "follow_up": {
+        "question": "Why can FIFO and average-cost realized profit differ but total marked profit agree?",
+        "reference": "They allocate cost differently between realized profit and remaining inventory. With identical cash flows and marks, their combined realized and unrealized profit reconciles."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Use no opening position. Buy 6 at 98; buy 4 at 104; sell 1 at 114; buy 2 at 109. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 98,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 104,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 1,
+            "side": "sell"
+          },
+          {
+            "price": 109,
+            "qty": 2,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "5608/55",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Use no opening position. Buy six at ninety-eight; buy four at one hundred and four; sell one at one hundred and fourteen; buy two at one hundred and nine. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "1124/11",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1108/11",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "502/5"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "11"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "5608/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "12/55",
+            "relative_gap": "3/1402"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "68/55",
+            "relative_gap": "17/1402"
+          }
+        ],
+        "min_wrong_pair_gap": "16/11",
+        "min_distinct_wrong_pair_gap": "16/11"
+      },
+      "follow_up": {
+        "question": "How would you control numerical error over a long fill history?",
+        "reference": "Use exact or suitably scaled monetary arithmetic and explicitly handle a zero position. Repeated floating-point pooling can leave residual cost even after a full close."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Begin with no position. Buy 3 at 94; buy 2 at 103; sell 2 at 106; buy 7 at 97. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 94,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "price": 97,
+            "qty": 7,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "4859/50",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Begin with no position. Buy three at ninety-four; buy two at one hundred and three; sell two at one hundred and six; buy seven at ninety-seven. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "979/10",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "191/2",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "488/5"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "10"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "4859/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "18/25",
+            "relative_gap": "36/4859"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "42/25",
+            "relative_gap": "84/4859"
+          }
+        ],
+        "min_wrong_pair_gap": "12/5",
+        "min_distinct_wrong_pair_gap": "12/5"
+      },
+      "follow_up": {
+        "question": "What if the sale closes the entire position before the final buy?",
+        "reference": "Reset both quantity and pooled cost to zero. The later purchase starts a new average-cost pool."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Start with zero shares. Buy 7 at 95; buy 10 at 105; sell 5 at 108; buy 7 at 108. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "params": {
+        "fills": [
+          {
+            "price": 95,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "price": 108,
+            "qty": 7,
+            "side": "buy"
+          }
+        ]
+      },
+      "answer": "33432/323",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Average cost after a partial sale",
+      "difficulty": "Medium",
+      "spoken_text": "Start with zero shares. Buy seven at ninety-five; buy ten at one hundred and five; sell five at one hundred and eight; buy seven at one hundred and eight. Using average-cost accounting without fees, what is remaining cost per share in dollars, as an exact fraction?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "complex_fraction",
+      "wrong": [
+        {
+          "value": "1996/19",
+          "misconceptions": [
+            "uses_fifo_remaining_cost_instead_of_average_cost"
+          ]
+        },
+        {
+          "value": "1931/19",
+          "misconceptions": [
+            "deducts_sale_proceeds_from_the_cost_pool"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "average_cost_before_sale",
+          "value": "1715/17"
+        },
+        {
+          "name": "total_shares_final",
+          "value": "19"
+        },
+        {
+          "name": "total_cost_final",
+          "value": "33432/17"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "uses_fifo_remaining_cost_instead_of_average_cost",
+            "absolute_gap": "500/323",
+            "relative_gap": "125/8358"
+          },
+          {
+            "misconception": "deducts_sale_proceeds_from_the_cost_pool",
+            "absolute_gap": "605/323",
+            "relative_gap": "605/33432"
+          }
+        ],
+        "min_wrong_pair_gap": "65/19",
+        "min_distinct_wrong_pair_gap": "65/19"
+      },
+      "follow_up": {
+        "question": "Why does the sale price not set the remaining average cost?",
+        "reference": "The sale price determines realized profit. The remaining inventory cost is reduced at the existing average under this accounting convention."
+      }
+    }
+  ]
+}

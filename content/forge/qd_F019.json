@@ -1,0 +1,4501 @@
+{
+  "template_id": "qd_F019",
+  "pack": "quant_dev",
+  "topic": "Event processing",
+  "topics": [
+    "Event processing"
+  ],
+  "source_topic": "Alive-order counts at query times",
+  "difficulty": "Medium",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": true,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "If an order is canceled exactly at a query time, is it counted?",
+    "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Times are milliseconds. Add B at 0; add C at 3; add A at 7; cancel A at 14; cancel B at 16; cancel C at 16. After all events at each time, what are alive-order counts at 8, 11, 13, 16?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 16
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 16
+          }
+        ],
+        "queries": [
+          8,
+          11,
+          13,
+          16
+        ]
+      },
+      "answer": "[3,3,3,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at zero; add C at three; add A at seven; cancel A at fourteen; cancel B at sixteen; cancel C at sixteen. After all events at each time, what are alive-order counts at eight, eleven, thirteen, sixteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[3,3,3,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[3,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Times are milliseconds. Add A at 0; add C at 3; add B at 7; cancel B at 15; cancel C at 17; cancel A at 18. After all events at each time, what are alive-order counts at 0, 9, 12, 15?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 15
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 17
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          0,
+          9,
+          12,
+          15
+        ]
+      },
+      "answer": "[1,3,3,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at zero; add C at three; add B at seven; cancel B at fifteen; cancel C at seventeen; cancel A at eighteen. After all events at each time, what are alive-order counts at zero, nine, twelve, fifteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,3,3,3]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time",
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Times are milliseconds. Add C at 2; add A at 6; add B at 6; cancel C at 11; cancel A at 14; cancel B at 14. After all events at each time, what are alive-order counts at 3, 4, 11, 15?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 14
+          }
+        ],
+        "queries": [
+          3,
+          4,
+          11,
+          15
+        ]
+      },
+      "answer": "[1,1,2,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at two; add A at six; add B at six; cancel C at eleven; cancel A at fourteen; cancel B at fourteen. After all events at each time, what are alive-order counts at three, four, eleven, fifteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,1,3,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[1,1,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Times are milliseconds. Add A at 6; add B at 6; add C at 9; cancel C at 15; cancel B at 17; cancel A at 18. After all events at each time, what are alive-order counts at 0, 5, 12, 17?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 15
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 17
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          0,
+          5,
+          12,
+          17
+        ]
+      },
+      "answer": "[0,0,3,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at six; add B at six; add C at nine; cancel C at fifteen; cancel B at seventeen; cancel A at eighteen. After all events at each time, what are alive-order counts at zero, five, twelve, seventeen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,0,3,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,0,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Times are milliseconds. Add A at 3; add B at 9; add C at 9; cancel A at 10; cancel B at 15; cancel C at 19. After all events at each time, what are alive-order counts at 2, 12, 15, 17?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 15
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          2,
+          12,
+          15,
+          17
+        ]
+      },
+      "answer": "[0,2,1,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at three; add B at nine; add C at nine; cancel A at ten; cancel B at fifteen; cancel C at nineteen. After all events at each time, what are alive-order counts at two, twelve, fifteen, seventeen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,2,2,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Times are milliseconds. Add B at 0; add C at 0; add A at 8; cancel A at 13; cancel C at 14; cancel B at 15. After all events at each time, what are alive-order counts at 4, 6, 12, 13?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 15
+          }
+        ],
+        "queries": [
+          4,
+          6,
+          12,
+          13
+        ]
+      },
+      "answer": "[2,2,3,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at zero; add C at zero; add A at eight; cancel A at thirteen; cancel C at fourteen; cancel B at fifteen. After all events at each time, what are alive-order counts at four, six, twelve, thirteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[2,2,3,3]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time",
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Times are milliseconds. Add C at 4; add A at 5; add B at 9; cancel A at 11; cancel B at 15; cancel C at 18. After all events at each time, what are alive-order counts at 5, 11, 12, 17?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 4
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 5
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 15
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          5,
+          11,
+          12,
+          17
+        ]
+      },
+      "answer": "[2,2,2,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at four; add A at five; add B at nine; cancel A at eleven; cancel B at fifteen; cancel C at eighteen. After all events at each time, what are alive-order counts at five, eleven, twelve, seventeen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[2,3,2,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[2,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Times are milliseconds. Add B at 1; add A at 3; add C at 4; cancel A at 12; cancel C at 17; cancel B at 19. After all events at each time, what are alive-order counts at 4, 12, 14, 16?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 4
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 17
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          4,
+          12,
+          14,
+          16
+        ]
+      },
+      "answer": "[3,2,2,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at one; add A at three; add C at four; cancel A at twelve; cancel C at seventeen; cancel B at nineteen. After all events at each time, what are alive-order counts at four, twelve, fourteen, sixteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[3,3,2,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[3,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Times are milliseconds. Add B at 0; add A at 2; add C at 3; cancel B at 13; cancel A at 16; cancel C at 16. After all events at each time, what are alive-order counts at 0, 1, 7, 13?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 16
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 16
+          }
+        ],
+        "queries": [
+          0,
+          1,
+          7,
+          13
+        ]
+      },
+      "answer": "[1,1,3,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at zero; add A at two; add C at three; cancel B at thirteen; cancel A at sixteen; cancel C at sixteen. After all events at each time, what are alive-order counts at zero, one, seven, thirteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,1,3,3]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time",
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Times are milliseconds. Add B at 0; add A at 3; add C at 7; cancel B at 14; cancel A at 16; cancel C at 16. After all events at each time, what are alive-order counts at 4, 11, 14, 15?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 16
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 16
+          }
+        ],
+        "queries": [
+          4,
+          11,
+          14,
+          15
+        ]
+      },
+      "answer": "[2,3,2,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at zero; add A at three; add C at seven; cancel B at fourteen; cancel A at sixteen; cancel C at sixteen. After all events at each time, what are alive-order counts at four, eleven, fourteen, fifteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[2,3,3,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[2,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Times are milliseconds. Add C at 1; add A at 3; add B at 5; cancel A at 15; cancel B at 16; cancel C at 16. After all events at each time, what are alive-order counts at 1, 9, 14, 16?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 5
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 15
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 16
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 16
+          }
+        ],
+        "queries": [
+          1,
+          9,
+          14,
+          16
+        ]
+      },
+      "answer": "[1,3,3,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at one; add A at three; add B at five; cancel A at fifteen; cancel B at sixteen; cancel C at sixteen. After all events at each time, what are alive-order counts at one, nine, fourteen, sixteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,3,3,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[1,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Times are milliseconds. Add C at 0; add B at 1; add A at 8; cancel B at 14; cancel A at 17; cancel C at 19. After all events at each time, what are alive-order counts at 5, 11, 14, 19?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 17
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          5,
+          11,
+          14,
+          19
+        ]
+      },
+      "answer": "[2,3,2,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at zero; add B at one; add A at eight; cancel B at fourteen; cancel A at seventeen; cancel C at nineteen. After all events at each time, what are alive-order counts at five, eleven, fourteen, nineteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[2,3,3,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[2,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Times are milliseconds. Add B at 1; add A at 7; add C at 8; cancel B at 13; cancel C at 16; cancel A at 18. After all events at each time, what are alive-order counts at 9, 12, 14, 16?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 16
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          9,
+          12,
+          14,
+          16
+        ]
+      },
+      "answer": "[3,3,2,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at one; add A at seven; add C at eight; cancel B at thirteen; cancel C at sixteen; cancel A at eighteen. After all events at each time, what are alive-order counts at nine, twelve, fourteen, sixteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[3,3,2,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[3,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Times are milliseconds. Add C at 1; add B at 6; add A at 7; cancel A at 12; cancel C at 13; cancel B at 19. After all events at each time, what are alive-order counts at 0, 5, 7, 12?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          0,
+          5,
+          7,
+          12
+        ]
+      },
+      "answer": "[0,1,3,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at one; add B at six; add A at seven; cancel A at twelve; cancel C at thirteen; cancel B at nineteen. After all events at each time, what are alive-order counts at zero, five, seven, twelve?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,1,3,3]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time",
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Times are milliseconds. Add B at 2; add A at 5; add C at 8; cancel A at 14; cancel B at 16; cancel C at 18. After all events at each time, what are alive-order counts at 2, 7, 13, 16?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 5
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 16
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          2,
+          7,
+          13,
+          16
+        ]
+      },
+      "answer": "[1,2,3,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at two; add A at five; add C at eight; cancel A at fourteen; cancel B at sixteen; cancel C at eighteen. After all events at each time, what are alive-order counts at two, seven, thirteen, sixteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,2,3,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[1,2,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Times are milliseconds. Add C at 0; add A at 4; add B at 9; cancel A at 10; cancel C at 11; cancel B at 19. After all events at each time, what are alive-order counts at 6, 11, 12, 16?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 4
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          6,
+          11,
+          12,
+          16
+        ]
+      },
+      "answer": "[2,1,1,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at zero; add A at four; add B at nine; cancel A at ten; cancel C at eleven; cancel B at nineteen. After all events at each time, what are alive-order counts at six, eleven, twelve, sixteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[2,2,1,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[2,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Times are milliseconds. Add B at 0; add A at 3; add C at 6; cancel B at 13; cancel A at 18; cancel C at 18. After all events at each time, what are alive-order counts at 7, 8, 11, 13?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 18
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          7,
+          8,
+          11,
+          13
+        ]
+      },
+      "answer": "[3,3,3,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at zero; add A at three; add C at six; cancel B at thirteen; cancel A at eighteen; cancel C at eighteen. After all events at each time, what are alive-order counts at seven, eight, eleven, thirteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[3,3,3,3]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time",
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Times are milliseconds. Add A at 3; add B at 3; add C at 8; cancel B at 11; cancel C at 11; cancel A at 16. After all events at each time, what are alive-order counts at 0, 7, 10, 16?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 16
+          }
+        ],
+        "queries": [
+          0,
+          7,
+          10,
+          16
+        ]
+      },
+      "answer": "[0,2,3,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at three; add B at three; add C at eight; cancel B at eleven; cancel C at eleven; cancel A at sixteen. After all events at each time, what are alive-order counts at zero, seven, ten, sixteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,2,3,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,2,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Times are milliseconds. Add B at 1; add C at 4; add A at 5; cancel A at 17; cancel B at 17; cancel C at 18. After all events at each time, what are alive-order counts at 3, 4, 17, 21?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 4
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 5
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 17
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 17
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          3,
+          4,
+          17,
+          21
+        ]
+      },
+      "answer": "[1,2,1,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at one; add C at four; add A at five; cancel A at seventeen; cancel B at seventeen; cancel C at eighteen. After all events at each time, what are alive-order counts at three, four, seventeen, twenty-one?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,2,3,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[1,2,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Times are milliseconds. Add A at 3; add C at 5; add B at 9; cancel B at 11; cancel C at 14; cancel A at 17. After all events at each time, what are alive-order counts at 1, 11, 12, 14?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 5
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 17
+          }
+        ],
+        "queries": [
+          1,
+          11,
+          12,
+          14
+        ]
+      },
+      "answer": "[0,2,2,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at three; add C at five; add B at nine; cancel B at eleven; cancel C at fourteen; cancel A at seventeen. After all events at each time, what are alive-order counts at one, eleven, twelve, fourteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,3,2,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Times are milliseconds. Add A at 1; add C at 3; add B at 9; cancel B at 15; cancel C at 18; cancel A at 19. After all events at each time, what are alive-order counts at 5, 15, 18, 19?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 15
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 18
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          5,
+          15,
+          18,
+          19
+        ]
+      },
+      "answer": "[2,2,1,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at one; add C at three; add B at nine; cancel B at fifteen; cancel C at eighteen; cancel A at nineteen. After all events at each time, what are alive-order counts at five, fifteen, eighteen, nineteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[2,3,2,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[2,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Times are milliseconds. Add A at 2; add C at 2; add B at 8; cancel A at 11; cancel C at 16; cancel B at 19. After all events at each time, what are alive-order counts at 10, 16, 17, 18?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 16
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          10,
+          16,
+          17,
+          18
+        ]
+      },
+      "answer": "[3,1,1,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at two; add C at two; add B at eight; cancel A at eleven; cancel C at sixteen; cancel B at nineteen. After all events at each time, what are alive-order counts at ten, sixteen, seventeen, eighteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[3,2,1,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[3,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Times are milliseconds. Add A at 0; add C at 2; add B at 4; cancel C at 11; cancel A at 12; cancel B at 15. After all events at each time, what are alive-order counts at 2, 5, 12, 16?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 4
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 15
+          }
+        ],
+        "queries": [
+          2,
+          5,
+          12,
+          16
+        ]
+      },
+      "answer": "[2,3,1,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at zero; add C at two; add B at four; cancel C at eleven; cancel A at twelve; cancel B at fifteen. After all events at each time, what are alive-order counts at two, five, twelve, sixteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[2,3,2,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[2,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Times are milliseconds. Add A at 3; add B at 7; add C at 8; cancel B at 10; cancel C at 17; cancel A at 19. After all events at each time, what are alive-order counts at 8, 10, 15, 21?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 17
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          8,
+          10,
+          15,
+          21
+        ]
+      },
+      "answer": "[3,2,2,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at three; add B at seven; add C at eight; cancel B at ten; cancel C at seventeen; cancel A at nineteen. After all events at each time, what are alive-order counts at eight, ten, fifteen, twenty-one?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[3,3,2,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[3,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Times are milliseconds. Add B at 0; add A at 2; add C at 3; cancel B at 11; cancel A at 12; cancel C at 15. After all events at each time, what are alive-order counts at 7, 8, 12, 14?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 15
+          }
+        ],
+        "queries": [
+          7,
+          8,
+          12,
+          14
+        ]
+      },
+      "answer": "[3,3,1,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at zero; add A at two; add C at three; cancel B at eleven; cancel A at twelve; cancel C at fifteen. After all events at each time, what are alive-order counts at seven, eight, twelve, fourteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[3,3,2,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[3,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Times are milliseconds. Add C at 0; add A at 1; add B at 1; cancel B at 13; cancel C at 16; cancel A at 18. After all events at each time, what are alive-order counts at 3, 13, 17, 23?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 16
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          3,
+          13,
+          17,
+          23
+        ]
+      },
+      "answer": "[3,2,1,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at zero; add A at one; add B at one; cancel B at thirteen; cancel C at sixteen; cancel A at eighteen. After all events at each time, what are alive-order counts at three, thirteen, seventeen, twenty-three?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[3,3,1,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[3,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Times are milliseconds. Add A at 1; add C at 6; add B at 7; cancel B at 11; cancel A at 14; cancel C at 19. After all events at each time, what are alive-order counts at 1, 3, 14, 17?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          1,
+          3,
+          14,
+          17
+        ]
+      },
+      "answer": "[1,1,1,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at one; add C at six; add B at seven; cancel B at eleven; cancel A at fourteen; cancel C at nineteen. After all events at each time, what are alive-order counts at one, three, fourteen, seventeen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,1,2,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[1,1,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Times are milliseconds. Add C at 3; add A at 6; add B at 7; cancel C at 13; cancel A at 15; cancel B at 15. After all events at each time, what are alive-order counts at 4, 7, 15, 17?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 15
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 15
+          }
+        ],
+        "queries": [
+          4,
+          7,
+          15,
+          17
+        ]
+      },
+      "answer": "[1,3,0,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at three; add A at six; add B at seven; cancel C at thirteen; cancel A at fifteen; cancel B at fifteen. After all events at each time, what are alive-order counts at four, seven, fifteen, seventeen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,3,2,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[1,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Times are milliseconds. Add A at 2; add B at 2; add C at 5; cancel B at 12; cancel A at 16; cancel C at 18. After all events at each time, what are alive-order counts at 1, 4, 8, 12?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 5
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 16
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          1,
+          4,
+          8,
+          12
+        ]
+      },
+      "answer": "[0,2,3,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at two; add B at two; add C at five; cancel B at twelve; cancel A at sixteen; cancel C at eighteen. After all events at each time, what are alive-order counts at one, four, eight, twelve?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,2,3,3]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time",
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Times are milliseconds. Add A at 1; add C at 5; add B at 7; cancel A at 13; cancel B at 16; cancel C at 18. After all events at each time, what are alive-order counts at 2, 4, 18, 22?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 5
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 16
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          2,
+          4,
+          18,
+          22
+        ]
+      },
+      "answer": "[1,1,0,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at one; add C at five; add B at seven; cancel A at thirteen; cancel B at sixteen; cancel C at eighteen. After all events at each time, what are alive-order counts at two, four, eighteen, twenty-two?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,1,1,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[1,1,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Times are milliseconds. Add C at 2; add A at 7; add B at 9; cancel C at 12; cancel A at 13; cancel B at 18. After all events at each time, what are alive-order counts at 1, 9, 17, 18?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          1,
+          9,
+          17,
+          18
+        ]
+      },
+      "answer": "[0,3,1,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at two; add A at seven; add B at nine; cancel C at twelve; cancel A at thirteen; cancel B at eighteen. After all events at each time, what are alive-order counts at one, nine, seventeen, eighteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,3,1,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Times are milliseconds. Add A at 8; add B at 8; add C at 8; cancel C at 14; cancel A at 19; cancel B at 19. After all events at each time, what are alive-order counts at 4, 13, 16, 19?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 19
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          4,
+          13,
+          16,
+          19
+        ]
+      },
+      "answer": "[0,3,2,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at eight; add B at eight; add C at eight; cancel C at fourteen; cancel A at nineteen; cancel B at nineteen. After all events at each time, what are alive-order counts at four, thirteen, sixteen, nineteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,3,2,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Times are milliseconds. Add C at 4; add B at 5; add A at 6; cancel A at 12; cancel B at 17; cancel C at 18. After all events at each time, what are alive-order counts at 0, 3, 14, 17?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 4
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 5
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 17
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          0,
+          3,
+          14,
+          17
+        ]
+      },
+      "answer": "[0,0,2,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at four; add B at five; add A at six; cancel A at twelve; cancel B at seventeen; cancel C at eighteen. After all events at each time, what are alive-order counts at zero, three, fourteen, seventeen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,0,2,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,0,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Times are milliseconds. Add A at 7; add B at 7; add C at 8; cancel A at 10; cancel C at 12; cancel B at 15. After all events at each time, what are alive-order counts at 1, 2, 15, 22?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 15
+          }
+        ],
+        "queries": [
+          1,
+          2,
+          15,
+          22
+        ]
+      },
+      "answer": "[0,0,0,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at seven; add B at seven; add C at eight; cancel A at ten; cancel C at twelve; cancel B at fifteen. After all events at each time, what are alive-order counts at one, two, fifteen, twenty-two?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,0,1,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,0,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Times are milliseconds. Add A at 4; add B at 5; add C at 7; cancel B at 10; cancel A at 12; cancel C at 15. After all events at each time, what are alive-order counts at 2, 3, 12, 16?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 4
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 5
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 15
+          }
+        ],
+        "queries": [
+          2,
+          3,
+          12,
+          16
+        ]
+      },
+      "answer": "[0,0,1,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at four; add B at five; add C at seven; cancel B at ten; cancel A at twelve; cancel C at fifteen. After all events at each time, what are alive-order counts at two, three, twelve, sixteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,0,2,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,0,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Times are milliseconds. Add C at 3; add A at 8; add B at 9; cancel B at 10; cancel C at 10; cancel A at 15. After all events at each time, what are alive-order counts at 2, 10, 16, 21?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 15
+          }
+        ],
+        "queries": [
+          2,
+          10,
+          16,
+          21
+        ]
+      },
+      "answer": "[0,1,0,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at three; add A at eight; add B at nine; cancel B at ten; cancel C at ten; cancel A at fifteen. After all events at each time, what are alive-order counts at two, ten, sixteen, twenty-one?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,3,0,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Times are milliseconds. Add B at 0; add A at 6; add C at 6; cancel C at 13; cancel B at 14; cancel A at 15. After all events at each time, what are alive-order counts at 11, 14, 16, 21?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 15
+          }
+        ],
+        "queries": [
+          11,
+          14,
+          16,
+          21
+        ]
+      },
+      "answer": "[3,1,0,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at zero; add A at six; add C at six; cancel C at thirteen; cancel B at fourteen; cancel A at fifteen. After all events at each time, what are alive-order counts at eleven, fourteen, sixteen, twenty-one?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[3,2,0,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[3,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Times are milliseconds. Add B at 2; add A at 5; add C at 6; cancel C at 10; cancel A at 19; cancel B at 19. After all events at each time, what are alive-order counts at 4, 6, 17, 19?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 5
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 19
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          4,
+          6,
+          17,
+          19
+        ]
+      },
+      "answer": "[1,3,2,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at two; add A at five; add C at six; cancel C at ten; cancel A at nineteen; cancel B at nineteen. After all events at each time, what are alive-order counts at four, six, seventeen, nineteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,3,2,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[1,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Times are milliseconds. Add C at 6; add A at 9; add B at 9; cancel A at 10; cancel C at 11; cancel B at 14. After all events at each time, what are alive-order counts at 1, 2, 7, 10?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 14
+          }
+        ],
+        "queries": [
+          1,
+          2,
+          7,
+          10
+        ]
+      },
+      "answer": "[0,0,1,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at six; add A at nine; add B at nine; cancel A at ten; cancel C at eleven; cancel B at fourteen. After all events at each time, what are alive-order counts at one, two, seven, ten?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,0,1,3]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time",
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Times are milliseconds. Add C at 1; add A at 2; add B at 4; cancel C at 13; cancel B at 14; cancel A at 17. After all events at each time, what are alive-order counts at 1, 2, 13, 17?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 4
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 17
+          }
+        ],
+        "queries": [
+          1,
+          2,
+          13,
+          17
+        ]
+      },
+      "answer": "[1,2,2,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at one; add A at two; add B at four; cancel C at thirteen; cancel B at fourteen; cancel A at seventeen. After all events at each time, what are alive-order counts at one, two, thirteen, seventeen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,2,3,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[1,2,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Times are milliseconds. Add C at 3; add B at 7; add A at 9; cancel A at 12; cancel B at 12; cancel C at 16. After all events at each time, what are alive-order counts at 2, 3, 9, 16?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 16
+          }
+        ],
+        "queries": [
+          2,
+          3,
+          9,
+          16
+        ]
+      },
+      "answer": "[0,1,3,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at three; add B at seven; add A at nine; cancel A at twelve; cancel B at twelve; cancel C at sixteen. After all events at each time, what are alive-order counts at two, three, nine, sixteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,1,3,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,1,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Times are milliseconds. Add A at 4; add C at 4; add B at 6; cancel A at 10; cancel C at 10; cancel B at 11. After all events at each time, what are alive-order counts at 0, 8, 9, 11?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 4
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 4
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 11
+          }
+        ],
+        "queries": [
+          0,
+          8,
+          9,
+          11
+        ]
+      },
+      "answer": "[0,3,3,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at four; add C at four; add B at six; cancel A at ten; cancel C at ten; cancel B at eleven. After all events at each time, what are alive-order counts at zero, eight, nine, eleven?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,3,3,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Times are milliseconds. Add A at 2; add B at 2; add C at 7; cancel A at 10; cancel B at 11; cancel C at 13. After all events at each time, what are alive-order counts at 10, 11, 19, 21?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 13
+          }
+        ],
+        "queries": [
+          10,
+          11,
+          19,
+          21
+        ]
+      },
+      "answer": "[2,1,0,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at two; add B at two; add C at seven; cancel A at ten; cancel B at eleven; cancel C at thirteen. After all events at each time, what are alive-order counts at ten, eleven, nineteen, twenty-one?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[3,2,0,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[3,3,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Times are milliseconds. Add A at 4; add C at 7; add B at 9; cancel C at 11; cancel A at 12; cancel B at 12. After all events at each time, what are alive-order counts at 1, 6, 11, 21?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 4
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 11
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 12
+          }
+        ],
+        "queries": [
+          1,
+          6,
+          11,
+          21
+        ]
+      },
+      "answer": "[0,1,2,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at four; add C at seven; add B at nine; cancel C at eleven; cancel A at twelve; cancel B at twelve. After all events at each time, what are alive-order counts at one, six, eleven, twenty-one?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,1,3,0]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,1,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Times are milliseconds. Add C at 2; add B at 6; add A at 9; cancel C at 10; cancel A at 15; cancel B at 19. After all events at each time, what are alive-order counts at 1, 2, 4, 15?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 2
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 15
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          1,
+          2,
+          4,
+          15
+        ]
+      },
+      "answer": "[0,1,1,1]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at two; add B at six; add A at nine; cancel C at ten; cancel A at fifteen; cancel B at nineteen. After all events at each time, what are alive-order counts at one, two, four, fifteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,1,1,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[0,1,1,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "1"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Times are milliseconds. Add B at 0; add A at 1; add C at 5; cancel B at 17; cancel A at 19; cancel C at 19. After all events at each time, what are alive-order counts at 1, 10, 12, 17?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 5
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 17
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 19
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          1,
+          10,
+          12,
+          17
+        ]
+      },
+      "answer": "[2,3,3,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at zero; add A at one; add C at five; cancel B at seventeen; cancel A at nineteen; cancel C at nineteen. After all events at each time, what are alive-order counts at one, ten, twelve, seventeen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[2,3,3,3]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time",
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Times are milliseconds. Add A at 0; add B at 6; add C at 9; cancel B at 10; cancel A at 13; cancel C at 18. After all events at each time, what are alive-order counts at 1, 8, 10, 11?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 9
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 10
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 18
+          }
+        ],
+        "queries": [
+          1,
+          8,
+          10,
+          11
+        ]
+      },
+      "answer": "[1,2,2,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at zero; add B at six; add C at nine; cancel B at ten; cancel A at thirteen; cancel C at eighteen. After all events at each time, what are alive-order counts at one, eight, ten, eleven?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,2,3,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[1,2,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How could you answer many unsorted queries efficiently?",
+        "reference": "Sort the queries while retaining their original positions, then sweep the events once. Restore the counts to the original query order."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Times are milliseconds. Add A at 0; add B at 6; add C at 6; cancel B at 12; cancel A at 19; cancel C at 19. After all events at each time, what are alive-order counts at 2, 3, 12, 13?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 0
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 6
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 12
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 19
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 19
+          }
+        ],
+        "queries": [
+          2,
+          3,
+          12,
+          13
+        ]
+      },
+      "answer": "[1,1,2,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add A at zero; add B at six; add C at six; cancel B at twelve; cancel A at nineteen; cancel C at nineteen. After all events at each time, what are alive-order counts at two, three, twelve, thirteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[1,1,3,2]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[1,1,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would duplicate or out-of-order event delivery affect production state?",
+        "reference": "Use stable order identity and a defined sequencing or watermark policy. Replayed cancellations and late additions must not corrupt live-state counts."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Times are milliseconds. Add B at 3; add C at 3; add A at 8; cancel C at 13; cancel B at 14; cancel A at 17. After all events at each time, what are alive-order counts at 1, 9, 12, 13?",
+      "params": {
+        "events": [
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 8
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 13
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 17
+          }
+        ],
+        "queries": [
+          1,
+          9,
+          12,
+          13
+        ]
+      },
+      "answer": "[0,3,3,2]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add B at three; add C at three; add A at eight; cancel C at thirteen; cancel B at fourteen; cancel A at seventeen. After all events at each time, what are alive-order counts at one, nine, twelve, thirteen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[0,3,3,3]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time",
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "If an order is canceled exactly at a query time, is it counted?",
+        "reference": "No, all events at that timestamp are applied before answering. Its lifetime ends exclusively at the cancel time."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Times are milliseconds. Add C at 1; add A at 3; add B at 7; cancel C at 14; cancel A at 16; cancel B at 17. After all events at each time, what are alive-order counts at 5, 6, 7, 17?",
+      "params": {
+        "events": [
+          {
+            "id": "C",
+            "kind": "add",
+            "time": 1
+          },
+          {
+            "id": "A",
+            "kind": "add",
+            "time": 3
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "time": 7
+          },
+          {
+            "id": "C",
+            "kind": "cancel",
+            "time": 14
+          },
+          {
+            "id": "A",
+            "kind": "cancel",
+            "time": 16
+          },
+          {
+            "id": "B",
+            "kind": "cancel",
+            "time": 17
+          }
+        ],
+        "queries": [
+          5,
+          6,
+          7,
+          17
+        ]
+      },
+      "answer": "[2,2,3,0]",
+      "tolerance": "0",
+      "topic": "Event processing",
+      "source_topic": "Alive-order counts at query times",
+      "difficulty": "Medium",
+      "spoken_text": "Times are milliseconds. Add C at one; add A at three; add B at seven; cancel C at fourteen; cancel A at sixteen; cancel B at seventeen. After all events at each time, what are alive-order counts at five, six, seven, seventeen?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[2,2,3,1]",
+          "misconceptions": [
+            "keeps_an_order_alive_at_its_cancel_time"
+          ]
+        },
+        {
+          "value": "[2,2,3,3]",
+          "misconceptions": [
+            "never_removes_canceled_orders"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "num_events",
+          "value": "6"
+        },
+        {
+          "name": "num_queries",
+          "value": "4"
+        },
+        {
+          "name": "total_alive_at_last_query",
+          "value": "0"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must all same-timestamp events be processed before returning a count?",
+        "reference": "A mid-timestamp snapshot can depend on incidental event order. The declared query contract is the state after the entire timestamp has been applied."
+      }
+    }
+  ],
+  "answer_kind": "list",
+  "coding_only": true
+}

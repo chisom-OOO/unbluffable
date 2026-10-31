@@ -1,0 +1,3894 @@
+{
+  "template_id": "qd_F008",
+  "pack": "quant_dev",
+  "topic": "Position and P&L accounting",
+  "topics": [
+    "Position and P&L accounting"
+  ],
+  "source_topic": "Marked total profit after fees",
+  "difficulty": "Hard",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "What if the mark equals the original purchase price?",
+    "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Start flat. Buy 10 at 108; sell 3 at 108. Mark remaining shares at 109. Fees are 25 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 25,
+        "fills": [
+          {
+            "price": 108,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 3,
+            "side": "sell"
+          }
+        ],
+        "mark": 109
+      },
+      "answer": "15/4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy ten at one hundred and eight; sell three at one hundred and eight. Mark remaining shares at one hundred and nine. Fees are twenty-five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "7",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-13/4",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "0"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "7"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "13/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "13/4",
+            "relative_gap": "13/15"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "7",
+            "relative_gap": "28/15"
+          }
+        ],
+        "min_wrong_pair_gap": "41/4",
+        "min_distinct_wrong_pair_gap": "41/4"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Begin with zero shares. Buy 7 at 105; sell 1 at 106. Mark remaining shares at 103. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 105,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 1,
+            "side": "sell"
+          }
+        ],
+        "mark": 103
+      },
+      "answer": "-59/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy seven at one hundred and five; sell one at one hundred and six. Mark remaining shares at one hundred and three. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-11",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "1/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "1"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-12"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "4/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "4/5",
+            "relative_gap": "4/59"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "12",
+            "relative_gap": "60/59"
+          }
+        ],
+        "min_wrong_pair_gap": "56/5",
+        "min_distinct_wrong_pair_gap": "56/5"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Use no opening position. Buy 24 at 98; sell 15 at 105. Mark remaining shares at 94. Fees are 20 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 20,
+        "fills": [
+          {
+            "price": 98,
+            "qty": 24,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 15,
+            "side": "sell"
+          }
+        ],
+        "mark": 94
+      },
+      "answer": "306/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy twenty-four at ninety-eight; sell fifteen at one hundred and five. Mark remaining shares at ninety-four. Fees are twenty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "69",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "486/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "105"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-36"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "39/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "39/5",
+            "relative_gap": "13/102"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "36",
+            "relative_gap": "10/17"
+          }
+        ],
+        "min_wrong_pair_gap": "141/5",
+        "min_distinct_wrong_pair_gap": "141/5"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Begin with no position. Buy 25 at 105; sell 4 at 114. Mark remaining shares at 101. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 105,
+            "qty": 25,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 4,
+            "side": "sell"
+          }
+        ],
+        "mark": 101
+      },
+      "answer": "-509/10",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy twenty-five at one hundred and five; sell four at one hundred and fourteen. Mark remaining shares at one hundred and one. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-48",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "331/10",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "36"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-84"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "29/10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "29/10",
+            "relative_gap": "29/509"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "84",
+            "relative_gap": "840/509"
+          }
+        ],
+        "min_wrong_pair_gap": "811/10",
+        "min_distinct_wrong_pair_gap": "811/10"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Start with zero shares. Buy 10 at 94; sell 6 at 95. Mark remaining shares at 92. Fees are 5 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 5,
+        "fills": [
+          {
+            "price": 94,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 95,
+            "qty": 6,
+            "side": "sell"
+          }
+        ],
+        "mark": 92
+      },
+      "answer": "-14/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy ten at ninety-four; sell six at ninety-five. Mark remaining shares at ninety-two. Fees are five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-2",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "26/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "6"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-8"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "4/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "4/5",
+            "relative_gap": "2/7"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "8",
+            "relative_gap": "20/7"
+          }
+        ],
+        "min_wrong_pair_gap": "36/5",
+        "min_distinct_wrong_pair_gap": "36/5"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Start flat. Buy 17 at 94; sell 16 at 91. Mark remaining shares at 88. Fees are 25 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 25,
+        "fills": [
+          {
+            "price": 94,
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "price": 91,
+            "qty": 16,
+            "side": "sell"
+          }
+        ],
+        "mark": 88
+      },
+      "answer": "-249/4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy seventeen at ninety-four; sell sixteen at ninety-one. Mark remaining shares at eighty-eight. Fees are twenty-five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-54",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-225/4",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-48"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-6"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "33/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "33/4",
+            "relative_gap": "11/83"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "6",
+            "relative_gap": "8/83"
+          }
+        ],
+        "min_wrong_pair_gap": "9/4",
+        "min_distinct_wrong_pair_gap": "9/4"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Begin with zero shares. Buy 22 at 101; sell 19 at 96. Mark remaining shares at 109. Fees are 20 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 20,
+        "fills": [
+          {
+            "price": 101,
+            "qty": 22,
+            "side": "buy"
+          },
+          {
+            "price": 96,
+            "qty": 19,
+            "side": "sell"
+          }
+        ],
+        "mark": 109
+      },
+      "answer": "-396/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy twenty-two at one hundred and one; sell nineteen at ninety-six. Mark remaining shares at one hundred and nine. Fees are twenty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-71",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-516/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-95"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "24"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "41/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "41/5",
+            "relative_gap": "41/396"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "24",
+            "relative_gap": "10/33"
+          }
+        ],
+        "min_wrong_pair_gap": "161/5",
+        "min_distinct_wrong_pair_gap": "161/5"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Use no opening position. Buy 16 at 92; sell 5 at 100. Mark remaining shares at 97. Fees are 50 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 50,
+        "fills": [
+          {
+            "price": 92,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "price": 100,
+            "qty": 5,
+            "side": "sell"
+          }
+        ],
+        "mark": 97
+      },
+      "answer": "169/2",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy sixteen at ninety-two; sell five at one hundred. Mark remaining shares at ninety-seven. Fees are fifty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "95",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "59/2",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "40"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "55"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "21/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "21/2",
+            "relative_gap": "21/169"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "55",
+            "relative_gap": "110/169"
+          }
+        ],
+        "min_wrong_pair_gap": "131/2",
+        "min_distinct_wrong_pair_gap": "131/2"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Begin with no position. Buy 21 at 100; sell 19 at 100. Mark remaining shares at 101. Fees are 25 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 25,
+        "fills": [
+          {
+            "price": 100,
+            "qty": 21,
+            "side": "buy"
+          },
+          {
+            "price": 100,
+            "qty": 19,
+            "side": "sell"
+          }
+        ],
+        "mark": 101
+      },
+      "answer": "-8",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy twenty-one at one hundred; sell nineteen at one hundred. Mark remaining shares at one hundred and one. Fees are twenty-five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "2",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-10",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "0"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "2"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "10",
+            "relative_gap": "5/4"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "2",
+            "relative_gap": "1/4"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Start with zero shares. Buy 18 at 99; sell 11 at 106. Mark remaining shares at 97. Fees are 20 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 20,
+        "fills": [
+          {
+            "price": 99,
+            "qty": 18,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 11,
+            "side": "sell"
+          }
+        ],
+        "mark": 97
+      },
+      "answer": "286/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy eighteen at ninety-nine; sell eleven at one hundred and six. Mark remaining shares at ninety-seven. Fees are twenty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "63",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "356/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "77"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-14"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "29/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "29/5",
+            "relative_gap": "29/286"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "14",
+            "relative_gap": "35/143"
+          }
+        ],
+        "min_wrong_pair_gap": "41/5",
+        "min_distinct_wrong_pair_gap": "41/5"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Start flat. Buy 17 at 101; sell 16 at 99. Mark remaining shares at 95. Fees are 20 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 20,
+        "fills": [
+          {
+            "price": 101,
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "price": 99,
+            "qty": 16,
+            "side": "sell"
+          }
+        ],
+        "mark": 95
+      },
+      "answer": "-223/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy seventeen at one hundred and one; sell sixteen at ninety-nine. Mark remaining shares at ninety-five. Fees are twenty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-38",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-193/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-32"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-6"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "33/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "33/5",
+            "relative_gap": "33/223"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "6",
+            "relative_gap": "30/223"
+          }
+        ],
+        "min_wrong_pair_gap": "3/5",
+        "min_distinct_wrong_pair_gap": "3/5"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Begin with zero shares. Buy 14 at 94; sell 8 at 101. Mark remaining shares at 99. Fees are 50 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 50,
+        "fills": [
+          {
+            "price": 94,
+            "qty": 14,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 8,
+            "side": "sell"
+          }
+        ],
+        "mark": 99
+      },
+      "answer": "75",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy fourteen at ninety-four; sell eight at one hundred and one. Mark remaining shares at ninety-nine. Fees are fifty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "86",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "45",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "56"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "30"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "11"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "11",
+            "relative_gap": "11/75"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "30",
+            "relative_gap": "2/5"
+          }
+        ],
+        "min_wrong_pair_gap": "41",
+        "min_distinct_wrong_pair_gap": "41"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Use no opening position. Buy 14 at 102; sell 9 at 101. Mark remaining shares at 110. Fees are 5 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 5,
+        "fills": [
+          {
+            "price": 102,
+            "qty": 14,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 9,
+            "side": "sell"
+          }
+        ],
+        "mark": 110
+      },
+      "answer": "597/20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy fourteen at one hundred and two; sell nine at one hundred and one. Mark remaining shares at one hundred and ten. Fees are five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "31",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-203/20",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-9"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "40"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "23/20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "23/20",
+            "relative_gap": "23/597"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "40",
+            "relative_gap": "800/597"
+          }
+        ],
+        "min_wrong_pair_gap": "823/20",
+        "min_distinct_wrong_pair_gap": "823/20"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Begin with no position. Buy 20 at 99; sell 14 at 105. Mark remaining shares at 93. Fees are 20 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 20,
+        "fills": [
+          {
+            "price": 99,
+            "qty": 20,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 14,
+            "side": "sell"
+          }
+        ],
+        "mark": 93
+      },
+      "answer": "206/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy twenty at ninety-nine; sell fourteen at one hundred and five. Mark remaining shares at ninety-three. Fees are twenty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "48",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "386/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "84"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-36"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "34/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "34/5",
+            "relative_gap": "17/103"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "36",
+            "relative_gap": "90/103"
+          }
+        ],
+        "min_wrong_pair_gap": "146/5",
+        "min_distinct_wrong_pair_gap": "146/5"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Start with zero shares. Buy 30 at 98; sell 1 at 99. Mark remaining shares at 103. Fees are 20 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 20,
+        "fills": [
+          {
+            "price": 98,
+            "qty": 30,
+            "side": "buy"
+          },
+          {
+            "price": 99,
+            "qty": 1,
+            "side": "sell"
+          }
+        ],
+        "mark": 103
+      },
+      "answer": "699/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy thirty at ninety-eight; sell one at ninety-nine. Mark remaining shares at one hundred and three. Fees are twenty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "146",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-26/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "1"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "145"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "31/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "31/5",
+            "relative_gap": "31/699"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "145",
+            "relative_gap": "725/699"
+          }
+        ],
+        "min_wrong_pair_gap": "756/5",
+        "min_distinct_wrong_pair_gap": "756/5"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Start flat. Buy 28 at 108; sell 26 at 118. Mark remaining shares at 106. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 108,
+            "qty": 28,
+            "side": "buy"
+          },
+          {
+            "price": 118,
+            "qty": 26,
+            "side": "sell"
+          }
+        ],
+        "mark": 106
+      },
+      "answer": "1253/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy twenty-eight at one hundred and eight; sell twenty-six at one hundred and eighteen. Mark remaining shares at one hundred and six. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "256",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "1273/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "260"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-4"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "27/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "27/5",
+            "relative_gap": "27/1253"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "4",
+            "relative_gap": "20/1253"
+          }
+        ],
+        "min_wrong_pair_gap": "7/5",
+        "min_distinct_wrong_pair_gap": "7/5"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Begin with zero shares. Buy 28 at 100; sell 9 at 110. Mark remaining shares at 96. Fees are 5 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 5,
+        "fills": [
+          {
+            "price": 100,
+            "qty": 28,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 9,
+            "side": "sell"
+          }
+        ],
+        "mark": 96
+      },
+      "answer": "243/20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy twenty-eight at one hundred; sell nine at one hundred and ten. Mark remaining shares at ninety-six. Fees are five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "14",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "1763/20",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "90"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-76"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "37/20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "37/20",
+            "relative_gap": "37/243"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "76",
+            "relative_gap": "1520/243"
+          }
+        ],
+        "min_wrong_pair_gap": "1483/20",
+        "min_distinct_wrong_pair_gap": "1483/20"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Use no opening position. Buy 6 at 94; sell 3 at 94. Mark remaining shares at 95. Fees are 5 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 5,
+        "fills": [
+          {
+            "price": 94,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 94,
+            "qty": 3,
+            "side": "sell"
+          }
+        ],
+        "mark": 95
+      },
+      "answer": "51/20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy six at ninety-four; sell three at ninety-four. Mark remaining shares at ninety-five. Fees are five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-9/20",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "0"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "3"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "9/20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "9/20",
+            "relative_gap": "3/17"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "3",
+            "relative_gap": "20/17"
+          }
+        ],
+        "min_wrong_pair_gap": "69/20",
+        "min_distinct_wrong_pair_gap": "69/20"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Begin with no position. Buy 22 at 98; sell 1 at 103. Mark remaining shares at 92. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 98,
+            "qty": 22,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 1,
+            "side": "sell"
+          }
+        ],
+        "mark": 92
+      },
+      "answer": "-1233/10",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy twenty-two at ninety-eight; sell one at one hundred and three. Mark remaining shares at ninety-two. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-121",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "27/10",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "5"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-126"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "23/10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "23/10",
+            "relative_gap": "23/1233"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "126",
+            "relative_gap": "140/137"
+          }
+        ],
+        "min_wrong_pair_gap": "1237/10",
+        "min_distinct_wrong_pair_gap": "1237/10"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Start with zero shares. Buy 30 at 101; sell 27 at 101. Mark remaining shares at 99. Fees are 5 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 5,
+        "fills": [
+          {
+            "price": 101,
+            "qty": 30,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 27,
+            "side": "sell"
+          }
+        ],
+        "mark": 99
+      },
+      "answer": "-177/20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy thirty at one hundred and one; sell twenty-seven at one hundred and one. Mark remaining shares at ninety-nine. Fees are five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-6",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-57/20",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "0"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-6"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "57/20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "57/20",
+            "relative_gap": "19/59"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "6",
+            "relative_gap": "40/59"
+          }
+        ],
+        "min_wrong_pair_gap": "63/20",
+        "min_distinct_wrong_pair_gap": "63/20"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Start flat. Buy 16 at 91; sell 13 at 94. Mark remaining shares at 87. Fees are 20 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 20,
+        "fills": [
+          {
+            "price": 91,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "price": 94,
+            "qty": 13,
+            "side": "sell"
+          }
+        ],
+        "mark": 87
+      },
+      "answer": "106/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy sixteen at ninety-one; sell thirteen at ninety-four. Mark remaining shares at eighty-seven. Fees are twenty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "166/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "39"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-12"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "29/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "29/5",
+            "relative_gap": "29/106"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "12",
+            "relative_gap": "30/53"
+          }
+        ],
+        "min_wrong_pair_gap": "31/5",
+        "min_distinct_wrong_pair_gap": "31/5"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Begin with zero shares. Buy 11 at 93; sell 3 at 103. Mark remaining shares at 96. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 93,
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 3,
+            "side": "sell"
+          }
+        ],
+        "mark": 96
+      },
+      "answer": "263/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy eleven at ninety-three; sell three at one hundred and three. Mark remaining shares at ninety-six. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "54",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "143/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "30"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "24"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "7/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "7/5",
+            "relative_gap": "7/263"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "24",
+            "relative_gap": "120/263"
+          }
+        ],
+        "min_wrong_pair_gap": "127/5",
+        "min_distinct_wrong_pair_gap": "127/5"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Use no opening position. Buy 30 at 103; sell 13 at 113. Mark remaining shares at 104. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 103,
+            "qty": 30,
+            "side": "buy"
+          },
+          {
+            "price": 113,
+            "qty": 13,
+            "side": "sell"
+          }
+        ],
+        "mark": 104
+      },
+      "answer": "1427/10",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy thirty at one hundred and three; sell thirteen at one hundred and thirteen. Mark remaining shares at one hundred and four. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "147",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "1257/10",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "130"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "17"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "43/10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "43/10",
+            "relative_gap": "43/1427"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "17",
+            "relative_gap": "170/1427"
+          }
+        ],
+        "min_wrong_pair_gap": "213/10",
+        "min_distinct_wrong_pair_gap": "213/10"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Begin with no position. Buy 6 at 93; sell 1 at 102. Mark remaining shares at 101. Fees are 50 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 50,
+        "fills": [
+          {
+            "price": 93,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 102,
+            "qty": 1,
+            "side": "sell"
+          }
+        ],
+        "mark": 101
+      },
+      "answer": "91/2",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy six at ninety-three; sell one at one hundred and two. Mark remaining shares at one hundred and one. Fees are fifty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "49",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "11/2",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "9"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "40"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "7/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "7/2",
+            "relative_gap": "1/13"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "40",
+            "relative_gap": "80/91"
+          }
+        ],
+        "min_wrong_pair_gap": "87/2",
+        "min_distinct_wrong_pair_gap": "87/2"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Start with zero shares. Buy 5 at 98; sell 4 at 97. Mark remaining shares at 101. Fees are 50 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 50,
+        "fills": [
+          {
+            "price": 98,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 97,
+            "qty": 4,
+            "side": "sell"
+          }
+        ],
+        "mark": 101
+      },
+      "answer": "-11/2",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy five at ninety-eight; sell four at ninety-seven. Mark remaining shares at one hundred and one. Fees are fifty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-1",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-17/2",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-4"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "3"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "9/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "9/2",
+            "relative_gap": "9/11"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "3",
+            "relative_gap": "6/11"
+          }
+        ],
+        "min_wrong_pair_gap": "15/2",
+        "min_distinct_wrong_pair_gap": "15/2"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Start flat. Buy 23 at 90; sell 10 at 92. Mark remaining shares at 93. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 90,
+            "qty": 23,
+            "side": "buy"
+          },
+          {
+            "price": 92,
+            "qty": 10,
+            "side": "sell"
+          }
+        ],
+        "mark": 93
+      },
+      "answer": "557/10",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy twenty-three at ninety; sell ten at ninety-two. Mark remaining shares at ninety-three. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "59",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "167/10",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "20"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "39"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "33/10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "33/10",
+            "relative_gap": "33/557"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "39",
+            "relative_gap": "390/557"
+          }
+        ],
+        "min_wrong_pair_gap": "423/10",
+        "min_distinct_wrong_pair_gap": "423/10"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Begin with zero shares. Buy 15 at 100; sell 2 at 104. Mark remaining shares at 96. Fees are 5 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 5,
+        "fills": [
+          {
+            "price": 100,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "price": 104,
+            "qty": 2,
+            "side": "sell"
+          }
+        ],
+        "mark": 96
+      },
+      "answer": "-897/20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy fifteen at one hundred; sell two at one hundred and four. Mark remaining shares at ninety-six. Fees are five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-44",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "143/20",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "8"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-52"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "17/20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "17/20",
+            "relative_gap": "17/897"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "52",
+            "relative_gap": "80/69"
+          }
+        ],
+        "min_wrong_pair_gap": "1023/20",
+        "min_distinct_wrong_pair_gap": "1023/20"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Use no opening position. Buy 9 at 102; sell 5 at 108. Mark remaining shares at 96. Fees are 50 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 50,
+        "fills": [
+          {
+            "price": 102,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 5,
+            "side": "sell"
+          }
+        ],
+        "mark": 96
+      },
+      "answer": "-1",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy nine at one hundred and two; sell five at one hundred and eight. Mark remaining shares at ninety-six. Fees are fifty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "6",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "23",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "30"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-24"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "7",
+            "relative_gap": "7"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "24",
+            "relative_gap": "24"
+          }
+        ],
+        "min_wrong_pair_gap": "17",
+        "min_distinct_wrong_pair_gap": "17"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Begin with no position. Buy 10 at 106; sell 6 at 116. Mark remaining shares at 111. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 106,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 116,
+            "qty": 6,
+            "side": "sell"
+          }
+        ],
+        "mark": 111
+      },
+      "answer": "392/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy ten at one hundred and six; sell six at one hundred and sixteen. Mark remaining shares at one hundred and eleven. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "80",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "292/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "60"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "20"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "8/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "8/5",
+            "relative_gap": "1/49"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "20",
+            "relative_gap": "25/98"
+          }
+        ],
+        "min_wrong_pair_gap": "108/5",
+        "min_distinct_wrong_pair_gap": "108/5"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Start with zero shares. Buy 10 at 90; sell 5 at 99. Mark remaining shares at 93. Fees are 25 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 25,
+        "fills": [
+          {
+            "price": 90,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 99,
+            "qty": 5,
+            "side": "sell"
+          }
+        ],
+        "mark": 93
+      },
+      "answer": "225/4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy ten at ninety; sell five at ninety-nine. Mark remaining shares at ninety-three. Fees are twenty-five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "60",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "165/4",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "45"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "15"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "15/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "15/4",
+            "relative_gap": "1/15"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "15",
+            "relative_gap": "4/15"
+          }
+        ],
+        "min_wrong_pair_gap": "75/4",
+        "min_distinct_wrong_pair_gap": "75/4"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Start flat. Buy 21 at 99; sell 18 at 96. Mark remaining shares at 97. Fees are 25 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 25,
+        "fills": [
+          {
+            "price": 99,
+            "qty": 21,
+            "side": "buy"
+          },
+          {
+            "price": 96,
+            "qty": 18,
+            "side": "sell"
+          }
+        ],
+        "mark": 97
+      },
+      "answer": "-279/4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy twenty-one at ninety-nine; sell eighteen at ninety-six. Mark remaining shares at ninety-seven. Fees are twenty-five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-60",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-255/4",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-54"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-6"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "39/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "39/4",
+            "relative_gap": "13/93"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "6",
+            "relative_gap": "8/93"
+          }
+        ],
+        "min_wrong_pair_gap": "15/4",
+        "min_distinct_wrong_pair_gap": "15/4"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Begin with zero shares. Buy 15 at 105; sell 11 at 109. Mark remaining shares at 110. Fees are 25 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 25,
+        "fills": [
+          {
+            "price": 105,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 11,
+            "side": "sell"
+          }
+        ],
+        "mark": 110
+      },
+      "answer": "115/2",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy fifteen at one hundred and five; sell eleven at one hundred and nine. Mark remaining shares at one hundred and ten. Fees are twenty-five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "64",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "75/2",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "44"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "20"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "13/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "13/2",
+            "relative_gap": "13/115"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "20",
+            "relative_gap": "8/23"
+          }
+        ],
+        "min_wrong_pair_gap": "53/2",
+        "min_distinct_wrong_pair_gap": "53/2"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Use no opening position. Buy 15 at 100; sell 10 at 100. Mark remaining shares at 98. Fees are 5 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 5,
+        "fills": [
+          {
+            "price": 100,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "price": 100,
+            "qty": 10,
+            "side": "sell"
+          }
+        ],
+        "mark": 98
+      },
+      "answer": "-45/4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy fifteen at one hundred; sell ten at one hundred. Mark remaining shares at ninety-eight. Fees are five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-10",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-5/4",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "0"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-10"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "5/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "5/4",
+            "relative_gap": "1/9"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "10",
+            "relative_gap": "8/9"
+          }
+        ],
+        "min_wrong_pair_gap": "35/4",
+        "min_distinct_wrong_pair_gap": "35/4"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Begin with no position. Buy 26 at 94; sell 7 at 99. Mark remaining shares at 97. Fees are 5 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 5,
+        "fills": [
+          {
+            "price": 94,
+            "qty": 26,
+            "side": "buy"
+          },
+          {
+            "price": 99,
+            "qty": 7,
+            "side": "sell"
+          }
+        ],
+        "mark": 97
+      },
+      "answer": "1807/20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy twenty-six at ninety-four; sell seven at ninety-nine. Mark remaining shares at ninety-seven. Fees are five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "92",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "667/20",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "35"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "57"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "33/20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "33/20",
+            "relative_gap": "33/1807"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "57",
+            "relative_gap": "1140/1807"
+          }
+        ],
+        "min_wrong_pair_gap": "1173/20",
+        "min_distinct_wrong_pair_gap": "1173/20"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Start with zero shares. Buy 8 at 92; sell 3 at 100. Mark remaining shares at 86. Fees are 25 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 25,
+        "fills": [
+          {
+            "price": 92,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 100,
+            "qty": 3,
+            "side": "sell"
+          }
+        ],
+        "mark": 86
+      },
+      "answer": "-35/4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy eight at ninety-two; sell three at one hundred. Mark remaining shares at eighty-six. Fees are twenty-five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-6",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "85/4",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "24"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-30"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "11/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "11/4",
+            "relative_gap": "11/35"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "30",
+            "relative_gap": "24/7"
+          }
+        ],
+        "min_wrong_pair_gap": "109/4",
+        "min_distinct_wrong_pair_gap": "109/4"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Start flat. Buy 19 at 105; sell 5 at 103. Mark remaining shares at 106. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 105,
+            "qty": 19,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 5,
+            "side": "sell"
+          }
+        ],
+        "mark": 106
+      },
+      "answer": "8/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy nineteen at one hundred and five; sell five at one hundred and three. Mark remaining shares at one hundred and six. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "4",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-62/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-10"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "14"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "12/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "12/5",
+            "relative_gap": "3/2"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "14",
+            "relative_gap": "35/4"
+          }
+        ],
+        "min_wrong_pair_gap": "82/5",
+        "min_distinct_wrong_pair_gap": "82/5"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Begin with zero shares. Buy 7 at 105; sell 1 at 102. Mark remaining shares at 101. Fees are 50 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 50,
+        "fills": [
+          {
+            "price": 105,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 102,
+            "qty": 1,
+            "side": "sell"
+          }
+        ],
+        "mark": 101
+      },
+      "answer": "-31",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy seven at one hundred and five; sell one at one hundred and two. Mark remaining shares at one hundred and one. Fees are fifty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-27",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-7",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-3"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-24"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "4",
+            "relative_gap": "4/31"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "24",
+            "relative_gap": "24/31"
+          }
+        ],
+        "min_wrong_pair_gap": "20",
+        "min_distinct_wrong_pair_gap": "20"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Use no opening position. Buy 15 at 98; sell 14 at 98. Mark remaining shares at 101. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 98,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "price": 98,
+            "qty": 14,
+            "side": "sell"
+          }
+        ],
+        "mark": 101
+      },
+      "answer": "1/10",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy fifteen at ninety-eight; sell fourteen at ninety-eight. Mark remaining shares at one hundred and one. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-29/10",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "0"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "3"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "29/10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "29/10",
+            "relative_gap": "29"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "3",
+            "relative_gap": "30"
+          }
+        ],
+        "min_wrong_pair_gap": "59/10",
+        "min_distinct_wrong_pair_gap": "59/10"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Begin with no position. Buy 16 at 90; sell 1 at 89. Mark remaining shares at 84. Fees are 50 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 50,
+        "fills": [
+          {
+            "price": 90,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "price": 89,
+            "qty": 1,
+            "side": "sell"
+          }
+        ],
+        "mark": 84
+      },
+      "answer": "-199/2",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy sixteen at ninety; sell one at eighty-nine. Mark remaining shares at eighty-four. Fees are fifty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-91",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-19/2",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-1"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-90"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "17/2"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "17/2",
+            "relative_gap": "17/199"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "90",
+            "relative_gap": "180/199"
+          }
+        ],
+        "min_wrong_pair_gap": "163/2",
+        "min_distinct_wrong_pair_gap": "163/2"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Start with zero shares. Buy 27 at 90; sell 20 at 90. Mark remaining shares at 93. Fees are 25 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 25,
+        "fills": [
+          {
+            "price": 90,
+            "qty": 27,
+            "side": "buy"
+          },
+          {
+            "price": 90,
+            "qty": 20,
+            "side": "sell"
+          }
+        ],
+        "mark": 93
+      },
+      "answer": "37/4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy twenty-seven at ninety; sell twenty at ninety. Mark remaining shares at ninety-three. Fees are twenty-five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-47/4",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "0"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "21"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "47/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "47/4",
+            "relative_gap": "47/37"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "21",
+            "relative_gap": "84/37"
+          }
+        ],
+        "min_wrong_pair_gap": "131/4",
+        "min_distinct_wrong_pair_gap": "131/4"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Start flat. Buy 25 at 101; sell 3 at 109. Mark remaining shares at 104. Fees are 20 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 20,
+        "fills": [
+          {
+            "price": 101,
+            "qty": 25,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 3,
+            "side": "sell"
+          }
+        ],
+        "mark": 104
+      },
+      "answer": "422/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy twenty-five at one hundred and one; sell three at one hundred and nine. Mark remaining shares at one hundred and four. Fees are twenty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "90",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "92/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "24"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "66"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "28/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "28/5",
+            "relative_gap": "14/211"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "66",
+            "relative_gap": "165/211"
+          }
+        ],
+        "min_wrong_pair_gap": "358/5",
+        "min_distinct_wrong_pair_gap": "358/5"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Begin with zero shares. Buy 22 at 106; sell 6 at 110. Mark remaining shares at 109. Fees are 25 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 25,
+        "fills": [
+          {
+            "price": 106,
+            "qty": 22,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 6,
+            "side": "sell"
+          }
+        ],
+        "mark": 109
+      },
+      "answer": "65",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy twenty-two at one hundred and six; sell six at one hundred and ten. Mark remaining shares at one hundred and nine. Fees are twenty-five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "72",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "17",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "24"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "48"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "7"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "7",
+            "relative_gap": "7/65"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "48",
+            "relative_gap": "48/65"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Use no opening position. Buy 16 at 103; sell 2 at 102. Mark remaining shares at 106. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 103,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "price": 102,
+            "qty": 2,
+            "side": "sell"
+          }
+        ],
+        "mark": 106
+      },
+      "answer": "191/5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy sixteen at one hundred and three; sell two at one hundred and two. Mark remaining shares at one hundred and six. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "40",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-19/5",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-2"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "42"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "9/5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "9/5",
+            "relative_gap": "9/191"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "42",
+            "relative_gap": "210/191"
+          }
+        ],
+        "min_wrong_pair_gap": "219/5",
+        "min_distinct_wrong_pair_gap": "219/5"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Begin with no position. Buy 7 at 104; sell 6 at 109. Mark remaining shares at 109. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 104,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 6,
+            "side": "sell"
+          }
+        ],
+        "mark": 109
+      },
+      "answer": "337/10",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy seven at one hundred and four; sell six at one hundred and nine. Mark remaining shares at one hundred and nine. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "35",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "287/10",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "30"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "5"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "13/10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "13/10",
+            "relative_gap": "13/337"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "5",
+            "relative_gap": "50/337"
+          }
+        ],
+        "min_wrong_pair_gap": "63/10",
+        "min_distinct_wrong_pair_gap": "63/10"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Start with zero shares. Buy 6 at 100; sell 3 at 106. Mark remaining shares at 103. Fees are 25 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 25,
+        "fills": [
+          {
+            "price": 100,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 3,
+            "side": "sell"
+          }
+        ],
+        "mark": 103
+      },
+      "answer": "99/4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy six at one hundred; sell three at one hundred and six. Mark remaining shares at one hundred and three. Fees are twenty-five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "63/4",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "18"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "9"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "9/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "9/4",
+            "relative_gap": "1/11"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "9",
+            "relative_gap": "4/11"
+          }
+        ],
+        "min_wrong_pair_gap": "45/4",
+        "min_distinct_wrong_pair_gap": "45/4"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Start flat. Buy 9 at 97; sell 8 at 95. Mark remaining shares at 100. Fees are 25 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 25,
+        "fills": [
+          {
+            "price": 97,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 95,
+            "qty": 8,
+            "side": "sell"
+          }
+        ],
+        "mark": 100
+      },
+      "answer": "-69/4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy nine at ninety-seven; sell eight at ninety-five. Mark remaining shares at one hundred. Fees are twenty-five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-13",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-81/4",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-16"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "3"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "17/4"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "17/4",
+            "relative_gap": "17/69"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "3",
+            "relative_gap": "4/23"
+          }
+        ],
+        "min_wrong_pair_gap": "29/4",
+        "min_distinct_wrong_pair_gap": "29/4"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Begin with zero shares. Buy 10 at 109; sell 4 at 105. Mark remaining shares at 114. Fees are 5 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 5,
+        "fills": [
+          {
+            "price": 109,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 4,
+            "side": "sell"
+          }
+        ],
+        "mark": 114
+      },
+      "answer": "133/10",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy ten at one hundred and nine; sell four at one hundred and five. Mark remaining shares at one hundred and fourteen. Fees are five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "14",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-167/10",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "-16"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "30"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "7/10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "7/10",
+            "relative_gap": "1/19"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "30",
+            "relative_gap": "300/133"
+          }
+        ],
+        "min_wrong_pair_gap": "307/10",
+        "min_distinct_wrong_pair_gap": "307/10"
+      },
+      "follow_up": {
+        "question": "How could a cash-ledger check detect an omitted unrealized component?",
+        "reference": "Combine execution cash and fee outflows with the marked value of ending inventory. Omitting that inventory value would fail the total-profit reconciliation."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Use no opening position. Buy 30 at 105; sell 11 at 105. Mark remaining shares at 101. Fees are 5 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 5,
+        "fills": [
+          {
+            "price": 105,
+            "qty": 30,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 11,
+            "side": "sell"
+          }
+        ],
+        "mark": 101
+      },
+      "answer": "-1561/20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy thirty at one hundred and five; sell eleven at one hundred and five. Mark remaining shares at one hundred and one. Fees are five cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "-76",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "-41/20",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "0"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-76"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "41/20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "41/20",
+            "relative_gap": "41/1561"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "76",
+            "relative_gap": "1520/1561"
+          }
+        ],
+        "min_wrong_pair_gap": "1479/20",
+        "min_distinct_wrong_pair_gap": "1479/20"
+      },
+      "follow_up": {
+        "question": "How would fees charged in different currencies affect a production implementation?",
+        "reference": "Keep currency and conversion timing explicit for every fee and cash flow. Aggregate profit only after applying a consistent valuation and rounding policy."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Begin with no position. Buy 6 at 94; sell 5 at 102. Mark remaining shares at 102. Fees are 10 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 10,
+        "fills": [
+          {
+            "price": 94,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 102,
+            "qty": 5,
+            "side": "sell"
+          }
+        ],
+        "mark": 102
+      },
+      "answer": "469/10",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy six at ninety-four; sell five at one hundred and two. Mark remaining shares at one hundred and two. Fees are ten cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 2,
+      "interview_friendly_basis": "simple_fraction",
+      "wrong": [
+        {
+          "value": "48",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "389/10",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "40"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "8"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "11/10"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "11/10",
+            "relative_gap": "11/469"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "8",
+            "relative_gap": "80/469"
+          }
+        ],
+        "min_wrong_pair_gap": "91/10",
+        "min_distinct_wrong_pair_gap": "91/10"
+      },
+      "follow_up": {
+        "question": "What if the mark equals the original purchase price?",
+        "reference": "Unrealized profit on the remaining shares is zero. Realized profit and the fees from both trades still remain."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Start with zero shares. Buy 15 at 94; sell 13 at 102. Mark remaining shares at 92. Fees are 50 cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "params": {
+        "fee_cents": 50,
+        "fills": [
+          {
+            "price": 94,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "price": 102,
+            "qty": 13,
+            "side": "sell"
+          }
+        ],
+        "mark": 92
+      },
+      "answer": "86",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Marked total profit after fees",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy fifteen at ninety-four; sell thirteen at one hundred and two. Mark remaining shares at ninety-two. Fees are fifty cents per executed share on both trades, expensed immediately. What is total profit including unrealized profit, in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "100",
+          "misconceptions": [
+            "omits_fees_on_both_sides"
+          ]
+        },
+        {
+          "value": "90",
+          "misconceptions": [
+            "omits_unrealized_profit_on_the_remainder"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "realized_profit_dollars",
+          "value": "104"
+        },
+        {
+          "name": "unrealized_profit_dollars",
+          "value": "-4"
+        },
+        {
+          "name": "total_fees_dollars",
+          "value": "14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "omits_fees_on_both_sides",
+            "absolute_gap": "14",
+            "relative_gap": "7/43"
+          },
+          {
+            "misconception": "omits_unrealized_profit_on_the_remainder",
+            "absolute_gap": "4",
+            "relative_gap": "2/43"
+          }
+        ],
+        "min_wrong_pair_gap": "10",
+        "min_distinct_wrong_pair_gap": "10"
+      },
+      "follow_up": {
+        "question": "Why are buy-side fees still counted after only part of the position is sold?",
+        "reference": "The question expenses every executed fee immediately. Buying shares generated that cash charge whether or not all inventory has since been sold."
+      }
+    }
+  ]
+}

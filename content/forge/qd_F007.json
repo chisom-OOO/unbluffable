@@ -1,0 +1,3944 @@
+{
+  "template_id": "qd_F007",
+  "pack": "quant_dev",
+  "topic": "Position and P&L accounting",
+  "topics": [
+    "Position and P&L accounting"
+  ],
+  "source_topic": "Signed net position",
+  "difficulty": "Easy",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "How should a short ending position be represented?",
+    "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "All quantities are shares. Opening position is minus 28. Buy 2, sell 38, buy 11, sell 7. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "qty": 38,
+            "side": "sell"
+          },
+          {
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "qty": 7,
+            "side": "sell"
+          }
+        ],
+        "opening": -28
+      },
+      "answer": "-60",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-eight. Buy two, sell thirty-eight, buy eleven, sell seven. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-32",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "30",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "13"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "45"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "28",
+            "relative_gap": "7/15"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "90",
+            "relative_gap": "3/2"
+          }
+        ],
+        "min_wrong_pair_gap": "62",
+        "min_distinct_wrong_pair_gap": "62"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "All quantities are shares. Opening position is 11. Buy 31, sell 25, buy 37, sell 28. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 31,
+            "side": "buy"
+          },
+          {
+            "qty": 25,
+            "side": "sell"
+          },
+          {
+            "qty": 37,
+            "side": "buy"
+          },
+          {
+            "qty": 28,
+            "side": "sell"
+          }
+        ],
+        "opening": 11
+      },
+      "answer": "26",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is eleven. Buy thirty-one, sell twenty-five, buy thirty-seven, sell twenty-eight. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "132",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "68"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "53"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "11",
+            "relative_gap": "11/26"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "106",
+            "relative_gap": "53/13"
+          }
+        ],
+        "min_wrong_pair_gap": "117",
+        "min_distinct_wrong_pair_gap": "117"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "All quantities are shares. Opening position is minus 21. Buy 16, sell 30, buy 7, sell 36. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "qty": 30,
+            "side": "sell"
+          },
+          {
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "qty": 36,
+            "side": "sell"
+          }
+        ],
+        "opening": -21
+      },
+      "answer": "-64",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-one. Buy sixteen, sell thirty, buy seven, sell thirty-six. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-43",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "68",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "23"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "66"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "21",
+            "relative_gap": "21/64"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "132",
+            "relative_gap": "33/16"
+          }
+        ],
+        "min_wrong_pair_gap": "111",
+        "min_distinct_wrong_pair_gap": "111"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "All quantities are shares. Opening position is 28. Buy 8, sell 24, buy 18, sell 29. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "qty": 24,
+            "side": "sell"
+          },
+          {
+            "qty": 18,
+            "side": "buy"
+          },
+          {
+            "qty": 29,
+            "side": "sell"
+          }
+        ],
+        "opening": 28
+      },
+      "answer": "1",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is twenty-eight. Buy eight, sell twenty-four, buy eighteen, sell twenty-nine. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-27",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "107",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "26"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "53"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "28",
+            "relative_gap": "28"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "106",
+            "relative_gap": "106"
+          }
+        ],
+        "min_wrong_pair_gap": "134",
+        "min_distinct_wrong_pair_gap": "134"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "All quantities are shares. Opening position is 9. Buy 8, sell 34, buy 19, sell 22. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "qty": 34,
+            "side": "sell"
+          },
+          {
+            "qty": 19,
+            "side": "buy"
+          },
+          {
+            "qty": 22,
+            "side": "sell"
+          }
+        ],
+        "opening": 9
+      },
+      "answer": "-20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is nine. Buy eight, sell thirty-four, buy nineteen, sell twenty-two. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-29",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "92",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "27"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "56"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "9",
+            "relative_gap": "9/20"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "112",
+            "relative_gap": "28/5"
+          }
+        ],
+        "min_wrong_pair_gap": "121",
+        "min_distinct_wrong_pair_gap": "121"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "All quantities are shares. Opening position is 7. Buy 2, sell 12, buy 9, sell 35. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "qty": 35,
+            "side": "sell"
+          }
+        ],
+        "opening": 7
+      },
+      "answer": "-29",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is seven. Buy two, sell twelve, buy nine, sell thirty-five. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-36",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "65",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "11"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "47"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "7",
+            "relative_gap": "7/29"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "94",
+            "relative_gap": "94/29"
+          }
+        ],
+        "min_wrong_pair_gap": "101",
+        "min_distinct_wrong_pair_gap": "101"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "All quantities are shares. Opening position is minus 10. Buy 31, sell 32, buy 38, sell 34. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 31,
+            "side": "buy"
+          },
+          {
+            "qty": 32,
+            "side": "sell"
+          },
+          {
+            "qty": 38,
+            "side": "buy"
+          },
+          {
+            "qty": 34,
+            "side": "sell"
+          }
+        ],
+        "opening": -10
+      },
+      "answer": "-7",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus ten. Buy thirty-one, sell thirty-two, buy thirty-eight, sell thirty-four. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "125",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "69"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "66"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "10",
+            "relative_gap": "10/7"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "132",
+            "relative_gap": "132/7"
+          }
+        ],
+        "min_wrong_pair_gap": "122",
+        "min_distinct_wrong_pair_gap": "122"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "All quantities are shares. Opening position is minus 29. Buy 36, sell 32, buy 6, sell 39. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 36,
+            "side": "buy"
+          },
+          {
+            "qty": 32,
+            "side": "sell"
+          },
+          {
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "qty": 39,
+            "side": "sell"
+          }
+        ],
+        "opening": -29
+      },
+      "answer": "-58",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-nine. Buy thirty-six, sell thirty-two, buy six, sell thirty-nine. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-29",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "84",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "42"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "71"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "29",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "142",
+            "relative_gap": "71/29"
+          }
+        ],
+        "min_wrong_pair_gap": "113",
+        "min_distinct_wrong_pair_gap": "113"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "All quantities are shares. Opening position is minus 20. Buy 17, sell 1, buy 21, sell 29. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "qty": 1,
+            "side": "sell"
+          },
+          {
+            "qty": 21,
+            "side": "buy"
+          },
+          {
+            "qty": 29,
+            "side": "sell"
+          }
+        ],
+        "opening": -20
+      },
+      "answer": "-12",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty. Buy seventeen, sell one, buy twenty-one, sell twenty-nine. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "8",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "48",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "38"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "30"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "20",
+            "relative_gap": "5/3"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "60",
+            "relative_gap": "5"
+          }
+        ],
+        "min_wrong_pair_gap": "40",
+        "min_distinct_wrong_pair_gap": "40"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "All quantities are shares. Opening position is 5. Buy 38, sell 19, buy 25, sell 20. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 38,
+            "side": "buy"
+          },
+          {
+            "qty": 19,
+            "side": "sell"
+          },
+          {
+            "qty": 25,
+            "side": "buy"
+          },
+          {
+            "qty": 20,
+            "side": "sell"
+          }
+        ],
+        "opening": 5
+      },
+      "answer": "29",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is five. Buy thirty-eight, sell nineteen, buy twenty-five, sell twenty. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "107",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "63"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "39"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "5",
+            "relative_gap": "5/29"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "78",
+            "relative_gap": "78/29"
+          }
+        ],
+        "min_wrong_pair_gap": "83",
+        "min_distinct_wrong_pair_gap": "83"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "All quantities are shares. Opening position is 28. Buy 11, sell 33, buy 3, sell 24. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "qty": 33,
+            "side": "sell"
+          },
+          {
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "qty": 24,
+            "side": "sell"
+          }
+        ],
+        "opening": 28
+      },
+      "answer": "-15",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is twenty-eight. Buy eleven, sell thirty-three, buy three, sell twenty-four. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-43",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "99",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "14"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "57"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "28",
+            "relative_gap": "28/15"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "114",
+            "relative_gap": "38/5"
+          }
+        ],
+        "min_wrong_pair_gap": "142",
+        "min_distinct_wrong_pair_gap": "142"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "All quantities are shares. Opening position is 4. Buy 40, sell 17, buy 38, sell 10. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 40,
+            "side": "buy"
+          },
+          {
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "qty": 38,
+            "side": "buy"
+          },
+          {
+            "qty": 10,
+            "side": "sell"
+          }
+        ],
+        "opening": 4
+      },
+      "answer": "55",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is four. Buy forty, sell seventeen, buy thirty-eight, sell ten. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "51",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "109",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "78"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "4",
+            "relative_gap": "4/55"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "54",
+            "relative_gap": "54/55"
+          }
+        ],
+        "min_wrong_pair_gap": "58",
+        "min_distinct_wrong_pair_gap": "58"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "All quantities are shares. Opening position is minus 10. Buy 30, sell 2, buy 6, sell 19. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 30,
+            "side": "buy"
+          },
+          {
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "qty": 19,
+            "side": "sell"
+          }
+        ],
+        "opening": -10
+      },
+      "answer": "5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus ten. Buy thirty, sell two, buy six, sell nineteen. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "15",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "47",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "36"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "10",
+            "relative_gap": "2"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "42",
+            "relative_gap": "42/5"
+          }
+        ],
+        "min_wrong_pair_gap": "32",
+        "min_distinct_wrong_pair_gap": "32"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "All quantities are shares. Opening position is 14. Buy 13, sell 11, buy 1, sell 13. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 13,
+            "side": "buy"
+          },
+          {
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "qty": 13,
+            "side": "sell"
+          }
+        ],
+        "opening": 14
+      },
+      "answer": "4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is fourteen. Buy thirteen, sell eleven, buy one, sell thirteen. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-10",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "52",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "14"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "14",
+            "relative_gap": "7/2"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "48",
+            "relative_gap": "12"
+          }
+        ],
+        "min_wrong_pair_gap": "62",
+        "min_distinct_wrong_pair_gap": "62"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "All quantities are shares. Opening position is minus 2. Buy 39, sell 32, buy 40, sell 3. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 39,
+            "side": "buy"
+          },
+          {
+            "qty": 32,
+            "side": "sell"
+          },
+          {
+            "qty": 40,
+            "side": "buy"
+          },
+          {
+            "qty": 3,
+            "side": "sell"
+          }
+        ],
+        "opening": -2
+      },
+      "answer": "42",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus two. Buy thirty-nine, sell thirty-two, buy forty, sell three. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "44",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "112",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "79"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "35"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "2",
+            "relative_gap": "1/21"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "70",
+            "relative_gap": "5/3"
+          }
+        ],
+        "min_wrong_pair_gap": "68",
+        "min_distinct_wrong_pair_gap": "68"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "All quantities are shares. Opening position is minus 16. Buy 28, sell 37, buy 5, sell 13. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 28,
+            "side": "buy"
+          },
+          {
+            "qty": 37,
+            "side": "sell"
+          },
+          {
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "qty": 13,
+            "side": "sell"
+          }
+        ],
+        "opening": -16
+      },
+      "answer": "-33",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus sixteen. Buy twenty-eight, sell thirty-seven, buy five, sell thirteen. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-17",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "67",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "33"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "50"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "16",
+            "relative_gap": "16/33"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "100",
+            "relative_gap": "100/33"
+          }
+        ],
+        "min_wrong_pair_gap": "84",
+        "min_distinct_wrong_pair_gap": "84"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "All quantities are shares. Opening position is minus 24. Buy 3, sell 20, buy 1, sell 36. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "qty": 20,
+            "side": "sell"
+          },
+          {
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "qty": 36,
+            "side": "sell"
+          }
+        ],
+        "opening": -24
+      },
+      "answer": "-76",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-four. Buy three, sell twenty, buy one, sell thirty-six. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-52",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "4"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "56"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "24",
+            "relative_gap": "6/19"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "112",
+            "relative_gap": "28/19"
+          }
+        ],
+        "min_wrong_pair_gap": "88",
+        "min_distinct_wrong_pair_gap": "88"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "All quantities are shares. Opening position is minus 11. Buy 22, sell 6, buy 26, sell 13. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 22,
+            "side": "buy"
+          },
+          {
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "qty": 26,
+            "side": "buy"
+          },
+          {
+            "qty": 13,
+            "side": "sell"
+          }
+        ],
+        "opening": -11
+      },
+      "answer": "18",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus eleven. Buy twenty-two, sell six, buy twenty-six, sell thirteen. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "56",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "48"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "19"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "11",
+            "relative_gap": "11/18"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "38",
+            "relative_gap": "19/9"
+          }
+        ],
+        "min_wrong_pair_gap": "27",
+        "min_distinct_wrong_pair_gap": "27"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "All quantities are shares. Opening position is minus 22. Buy 2, sell 37, buy 39, sell 21. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "qty": 37,
+            "side": "sell"
+          },
+          {
+            "qty": 39,
+            "side": "buy"
+          },
+          {
+            "qty": 21,
+            "side": "sell"
+          }
+        ],
+        "opening": -22
+      },
+      "answer": "-39",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-two. Buy two, sell thirty-seven, buy thirty-nine, sell twenty-one. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-17",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "77",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "41"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "58"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "22",
+            "relative_gap": "22/39"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "116",
+            "relative_gap": "116/39"
+          }
+        ],
+        "min_wrong_pair_gap": "94",
+        "min_distinct_wrong_pair_gap": "94"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "All quantities are shares. Opening position is minus 10. Buy 36, sell 6, buy 17, sell 38. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 36,
+            "side": "buy"
+          },
+          {
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "qty": 38,
+            "side": "sell"
+          }
+        ],
+        "opening": -10
+      },
+      "answer": "-1",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus ten. Buy thirty-six, sell six, buy seventeen, sell thirty-eight. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "87",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "53"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "44"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "10",
+            "relative_gap": "10"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "88",
+            "relative_gap": "88"
+          }
+        ],
+        "min_wrong_pair_gap": "78",
+        "min_distinct_wrong_pair_gap": "78"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "All quantities are shares. Opening position is minus 3. Buy 14, sell 29, buy 10, sell 28. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 14,
+            "side": "buy"
+          },
+          {
+            "qty": 29,
+            "side": "sell"
+          },
+          {
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "qty": 28,
+            "side": "sell"
+          }
+        ],
+        "opening": -3
+      },
+      "answer": "-36",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus three. Buy fourteen, sell twenty-nine, buy ten, sell twenty-eight. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-33",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "78",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "24"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "57"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "3",
+            "relative_gap": "1/12"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "114",
+            "relative_gap": "19/6"
+          }
+        ],
+        "min_wrong_pair_gap": "111",
+        "min_distinct_wrong_pair_gap": "111"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "All quantities are shares. Opening position is minus 26. Buy 3, sell 28, buy 3, sell 24. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "qty": 28,
+            "side": "sell"
+          },
+          {
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "qty": 24,
+            "side": "sell"
+          }
+        ],
+        "opening": -26
+      },
+      "answer": "-72",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-six. Buy three, sell twenty-eight, buy three, sell twenty-four. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-46",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "32",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "6"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "52"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "26",
+            "relative_gap": "13/36"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "104",
+            "relative_gap": "13/9"
+          }
+        ],
+        "min_wrong_pair_gap": "78",
+        "min_distinct_wrong_pair_gap": "78"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "All quantities are shares. Opening position is minus 1. Buy 31, sell 7, buy 38, sell 13. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 31,
+            "side": "buy"
+          },
+          {
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "qty": 38,
+            "side": "buy"
+          },
+          {
+            "qty": 13,
+            "side": "sell"
+          }
+        ],
+        "opening": -1
+      },
+      "answer": "48",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus one. Buy thirty-one, sell seven, buy thirty-eight, sell thirteen. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "49",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "88",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "69"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "20"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "1",
+            "relative_gap": "1/48"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "40",
+            "relative_gap": "5/6"
+          }
+        ],
+        "min_wrong_pair_gap": "39",
+        "min_distinct_wrong_pair_gap": "39"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "All quantities are shares. Opening position is minus 1. Buy 29, sell 2, buy 30, sell 36. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 29,
+            "side": "buy"
+          },
+          {
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "qty": 30,
+            "side": "buy"
+          },
+          {
+            "qty": 36,
+            "side": "sell"
+          }
+        ],
+        "opening": -1
+      },
+      "answer": "20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus one. Buy twenty-nine, sell two, buy thirty, sell thirty-six. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "96",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "59"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "38"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "1",
+            "relative_gap": "1/20"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "76",
+            "relative_gap": "19/5"
+          }
+        ],
+        "min_wrong_pair_gap": "75",
+        "min_distinct_wrong_pair_gap": "75"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "All quantities are shares. Opening position is minus 14. Buy 13, sell 19, buy 5, sell 32. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 13,
+            "side": "buy"
+          },
+          {
+            "qty": 19,
+            "side": "sell"
+          },
+          {
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "qty": 32,
+            "side": "sell"
+          }
+        ],
+        "opening": -14
+      },
+      "answer": "-47",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus fourteen. Buy thirteen, sell nineteen, buy five, sell thirty-two. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-33",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "55",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "18"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "51"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "14",
+            "relative_gap": "14/47"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "102",
+            "relative_gap": "102/47"
+          }
+        ],
+        "min_wrong_pair_gap": "88",
+        "min_distinct_wrong_pair_gap": "88"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "All quantities are shares. Opening position is minus 21. Buy 18, sell 36, buy 13, sell 18. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 18,
+            "side": "buy"
+          },
+          {
+            "qty": 36,
+            "side": "sell"
+          },
+          {
+            "qty": 13,
+            "side": "buy"
+          },
+          {
+            "qty": 18,
+            "side": "sell"
+          }
+        ],
+        "opening": -21
+      },
+      "answer": "-44",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-one. Buy eighteen, sell thirty-six, buy thirteen, sell eighteen. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-23",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "64",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "31"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "54"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "21",
+            "relative_gap": "21/44"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "108",
+            "relative_gap": "27/11"
+          }
+        ],
+        "min_wrong_pair_gap": "87",
+        "min_distinct_wrong_pair_gap": "87"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "All quantities are shares. Opening position is minus 18. Buy 4, sell 28, buy 19, sell 3. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "qty": 28,
+            "side": "sell"
+          },
+          {
+            "qty": 19,
+            "side": "buy"
+          },
+          {
+            "qty": 3,
+            "side": "sell"
+          }
+        ],
+        "opening": -18
+      },
+      "answer": "-26",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus eighteen. Buy four, sell twenty-eight, buy nineteen, sell three. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-8",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "36",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "23"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "31"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "18",
+            "relative_gap": "9/13"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "62",
+            "relative_gap": "31/13"
+          }
+        ],
+        "min_wrong_pair_gap": "44",
+        "min_distinct_wrong_pair_gap": "44"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "All quantities are shares. Opening position is 23. Buy 32, sell 1, buy 21, sell 15. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 32,
+            "side": "buy"
+          },
+          {
+            "qty": 1,
+            "side": "sell"
+          },
+          {
+            "qty": 21,
+            "side": "buy"
+          },
+          {
+            "qty": 15,
+            "side": "sell"
+          }
+        ],
+        "opening": 23
+      },
+      "answer": "60",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is twenty-three. Buy thirty-two, sell one, buy twenty-one, sell fifteen. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "37",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "92",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "53"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "16"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "23",
+            "relative_gap": "23/60"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "32",
+            "relative_gap": "8/15"
+          }
+        ],
+        "min_wrong_pair_gap": "55",
+        "min_distinct_wrong_pair_gap": "55"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "All quantities are shares. Opening position is 26. Buy 30, sell 18, buy 21, sell 22. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 30,
+            "side": "buy"
+          },
+          {
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "qty": 21,
+            "side": "buy"
+          },
+          {
+            "qty": 22,
+            "side": "sell"
+          }
+        ],
+        "opening": 26
+      },
+      "answer": "37",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is twenty-six. Buy thirty, sell eighteen, buy twenty-one, sell twenty-two. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "11",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "117",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "51"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "40"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "26",
+            "relative_gap": "26/37"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "80",
+            "relative_gap": "80/37"
+          }
+        ],
+        "min_wrong_pair_gap": "106",
+        "min_distinct_wrong_pair_gap": "106"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "All quantities are shares. Opening position is minus 25. Buy 8, sell 1, buy 19, sell 32. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "qty": 1,
+            "side": "sell"
+          },
+          {
+            "qty": 19,
+            "side": "buy"
+          },
+          {
+            "qty": 32,
+            "side": "sell"
+          }
+        ],
+        "opening": -25
+      },
+      "answer": "-31",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-five. Buy eight, sell one, buy nineteen, sell thirty-two. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-6",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "35",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "27"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "33"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "25",
+            "relative_gap": "25/31"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "66",
+            "relative_gap": "66/31"
+          }
+        ],
+        "min_wrong_pair_gap": "41",
+        "min_distinct_wrong_pair_gap": "41"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "All quantities are shares. Opening position is minus 11. Buy 19, sell 25, buy 28, sell 2. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 19,
+            "side": "buy"
+          },
+          {
+            "qty": 25,
+            "side": "sell"
+          },
+          {
+            "qty": 28,
+            "side": "buy"
+          },
+          {
+            "qty": 2,
+            "side": "sell"
+          }
+        ],
+        "opening": -11
+      },
+      "answer": "9",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus eleven. Buy nineteen, sell twenty-five, buy twenty-eight, sell two. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "63",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "47"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "27"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "11",
+            "relative_gap": "11/9"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "54",
+            "relative_gap": "6"
+          }
+        ],
+        "min_wrong_pair_gap": "43",
+        "min_distinct_wrong_pair_gap": "43"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "All quantities are shares. Opening position is minus 20. Buy 23, sell 36, buy 11, sell 19. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 23,
+            "side": "buy"
+          },
+          {
+            "qty": 36,
+            "side": "sell"
+          },
+          {
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "qty": 19,
+            "side": "sell"
+          }
+        ],
+        "opening": -20
+      },
+      "answer": "-41",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty. Buy twenty-three, sell thirty-six, buy eleven, sell nineteen. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-21",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "69",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "34"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "55"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "20",
+            "relative_gap": "20/41"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "110",
+            "relative_gap": "110/41"
+          }
+        ],
+        "min_wrong_pair_gap": "90",
+        "min_distinct_wrong_pair_gap": "90"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "All quantities are shares. Opening position is 28. Buy 28, sell 2, buy 37, sell 33. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 28,
+            "side": "buy"
+          },
+          {
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "qty": 37,
+            "side": "buy"
+          },
+          {
+            "qty": 33,
+            "side": "sell"
+          }
+        ],
+        "opening": 28
+      },
+      "answer": "58",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is twenty-eight. Buy twenty-eight, sell two, buy thirty-seven, sell thirty-three. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "30",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "128",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "65"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "35"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "28",
+            "relative_gap": "14/29"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "70",
+            "relative_gap": "35/29"
+          }
+        ],
+        "min_wrong_pair_gap": "98",
+        "min_distinct_wrong_pair_gap": "98"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "All quantities are shares. Opening position is 22. Buy 40, sell 10, buy 2, sell 9. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 40,
+            "side": "buy"
+          },
+          {
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "qty": 9,
+            "side": "sell"
+          }
+        ],
+        "opening": 22
+      },
+      "answer": "45",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is twenty-two. Buy forty, sell ten, buy two, sell nine. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "83",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "42"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "19"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "22",
+            "relative_gap": "22/45"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "38",
+            "relative_gap": "38/45"
+          }
+        ],
+        "min_wrong_pair_gap": "60",
+        "min_distinct_wrong_pair_gap": "60"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "All quantities are shares. Opening position is 27. Buy 32, sell 31, buy 3, sell 24. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 32,
+            "side": "buy"
+          },
+          {
+            "qty": 31,
+            "side": "sell"
+          },
+          {
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "qty": 24,
+            "side": "sell"
+          }
+        ],
+        "opening": 27
+      },
+      "answer": "7",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is twenty-seven. Buy thirty-two, sell thirty-one, buy three, sell twenty-four. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-20",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "117",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "35"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "55"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "27",
+            "relative_gap": "27/7"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "110",
+            "relative_gap": "110/7"
+          }
+        ],
+        "min_wrong_pair_gap": "137",
+        "min_distinct_wrong_pair_gap": "137"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "All quantities are shares. Opening position is minus 25. Buy 13, sell 36, buy 14, sell 33. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 13,
+            "side": "buy"
+          },
+          {
+            "qty": 36,
+            "side": "sell"
+          },
+          {
+            "qty": 14,
+            "side": "buy"
+          },
+          {
+            "qty": 33,
+            "side": "sell"
+          }
+        ],
+        "opening": -25
+      },
+      "answer": "-67",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-five. Buy thirteen, sell thirty-six, buy fourteen, sell thirty-three. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-42",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "71",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "27"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "69"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "25",
+            "relative_gap": "25/67"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "138",
+            "relative_gap": "138/67"
+          }
+        ],
+        "min_wrong_pair_gap": "113",
+        "min_distinct_wrong_pair_gap": "113"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "All quantities are shares. Opening position is minus 5. Buy 21, sell 32, buy 32, sell 34. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 21,
+            "side": "buy"
+          },
+          {
+            "qty": 32,
+            "side": "sell"
+          },
+          {
+            "qty": 32,
+            "side": "buy"
+          },
+          {
+            "qty": 34,
+            "side": "sell"
+          }
+        ],
+        "opening": -5
+      },
+      "answer": "-18",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus five. Buy twenty-one, sell thirty-two, buy thirty-two, sell thirty-four. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-13",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "114",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "53"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "66"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "5",
+            "relative_gap": "5/18"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "132",
+            "relative_gap": "22/3"
+          }
+        ],
+        "min_wrong_pair_gap": "127",
+        "min_distinct_wrong_pair_gap": "127"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "All quantities are shares. Opening position is 21. Buy 31, sell 8, buy 39, sell 6. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 31,
+            "side": "buy"
+          },
+          {
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "qty": 39,
+            "side": "buy"
+          },
+          {
+            "qty": 6,
+            "side": "sell"
+          }
+        ],
+        "opening": 21
+      },
+      "answer": "77",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is twenty-one. Buy thirty-one, sell eight, buy thirty-nine, sell six. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "56",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "105",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "70"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "14"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "21",
+            "relative_gap": "3/11"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "28",
+            "relative_gap": "4/11"
+          }
+        ],
+        "min_wrong_pair_gap": "49",
+        "min_distinct_wrong_pair_gap": "49"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "All quantities are shares. Opening position is 21. Buy 32, sell 14, buy 32, sell 19. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 32,
+            "side": "buy"
+          },
+          {
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "qty": 32,
+            "side": "buy"
+          },
+          {
+            "qty": 19,
+            "side": "sell"
+          }
+        ],
+        "opening": 21
+      },
+      "answer": "52",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is twenty-one. Buy thirty-two, sell fourteen, buy thirty-two, sell nineteen. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "31",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "118",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "64"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "33"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "21",
+            "relative_gap": "21/52"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "66",
+            "relative_gap": "33/26"
+          }
+        ],
+        "min_wrong_pair_gap": "87",
+        "min_distinct_wrong_pair_gap": "87"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "All quantities are shares. Opening position is 12. Buy 32, sell 26, buy 22, sell 9. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 32,
+            "side": "buy"
+          },
+          {
+            "qty": 26,
+            "side": "sell"
+          },
+          {
+            "qty": 22,
+            "side": "buy"
+          },
+          {
+            "qty": 9,
+            "side": "sell"
+          }
+        ],
+        "opening": 12
+      },
+      "answer": "31",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is twelve. Buy thirty-two, sell twenty-six, buy twenty-two, sell nine. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "19",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "101",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "54"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "35"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "12",
+            "relative_gap": "12/31"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "70",
+            "relative_gap": "70/31"
+          }
+        ],
+        "min_wrong_pair_gap": "82",
+        "min_distinct_wrong_pair_gap": "82"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "All quantities are shares. Opening position is minus 24. Buy 1, sell 22, buy 24, sell 2. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "qty": 22,
+            "side": "sell"
+          },
+          {
+            "qty": 24,
+            "side": "buy"
+          },
+          {
+            "qty": 2,
+            "side": "sell"
+          }
+        ],
+        "opening": -24
+      },
+      "answer": "-23",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-four. Buy one, sell twenty-two, buy twenty-four, sell two. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "1",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "25",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "25"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "24"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "24",
+            "relative_gap": "24/23"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "48",
+            "relative_gap": "48/23"
+          }
+        ],
+        "min_wrong_pair_gap": "24",
+        "min_distinct_wrong_pair_gap": "24"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "All quantities are shares. Opening position is 29. Buy 30, sell 24, buy 23, sell 24. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 30,
+            "side": "buy"
+          },
+          {
+            "qty": 24,
+            "side": "sell"
+          },
+          {
+            "qty": 23,
+            "side": "buy"
+          },
+          {
+            "qty": 24,
+            "side": "sell"
+          }
+        ],
+        "opening": 29
+      },
+      "answer": "34",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is twenty-nine. Buy thirty, sell twenty-four, buy twenty-three, sell twenty-four. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "130",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "53"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "48"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "29",
+            "relative_gap": "29/34"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "96",
+            "relative_gap": "48/17"
+          }
+        ],
+        "min_wrong_pair_gap": "125",
+        "min_distinct_wrong_pair_gap": "125"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "All quantities are shares. Opening position is minus 1. Buy 35, sell 7, buy 1, sell 5. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 35,
+            "side": "buy"
+          },
+          {
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "qty": 5,
+            "side": "sell"
+          }
+        ],
+        "opening": -1
+      },
+      "answer": "23",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus one. Buy thirty-five, sell seven, buy one, sell five. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "47",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "36"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "12"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "1",
+            "relative_gap": "1/23"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "24",
+            "relative_gap": "24/23"
+          }
+        ],
+        "min_wrong_pair_gap": "23",
+        "min_distinct_wrong_pair_gap": "23"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "All quantities are shares. Opening position is minus 11. Buy 14, sell 26, buy 1, sell 30. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 14,
+            "side": "buy"
+          },
+          {
+            "qty": 26,
+            "side": "sell"
+          },
+          {
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "qty": 30,
+            "side": "sell"
+          }
+        ],
+        "opening": -11
+      },
+      "answer": "-52",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus eleven. Buy fourteen, sell twenty-six, buy one, sell thirty. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-41",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "60",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "15"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "56"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "11",
+            "relative_gap": "11/52"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "112",
+            "relative_gap": "28/13"
+          }
+        ],
+        "min_wrong_pair_gap": "101",
+        "min_distinct_wrong_pair_gap": "101"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "All quantities are shares. Opening position is minus 20. Buy 26, sell 30, buy 5, sell 36. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 26,
+            "side": "buy"
+          },
+          {
+            "qty": 30,
+            "side": "sell"
+          },
+          {
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "qty": 36,
+            "side": "sell"
+          }
+        ],
+        "opening": -20
+      },
+      "answer": "-55",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty. Buy twenty-six, sell thirty, buy five, sell thirty-six. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-35",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "77",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "31"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "66"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "20",
+            "relative_gap": "4/11"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "132",
+            "relative_gap": "12/5"
+          }
+        ],
+        "min_wrong_pair_gap": "112",
+        "min_distinct_wrong_pair_gap": "112"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "All quantities are shares. Opening position is minus 8. Buy 31, sell 18, buy 17, sell 7. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 31,
+            "side": "buy"
+          },
+          {
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "qty": 7,
+            "side": "sell"
+          }
+        ],
+        "opening": -8
+      },
+      "answer": "15",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus eight. Buy thirty-one, sell eighteen, buy seventeen, sell seven. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "23",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "65",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "48"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "25"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "8",
+            "relative_gap": "8/15"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "50",
+            "relative_gap": "10/3"
+          }
+        ],
+        "min_wrong_pair_gap": "42",
+        "min_distinct_wrong_pair_gap": "42"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "All quantities are shares. Opening position is minus 8. Buy 4, sell 1, buy 21, sell 4. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "qty": 1,
+            "side": "sell"
+          },
+          {
+            "qty": 21,
+            "side": "buy"
+          },
+          {
+            "qty": 4,
+            "side": "sell"
+          }
+        ],
+        "opening": -8
+      },
+      "answer": "12",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus eight. Buy four, sell one, buy twenty-one, sell four. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "20",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "22",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "25"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "5"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "8",
+            "relative_gap": "2/3"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "10",
+            "relative_gap": "5/6"
+          }
+        ],
+        "min_wrong_pair_gap": "2",
+        "min_distinct_wrong_pair_gap": "2"
+      },
+      "follow_up": {
+        "question": "How could you verify updates without replaying every fill?",
+        "reference": "Maintain cumulative bought and sold quantities and reconcile opening plus buys minus sells. That identity offers a separate check on incremental updates."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "All quantities are shares. Opening position is 17. Buy 33, sell 6, buy 35, sell 15. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 33,
+            "side": "buy"
+          },
+          {
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "qty": 35,
+            "side": "buy"
+          },
+          {
+            "qty": 15,
+            "side": "sell"
+          }
+        ],
+        "opening": 17
+      },
+      "answer": "64",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is seventeen. Buy thirty-three, sell six, buy thirty-five, sell fifteen. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "47",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "106",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "68"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "21"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "17",
+            "relative_gap": "17/64"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "42",
+            "relative_gap": "21/32"
+          }
+        ],
+        "min_wrong_pair_gap": "59",
+        "min_distinct_wrong_pair_gap": "59"
+      },
+      "follow_up": {
+        "question": "What problem can duplicate fill messages create?",
+        "reference": "Applying a fill twice doubles its position effect. Use a stable execution ID and an idempotent processing policy at scale."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "All quantities are shares. Opening position is minus 24. Buy 1, sell 38, buy 8, sell 27. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 1,
+            "side": "buy"
+          },
+          {
+            "qty": 38,
+            "side": "sell"
+          },
+          {
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "qty": 27,
+            "side": "sell"
+          }
+        ],
+        "opening": -24
+      },
+      "answer": "-80",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-four. Buy one, sell thirty-eight, buy eight, sell twenty-seven. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-56",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "50",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "9"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "65"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "24",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "130",
+            "relative_gap": "13/8"
+          }
+        ],
+        "min_wrong_pair_gap": "106",
+        "min_distinct_wrong_pair_gap": "106"
+      },
+      "follow_up": {
+        "question": "How should a short ending position be represented?",
+        "reference": "Use a negative signed share quantity. A separate absolute exposure field may be useful, but it is not the net position."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "All quantities are shares. Opening position is minus 29. Buy 35, sell 12, buy 26, sell 25. What is the signed final position?",
+      "params": {
+        "fills": [
+          {
+            "qty": 35,
+            "side": "buy"
+          },
+          {
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "qty": 26,
+            "side": "buy"
+          },
+          {
+            "qty": 25,
+            "side": "sell"
+          }
+        ],
+        "opening": -29
+      },
+      "answer": "-5",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "Signed net position",
+      "difficulty": "Easy",
+      "spoken_text": "All quantities are shares. Opening position is minus twenty-nine. Buy thirty-five, sell twelve, buy twenty-six, sell twenty-five. What is the signed final position?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "24",
+          "misconceptions": [
+            "ignores_the_opening_position"
+          ]
+        },
+        {
+          "value": "69",
+          "misconceptions": [
+            "treats_sell_fills_as_buys"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_bought_shares",
+          "value": "61"
+        },
+        {
+          "name": "total_sold_shares",
+          "value": "37"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "ignores_the_opening_position",
+            "absolute_gap": "29",
+            "relative_gap": "29/5"
+          },
+          {
+            "misconception": "treats_sell_fills_as_buys",
+            "absolute_gap": "74",
+            "relative_gap": "74/5"
+          }
+        ],
+        "min_wrong_pair_gap": "45",
+        "min_distinct_wrong_pair_gap": "45"
+      },
+      "follow_up": {
+        "question": "Would canceling an unfilled order change this executed position?",
+        "reference": "No, an unfilled order has not transferred shares. Keep order state separate from executed inventory."
+      }
+    }
+  ]
+}

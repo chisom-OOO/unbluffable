@@ -1,0 +1,1901 @@
+{
+  "template_id": "qd_F003",
+  "pack": "quant_dev",
+  "topic": "Order book and matching",
+  "difficulty": "Medium",
+  "function_name": "calculate_market_fill_quantity",
+  "signature": "def calculate_market_fill_quantity(events: list[dict]) -> int:",
+  "parameters": [
+    {
+      "name": "events",
+      "type": "list[dict]",
+      "param": "events"
+    }
+  ],
+  "return_type": "int",
+  "statement": "Given a chronological sequence of order book actions described by events, simulate the book starting empty and determine the resulting fill for the market order. Each entry in events encodes either adding a limit order, cancelling an existing order, or submitting a market order. Return the number of shares that are actually filled by the market order based on the live opposite-side liquidity available at that time.",
+  "examples": [
+    0,
+    1
+  ],
+  "tests": [
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 109,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 111,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 106,
+          "qty": 15,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 25,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 90,
+          "qty": 8,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 91,
+          "qty": 59,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 87,
+          "qty": 27,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 62,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 92,
+          "qty": 22,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 96,
+          "qty": 62,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 90,
+          "qty": 26,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 82,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 94,
+          "qty": 8,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 95,
+          "qty": 46,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 91,
+          "qty": 24,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 63,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 106,
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 110,
+          "qty": 17,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 103,
+          "qty": 29,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 33,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 97,
+          "qty": 3,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 99,
+          "qty": 8,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 96,
+          "qty": 4,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 21,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 94,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 98,
+          "qty": 13,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 91,
+          "qty": 27,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 17,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 106,
+          "qty": 20,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 109,
+          "qty": 53,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 102,
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 66,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 102,
+          "qty": 17,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 103,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 101,
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 9,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 108,
+          "qty": 23,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 109,
+          "qty": 34,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 104,
+          "qty": 27,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 39,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 97,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 98,
+          "qty": 63,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 96,
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 65,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 99,
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 103,
+          "qty": 19,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 96,
+          "qty": 19,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 38,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 109,
+          "qty": 24,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 110,
+          "qty": 20,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 107,
+          "qty": 20,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 28,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 102,
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 106,
+          "qty": 11,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 101,
+          "qty": 30,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 23,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 98,
+          "qty": 21,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 102,
+          "qty": 21,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 96,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 27,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 95,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 96,
+          "qty": 81,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 92,
+          "qty": 4,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 102,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 108,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 112,
+          "qty": 41,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 104,
+          "qty": 29,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 49,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 100,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 104,
+          "qty": 30,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 98,
+          "qty": 26,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 48,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 94,
+          "qty": 22,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 97,
+          "qty": 91,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 91,
+          "qty": 28,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 110,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 104,
+          "qty": 17,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 107,
+          "qty": 55,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 102,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 69,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 92,
+          "qty": 24,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 93,
+          "qty": 78,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 88,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 86,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 98,
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 100,
+          "qty": 88,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 95,
+          "qty": 20,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 106,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 93,
+          "qty": 16,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 97,
+          "qty": 67,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 92,
+          "qty": 4,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 68,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 101,
+          "qty": 24,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 103,
+          "qty": 51,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 100,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 52,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 103,
+          "qty": 23,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 107,
+          "qty": 93,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 99,
+          "qty": 13,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 102,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 98,
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 102,
+          "qty": 60,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 95,
+          "qty": 29,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 61,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 91,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 92,
+          "qty": 95,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 88,
+          "qty": 2,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 120,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 90,
+          "qty": 13,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 94,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 87,
+          "qty": 30,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 36,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 99,
+          "qty": 20,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 102,
+          "qty": 44,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 97,
+          "qty": 26,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 58,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 109,
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 112,
+          "qty": 29,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 108,
+          "qty": 26,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 30,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 91,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 95,
+          "qty": 42,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 90,
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 55,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 90,
+          "qty": 22,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 92,
+          "qty": 84,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 87,
+          "qty": 25,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 103,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 100,
+          "qty": 21,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 103,
+          "qty": 65,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 99,
+          "qty": 22,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 82,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 109,
+          "qty": 5,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 111,
+          "qty": 9,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 106,
+          "qty": 24,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 14,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 99,
+          "qty": 15,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 102,
+          "qty": 36,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 97,
+          "qty": 21,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 39,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 98,
+          "qty": 10,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 100,
+          "qty": 74,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 94,
+          "qty": 27,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 78,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 105,
+          "qty": 8,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 107,
+          "qty": 48,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 101,
+          "qty": 12,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 57,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 97,
+          "qty": 21,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 98,
+          "qty": 69,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 93,
+          "qty": 24,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 82,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 91,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 95,
+          "qty": 72,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 87,
+          "qty": 24,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 81,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 104,
+          "qty": 21,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 107,
+          "qty": 23,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 103,
+          "qty": 25,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 28,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 99,
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 101,
+          "qty": 86,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 96,
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 94,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 104,
+          "qty": 21,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 105,
+          "qty": 38,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 103,
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 51,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 103,
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 106,
+          "qty": 1,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 101,
+          "qty": 27,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 22,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 92,
+          "qty": 19,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 93,
+          "qty": 27,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 90,
+          "qty": 19,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 47,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 107,
+          "qty": 25,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 108,
+          "qty": 76,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 106,
+          "qty": 27,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 83,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 109,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 111,
+          "qty": 25,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 108,
+          "qty": 5,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 26,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 99,
+          "qty": 11,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 101,
+          "qty": 83,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 95,
+          "qty": 23,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 107,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 103,
+          "qty": 17,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 106,
+          "qty": 57,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 102,
+          "qty": 28,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 67,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 108,
+          "qty": 4,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 110,
+          "qty": 70,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 104,
+          "qty": 14,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 89,
+          "side": "buy"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "id": "A",
+          "kind": "add",
+          "price": 105,
+          "qty": 2,
+          "side": "sell"
+        },
+        {
+          "id": "B",
+          "kind": "add",
+          "price": 109,
+          "qty": 32,
+          "side": "sell"
+        },
+        {
+          "id": "C",
+          "kind": "add",
+          "price": 104,
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "id": "A",
+          "kind": "cancel"
+        },
+        {
+          "kind": "market",
+          "qty": 40,
+          "side": "buy"
+        }
+      ]
+    ]
+  ],
+  "expected": [
+    "5",
+    "59",
+    "62",
+    "46",
+    "17",
+    "8",
+    "13",
+    "53",
+    "4",
+    "34",
+    "63",
+    "19",
+    "20",
+    "11",
+    "21",
+    "81",
+    "41",
+    "30",
+    "91",
+    "55",
+    "78",
+    "88",
+    "67",
+    "51",
+    "93",
+    "60",
+    "95",
+    "15",
+    "44",
+    "29",
+    "42",
+    "84",
+    "65",
+    "9",
+    "36",
+    "74",
+    "48",
+    "69",
+    "72",
+    "23",
+    "86",
+    "38",
+    "1",
+    "27",
+    "76",
+    "25",
+    "83",
+    "57",
+    "70",
+    "32"
+  ],
+  "wrong_methods": [
+    {
+      "name": "fills against a canceled order",
+      "outputs": [
+        "19",
+        "62",
+        "82",
+        "54",
+        "33",
+        "11",
+        "17",
+        "66",
+        "9",
+        "39",
+        "65",
+        "37",
+        "28",
+        "23",
+        "27",
+        "88",
+        "49",
+        "39",
+        "110",
+        "69",
+        "86",
+        "106",
+        "68",
+        "52",
+        "102",
+        "61",
+        "109",
+        "28",
+        "58",
+        "30",
+        "47",
+        "103",
+        "82",
+        "14",
+        "39",
+        "78",
+        "56",
+        "82",
+        "79",
+        "28",
+        "93",
+        "51",
+        "19",
+        "46",
+        "83",
+        "26",
+        "94",
+        "67",
+        "74",
+        "34"
+      ],
+      "source": "def solve(params):\n    events = params[\"events\"]\n    all_adds = {}\n    live = {}\n    for ev in events:\n        if ev[\"kind\"] == \"add\":\n            all_adds[ev[\"id\"]] = {\"side\": ev[\"side\"], \"qty\": int(ev[\"qty\"])}\n            live[ev[\"id\"]] = {\"side\": ev[\"side\"], \"qty\": int(ev[\"qty\"])}\n        elif ev[\"kind\"] == \"cancel\":\n            if ev[\"id\"] in live:\n                del live[ev[\"id\"]]\n    # misconception: count cancelled orders as still fillable (use all_adds instead of live)\n    for ev in reversed(events):\n        if ev[\"kind\"] == \"market\":\n            m_side = ev[\"side\"]\n            m_qty = int(ev[\"qty\"])\n            opp = \"sell\" if m_side == \"buy\" else \"buy\"\n            total_opp = sum(o[\"qty\"] for o in all_adds.values() if o[\"side\"] == opp)\n            return min(m_qty, total_opp)\n    return 0\n"
+    },
+    {
+      "name": "counts bid liquidity for a market buy",
+      "outputs": [
+        "20",
+        "62",
+        "82",
+        "63",
+        "33",
+        "12",
+        "17",
+        "61",
+        "9",
+        "39",
+        "65",
+        "38",
+        "28",
+        "23",
+        "27",
+        "85",
+        "49",
+        "48",
+        "110",
+        "69",
+        "84",
+        "106",
+        "68",
+        "52",
+        "102",
+        "61",
+        "97",
+        "36",
+        "58",
+        "30",
+        "55",
+        "103",
+        "82",
+        "14",
+        "39",
+        "78",
+        "57",
+        "82",
+        "81",
+        "28",
+        "94",
+        "44",
+        "22",
+        "46",
+        "83",
+        "26",
+        "106",
+        "67",
+        "84",
+        "40"
+      ],
+      "source": "def solve(params):\n    events = params[\"events\"]\n    book = {}\n    for ev in events:\n        if ev[\"kind\"] == \"add\":\n            book[ev[\"id\"]] = {\"side\": ev[\"side\"], \"qty\": int(ev[\"qty\"])}\n        elif ev[\"kind\"] == \"cancel\":\n            if ev[\"id\"] in book:\n                del book[ev[\"id\"]]\n    for ev in reversed(events):\n        if ev[\"kind\"] == \"market\":\n            m_side = ev[\"side\"]\n            m_qty = int(ev[\"qty\"])\n            # misconception: for market buy, sum same-side (bid) liquidity and opposite, i.e., count bids as fillable\n            if m_side == \"buy\":\n                total = sum(o[\"qty\"] for o in book.values())\n            else:\n                opp = \"sell\" if m_side == \"buy\" else \"buy\"\n                total = sum(o[\"qty\"] for o in book.values() if o[\"side\"] == opp)\n            return min(m_qty, total)\n    return 0\n"
+    }
+  ],
+  "solver_source": "def solve(params):\n    from fractions import Fraction\n    events = params[\"events\"]\n    book = {}\n    live_opposite_liquidity = 0\n    requested_market_qty = 0\n    filled_qty = 0\n    for ev in events:\n        kind = ev[\"kind\"]\n        if kind == \"add\":\n            book[ev[\"id\"]] = {\"side\": ev[\"side\"], \"qty\": int(ev[\"qty\"]), \"price\": ev[\"price\"]}\n        elif kind == \"cancel\":\n            cid = ev[\"id\"]\n            if cid in book:\n                del book[cid]\n        elif kind == \"market\":\n            m_side = ev[\"side\"]\n            m_qty = int(ev[\"qty\"])\n            requested_market_qty = m_qty\n            opp = \"sell\" if m_side == \"buy\" else \"buy\"\n            live_opposite_liquidity = sum(o[\"qty\"] for o in book.values() if o[\"side\"] == opp)\n            # market fills limited to live opposite liquidity, no partial beyond\n            filled_qty = m_qty if m_qty < live_opposite_liquidity else live_opposite_liquidity\n            # consume liquidity (not needed further but for correctness)\n            # we can simulate fill by reducing opposite orders\n            remaining = filled_qty\n            for oid in list(book.keys()):\n                if remaining <= 0:\n                    break\n                if book[oid][\"side\"] == opp:\n                    take = min(book[oid][\"qty\"], remaining)\n                    book[oid][\"qty\"] -= take\n                    remaining -= take\n                    if book[oid][\"qty\"] == 0:\n                        del book[oid]\n    answer = filled_qty\n    steps = {\"live_opposite_liquidity\": live_opposite_liquidity, \"requested_market_qty\": requested_market_qty, \"filled_qty\": filled_qty}\n    return {\"answer\": answer, \"steps\": steps}\n",
+  "verification": {
+    "verified": true,
+    "variants": 50,
+    "solver_reproduced": 50,
+    "wrong_methods_kept": 2,
+    "wrong_methods_given": 2,
+    "types_corrected_from_data": 1
+  },
+  "models": {
+    "spec_author": "meta-models/muse-spark-open-1026"
+  }
+}

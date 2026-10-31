@@ -1,0 +1,4344 @@
+{
+  "template_id": "qd_F005",
+  "pack": "quant_dev",
+  "topic": "Position and P&L accounting",
+  "topics": [
+    "Position and P&L accounting"
+  ],
+  "source_topic": "FIFO realized profit",
+  "difficulty": "Hard",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "What changes if a sale is larger than the long inventory?",
+    "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Start flat. Buy 7 at 94; buy 8 at 95; sell 10 at 104; buy 9 at 101; sell 13 at 112. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 94,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 95,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 104,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "price": 101,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 112,
+            "qty": 13,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "270",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy seven at ninety-four; buy eight at ninety-five; sell ten at one hundred and four; buy nine at one hundred and one; sell thirteen at one hundred and twelve. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "263",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "11243/42",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "2496"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "2226"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "7",
+            "relative_gap": "7/270"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "97/42",
+            "relative_gap": "97/11340"
+          }
+        ],
+        "min_wrong_pair_gap": "197/42",
+        "min_distinct_wrong_pair_gap": "197/42"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Begin with zero shares. Buy 7 at 105; buy 12 at 111; sell 18 at 103; buy 2 at 117; sell 2 at 104. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 105,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 12,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "price": 117,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 104,
+            "qty": 2,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-122",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy seven at one hundred and five; buy twelve at one hundred and eleven; sell eighteen at one hundred and three; buy two at one hundred and seventeen; sell two at one hundred and four. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-134",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-2370/19",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "2062"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "2184"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "12",
+            "relative_gap": "6/61"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "52/19",
+            "relative_gap": "26/1159"
+          }
+        ],
+        "min_wrong_pair_gap": "176/19",
+        "min_distinct_wrong_pair_gap": "176/19"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Use no opening position. Buy 10 at 91; buy 3 at 97; sell 12 at 86; buy 7 at 98; sell 5 at 99. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 91,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 97,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 86,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "price": 98,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 99,
+            "qty": 5,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-66",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy ten at ninety-one; buy three at ninety-seven; sell twelve at eighty-six; buy seven at ninety-eight; sell five at ninety-nine. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-73",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-7083/104",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1527"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1593"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "7",
+            "relative_gap": "7/66"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "219/104",
+            "relative_gap": "73/2288"
+          }
+        ],
+        "min_wrong_pair_gap": "509/104",
+        "min_distinct_wrong_pair_gap": "509/104"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Begin with no position. Buy 5 at 95; buy 3 at 99; sell 6 at 92; buy 9 at 101; sell 1 at 115. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 95,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 99,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 92,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "price": 101,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 115,
+            "qty": 1,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-6",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy five at ninety-five; buy three at ninety-nine; sell six at ninety-two; buy nine at one hundred and one; sell one at one hundred and fifteen. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-16",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-134/11",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "667"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "673"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "10",
+            "relative_gap": "5/3"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "68/11",
+            "relative_gap": "34/33"
+          }
+        ],
+        "min_wrong_pair_gap": "42/11",
+        "min_distinct_wrong_pair_gap": "42/11"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Start with zero shares. Buy 4 at 109; buy 3 at 110; sell 6 at 113; buy 7 at 114; sell 6 at 111. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 109,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 113,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "price": 114,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 6,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "8",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy four at one hundred and nine; buy three at one hundred and ten; sell six at one hundred and thirteen; buy seven at one hundred and fourteen; sell six at one hundred and eleven. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "3",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "48/7",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1344"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1336"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "5",
+            "relative_gap": "5/8"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "8/7",
+            "relative_gap": "1/7"
+          }
+        ],
+        "min_wrong_pair_gap": "27/7",
+        "min_distinct_wrong_pair_gap": "27/7"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Start flat. Buy 9 at 99; buy 12 at 105; sell 14 at 96; buy 6 at 107; sell 12 at 108. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 99,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 12,
+            "side": "buy"
+          },
+          {
+            "price": 96,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "price": 107,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 12,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-46",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy nine at ninety-nine; buy twelve at one hundred and five; sell fourteen at ninety-six; buy six at one hundred and seven; sell twelve at one hundred and eight. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-54",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-630/13",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "2640"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "2686"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "8",
+            "relative_gap": "4/23"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "32/13",
+            "relative_gap": "16/299"
+          }
+        ],
+        "min_wrong_pair_gap": "72/13",
+        "min_distinct_wrong_pair_gap": "72/13"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Begin with zero shares. Buy 8 at 96; buy 12 at 102; sell 12 at 106; buy 6 at 104; sell 11 at 113. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 96,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 102,
+            "qty": 12,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "price": 104,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 113,
+            "qty": 11,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "211",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy eight at ninety-six; buy twelve at one hundred and two; sell twelve at one hundred and six; buy six at one hundred and four; sell eleven at one hundred and thirteen. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "187",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "7121/35",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "2515"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "2304"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "24",
+            "relative_gap": "24/211"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "264/35",
+            "relative_gap": "264/7385"
+          }
+        ],
+        "min_wrong_pair_gap": "576/35",
+        "min_distinct_wrong_pair_gap": "576/35"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Use no opening position. Buy 2 at 92; buy 5 at 98; sell 3 at 106; buy 9 at 100; sell 11 at 93. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 92,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 98,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "price": 100,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 93,
+            "qty": 11,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-33",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy two at ninety-two; buy five at ninety-eight; sell three at one hundred and six; buy nine at one hundred; sell eleven at ninety-three. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-49",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-247/7",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1341"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1374"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "16",
+            "relative_gap": "16/33"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "16/7",
+            "relative_gap": "16/231"
+          }
+        ],
+        "min_wrong_pair_gap": "96/7",
+        "min_distinct_wrong_pair_gap": "96/7"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Begin with no position. Buy 8 at 91; buy 4 at 97; sell 10 at 103; buy 4 at 101; sell 5 at 106. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 91,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 97,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "price": 101,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 5,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "141",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy eight at ninety-one; buy four at ninety-seven; sell ten at one hundred and three; buy four at one hundred and one; sell five at one hundred and six. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "131",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "415/3",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1560"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1419"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "10",
+            "relative_gap": "10/141"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "8/3",
+            "relative_gap": "8/423"
+          }
+        ],
+        "min_wrong_pair_gap": "22/3",
+        "min_distinct_wrong_pair_gap": "22/3"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Start with zero shares. Buy 2 at 91; buy 7 at 97; sell 3 at 91; buy 5 at 98; sell 3 at 107. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 91,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 97,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 91,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "price": 98,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 3,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "24",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy two at ninety-one; buy seven at ninety-seven; sell three at ninety-one; buy five at ninety-eight; sell three at one hundred and seven. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "9",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "185/11",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "594"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "570"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "15",
+            "relative_gap": "5/8"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "79/11",
+            "relative_gap": "79/264"
+          }
+        ],
+        "min_wrong_pair_gap": "86/11",
+        "min_distinct_wrong_pair_gap": "86/11"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Start flat. Buy 6 at 104; buy 7 at 108; sell 9 at 105; buy 4 at 113; sell 5 at 99. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 104,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "price": 113,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 99,
+            "qty": 5,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-53",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy six at one hundred and four; buy seven at one hundred and eight; sell nine at one hundred and five; buy four at one hundred and thirteen; sell five at ninety-nine. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-80",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-1645/26",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1440"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1493"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "27",
+            "relative_gap": "27/53"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "267/26",
+            "relative_gap": "267/1378"
+          }
+        ],
+        "min_wrong_pair_gap": "435/26",
+        "min_distinct_wrong_pair_gap": "435/26"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Begin with zero shares. Buy 5 at 102; buy 11 at 104; sell 14 at 113; buy 8 at 106; sell 2 at 100. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 102,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 104,
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "price": 113,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "price": 106,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 100,
+            "qty": 2,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "128",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy five at one hundred and two; buy eleven at one hundred and four; sell fourteen at one hundred and thirteen; buy eight at one hundred and six; sell two at one hundred. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "120",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "619/5",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1782"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1654"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "8",
+            "relative_gap": "1/16"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "21/5",
+            "relative_gap": "21/640"
+          }
+        ],
+        "min_wrong_pair_gap": "19/5",
+        "min_distinct_wrong_pair_gap": "19/5"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Use no opening position. Buy 4 at 109; buy 5 at 110; sell 5 at 114; buy 10 at 111; sell 9 at 116. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 109,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "price": 111,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 116,
+            "qty": 9,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "73",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy four at one hundred and nine; buy five at one hundred and ten; sell five at one hundred and fourteen; buy ten at one hundred and eleven; sell nine at one hundred and sixteen. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "65",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "4469/63",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1614"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1541"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "8",
+            "relative_gap": "8/73"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "130/63",
+            "relative_gap": "130/4599"
+          }
+        ],
+        "min_wrong_pair_gap": "374/63",
+        "min_distinct_wrong_pair_gap": "374/63"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Begin with no position. Buy 6 at 102; buy 3 at 106; sell 8 at 105; buy 4 at 111; sell 3 at 114. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 102,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "price": 111,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 3,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "30",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy six at one hundred and two; buy three at one hundred and six; sell eight at one hundred and five; buy four at one hundred and eleven; sell three at one hundred and fourteen. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "21",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "404/15",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1182"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1152"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "9",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "46/15",
+            "relative_gap": "23/225"
+          }
+        ],
+        "min_wrong_pair_gap": "89/15",
+        "min_distinct_wrong_pair_gap": "89/15"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Start with zero shares. Buy 4 at 107; buy 8 at 108; sell 10 at 110; buy 6 at 114; sell 7 at 114. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 107,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "price": 114,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 7,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "36",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy four at one hundred and seven; buy eight at one hundred and eight; sell ten at one hundred and ten; buy six at one hundred and fourteen; sell seven at one hundred and fourteen. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "29",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "413/12",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1898"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1862"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "7",
+            "relative_gap": "7/36"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "19/12",
+            "relative_gap": "19/432"
+          }
+        ],
+        "min_wrong_pair_gap": "65/12",
+        "min_distinct_wrong_pair_gap": "65/12"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Start flat. Buy 5 at 110; buy 4 at 111; sell 6 at 108; buy 5 at 114; sell 6 at 129. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 110,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "price": 114,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 129,
+            "qty": 6,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "86",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy five at one hundred and ten; buy four at one hundred and eleven; sell six at one hundred and eight; buy five at one hundred and fourteen; sell six at one hundred and twenty-nine. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "78",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "250/3",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1422"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1336"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "8",
+            "relative_gap": "4/43"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "8/3",
+            "relative_gap": "4/129"
+          }
+        ],
+        "min_wrong_pair_gap": "16/3",
+        "min_distinct_wrong_pair_gap": "16/3"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Begin with zero shares. Buy 9 at 92; buy 5 at 95; sell 11 at 100; buy 8 at 96; sell 6 at 90. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 92,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 95,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 100,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "price": 96,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 90,
+            "qty": 6,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "49",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy nine at ninety-two; buy five at ninety-five; sell eleven at one hundred; buy eight at ninety-six; sell six at ninety. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "37",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "6931/154",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1640"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1591"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "12",
+            "relative_gap": "12/49"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "615/154",
+            "relative_gap": "615/7546"
+          }
+        ],
+        "min_wrong_pair_gap": "1233/154",
+        "min_distinct_wrong_pair_gap": "1233/154"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Use no opening position. Buy 2 at 100; buy 4 at 101; sell 4 at 105; buy 9 at 103; sell 9 at 114. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 100,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "price": 103,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 9,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "121",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy two at one hundred; buy four at one hundred and one; sell four at one hundred and five; buy nine at one hundred and three; sell nine at one hundred and fourteen. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "115",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "3965/33",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1446"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1325"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "6",
+            "relative_gap": "6/121"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "28/33",
+            "relative_gap": "28/3993"
+          }
+        ],
+        "min_wrong_pair_gap": "170/33",
+        "min_distinct_wrong_pair_gap": "170/33"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Begin with no position. Buy 6 at 108; buy 9 at 114; sell 10 at 103; buy 2 at 120; sell 4 at 108. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 108,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "price": 120,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 4,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-98",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy six at one hundred and eight; buy nine at one hundred and fourteen; sell ten at one hundred and three; buy two at one hundred and twenty; sell four at one hundred and eight. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-128",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-110",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1462"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1560"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "30",
+            "relative_gap": "15/49"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "12",
+            "relative_gap": "6/49"
+          }
+        ],
+        "min_wrong_pair_gap": "18",
+        "min_distinct_wrong_pair_gap": "18"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Start with zero shares. Buy 3 at 98; buy 8 at 104; sell 5 at 99; buy 4 at 106; sell 3 at 107. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 98,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 104,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 99,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "price": 106,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 3,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "2",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy three at ninety-eight; buy eight at one hundred and four; sell five at ninety-nine; buy four at one hundred and six; sell three at one hundred and seven. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-22",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-80/11",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "816"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "814"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "24",
+            "relative_gap": "12"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "102/11",
+            "relative_gap": "51/11"
+          }
+        ],
+        "min_wrong_pair_gap": "162/11",
+        "min_distinct_wrong_pair_gap": "162/11"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Start flat. Buy 3 at 93; buy 11 at 96; sell 12 at 103; buy 9 at 97; sell 8 at 109. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 93,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 96,
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "price": 97,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 8,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "191",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy three at ninety-three; buy eleven at ninety-six; sell twelve at one hundred and three; buy nine at ninety-seven; sell eight at one hundred and nine. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "183",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "14638/77",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "2108"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1917"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "8",
+            "relative_gap": "8/191"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "69/77",
+            "relative_gap": "69/14707"
+          }
+        ],
+        "min_wrong_pair_gap": "547/77",
+        "min_distinct_wrong_pair_gap": "547/77"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Begin with zero shares. Buy 5 at 110; buy 10 at 113; sell 12 at 111; buy 3 at 114; sell 1 at 121. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 110,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 113,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "price": 114,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 121,
+            "qty": 1,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-1",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy five at one hundred and ten; buy ten at one hundred and thirteen; sell twelve at one hundred and eleven; buy three at one hundred and fourteen; sell one at one hundred and twenty-one. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-11",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-4",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1453"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1454"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "10",
+            "relative_gap": "10"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "3",
+            "relative_gap": "3"
+          }
+        ],
+        "min_wrong_pair_gap": "7",
+        "min_distinct_wrong_pair_gap": "7"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Use no opening position. Buy 10 at 100; buy 5 at 104; sell 11 at 102; buy 5 at 107; sell 5 at 112. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 100,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 104,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 102,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "price": 107,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 112,
+            "qty": 5,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "55",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy ten at one hundred; buy five at one hundred and four; sell eleven at one hundred and two; buy five at one hundred and seven; sell five at one hundred and twelve. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "27",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "1213/27",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1682"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1627"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "28",
+            "relative_gap": "28/55"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "272/27",
+            "relative_gap": "272/1485"
+          }
+        ],
+        "min_wrong_pair_gap": "484/27",
+        "min_distinct_wrong_pair_gap": "484/27"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Begin with no position. Buy 3 at 93; buy 6 at 97; sell 7 at 94; buy 5 at 102; sell 1 at 98. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 93,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 97,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 94,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "price": 102,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 98,
+            "qty": 1,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-8",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy three at ninety-three; buy six at ninety-seven; sell seven at ninety-four; buy five at one hundred and two; sell one at ninety-eight. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-21",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-97/7",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "756"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "764"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "13",
+            "relative_gap": "13/8"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "41/7",
+            "relative_gap": "41/56"
+          }
+        ],
+        "min_wrong_pair_gap": "50/7",
+        "min_distinct_wrong_pair_gap": "50/7"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Start with zero shares. Buy 7 at 103; buy 3 at 109; sell 9 at 100; buy 6 at 112; sell 4 at 103. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 103,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 100,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "price": 112,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 4,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-72",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy seven at one hundred and three; buy three at one hundred and nine; sell nine at one hundred; buy six at one hundred and twelve; sell four at one hundred and three. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-81",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-2628/35",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1312"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1384"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "9",
+            "relative_gap": "1/8"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "108/35",
+            "relative_gap": "3/70"
+          }
+        ],
+        "min_wrong_pair_gap": "207/35",
+        "min_distinct_wrong_pair_gap": "207/35"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Start flat. Buy 4 at 108; buy 10 at 113; sell 7 at 106; buy 6 at 114; sell 5 at 122. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 108,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 113,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "price": 114,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 122,
+            "qty": 5,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "16",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy four at one hundred and eight; buy ten at one hundred and thirteen; sell seven at one hundred and six; buy six at one hundred and fourteen; sell five at one hundred and twenty-two. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-9",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "98/13",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1352"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1336"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "25",
+            "relative_gap": "25/16"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "110/13",
+            "relative_gap": "55/104"
+          }
+        ],
+        "min_wrong_pair_gap": "215/13",
+        "min_distinct_wrong_pair_gap": "215/13"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Begin with zero shares. Buy 2 at 107; buy 4 at 108; sell 5 at 120; buy 4 at 112; sell 1 at 107. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 107,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 120,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "price": 112,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 1,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "61",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy two at one hundred and seven; buy four at one hundred and eight; sell five at one hundred and twenty; buy four at one hundred and twelve; sell one at one hundred and seven. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "56",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "863/15",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "707"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "646"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "5",
+            "relative_gap": "5/61"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "52/15",
+            "relative_gap": "52/915"
+          }
+        ],
+        "min_wrong_pair_gap": "23/15",
+        "min_distinct_wrong_pair_gap": "23/15"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Use no opening position. Buy 10 at 106; buy 11 at 107; sell 12 at 120; buy 6 at 108; sell 4 at 109. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 106,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "price": 120,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "price": 108,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 4,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "174",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy ten at one hundred and six; buy eleven at one hundred and seven; sell twelve at one hundred and twenty; buy six at one hundred and eight; sell four at one hundred and nine. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "161",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "5924/35",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1876"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1702"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "13",
+            "relative_gap": "13/174"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "166/35",
+            "relative_gap": "83/3045"
+          }
+        ],
+        "min_wrong_pair_gap": "289/35",
+        "min_distinct_wrong_pair_gap": "289/35"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Begin with no position. Buy 2 at 101; buy 7 at 103; sell 5 at 114; buy 10 at 105; sell 9 at 118. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 101,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "price": 105,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 118,
+            "qty": 9,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "184",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy two at one hundred and one; buy seven at one hundred and three; sell five at one hundred and fourteen; buy ten at one hundred and five; sell nine at one hundred and eighteen. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "172",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "11372/63",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1632"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1448"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "12",
+            "relative_gap": "3/46"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "220/63",
+            "relative_gap": "55/2898"
+          }
+        ],
+        "min_wrong_pair_gap": "536/63",
+        "min_distinct_wrong_pair_gap": "536/63"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Start with zero shares. Buy 7 at 106; buy 12 at 111; sell 16 at 103; buy 7 at 114; sell 6 at 101. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 106,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 12,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 16,
+            "side": "sell"
+          },
+          {
+            "price": 114,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 6,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-162",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy seven at one hundred and six; buy twelve at one hundred and eleven; sell sixteen at one hundred and three; buy seven at one hundred and fourteen; sell six at one hundred and one. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-186",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-15942/95",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "2254"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "2416"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "24",
+            "relative_gap": "4/27"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "552/95",
+            "relative_gap": "92/2565"
+          }
+        ],
+        "min_wrong_pair_gap": "1728/95",
+        "min_distinct_wrong_pair_gap": "1728/95"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Start flat. Buy 4 at 105; buy 5 at 106; sell 6 at 116; buy 10 at 109; sell 12 at 120. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 105,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 116,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "price": 109,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 120,
+            "qty": 12,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "205",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy four at one hundred and five; buy five at one hundred and six; sell six at one hundred and sixteen; buy ten at one hundred and nine; sell twelve at one hundred and twenty. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "201",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "7964/39",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "2136"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1931"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "4",
+            "relative_gap": "4/205"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "31/39",
+            "relative_gap": "31/7995"
+          }
+        ],
+        "min_wrong_pair_gap": "125/39",
+        "min_distinct_wrong_pair_gap": "125/39"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Begin with zero shares. Buy 3 at 110; buy 3 at 111; sell 5 at 107; buy 6 at 112; sell 1 at 124. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 110,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "price": 112,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 124,
+            "qty": 1,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-4",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy three at one hundred and ten; buy three at one hundred and eleven; sell five at one hundred and seven; buy six at one hundred and twelve; sell one at one hundred and twenty-four. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-6",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-37/7",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "659"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "663"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "2",
+            "relative_gap": "1/2"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "9/7",
+            "relative_gap": "9/28"
+          }
+        ],
+        "min_wrong_pair_gap": "5/7",
+        "min_distinct_wrong_pair_gap": "5/7"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Use no opening position. Buy 5 at 107; buy 10 at 113; sell 6 at 111; buy 4 at 116; sell 11 at 102. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 107,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 113,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "price": 116,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 102,
+            "qty": 11,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-109",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy five at one hundred and seven; buy ten at one hundred and thirteen; sell six at one hundred and eleven; buy four at one hundred and sixteen; sell eleven at one hundred and two. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-127",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-1507/13",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1788"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1897"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "18",
+            "relative_gap": "18/109"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "90/13",
+            "relative_gap": "90/1417"
+          }
+        ],
+        "min_wrong_pair_gap": "144/13",
+        "min_distinct_wrong_pair_gap": "144/13"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Begin with no position. Buy 6 at 105; buy 6 at 107; sell 11 at 110; buy 3 at 109; sell 1 at 104. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 105,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 110,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "price": 109,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 104,
+            "qty": 1,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "42",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy six at one hundred and five; buy six at one hundred and seven; sell eleven at one hundred and ten; buy three at one hundred and nine; sell one at one hundred and four. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "38",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "159/4",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1314"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1272"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "4",
+            "relative_gap": "2/21"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "9/4",
+            "relative_gap": "3/56"
+          }
+        ],
+        "min_wrong_pair_gap": "7/4",
+        "min_distinct_wrong_pair_gap": "7/4"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Start with zero shares. Buy 6 at 110; buy 8 at 111; sell 9 at 119; buy 7 at 116; sell 3 at 119. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 110,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 119,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "price": 116,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 119,
+            "qty": 3,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "102",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy six at one hundred and ten; buy eight at one hundred and eleven; sell nine at one hundred and nineteen; buy seven at one hundred and sixteen; sell three at one hundred and nineteen. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "82",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "1283/14",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1428"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1326"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "20",
+            "relative_gap": "10/51"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "145/14",
+            "relative_gap": "145/1428"
+          }
+        ],
+        "min_wrong_pair_gap": "135/14",
+        "min_distinct_wrong_pair_gap": "135/14"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Start flat. Buy 7 at 103; buy 7 at 108; sell 8 at 99; buy 6 at 111; sell 5 at 98. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 103,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 99,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "price": 111,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 98,
+            "qty": 5,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-87",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy seven at one hundred and three; buy seven at one hundred and eight; sell eight at ninety-nine; buy six at one hundred and eleven; sell five at ninety-eight. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-132",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-413/4",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1282"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1369"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "45",
+            "relative_gap": "15/29"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "65/4",
+            "relative_gap": "65/348"
+          }
+        ],
+        "min_wrong_pair_gap": "115/4",
+        "min_distinct_wrong_pair_gap": "115/4"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Begin with zero shares. Buy 9 at 110; buy 8 at 111; sell 10 at 108; buy 10 at 117; sell 1 at 105. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 110,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 108,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "price": 117,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 1,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-27",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy nine at one hundred and ten; buy eight at one hundred and eleven; sell ten at one hundred and eight; buy ten at one hundred and seventeen; sell one at one hundred and five. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-40",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-9831/289",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1185"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1212"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "13",
+            "relative_gap": "13/27"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "2028/289",
+            "relative_gap": "676/2601"
+          }
+        ],
+        "min_wrong_pair_gap": "1729/289",
+        "min_distinct_wrong_pair_gap": "1729/289"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Use no opening position. Buy 8 at 99; buy 3 at 100; sell 10 at 107; buy 7 at 105; sell 5 at 119. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 99,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 100,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "price": 105,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 119,
+            "qty": 5,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "153",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy eight at ninety-nine; buy three at one hundred; sell ten at one hundred and seven; buy seven at one hundred and five; sell five at one hundred and nineteen. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "147",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "13275/88",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1665"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1512"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "6",
+            "relative_gap": "2/51"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "189/88",
+            "relative_gap": "21/1496"
+          }
+        ],
+        "min_wrong_pair_gap": "339/88",
+        "min_distinct_wrong_pair_gap": "339/88"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Begin with no position. Buy 9 at 90; buy 5 at 96; sell 13 at 98; buy 8 at 101; sell 5 at 107. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 90,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 96,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "price": 98,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "price": 101,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 5,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "115",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy nine at ninety; buy five at ninety-six; sell thirteen at ninety-eight; buy eight at one hundred and one; sell five at one hundred and seven. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "104",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "6997/63",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1809"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1694"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "11",
+            "relative_gap": "11/115"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "248/63",
+            "relative_gap": "248/7245"
+          }
+        ],
+        "min_wrong_pair_gap": "445/63",
+        "min_distinct_wrong_pair_gap": "445/63"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Start with zero shares. Buy 9 at 92; buy 11 at 97; sell 18 at 103; buy 7 at 102; sell 1 at 92. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 92,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 97,
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "price": 102,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 92,
+            "qty": 1,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "148",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy nine at ninety-two; buy eleven at ninety-seven; sell eighteen at one hundred and three; buy seven at one hundred and two; sell one at ninety-two. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "133",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "1261/9",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1946"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1798"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "15",
+            "relative_gap": "15/148"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "71/9",
+            "relative_gap": "71/1332"
+          }
+        ],
+        "min_wrong_pair_gap": "64/9",
+        "min_distinct_wrong_pair_gap": "64/9"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Start flat. Buy 10 at 102; buy 3 at 104; sell 11 at 111; buy 8 at 107; sell 5 at 100. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 102,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 104,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "price": 107,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 100,
+            "qty": 5,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "68",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy ten at one hundred and two; buy three at one hundred and four; sell eleven at one hundred and eleven; buy eight at one hundred and seven; sell five at one hundred. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "58",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "825/13",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1721"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1653"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "10",
+            "relative_gap": "5/34"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "59/13",
+            "relative_gap": "59/884"
+          }
+        ],
+        "min_wrong_pair_gap": "71/13",
+        "min_distinct_wrong_pair_gap": "71/13"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Begin with zero shares. Buy 8 at 109; buy 11 at 111; sell 15 at 114; buy 6 at 117; sell 6 at 121. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 109,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "price": 117,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 121,
+            "qty": 6,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "109",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy eight at one hundred and nine; buy eleven at one hundred and eleven; sell fifteen at one hundred and fourteen; buy six at one hundred and seventeen; sell six at one hundred and twenty-one. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "77",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "1863/19",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "2436"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "2327"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "32",
+            "relative_gap": "32/109"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "208/19",
+            "relative_gap": "208/2071"
+          }
+        ],
+        "min_wrong_pair_gap": "400/19",
+        "min_distinct_wrong_pair_gap": "400/19"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Use no opening position. Buy 9 at 93; buy 4 at 95; sell 11 at 107; buy 4 at 99; sell 2 at 103. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 93,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 95,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 107,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "price": 99,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 2,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "166",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy nine at ninety-three; buy four at ninety-five; sell eleven at one hundred and seven; buy four at ninety-nine; sell two at one hundred and three. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "154",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "6194/39",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1383"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1217"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "12",
+            "relative_gap": "6/83"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "280/39",
+            "relative_gap": "140/3237"
+          }
+        ],
+        "min_wrong_pair_gap": "188/39",
+        "min_distinct_wrong_pair_gap": "188/39"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Begin with no position. Buy 8 at 96; buy 12 at 101; sell 17 at 106; buy 10 at 105; sell 2 at 106. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 96,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 12,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "price": 105,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 2,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "135",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy eight at ninety-six; buy twelve at one hundred and one; sell seventeen at one hundred and six; buy ten at one hundred and five; sell two at one hundred and six. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "112",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "1609/13",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "2014"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1879"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "23",
+            "relative_gap": "23/135"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "146/13",
+            "relative_gap": "146/1755"
+          }
+        ],
+        "min_wrong_pair_gap": "153/13",
+        "min_distinct_wrong_pair_gap": "153/13"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Start with zero shares. Buy 2 at 107; buy 11 at 112; sell 6 at 105; buy 4 at 114; sell 9 at 127. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 107,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "price": 112,
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "price": 114,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 127,
+            "qty": 9,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "99",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy two at one hundred and seven; buy eleven at one hundred and twelve; sell six at one hundred and five; buy four at one hundred and fourteen; sell nine at one hundred and twenty-seven. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "85",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "13653/143",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1773"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1674"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "14",
+            "relative_gap": "14/99"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "504/143",
+            "relative_gap": "56/1573"
+          }
+        ],
+        "min_wrong_pair_gap": "1498/143",
+        "min_distinct_wrong_pair_gap": "1498/143"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Start flat. Buy 9 at 104; buy 9 at 105; sell 16 at 119; buy 8 at 107; sell 5 at 111. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 104,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 105,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 119,
+            "qty": 16,
+            "side": "sell"
+          },
+          {
+            "price": 107,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "price": 111,
+            "qty": 5,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "257",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start flat. Buy nine at one hundred and four; buy nine at one hundred and five; sell sixteen at one hundred and nineteen; buy eight at one hundred and seven; sell five at one hundred and eleven. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "251",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "509/2",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "2459"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "2202"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "6",
+            "relative_gap": "6/257"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "5/2",
+            "relative_gap": "5/514"
+          }
+        ],
+        "min_wrong_pair_gap": "7/2",
+        "min_distinct_wrong_pair_gap": "7/2"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Begin with zero shares. Buy 7 at 97; buy 3 at 101; sell 8 at 93; buy 3 at 103; sell 4 at 106. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 97,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 93,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "price": 103,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 4,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-20",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with zero shares. Buy seven at ninety-seven; buy three at one hundred and one; sell eight at ninety-three; buy three at one hundred and three; sell four at one hundred and six. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-26",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-548/25",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1168"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1188"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "6",
+            "relative_gap": "3/10"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "48/25",
+            "relative_gap": "12/125"
+          }
+        ],
+        "min_wrong_pair_gap": "102/25",
+        "min_distinct_wrong_pair_gap": "102/25"
+      },
+      "follow_up": {
+        "question": "Could a stack replace the lot queue?",
+        "reference": "A stack naturally closes the newest lot first and implements LIFO. FIFO requires access to the oldest remaining lot."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Use no opening position. Buy 4 at 97; buy 12 at 101; sell 9 at 109; buy 7 at 103; sell 2 at 103. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 97,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "price": 101,
+            "qty": 12,
+            "side": "buy"
+          },
+          {
+            "price": 109,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "price": 103,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "price": 103,
+            "qty": 2,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "92",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Use no opening position. Buy four at ninety-seven; buy twelve at one hundred and one; sell nine at one hundred and nine; buy seven at one hundred and three; sell two at one hundred and three. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "72",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "84",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1187"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1095"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "20",
+            "relative_gap": "5/23"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "8",
+            "relative_gap": "2/23"
+          }
+        ],
+        "min_wrong_pair_gap": "12",
+        "min_distinct_wrong_pair_gap": "12"
+      },
+      "follow_up": {
+        "question": "How can FIFO processing stay efficient with many fills?",
+        "reference": "Consume each lot incrementally from a deque and remove it once exhausted. A lot should be inserted and removed once rather than rescanned for every sale."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Begin with no position. Buy 6 at 108; buy 10 at 114; sell 11 at 106; buy 9 at 115; sell 11 at 106. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 108,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "price": 114,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "price": 115,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "price": 106,
+            "qty": 11,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "-146",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Begin with no position. Buy six at one hundred and eight; buy ten at one hundred and fourteen; sell eleven at one hundred and six; buy nine at one hundred and fifteen; sell eleven at one hundred and six. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "-167",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "-8371/56",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "2332"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "2478"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "21",
+            "relative_gap": "21/146"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "195/56",
+            "relative_gap": "195/8176"
+          }
+        ],
+        "min_wrong_pair_gap": "981/56",
+        "min_distinct_wrong_pair_gap": "981/56"
+      },
+      "follow_up": {
+        "question": "What changes if a sale is larger than the long inventory?",
+        "reference": "The current long-only solver needs an explicit contract for short positions or a rejection rule. Silently treating the excess as another long-lot close would misstate profit."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Start with zero shares. Buy 3 at 90; buy 11 at 93; sell 4 at 92; buy 10 at 94; sell 9 at 95. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "params": {
+        "fills": [
+          {
+            "price": 90,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "price": 93,
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "price": 92,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "price": 94,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "price": 95,
+            "qty": 9,
+            "side": "sell"
+          }
+        ]
+      },
+      "answer": "23",
+      "tolerance": "0",
+      "topic": "Position and P&L accounting",
+      "source_topic": "FIFO realized profit",
+      "difficulty": "Hard",
+      "spoken_text": "Start with zero shares. Buy three at ninety; buy eleven at ninety-three; sell four at ninety-two; buy ten at ninety-four; sell nine at ninety-five. Using FIFO and ignoring fees, what is realized profit in dollars?",
+      "interview_friendly": true,
+      "interview_friendly_score": 3,
+      "interview_friendly_basis": "integer",
+      "wrong": [
+        {
+          "value": "5",
+          "misconceptions": [
+            "realizes_lifo_instead_of_fifo"
+          ]
+        },
+        {
+          "value": "419/28",
+          "misconceptions": [
+            "realizes_at_weighted_average_cost"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "total_sale_proceeds",
+          "value": "1223"
+        },
+        {
+          "name": "fifo_cost_basis_realized",
+          "value": "1200"
+        }
+      ],
+      "separation": {
+        "by_misconception": [
+          {
+            "misconception": "realizes_lifo_instead_of_fifo",
+            "absolute_gap": "18",
+            "relative_gap": "18/23"
+          },
+          {
+            "misconception": "realizes_at_weighted_average_cost",
+            "absolute_gap": "225/28",
+            "relative_gap": "225/644"
+          }
+        ],
+        "min_wrong_pair_gap": "279/28",
+        "min_distinct_wrong_pair_gap": "279/28"
+      },
+      "follow_up": {
+        "question": "Why does a partial sale require keeping part of the second lot?",
+        "reference": "Only the executed quantity is realized. The unsold remainder retains its original acquisition cost for future FIFO closes."
+      }
+    }
+  ]
+}

@@ -1,0 +1,1256 @@
+{
+  "template_id": "qd_F007",
+  "pack": "quant_dev",
+  "topic": "Position and P&L accounting",
+  "difficulty": "Easy",
+  "function_name": "compute_final_position",
+  "signature": "def compute_final_position(opening: int, fills: list[dict]) -> int:",
+  "parameters": [
+    {
+      "name": "opening",
+      "type": "int",
+      "param": "opening"
+    },
+    {
+      "name": "fills",
+      "type": "list[dict]",
+      "param": "fills"
+    }
+  ],
+  "return_type": "int",
+  "statement": "Given an opening integer position and a collection of fills where each element of fills encodes a trade side and quantity. Apply all fills sequentially to the opening position to obtain the resulting holding. Return the signed final position as an integer.",
+  "examples": [
+    0,
+    1
+  ],
+  "tests": [
+    [
+      -28,
+      [
+        {
+          "qty": 2,
+          "side": "buy"
+        },
+        {
+          "qty": 38,
+          "side": "sell"
+        },
+        {
+          "qty": 11,
+          "side": "buy"
+        },
+        {
+          "qty": 7,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      11,
+      [
+        {
+          "qty": 31,
+          "side": "buy"
+        },
+        {
+          "qty": 25,
+          "side": "sell"
+        },
+        {
+          "qty": 37,
+          "side": "buy"
+        },
+        {
+          "qty": 28,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -21,
+      [
+        {
+          "qty": 16,
+          "side": "buy"
+        },
+        {
+          "qty": 30,
+          "side": "sell"
+        },
+        {
+          "qty": 7,
+          "side": "buy"
+        },
+        {
+          "qty": 36,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      28,
+      [
+        {
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "qty": 24,
+          "side": "sell"
+        },
+        {
+          "qty": 18,
+          "side": "buy"
+        },
+        {
+          "qty": 29,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      9,
+      [
+        {
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "qty": 34,
+          "side": "sell"
+        },
+        {
+          "qty": 19,
+          "side": "buy"
+        },
+        {
+          "qty": 22,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      7,
+      [
+        {
+          "qty": 2,
+          "side": "buy"
+        },
+        {
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "qty": 9,
+          "side": "buy"
+        },
+        {
+          "qty": 35,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -10,
+      [
+        {
+          "qty": 31,
+          "side": "buy"
+        },
+        {
+          "qty": 32,
+          "side": "sell"
+        },
+        {
+          "qty": 38,
+          "side": "buy"
+        },
+        {
+          "qty": 34,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -29,
+      [
+        {
+          "qty": 36,
+          "side": "buy"
+        },
+        {
+          "qty": 32,
+          "side": "sell"
+        },
+        {
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "qty": 39,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -20,
+      [
+        {
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "qty": 1,
+          "side": "sell"
+        },
+        {
+          "qty": 21,
+          "side": "buy"
+        },
+        {
+          "qty": 29,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      5,
+      [
+        {
+          "qty": 38,
+          "side": "buy"
+        },
+        {
+          "qty": 19,
+          "side": "sell"
+        },
+        {
+          "qty": 25,
+          "side": "buy"
+        },
+        {
+          "qty": 20,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      28,
+      [
+        {
+          "qty": 11,
+          "side": "buy"
+        },
+        {
+          "qty": 33,
+          "side": "sell"
+        },
+        {
+          "qty": 3,
+          "side": "buy"
+        },
+        {
+          "qty": 24,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      4,
+      [
+        {
+          "qty": 40,
+          "side": "buy"
+        },
+        {
+          "qty": 17,
+          "side": "sell"
+        },
+        {
+          "qty": 38,
+          "side": "buy"
+        },
+        {
+          "qty": 10,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -10,
+      [
+        {
+          "qty": 30,
+          "side": "buy"
+        },
+        {
+          "qty": 2,
+          "side": "sell"
+        },
+        {
+          "qty": 6,
+          "side": "buy"
+        },
+        {
+          "qty": 19,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      14,
+      [
+        {
+          "qty": 13,
+          "side": "buy"
+        },
+        {
+          "qty": 11,
+          "side": "sell"
+        },
+        {
+          "qty": 1,
+          "side": "buy"
+        },
+        {
+          "qty": 13,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -2,
+      [
+        {
+          "qty": 39,
+          "side": "buy"
+        },
+        {
+          "qty": 32,
+          "side": "sell"
+        },
+        {
+          "qty": 40,
+          "side": "buy"
+        },
+        {
+          "qty": 3,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -16,
+      [
+        {
+          "qty": 28,
+          "side": "buy"
+        },
+        {
+          "qty": 37,
+          "side": "sell"
+        },
+        {
+          "qty": 5,
+          "side": "buy"
+        },
+        {
+          "qty": 13,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -24,
+      [
+        {
+          "qty": 3,
+          "side": "buy"
+        },
+        {
+          "qty": 20,
+          "side": "sell"
+        },
+        {
+          "qty": 1,
+          "side": "buy"
+        },
+        {
+          "qty": 36,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -11,
+      [
+        {
+          "qty": 22,
+          "side": "buy"
+        },
+        {
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "qty": 26,
+          "side": "buy"
+        },
+        {
+          "qty": 13,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -22,
+      [
+        {
+          "qty": 2,
+          "side": "buy"
+        },
+        {
+          "qty": 37,
+          "side": "sell"
+        },
+        {
+          "qty": 39,
+          "side": "buy"
+        },
+        {
+          "qty": 21,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -10,
+      [
+        {
+          "qty": 36,
+          "side": "buy"
+        },
+        {
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "qty": 38,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -3,
+      [
+        {
+          "qty": 14,
+          "side": "buy"
+        },
+        {
+          "qty": 29,
+          "side": "sell"
+        },
+        {
+          "qty": 10,
+          "side": "buy"
+        },
+        {
+          "qty": 28,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -26,
+      [
+        {
+          "qty": 3,
+          "side": "buy"
+        },
+        {
+          "qty": 28,
+          "side": "sell"
+        },
+        {
+          "qty": 3,
+          "side": "buy"
+        },
+        {
+          "qty": 24,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -1,
+      [
+        {
+          "qty": 31,
+          "side": "buy"
+        },
+        {
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "qty": 38,
+          "side": "buy"
+        },
+        {
+          "qty": 13,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -1,
+      [
+        {
+          "qty": 29,
+          "side": "buy"
+        },
+        {
+          "qty": 2,
+          "side": "sell"
+        },
+        {
+          "qty": 30,
+          "side": "buy"
+        },
+        {
+          "qty": 36,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -14,
+      [
+        {
+          "qty": 13,
+          "side": "buy"
+        },
+        {
+          "qty": 19,
+          "side": "sell"
+        },
+        {
+          "qty": 5,
+          "side": "buy"
+        },
+        {
+          "qty": 32,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -21,
+      [
+        {
+          "qty": 18,
+          "side": "buy"
+        },
+        {
+          "qty": 36,
+          "side": "sell"
+        },
+        {
+          "qty": 13,
+          "side": "buy"
+        },
+        {
+          "qty": 18,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -18,
+      [
+        {
+          "qty": 4,
+          "side": "buy"
+        },
+        {
+          "qty": 28,
+          "side": "sell"
+        },
+        {
+          "qty": 19,
+          "side": "buy"
+        },
+        {
+          "qty": 3,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      23,
+      [
+        {
+          "qty": 32,
+          "side": "buy"
+        },
+        {
+          "qty": 1,
+          "side": "sell"
+        },
+        {
+          "qty": 21,
+          "side": "buy"
+        },
+        {
+          "qty": 15,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      26,
+      [
+        {
+          "qty": 30,
+          "side": "buy"
+        },
+        {
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "qty": 21,
+          "side": "buy"
+        },
+        {
+          "qty": 22,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -25,
+      [
+        {
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "qty": 1,
+          "side": "sell"
+        },
+        {
+          "qty": 19,
+          "side": "buy"
+        },
+        {
+          "qty": 32,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -11,
+      [
+        {
+          "qty": 19,
+          "side": "buy"
+        },
+        {
+          "qty": 25,
+          "side": "sell"
+        },
+        {
+          "qty": 28,
+          "side": "buy"
+        },
+        {
+          "qty": 2,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -20,
+      [
+        {
+          "qty": 23,
+          "side": "buy"
+        },
+        {
+          "qty": 36,
+          "side": "sell"
+        },
+        {
+          "qty": 11,
+          "side": "buy"
+        },
+        {
+          "qty": 19,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      28,
+      [
+        {
+          "qty": 28,
+          "side": "buy"
+        },
+        {
+          "qty": 2,
+          "side": "sell"
+        },
+        {
+          "qty": 37,
+          "side": "buy"
+        },
+        {
+          "qty": 33,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      22,
+      [
+        {
+          "qty": 40,
+          "side": "buy"
+        },
+        {
+          "qty": 10,
+          "side": "sell"
+        },
+        {
+          "qty": 2,
+          "side": "buy"
+        },
+        {
+          "qty": 9,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      27,
+      [
+        {
+          "qty": 32,
+          "side": "buy"
+        },
+        {
+          "qty": 31,
+          "side": "sell"
+        },
+        {
+          "qty": 3,
+          "side": "buy"
+        },
+        {
+          "qty": 24,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -25,
+      [
+        {
+          "qty": 13,
+          "side": "buy"
+        },
+        {
+          "qty": 36,
+          "side": "sell"
+        },
+        {
+          "qty": 14,
+          "side": "buy"
+        },
+        {
+          "qty": 33,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -5,
+      [
+        {
+          "qty": 21,
+          "side": "buy"
+        },
+        {
+          "qty": 32,
+          "side": "sell"
+        },
+        {
+          "qty": 32,
+          "side": "buy"
+        },
+        {
+          "qty": 34,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      21,
+      [
+        {
+          "qty": 31,
+          "side": "buy"
+        },
+        {
+          "qty": 8,
+          "side": "sell"
+        },
+        {
+          "qty": 39,
+          "side": "buy"
+        },
+        {
+          "qty": 6,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      21,
+      [
+        {
+          "qty": 32,
+          "side": "buy"
+        },
+        {
+          "qty": 14,
+          "side": "sell"
+        },
+        {
+          "qty": 32,
+          "side": "buy"
+        },
+        {
+          "qty": 19,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      12,
+      [
+        {
+          "qty": 32,
+          "side": "buy"
+        },
+        {
+          "qty": 26,
+          "side": "sell"
+        },
+        {
+          "qty": 22,
+          "side": "buy"
+        },
+        {
+          "qty": 9,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -24,
+      [
+        {
+          "qty": 1,
+          "side": "buy"
+        },
+        {
+          "qty": 22,
+          "side": "sell"
+        },
+        {
+          "qty": 24,
+          "side": "buy"
+        },
+        {
+          "qty": 2,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      29,
+      [
+        {
+          "qty": 30,
+          "side": "buy"
+        },
+        {
+          "qty": 24,
+          "side": "sell"
+        },
+        {
+          "qty": 23,
+          "side": "buy"
+        },
+        {
+          "qty": 24,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -1,
+      [
+        {
+          "qty": 35,
+          "side": "buy"
+        },
+        {
+          "qty": 7,
+          "side": "sell"
+        },
+        {
+          "qty": 1,
+          "side": "buy"
+        },
+        {
+          "qty": 5,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -11,
+      [
+        {
+          "qty": 14,
+          "side": "buy"
+        },
+        {
+          "qty": 26,
+          "side": "sell"
+        },
+        {
+          "qty": 1,
+          "side": "buy"
+        },
+        {
+          "qty": 30,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -20,
+      [
+        {
+          "qty": 26,
+          "side": "buy"
+        },
+        {
+          "qty": 30,
+          "side": "sell"
+        },
+        {
+          "qty": 5,
+          "side": "buy"
+        },
+        {
+          "qty": 36,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -8,
+      [
+        {
+          "qty": 31,
+          "side": "buy"
+        },
+        {
+          "qty": 18,
+          "side": "sell"
+        },
+        {
+          "qty": 17,
+          "side": "buy"
+        },
+        {
+          "qty": 7,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -8,
+      [
+        {
+          "qty": 4,
+          "side": "buy"
+        },
+        {
+          "qty": 1,
+          "side": "sell"
+        },
+        {
+          "qty": 21,
+          "side": "buy"
+        },
+        {
+          "qty": 4,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      17,
+      [
+        {
+          "qty": 33,
+          "side": "buy"
+        },
+        {
+          "qty": 6,
+          "side": "sell"
+        },
+        {
+          "qty": 35,
+          "side": "buy"
+        },
+        {
+          "qty": 15,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -24,
+      [
+        {
+          "qty": 1,
+          "side": "buy"
+        },
+        {
+          "qty": 38,
+          "side": "sell"
+        },
+        {
+          "qty": 8,
+          "side": "buy"
+        },
+        {
+          "qty": 27,
+          "side": "sell"
+        }
+      ]
+    ],
+    [
+      -29,
+      [
+        {
+          "qty": 35,
+          "side": "buy"
+        },
+        {
+          "qty": 12,
+          "side": "sell"
+        },
+        {
+          "qty": 26,
+          "side": "buy"
+        },
+        {
+          "qty": 25,
+          "side": "sell"
+        }
+      ]
+    ]
+  ],
+  "expected": [
+    "-60",
+    "26",
+    "-64",
+    "1",
+    "-20",
+    "-29",
+    "-7",
+    "-58",
+    "-12",
+    "29",
+    "-15",
+    "55",
+    "5",
+    "4",
+    "42",
+    "-33",
+    "-76",
+    "18",
+    "-39",
+    "-1",
+    "-36",
+    "-72",
+    "48",
+    "20",
+    "-47",
+    "-44",
+    "-26",
+    "60",
+    "37",
+    "-31",
+    "9",
+    "-41",
+    "58",
+    "45",
+    "7",
+    "-67",
+    "-18",
+    "77",
+    "52",
+    "31",
+    "-23",
+    "34",
+    "23",
+    "-52",
+    "-55",
+    "15",
+    "12",
+    "64",
+    "-80",
+    "-5"
+  ],
+  "wrong_methods": [
+    {
+      "name": "ignores the opening position",
+      "outputs": [
+        "-32",
+        "15",
+        "-43",
+        "-27",
+        "-29",
+        "-36",
+        "3",
+        "-29",
+        "8",
+        "24",
+        "-43",
+        "51",
+        "15",
+        "-10",
+        "44",
+        "-17",
+        "-52",
+        "29",
+        "-17",
+        "9",
+        "-33",
+        "-46",
+        "49",
+        "21",
+        "-33",
+        "-23",
+        "-8",
+        "37",
+        "11",
+        "-6",
+        "20",
+        "-21",
+        "30",
+        "23",
+        "-20",
+        "-42",
+        "-13",
+        "56",
+        "31",
+        "19",
+        "1",
+        "5",
+        "24",
+        "-41",
+        "-35",
+        "23",
+        "20",
+        "47",
+        "-56",
+        "24"
+      ],
+      "source": "def solve(params):\n    fills = params[\"fills\"]\n    total_bought = 0\n    total_sold = 0\n    for f in fills:\n        if f[\"side\"] == \"buy\":\n            total_bought += f[\"qty\"]\n        else:\n            total_sold += f[\"qty\"]\n    return total_bought - total_sold"
+    },
+    {
+      "name": "treats sell fills as buys",
+      "outputs": [
+        "30",
+        "132",
+        "68",
+        "107",
+        "92",
+        "65",
+        "125",
+        "84",
+        "48",
+        "107",
+        "99",
+        "109",
+        "47",
+        "52",
+        "112",
+        "67",
+        "36",
+        "56",
+        "77",
+        "87",
+        "78",
+        "32",
+        "88",
+        "96",
+        "55",
+        "64",
+        "36",
+        "92",
+        "117",
+        "35",
+        "63",
+        "69",
+        "128",
+        "83",
+        "117",
+        "71",
+        "114",
+        "105",
+        "118",
+        "101",
+        "25",
+        "130",
+        "47",
+        "60",
+        "77",
+        "65",
+        "22",
+        "106",
+        "50",
+        "69"
+      ],
+      "source": "def solve(params):\n    opening = params[\"opening\"]\n    fills = params[\"fills\"]\n    total = 0\n    for f in fills:\n        total += f[\"qty\"]\n    return opening + total"
+    }
+  ],
+  "solver_source": "def solve(params):\n    from fractions import Fraction\n    opening = params[\"opening\"]\n    fills = params[\"fills\"]\n    # total bought and total sold\n    total_bought = 0\n    total_sold = 0\n    for f in fills:\n        qty = f[\"qty\"]\n        side = f[\"side\"]\n        if side == \"buy\":\n            total_bought += qty\n        elif side == \"sell\":\n            total_sold += qty\n    final_position = opening + total_bought - total_sold\n    return {\"answer\": final_position, \"steps\": {\"total_bought_shares\": total_bought, \"total_sold_shares\": total_sold}}",
+  "verification": {
+    "verified": true,
+    "variants": 50,
+    "solver_reproduced": 50,
+    "wrong_methods_kept": 2,
+    "wrong_methods_given": 2,
+    "types_corrected_from_data": 1
+  },
+  "models": {
+    "spec_author": "meta-models/muse-spark-open-1026"
+  }
+}

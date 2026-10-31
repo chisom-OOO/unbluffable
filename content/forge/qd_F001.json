@@ -1,0 +1,4146 @@
+{
+  "template_id": "qd_F001",
+  "pack": "quant_dev",
+  "topic": "Order book and matching",
+  "topics": [
+    "Order book and matching"
+  ],
+  "source_topic": "Best bid and ask after cancellation",
+  "difficulty": "Easy",
+  "models": {
+    "author": "meta-models/muse-spark-open-1026",
+    "checker": null
+  },
+  "verification": {
+    "mode": "imported_verified_families",
+    "source": {
+      "passed": true,
+      "variants": 50,
+      "results": {
+        "PASS_EXACT": 50
+      }
+    },
+    "solver": {
+      "passed": true,
+      "variants_checked": 50,
+      "max_absolute_error": "0"
+    },
+    "misconceptions_verified": true,
+    "method_count": 2,
+    "repair_attempted": false,
+    "reason": null,
+    "pending_reason": null,
+    "all_variants_retained": true,
+    "rechecked_parameter_revision": null,
+    "variant_followups": true
+  },
+  "follow_up": {
+    "question": "What should the interface return if one side has no live orders?",
+    "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+  },
+  "review_status": "pending_builder_review",
+  "instances": [
+    {
+      "variant": "1",
+      "text": "Start with an empty book. Limits: A buy 17 at 144; B buy 12 at 143; C sell 4 at 146; D sell 8 at 147. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 144,
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 143,
+            "qty": 12,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 146,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 147,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[143,146]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Start with an empty book. Limits: A buy seventeen at one hundred and forty-four; B buy twelve at one hundred and forty-three; C sell four at one hundred and forty-six; D sell eight at one hundred and forty-seven. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[144,146]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[143,147]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "143"
+        },
+        {
+          "name": "best_ask",
+          "value": "146"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "2",
+      "text": "Begin with no resting orders. Limits: A buy 2 at 152; B buy 18 at 148; C sell 12 at 157; D sell 6 at 160. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 152,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 148,
+            "qty": 18,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 157,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 160,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[148,157]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with no resting orders. Limits: A buy two at one hundred and fifty-two; B buy eighteen at one hundred and forty-eight; C sell twelve at one hundred and fifty-seven; D sell six at one hundred and sixty. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[152,157]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[148,160]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "148"
+        },
+        {
+          "name": "best_ask",
+          "value": "157"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "3",
+      "text": "Replay into an empty book. Limits: A buy 9 at 144; B buy 7 at 141; C sell 16 at 146; D sell 6 at 150. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 144,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 141,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 146,
+            "qty": 16,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 150,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[141,146]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Replay into an empty book. Limits: A buy nine at one hundred and forty-four; B buy seven at one hundred and forty-one; C sell sixteen at one hundred and forty-six; D sell six at one hundred and fifty. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[144,146]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[141,150]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "141"
+        },
+        {
+          "name": "best_ask",
+          "value": "146"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "4",
+      "text": "Use an initially empty book. Limits: A buy 15 at 108; B buy 8 at 106; C sell 5 at 110; D sell 20 at 113. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 108,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 106,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 110,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 113,
+            "qty": 20,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[106,110]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Use an initially empty book. Limits: A buy fifteen at one hundred and eight; B buy eight at one hundred and six; C sell five at one hundred and ten; D sell twenty at one hundred and thirteen. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[108,110]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[106,113]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "106"
+        },
+        {
+          "name": "best_ask",
+          "value": "110"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "5",
+      "text": "Begin with an empty book. Limits: A buy 6 at 97; B buy 17 at 96; C sell 15 at 99; D sell 15 at 100. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 97,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 96,
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 99,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 100,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[96,99]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with an empty book. Limits: A buy six at ninety-seven; B buy seventeen at ninety-six; C sell fifteen at ninety-nine; D sell fifteen at one hundred. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[97,99]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[96,100]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "96"
+        },
+        {
+          "name": "best_ask",
+          "value": "99"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "6",
+      "text": "Start with an empty book. Limits: A buy 11 at 134; B buy 5 at 133; C sell 5 at 137; D sell 14 at 138. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 134,
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 133,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 137,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 138,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[133,137]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Start with an empty book. Limits: A buy eleven at one hundred and thirty-four; B buy five at one hundred and thirty-three; C sell five at one hundred and thirty-seven; D sell fourteen at one hundred and thirty-eight. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[134,137]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[133,138]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "133"
+        },
+        {
+          "name": "best_ask",
+          "value": "137"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "7",
+      "text": "Begin with no resting orders. Limits: A buy 20 at 83; B buy 5 at 80; C sell 15 at 86; D sell 10 at 90. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 83,
+            "qty": 20,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 80,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 86,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 90,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[80,86]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with no resting orders. Limits: A buy twenty at eighty-three; B buy five at eighty; C sell fifteen at eighty-six; D sell ten at ninety. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[83,86]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[80,90]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "80"
+        },
+        {
+          "name": "best_ask",
+          "value": "86"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "8",
+      "text": "Replay into an empty book. Limits: A buy 9 at 159; B buy 6 at 157; C sell 18 at 164; D sell 9 at 168. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 159,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 157,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 164,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 168,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[157,164]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Replay into an empty book. Limits: A buy nine at one hundred and fifty-nine; B buy six at one hundred and fifty-seven; C sell eighteen at one hundred and sixty-four; D sell nine at one hundred and sixty-eight. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[159,164]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[157,168]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "157"
+        },
+        {
+          "name": "best_ask",
+          "value": "164"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "9",
+      "text": "Use an initially empty book. Limits: A buy 13 at 135; B buy 8 at 131; C sell 7 at 137; D sell 12 at 138. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 135,
+            "qty": 13,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 131,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 137,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 138,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[131,137]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Use an initially empty book. Limits: A buy thirteen at one hundred and thirty-five; B buy eight at one hundred and thirty-one; C sell seven at one hundred and thirty-seven; D sell twelve at one hundred and thirty-eight. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[135,137]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[131,138]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "131"
+        },
+        {
+          "name": "best_ask",
+          "value": "137"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "10",
+      "text": "Begin with an empty book. Limits: A buy 8 at 123; B buy 6 at 119; C sell 15 at 127; D sell 17 at 131. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 123,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 119,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 127,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 131,
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[119,127]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with an empty book. Limits: A buy eight at one hundred and twenty-three; B buy six at one hundred and nineteen; C sell fifteen at one hundred and twenty-seven; D sell seventeen at one hundred and thirty-one. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[123,127]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[119,131]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "119"
+        },
+        {
+          "name": "best_ask",
+          "value": "127"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "11",
+      "text": "Start with an empty book. Limits: A buy 8 at 119; B buy 9 at 118; C sell 19 at 122; D sell 7 at 126. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 119,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 118,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 122,
+            "qty": 19,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 126,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[118,122]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Start with an empty book. Limits: A buy eight at one hundred and nineteen; B buy nine at one hundred and eighteen; C sell nineteen at one hundred and twenty-two; D sell seven at one hundred and twenty-six. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[119,122]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[118,126]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "118"
+        },
+        {
+          "name": "best_ask",
+          "value": "122"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "12",
+      "text": "Begin with no resting orders. Limits: A buy 4 at 118; B buy 3 at 114; C sell 13 at 123; D sell 5 at 126. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 118,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 114,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 123,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 126,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[114,123]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with no resting orders. Limits: A buy four at one hundred and eighteen; B buy three at one hundred and fourteen; C sell thirteen at one hundred and twenty-three; D sell five at one hundred and twenty-six. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[118,123]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[114,126]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "114"
+        },
+        {
+          "name": "best_ask",
+          "value": "123"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "13",
+      "text": "Replay into an empty book. Limits: A buy 8 at 129; B buy 8 at 126; C sell 7 at 133; D sell 8 at 134. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 129,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 126,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 133,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 134,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[126,133]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Replay into an empty book. Limits: A buy eight at one hundred and twenty-nine; B buy eight at one hundred and twenty-six; C sell seven at one hundred and thirty-three; D sell eight at one hundred and thirty-four. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[129,133]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[126,134]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "126"
+        },
+        {
+          "name": "best_ask",
+          "value": "133"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "14",
+      "text": "Use an initially empty book. Limits: A buy 2 at 83; B buy 7 at 82; C sell 19 at 85; D sell 3 at 86. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 83,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 82,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 85,
+            "qty": 19,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 86,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[82,85]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Use an initially empty book. Limits: A buy two at eighty-three; B buy seven at eighty-two; C sell nineteen at eighty-five; D sell three at eighty-six. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[83,85]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[82,86]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "82"
+        },
+        {
+          "name": "best_ask",
+          "value": "85"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "15",
+      "text": "Begin with an empty book. Limits: A buy 18 at 131; B buy 9 at 130; C sell 11 at 133; D sell 18 at 135. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 131,
+            "qty": 18,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 130,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 133,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 135,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[130,133]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with an empty book. Limits: A buy eighteen at one hundred and thirty-one; B buy nine at one hundred and thirty; C sell eleven at one hundred and thirty-three; D sell eighteen at one hundred and thirty-five. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[131,133]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[130,135]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "130"
+        },
+        {
+          "name": "best_ask",
+          "value": "133"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "16",
+      "text": "Start with an empty book. Limits: A buy 15 at 159; B buy 5 at 155; C sell 19 at 163; D sell 19 at 166. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 159,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 155,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 163,
+            "qty": 19,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 166,
+            "qty": 19,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[155,163]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Start with an empty book. Limits: A buy fifteen at one hundred and fifty-nine; B buy five at one hundred and fifty-five; C sell nineteen at one hundred and sixty-three; D sell nineteen at one hundred and sixty-six. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[159,163]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[155,166]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "155"
+        },
+        {
+          "name": "best_ask",
+          "value": "163"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "17",
+      "text": "Begin with no resting orders. Limits: A buy 16 at 93; B buy 9 at 90; C sell 12 at 96; D sell 17 at 100. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 93,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 90,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 96,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 100,
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[90,96]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with no resting orders. Limits: A buy sixteen at ninety-three; B buy nine at ninety; C sell twelve at ninety-six; D sell seventeen at one hundred. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[93,96]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[90,100]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "90"
+        },
+        {
+          "name": "best_ask",
+          "value": "96"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "18",
+      "text": "Replay into an empty book. Limits: A buy 16 at 102; B buy 17 at 99; C sell 2 at 107; D sell 15 at 109. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 102,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 99,
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 107,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 109,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[99,107]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Replay into an empty book. Limits: A buy sixteen at one hundred and two; B buy seventeen at ninety-nine; C sell two at one hundred and seven; D sell fifteen at one hundred and nine. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[102,107]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[99,109]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "99"
+        },
+        {
+          "name": "best_ask",
+          "value": "107"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "19",
+      "text": "Use an initially empty book. Limits: A buy 15 at 139; B buy 19 at 138; C sell 16 at 141; D sell 9 at 144. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 139,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 138,
+            "qty": 19,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 141,
+            "qty": 16,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 144,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[138,141]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Use an initially empty book. Limits: A buy fifteen at one hundred and thirty-nine; B buy nineteen at one hundred and thirty-eight; C sell sixteen at one hundred and forty-one; D sell nine at one hundred and forty-four. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[139,141]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[138,144]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "138"
+        },
+        {
+          "name": "best_ask",
+          "value": "141"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "20",
+      "text": "Begin with an empty book. Limits: A buy 10 at 163; B buy 4 at 159; C sell 7 at 166; D sell 19 at 169. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 163,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 159,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 166,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 169,
+            "qty": 19,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[159,166]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with an empty book. Limits: A buy ten at one hundred and sixty-three; B buy four at one hundred and fifty-nine; C sell seven at one hundred and sixty-six; D sell nineteen at one hundred and sixty-nine. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[163,166]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[159,169]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "159"
+        },
+        {
+          "name": "best_ask",
+          "value": "166"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "21",
+      "text": "Start with an empty book. Limits: A buy 4 at 109; B buy 4 at 108; C sell 6 at 112; D sell 18 at 116. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 109,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 108,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 112,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 116,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[108,112]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Start with an empty book. Limits: A buy four at one hundred and nine; B buy four at one hundred and eight; C sell six at one hundred and twelve; D sell eighteen at one hundred and sixteen. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[109,112]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[108,116]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "108"
+        },
+        {
+          "name": "best_ask",
+          "value": "112"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "22",
+      "text": "Begin with no resting orders. Limits: A buy 5 at 148; B buy 3 at 144; C sell 9 at 150; D sell 13 at 151. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 148,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 144,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 150,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 151,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[144,150]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with no resting orders. Limits: A buy five at one hundred and forty-eight; B buy three at one hundred and forty-four; C sell nine at one hundred and fifty; D sell thirteen at one hundred and fifty-one. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[148,150]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[144,151]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "144"
+        },
+        {
+          "name": "best_ask",
+          "value": "150"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "23",
+      "text": "Replay into an empty book. Limits: A buy 18 at 138; B buy 4 at 134; C sell 20 at 143; D sell 20 at 147. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 138,
+            "qty": 18,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 134,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 143,
+            "qty": 20,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 147,
+            "qty": 20,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[134,143]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Replay into an empty book. Limits: A buy eighteen at one hundred and thirty-eight; B buy four at one hundred and thirty-four; C sell twenty at one hundred and forty-three; D sell twenty at one hundred and forty-seven. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[138,143]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[134,147]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "134"
+        },
+        {
+          "name": "best_ask",
+          "value": "143"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "24",
+      "text": "Use an initially empty book. Limits: A buy 13 at 104; B buy 16 at 103; C sell 6 at 106; D sell 16 at 107. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 104,
+            "qty": 13,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 103,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 106,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 107,
+            "qty": 16,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[103,106]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Use an initially empty book. Limits: A buy thirteen at one hundred and four; B buy sixteen at one hundred and three; C sell six at one hundred and six; D sell sixteen at one hundred and seven. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[104,106]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[103,107]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "103"
+        },
+        {
+          "name": "best_ask",
+          "value": "106"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "25",
+      "text": "Begin with an empty book. Limits: A buy 16 at 87; B buy 5 at 85; C sell 18 at 89; D sell 5 at 91. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 87,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 85,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 89,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 91,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[85,89]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with an empty book. Limits: A buy sixteen at eighty-seven; B buy five at eighty-five; C sell eighteen at eighty-nine; D sell five at ninety-one. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[87,89]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[85,91]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "85"
+        },
+        {
+          "name": "best_ask",
+          "value": "89"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "26",
+      "text": "Start with an empty book. Limits: A buy 16 at 126; B buy 15 at 122; C sell 17 at 131; D sell 17 at 134. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 126,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 122,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 131,
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 134,
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[122,131]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Start with an empty book. Limits: A buy sixteen at one hundred and twenty-six; B buy fifteen at one hundred and twenty-two; C sell seventeen at one hundred and thirty-one; D sell seventeen at one hundred and thirty-four. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[126,131]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[122,134]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "122"
+        },
+        {
+          "name": "best_ask",
+          "value": "131"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "27",
+      "text": "Begin with no resting orders. Limits: A buy 12 at 155; B buy 20 at 152; C sell 6 at 157; D sell 20 at 160. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 155,
+            "qty": 12,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 152,
+            "qty": 20,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 157,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 160,
+            "qty": 20,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[152,157]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with no resting orders. Limits: A buy twelve at one hundred and fifty-five; B buy twenty at one hundred and fifty-two; C sell six at one hundred and fifty-seven; D sell twenty at one hundred and sixty. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[155,157]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[152,160]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "152"
+        },
+        {
+          "name": "best_ask",
+          "value": "157"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "28",
+      "text": "Replay into an empty book. Limits: A buy 17 at 95; B buy 11 at 94; C sell 2 at 100; D sell 12 at 102. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 95,
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 94,
+            "qty": 11,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 100,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 102,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[94,100]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Replay into an empty book. Limits: A buy seventeen at ninety-five; B buy eleven at ninety-four; C sell two at one hundred; D sell twelve at one hundred and two. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[95,100]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[94,102]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "94"
+        },
+        {
+          "name": "best_ask",
+          "value": "100"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "29",
+      "text": "Use an initially empty book. Limits: A buy 15 at 140; B buy 7 at 139; C sell 5 at 144; D sell 11 at 146. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 140,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 139,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 144,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 146,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[139,144]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Use an initially empty book. Limits: A buy fifteen at one hundred and forty; B buy seven at one hundred and thirty-nine; C sell five at one hundred and forty-four; D sell eleven at one hundred and forty-six. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[140,144]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[139,146]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "139"
+        },
+        {
+          "name": "best_ask",
+          "value": "144"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "30",
+      "text": "Begin with an empty book. Limits: A buy 9 at 155; B buy 18 at 154; C sell 11 at 157; D sell 12 at 159. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 155,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 154,
+            "qty": 18,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 157,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 159,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[154,157]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with an empty book. Limits: A buy nine at one hundred and fifty-five; B buy eighteen at one hundred and fifty-four; C sell eleven at one hundred and fifty-seven; D sell twelve at one hundred and fifty-nine. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[155,157]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[154,159]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "154"
+        },
+        {
+          "name": "best_ask",
+          "value": "157"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "31",
+      "text": "Start with an empty book. Limits: A buy 17 at 132; B buy 6 at 128; C sell 9 at 135; D sell 9 at 137. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 132,
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 128,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 135,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 137,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[128,135]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Start with an empty book. Limits: A buy seventeen at one hundred and thirty-two; B buy six at one hundred and twenty-eight; C sell nine at one hundred and thirty-five; D sell nine at one hundred and thirty-seven. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[132,135]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[128,137]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "128"
+        },
+        {
+          "name": "best_ask",
+          "value": "135"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "32",
+      "text": "Begin with no resting orders. Limits: A buy 15 at 102; B buy 19 at 100; C sell 3 at 104; D sell 5 at 107. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 102,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 100,
+            "qty": 19,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 104,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 107,
+            "qty": 5,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[100,104]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with no resting orders. Limits: A buy fifteen at one hundred and two; B buy nineteen at one hundred; C sell three at one hundred and four; D sell five at one hundred and seven. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[102,104]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[100,107]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "100"
+        },
+        {
+          "name": "best_ask",
+          "value": "104"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "33",
+      "text": "Replay into an empty book. Limits: A buy 5 at 93; B buy 3 at 92; C sell 15 at 95; D sell 4 at 96. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 93,
+            "qty": 5,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 92,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 95,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 96,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[92,95]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Replay into an empty book. Limits: A buy five at ninety-three; B buy three at ninety-two; C sell fifteen at ninety-five; D sell four at ninety-six. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[93,95]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[92,96]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "92"
+        },
+        {
+          "name": "best_ask",
+          "value": "95"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "34",
+      "text": "Use an initially empty book. Limits: A buy 10 at 137; B buy 13 at 136; C sell 14 at 142; D sell 7 at 145. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 137,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 136,
+            "qty": 13,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 142,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 145,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[136,142]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Use an initially empty book. Limits: A buy ten at one hundred and thirty-seven; B buy thirteen at one hundred and thirty-six; C sell fourteen at one hundred and forty-two; D sell seven at one hundred and forty-five. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[137,142]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[136,145]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "136"
+        },
+        {
+          "name": "best_ask",
+          "value": "142"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "35",
+      "text": "Begin with an empty book. Limits: A buy 2 at 107; B buy 8 at 104; C sell 13 at 112; D sell 10 at 116. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 107,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 104,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 112,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 116,
+            "qty": 10,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[104,112]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with an empty book. Limits: A buy two at one hundred and seven; B buy eight at one hundred and four; C sell thirteen at one hundred and twelve; D sell ten at one hundred and sixteen. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[107,112]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[104,116]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "104"
+        },
+        {
+          "name": "best_ask",
+          "value": "112"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "36",
+      "text": "Start with an empty book. Limits: A buy 7 at 120; B buy 2 at 116; C sell 9 at 122; D sell 14 at 124. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 120,
+            "qty": 7,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 116,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 122,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 124,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[116,122]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Start with an empty book. Limits: A buy seven at one hundred and twenty; B buy two at one hundred and sixteen; C sell nine at one hundred and twenty-two; D sell fourteen at one hundred and twenty-four. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[120,122]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[116,124]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "116"
+        },
+        {
+          "name": "best_ask",
+          "value": "122"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "37",
+      "text": "Begin with no resting orders. Limits: A buy 13 at 87; B buy 3 at 83; C sell 19 at 91; D sell 13 at 92. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 87,
+            "qty": 13,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 83,
+            "qty": 3,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 91,
+            "qty": 19,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 92,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[83,91]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with no resting orders. Limits: A buy thirteen at eighty-seven; B buy three at eighty-three; C sell nineteen at ninety-one; D sell thirteen at ninety-two. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[87,91]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[83,92]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "83"
+        },
+        {
+          "name": "best_ask",
+          "value": "91"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "38",
+      "text": "Replay into an empty book. Limits: A buy 8 at 126; B buy 17 at 124; C sell 15 at 131; D sell 7 at 133. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 126,
+            "qty": 8,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 124,
+            "qty": 17,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 131,
+            "qty": 15,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 133,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[124,131]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Replay into an empty book. Limits: A buy eight at one hundred and twenty-six; B buy seventeen at one hundred and twenty-four; C sell fifteen at one hundred and thirty-one; D sell seven at one hundred and thirty-three. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[126,131]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[124,133]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "124"
+        },
+        {
+          "name": "best_ask",
+          "value": "131"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "39",
+      "text": "Use an initially empty book. Limits: A buy 15 at 112; B buy 9 at 109; C sell 9 at 117; D sell 16 at 121. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 112,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 109,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 117,
+            "qty": 9,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 121,
+            "qty": 16,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[109,117]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Use an initially empty book. Limits: A buy fifteen at one hundred and twelve; B buy nine at one hundred and nine; C sell nine at one hundred and seventeen; D sell sixteen at one hundred and twenty-one. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[112,117]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[109,121]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "109"
+        },
+        {
+          "name": "best_ask",
+          "value": "117"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "40",
+      "text": "Begin with an empty book. Limits: A buy 19 at 153; B buy 4 at 150; C sell 4 at 158; D sell 7 at 159. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 153,
+            "qty": 19,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 150,
+            "qty": 4,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 158,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 159,
+            "qty": 7,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[150,158]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with an empty book. Limits: A buy nineteen at one hundred and fifty-three; B buy four at one hundred and fifty; C sell four at one hundred and fifty-eight; D sell seven at one hundred and fifty-nine. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[153,158]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[150,159]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "150"
+        },
+        {
+          "name": "best_ask",
+          "value": "158"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "41",
+      "text": "Start with an empty book. Limits: A buy 12 at 105; B buy 6 at 101; C sell 16 at 109; D sell 4 at 111. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 105,
+            "qty": 12,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 101,
+            "qty": 6,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 109,
+            "qty": 16,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 111,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[101,109]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Start with an empty book. Limits: A buy twelve at one hundred and five; B buy six at one hundred and one; C sell sixteen at one hundred and nine; D sell four at one hundred and eleven. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[105,109]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[101,111]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "101"
+        },
+        {
+          "name": "best_ask",
+          "value": "109"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "42",
+      "text": "Begin with no resting orders. Limits: A buy 18 at 90; B buy 20 at 86; C sell 11 at 95; D sell 13 at 96. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 90,
+            "qty": 18,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 86,
+            "qty": 20,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 95,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 96,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[86,95]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with no resting orders. Limits: A buy eighteen at ninety; B buy twenty at eighty-six; C sell eleven at ninety-five; D sell thirteen at ninety-six. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[90,95]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[86,96]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "86"
+        },
+        {
+          "name": "best_ask",
+          "value": "95"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "43",
+      "text": "Replay into an empty book. Limits: A buy 14 at 99; B buy 9 at 98; C sell 6 at 102; D sell 11 at 103. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 99,
+            "qty": 14,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 98,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 102,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 103,
+            "qty": 11,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[98,102]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Replay into an empty book. Limits: A buy fourteen at ninety-nine; B buy nine at ninety-eight; C sell six at one hundred and two; D sell eleven at one hundred and three. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[99,102]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[98,103]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "98"
+        },
+        {
+          "name": "best_ask",
+          "value": "102"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "44",
+      "text": "Use an initially empty book. Limits: A buy 14 at 99; B buy 9 at 95; C sell 16 at 103; D sell 17 at 105. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 99,
+            "qty": 14,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 95,
+            "qty": 9,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 103,
+            "qty": 16,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 105,
+            "qty": 17,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[95,103]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Use an initially empty book. Limits: A buy fourteen at ninety-nine; B buy nine at ninety-five; C sell sixteen at one hundred and three; D sell seventeen at one hundred and five. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[99,103]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[95,105]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "95"
+        },
+        {
+          "name": "best_ask",
+          "value": "103"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "45",
+      "text": "Begin with an empty book. Limits: A buy 10 at 91; B buy 18 at 88; C sell 8 at 95; D sell 2 at 98. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 91,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 88,
+            "qty": 18,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 95,
+            "qty": 8,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 98,
+            "qty": 2,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[88,95]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with an empty book. Limits: A buy ten at ninety-one; B buy eighteen at eighty-eight; C sell eight at ninety-five; D sell two at ninety-eight. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[91,95]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[88,98]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "88"
+        },
+        {
+          "name": "best_ask",
+          "value": "95"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "46",
+      "text": "Start with an empty book. Limits: A buy 10 at 114; B buy 19 at 113; C sell 13 at 116; D sell 6 at 118. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 114,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 113,
+            "qty": 19,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 116,
+            "qty": 13,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 118,
+            "qty": 6,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[113,116]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Start with an empty book. Limits: A buy ten at one hundred and fourteen; B buy nineteen at one hundred and thirteen; C sell thirteen at one hundred and sixteen; D sell six at one hundred and eighteen. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[114,116]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[113,118]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "113"
+        },
+        {
+          "name": "best_ask",
+          "value": "116"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    },
+    {
+      "variant": "47",
+      "text": "Begin with no resting orders. Limits: A buy 18 at 114; B buy 10 at 111; C sell 18 at 117; D sell 18 at 119. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 114,
+            "qty": 18,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 111,
+            "qty": 10,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 117,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 119,
+            "qty": 18,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[111,117]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with no resting orders. Limits: A buy eighteen at one hundred and fourteen; B buy ten at one hundred and eleven; C sell eighteen at one hundred and seventeen; D sell eighteen at one hundred and nineteen. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[114,117]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[111,119]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "111"
+        },
+        {
+          "name": "best_ask",
+          "value": "117"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Which structure could support fast best-price lookup and cancellation?",
+        "reference": "Maintain price levels in an ordered structure and map order IDs to their resting records. Each structure serves a different access pattern and both must remain consistent."
+      }
+    },
+    {
+      "variant": "48",
+      "text": "Replay into an empty book. Limits: A buy 16 at 147; B buy 13 at 146; C sell 3 at 149; D sell 4 at 152. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 147,
+            "qty": 16,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 146,
+            "qty": 13,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 149,
+            "qty": 3,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 152,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[146,149]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Replay into an empty book. Limits: A buy sixteen at one hundred and forty-seven; B buy thirteen at one hundred and forty-six; C sell three at one hundred and forty-nine; D sell four at one hundred and fifty-two. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[147,149]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[146,152]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "146"
+        },
+        {
+          "name": "best_ask",
+          "value": "149"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "How would you scale this to a high-rate feed?",
+        "reference": "Update price-level totals incrementally and avoid rescanning all orders for every quote. Preserve a deterministic event sequence and design bounded-memory handling for completed orders."
+      }
+    },
+    {
+      "variant": "49",
+      "text": "Use an initially empty book. Limits: A buy 20 at 151; B buy 2 at 147; C sell 14 at 154; D sell 4 at 158. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 151,
+            "qty": 20,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 147,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 154,
+            "qty": 14,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 158,
+            "qty": 4,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[147,154]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Use an initially empty book. Limits: A buy twenty at one hundred and fifty-one; B buy two at one hundred and forty-seven; C sell fourteen at one hundred and fifty-four; D sell four at one hundred and fifty-eight. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[151,154]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[147,158]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "147"
+        },
+        {
+          "name": "best_ask",
+          "value": "154"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "What should the interface return if one side has no live orders?",
+        "reference": "Return an explicit missing-side value under a documented contract. Do not fabricate a zero price or reuse a canceled quote."
+      }
+    },
+    {
+      "variant": "50",
+      "text": "Begin with an empty book. Limits: A buy 15 at 124; B buy 2 at 121; C sell 16 at 127; D sell 12 at 130. Cancel A. What are best bid and ask prices, in that order?",
+      "params": {
+        "events": [
+          {
+            "id": "A",
+            "kind": "add",
+            "price": 124,
+            "qty": 15,
+            "side": "buy"
+          },
+          {
+            "id": "B",
+            "kind": "add",
+            "price": 121,
+            "qty": 2,
+            "side": "buy"
+          },
+          {
+            "id": "C",
+            "kind": "add",
+            "price": 127,
+            "qty": 16,
+            "side": "sell"
+          },
+          {
+            "id": "D",
+            "kind": "add",
+            "price": 130,
+            "qty": 12,
+            "side": "sell"
+          },
+          {
+            "id": "A",
+            "kind": "cancel"
+          }
+        ]
+      },
+      "answer": "[121,127]",
+      "tolerance": "0",
+      "topic": "Order book and matching",
+      "source_topic": "Best bid and ask after cancellation",
+      "difficulty": "Easy",
+      "spoken_text": "Begin with an empty book. Limits: A buy fifteen at one hundred and twenty-four; B buy two at one hundred and twenty-one; C sell sixteen at one hundred and twenty-seven; D sell twelve at one hundred and thirty. Cancel A. What are best bid and ask prices, in that order?",
+      "interview_friendly": false,
+      "interview_friendly_score": 0,
+      "interview_friendly_basis": "list",
+      "wrong": [
+        {
+          "value": "[124,127]",
+          "misconceptions": [
+            "ignores_the_cancel_event"
+          ]
+        },
+        {
+          "value": "[121,130]",
+          "misconceptions": [
+            "takes_the_highest_ask_instead_of_lowest"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "best_bid",
+          "value": "121"
+        },
+        {
+          "name": "best_ask",
+          "value": "127"
+        }
+      ],
+      "separation": {
+        "by_misconception": [],
+        "min_wrong_pair_gap": null,
+        "min_distinct_wrong_pair_gap": null
+      },
+      "follow_up": {
+        "question": "Why must cancellation use an order ID rather than only a price?",
+        "reference": "Multiple independent orders can rest at the same price. Removing a price level would incorrectly cancel unrelated liquidity."
+      }
+    }
+  ],
+  "answer_kind": "list",
+  "coding_only": true
+}
