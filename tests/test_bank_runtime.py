@@ -480,18 +480,22 @@ def test_topics_list_forge_topics_and_mixed(monkeypatch, bank):
     assert data["default_track"] == "quant" and data["levels"] == ["Easy", "Medium", "Hard"]
     track, *rest = data["tracks"]  # the fixtures carry no pack, so all are Quant
     assert (track["id"], track["name"], track["default"], track["available"]) == ("quant", "Quant", "Mixed", True)
-    assert [(t["id"], t["available"], t["topics"]) for t in rest] == [
-        ("ib", False, []), ("consulting", False, []), ("software", False, [])]
+    # IB and Consulting have only their behavioural questions (decision log 24); Software has nothing.
+    assert [(t["id"], t["available"], [o["id"] for o in t["topics"]]) for t in rest] == [
+        ("ib", True, ["Behavioural"]), ("consulting", True, ["Behavioural"]), ("software", False, [])]
     assert [(t["id"], t["count"]) for t in track["topics"]] == [
         ("Mixed", 3), ("Percentages", 1), ("Probability", 1), ("Statistics", 1)]
 
 
-def test_without_templates_no_track_is_open_and_no_interview_starts(monkeypatch, tmp_path):
+def test_without_templates_only_behavioural_tracks_open_and_no_forge_interview_starts(monkeypatch, tmp_path):
     monkeypatch.setattr(interview_routes, "_BANK", load_bank(tmp_path))
     data = TestClient(app).get("/api/interview/topics").json()
-    assert data["default_track"] is None and not any(t["available"] for t in data["tracks"])
-    with pytest.raises(VoiceError, match="No questions are available yet"):
+    assert [t["id"] for t in data["tracks"] if t["available"]] == ["ib", "consulting"]
+    assert data["default_track"] == "ib" and data["tracks"][1]["default"] == "Behavioural"
+    with pytest.raises(VoiceError, match="not a forge interview"):
         interview_routes.interview_for(None, None, "Easy")
+    with pytest.raises(VoiceError, match="Choose topics from this track"):
+        interview_routes.interview_for("quant", "Mixed", "Easy")  # Quant is closed: IB's topics apply
 
 
 def test_socket_serves_the_chosen_topic_and_level(monkeypatch, bank):
@@ -1191,15 +1195,15 @@ def test_topic_route_groups_topics_by_track_and_marks_empty_tracks(monkeypatch):
         ("software", "Software engineering", 0, False)]  # no software templates: "Being added"
     topics = {t["id"]: [(o["id"], o["count"]) for o in t["topics"]] for t in data["tracks"]}
     assert topics == {"quant": [("Mixed", 1), ("Probability", 1)],
-                      "ib": [("Mixed", 1), ("Valuation", 1)],
-                      "consulting": [("Mixed", 1), ("Market sizing", 1)], "software": []}
+                      "ib": [("Mixed", 1), ("Valuation", 1), ("Behavioural", 25)],
+                      "consulting": [("Mixed", 1), ("Market sizing", 1), ("Behavioural", 25)], "software": []}
 
 
 def test_default_track_is_the_first_shown_when_quant_has_no_templates(monkeypatch):
     monkeypatch.setattr(interview_routes, "_BANK", _packed_bank(("b", "ib", "Valuation"), ("d", "software", "Complexity")))
     data = TestClient(app).get("/api/interview/topics").json()
     assert data["default_track"] == "ib"
-    assert [t["id"] for t in data["tracks"] if t["available"]] == ["ib", "software"]
+    assert [t["id"] for t in data["tracks"] if t["available"]] == ["ib", "consulting", "software"]  # consulting: behavioural
     assert data["tracks"][0]["topics"] == []  # Quant: no templates
 
 
@@ -1214,7 +1218,7 @@ def test_interview_uses_the_chosen_track_and_only_its_topics(monkeypatch):
             interview_routes.interview_for(pack, topic, "Easy")
     assert set(interview_routes.interview_for("software", "Mixed", "Easy").source.templates) == {"a"}
     # A track being added can't be picked: the default track is used.
-    assert set(interview_routes.interview_for("consulting", "Mixed", "Easy").source.templates) == {"a"}
+    assert set(interview_routes.interview_for("software", "Mixed", "Easy").source.templates) == {"a"}
 
 
 def test_socket_serves_the_chosen_track(monkeypatch):
