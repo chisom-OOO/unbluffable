@@ -74,3 +74,24 @@ for (const how of ["onerror", "cancel"]) {
   assert.deepEqual(gateProblems({ ...base, mic: "ok", topics: 2 }), []);
 }
 console.log("speech guard and gate ok");
+
+// The interviewer's voice: most human first, British English first within a group, robotic last.
+{
+  const { rankVoices, onlyRobotic } = require(path.resolve(__dirname, "../app/static/ui/turn-logic.js"));
+  const v = (name, lang) => ({ name, lang, voiceURI: name });
+  const voices = [v("Microsoft David Desktop - English (United States)", "en-US"), v("Google US English", "en-US"),
+                  v("Microsoft Sonia Online (Natural) - English (United Kingdom)", "en-GB"), v("Google UK English Female", "en-GB"),
+                  v("Microsoft Aria Online (Natural) - English (United States)", "en-US"), v("Daniel", "en-GB"),
+                  v("Thomas", "fr-FR"), v("Samantha (Enhanced)", "en-US"), v("eSpeak English", "en")];
+  assert.deepEqual(rankVoices(voices).map((x) => x.name), [
+    "Microsoft Sonia Online (Natural) - English (United Kingdom)",  // natural, en-GB
+    "Microsoft Aria Online (Natural) - English (United States)", "Samantha (Enhanced)",  // natural, en-US
+    "Google UK English Female", "Google US English",  // Google UK/US English
+    "Daniel",  // everything else
+    "Microsoft David Desktop - English (United States)", "eSpeak English",  // robotic last
+  ]);
+  assert.equal(onlyRobotic([v("Microsoft David Desktop", "en-US"), v("eSpeak English", "en")]), true, "suggest Edge or Chrome");
+  assert.equal(onlyRobotic(voices), false);
+  assert.equal(onlyRobotic([]), false);
+}
+console.log("voice ranking ok");

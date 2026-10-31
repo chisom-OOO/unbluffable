@@ -724,8 +724,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const note = $("speaker-note");
     if (!window.speechSynthesis) { note.textContent = "This browser has no speech voice; lines will appear as text."; note.className = "device-note bad"; return; }
     if (mute.getAttribute("aria-pressed") === "true") { note.textContent = "The interviewer is muted; unmute to hear the test line."; return; }
-    speak("This is how the interviewer will sound.", null, { mutes: false });  // never mutes the microphone check
-    note.textContent = "Playing a test line.";
+    speechSynthesis.cancel();
+    speak("Okay. Talk me through how you'd approach this, and tell me the number you commit to.", null, { mutes: false });  // never mutes the microphone check
+    note.textContent = "Playing a preview.";
+  });
+
+  // The interviewer's voice: ranked most human first; the choice is remembered in this browser.
+  function listVoices() {
+    const ranked = window.UB.rankedVoices();
+    $("voice-row").hidden = ranked.length === 0;
+    if (!ranked.length) return;
+    const chosen = window.UB.pickVoice();
+    $("voice-select").innerHTML = ranked.map((v) =>
+      `<option value="${escapeHtml(v.voiceURI)}"${v === chosen ? " selected" : ""}>${escapeHtml(v.name)} (${escapeHtml(v.lang)})</option>`).join("");
+    if (window.UBTurn.onlyRobotic(window.speechSynthesis.getVoices())) {
+      $("speaker-note").textContent = "This browser only has robotic-sounding voices. Edge or Chrome have more natural ones.";
+    }
+  }
+  if (window.speechSynthesis) {
+    listVoices();
+    speechSynthesis.addEventListener?.("voiceschanged", listVoices);
+  }
+  $("voice-select").addEventListener("change", () => {
+    window.UB.store.set("ub-voice", $("voice-select").value);
+    $("speaker-test").click();  // hear it straight away
   });
 
   // ---------- Config: connection check, and replay mode has no live microphone path ----------
