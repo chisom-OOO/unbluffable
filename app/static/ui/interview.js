@@ -236,7 +236,35 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.send(JSON.stringify({ type: "typed", transcript: text }));
   }
 
+  // ---------- A text-only timeline of this interview (exported only with consent) ----------
+  const timeline = { started: null, events: [] };
+  const KEEP = {
+    question: (e) => ({ number: e.number, kind: e.kind, text: e.text, topic: e.topic || null, difficulty: e.difficulty || null }),
+    part2: (e) => ({ text: e.text }),
+    follow_up: (e) => ({ text: e.text }),
+    interviewer_line: (e) => ({ kind: e.kind, text: e.text, receipt: e.receipt || null }),
+    answer_complete: (e) => ({ transcript: e.transcript }),
+    session_end: (e) => ({ label: e.label || null, behavioural: !!e.behavioural, timed_out: !!e.timed_out }),
+  };
+  function record(e) {
+    if (!KEEP[e.type]) return;
+    if (timeline.started === null) timeline.started = performance.now();
+    timeline.events.push({ t: Math.round(performance.now() - timeline.started), type: e.type, ...KEEP[e.type](e) });
+  }
+  $("export-consent").addEventListener("change", () => { $("export-timeline").disabled = !$("export-consent").checked; });
+  $("export-timeline").addEventListener("click", () => {
+    if (!$("export-consent").checked) return;
+    const end = timeline.events.find((e) => e.type === "session_end");
+    const file = { version: 1, kind: "unbluffable-recorded-interview", exported_at: new Date().toISOString(),
+                   label: end ? end.label : null, events: timeline.events };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(file, null, 2)], { type: "application/json" }));
+    const a = Object.assign(document.createElement("a"), { href: url, download: `unbluffable-interview-${new Date().toISOString().slice(0, 10)}.json` });
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
   function handle(event) {
+    record(event);
     switch (event.type) {
       case "session":
         sessionId = event.id;

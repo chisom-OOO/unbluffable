@@ -58,3 +58,17 @@ def test_pages_are_not_cached_and_assets_carry_the_version(monkeypatch) -> None:
     monkeypatch.setenv("RENDER_GIT_COMMIT", "0123456789abcdef0123")
     assert pages._version() == "0123456789ab"
     assert 'src="/ui-static/ui.js?v=0123456789ab"' in pages.render("landing.html", "0123456789ab")
+
+
+def test_landing_recording_is_off_until_one_is_committed(tmp_path, monkeypatch) -> None:
+    import json
+    import app.main as main
+    client = TestClient(app)
+    monkeypatch.setattr(main, "RECORDING", tmp_path / "recorded-interview.json")
+    assert client.get("/api/landing-recording").json() == {"available": False}
+    (tmp_path / "recorded-interview.json").write_text("{not json", encoding="utf-8")
+    assert client.get("/api/landing-recording").json() == {"available": False}
+    rec = {"version": 1, "kind": "unbluffable-recorded-interview", "label": "supports",
+           "events": [{"t": 0, "type": "question", "text": "Q?"}, {"t": 10, "type": "answer_complete", "transcript": "A."}]}
+    (tmp_path / "recorded-interview.json").write_text(json.dumps(rec), encoding="utf-8")
+    assert client.get("/api/landing-recording").json() == rec

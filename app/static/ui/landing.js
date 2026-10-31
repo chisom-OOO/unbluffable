@@ -36,25 +36,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("landing-puzzle").textContent = data.puzzle.text;
 
-  const lines = data.replay.lines;
+  let lines = data.replay.lines;
   const body = $("replay-body"), bar = $("replay-bar"), toggle = $("replay-toggle"), note = $("replay-note");
   const toggleLabel = toggle.querySelector("span");
   const synth = window.speechSynthesis && typeof window.SpeechSynthesisUtterance === "function" ? window.speechSynthesis : null;
   const muted = () => $("mute")?.getAttribute("aria-pressed") === "true";
 
-  // Build lines up front (hidden) so layout doesn't jump when they appear.
-  const nodes = lines.map((line, i) => {
-    const el = document.createElement("div");
-    el.className = "sampleline" + (line.kind === "challenge" ? " is-challenge" : "");
-    el.hidden = true;
-    const who = line.who === "interviewer" ? `Interviewer${line.kind === "challenge" ? " · Challenge" : ""}` : "Candidate";
-    el.innerHTML = `<b>${who.toUpperCase()}</b><span class="says">“${escapeHtml(line.text)}”</span>`;
-    el.dataset.index = i;
-    el.dataset.who = line.who;
-    body.appendChild(el);
-    return el;
-  });
-  const marked = lines.findIndex((l) => l.challenge);
+  // Build lines up front (hidden) so layout doesn't jump when they appear. A real recording
+  // uses the interview's own layout (avatars, speaker and the challenge/nudge/hint tags).
+  const TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint" };
+  let real = false;
+  function buildNodes() {
+    body.innerHTML = "";
+    return lines.map((line, i) => {
+      const el = document.createElement("div");
+      if (real) {
+        const interviewer = line.who === "interviewer", tag = interviewer && TAG[line.kind];
+        el.className = `utterance ${interviewer ? "interviewer" : "candidate"}${tag ? ` is-${line.kind}` : ""}`;
+        el.innerHTML = `<span class="avatar" aria-hidden="true">${interviewer ? "I" : "Y"}</span><div>`
+          + `<div class="speaker"><span>${interviewer ? "Interviewer" : "Candidate"}</span>${tag ? `<span class="tag tag-${line.kind}">${tag}</span>` : ""}</div>`
+          + `<p class="says">${escapeHtml(line.text)}</p></div>`;
+      } else {
+        el.className = "sampleline" + (line.kind === "challenge" ? " is-challenge" : "");
+        const who = line.who === "interviewer" ? `Interviewer${line.kind === "challenge" ? " · Challenge" : ""}` : "Candidate";
+        el.innerHTML = `<b>${who.toUpperCase()}</b><span class="says">“${escapeHtml(line.text)}”</span>`;
+      }
+      el.hidden = true;
+      el.dataset.index = i;
+      el.dataset.who = line.who;
+      body.appendChild(el);
+      return el;
+    });
+  }
+  let nodes = buildNodes();
+  let marked = lines.findIndex((l) => l.challenge);
+
+  // A recording exported from a real interview (content/landing/recorded-interview.json), once
+  // one is committed, replaces the scripted sample. Text only: lines, answers and timings.
+  function fromRecording(rec) {
+    if (!rec || rec.version !== 1 || rec.kind !== "unbluffable-recorded-interview" || !Array.isArray(rec.events)) return null;
+    const first = rec.events.find((e) => e.type === "question");
+    const out = [];
+    for (const e of rec.events) {
+      if (e.type === "interviewer_line" && e.text) out.push({ who: "interviewer", kind: e.kind, text: e.text });
+      if (e.type === "answer_complete" && e.transcript) out.push({ who: "candidate", text: e.transcript });
+    }
+    return first && out.length >= 2 ? { puzzle: first.text, lines: out } : null;
+  }
+  fetch("/api/landing-recording").then((r) => (r.ok ? r.json() : null)).then((rec) => {
+    const recording = fromRecording(rec);
+    if (!recording || playing) return;
+    stop("idle");
+    real = true;
+    lines = recording.lines;
+    nodes = buildNodes();
+    marked = -1;
+    body.classList.add("real");
+    $("landing-puzzle").textContent = recording.puzzle;
+    document.querySelector(".sample-head .tag").textContent = "A real recorded interview";
+  }).catch(() => {});
 
   function reset() {
     nodes.forEach((n) => { n.hidden = true; });
@@ -63,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function showLine(i) {
     nodes[i].hidden = false;
+    if (real) body.scrollTop = body.scrollHeight;
     bar.style.width = `${((i + 1) / nodes.length) * 100}%`;
     // Once the challenge lands, mark the words it quotes in the candidate's line.
     if (lines[i].kind === "challenge" && marked >= 0) {
