@@ -15,7 +15,7 @@ from contextlib import suppress
 
 from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 
-from app import interview_report, voice_routes
+from app import behavioural, interview_report, voice_routes
 from app.areas import AREAS
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
@@ -50,6 +50,9 @@ def topics() -> dict:
         count = sum(n for _, n in found)
         options = [{"id": MIXED, "name": MIXED, "count": count}] if found else []
         options += [{"id": topic, "name": topic, "count": n} for topic, n in found]
+        asked = behavioural.rows_for(pack)  # decision log 24: IB and Consulting
+        if asked:
+            options.append({"id": behavioural.BEHAVIOURAL, "name": behavioural.BEHAVIOURAL, "count": len(asked)})
         tracks.append({"id": pack, "name": name, "count": count, "available": bool(options),
                        "topics": options, "default": options[0]["id"] if options else None,
                        "areas": list(AREAS[pack])})
@@ -77,7 +80,11 @@ def selection(pack, topic) -> tuple[dict, str | tuple[str, ...]]:
         raise VoiceError("Choose at least one topic.")
     if not all(isinstance(t, str) and t in known for t in chosen):
         raise VoiceError("Choose topics from this track.")
-    forge = known - {MIXED}
+    if behavioural.BEHAVIOURAL in chosen:
+        if len(chosen) > 1:
+            raise VoiceError("Behavioural questions run on their own; choose them without other topics.")
+        return track, behavioural.BEHAVIOURAL
+    forge = known - {MIXED, behavioural.BEHAVIOURAL}
     if MIXED in chosen or set(chosen) == forge:
         return track, MIXED
     return track, tuple(dict.fromkeys(chosen))
@@ -92,12 +99,14 @@ def placement_for(pack) -> tuple[str, Interview]:
 def topic_label(pack, topic) -> str:
     """For the report header: the selected topics, or "All topics"."""
     _, chosen = selection(pack, topic)
-    return "All topics" if chosen == MIXED else ", ".join(chosen)
+    return "All topics" if chosen == MIXED else chosen if isinstance(chosen, str) else ", ".join(chosen)
 
 
 def interview_for(pack, topic, level) -> Interview:
     """A forge interview on the chosen track and topics."""
     track, chosen = selection(pack, topic)
+    if chosen == behavioural.BEHAVIOURAL:
+        raise VoiceError("Behavioural questions are not a forge interview.")
     if level not in DIFFICULTIES:
         raise VoiceError("Choose a starting level: Easy, Medium or Hard.")
     return Interview(source=BankSource(bank(), chosen, level, pack=track["id"]))
@@ -141,6 +150,8 @@ def report(session_id: str):
         raise HTTPException(404, "This report is no longer available.")
     if isinstance(session, DrillSession):
         return interview_report.build_drill(session)
+    if isinstance(session, behavioural.BehaviouralSession):
+        return behavioural.report(session)
     return interview_report.build(session, bank().templates)
 
 
@@ -215,6 +226,10 @@ async def interview_socket(socket: WebSocket):
             track, interview = placement_for(begin.get("pack"))
             session = ExamSession(socket.send_json, listen, VoiceAnalyzer(provider), interview, deadline=deadline)
             session.track, session.placement, session.topics = track, True, "Placement: one question per strength area"
+        elif selection(begin.get("pack"), begin["topics"] if begin.get("topics") is not None else begin.get("topic"))[1]                 == behavioural.BEHAVIOURAL:
+            # Decision log 24: model-judged, not exact; no engine label.
+            track = selection(begin.get("pack"), behavioural.BEHAVIOURAL)[0]["id"]
+            session = behavioural.BehaviouralSession(socket.send_json, listen, provider, track, deadline=deadline)
         else:
             # "topics" (a list) is what the page sends; a single "topic" or none (all) still works.
             chosen = begin["topics"] if begin.get("topics") is not None else begin.get("topic")

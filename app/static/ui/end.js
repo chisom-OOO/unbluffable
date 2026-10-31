@@ -54,7 +54,57 @@ document.addEventListener("DOMContentLoaded", () => {
     return entry;
   }
 
+  // Decision log 24: behavioural answers, model-judged and not exact. No label, stats or rating.
+  function renderBehavioural(e) {
+    $("end-eyebrow").textContent = "Behavioural report";
+    $("end-title").textContent = "How you told it";
+    $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}, each with one follow-up.`;
+    $("result-tag").textContent = "Model-judged";
+    $("conditions").hidden = !e.conditions;
+    $("conditions").textContent = e.conditions || "";
+    $("conditions").classList.toggle("warn", !!e.conditions && !/^Exam/.test(e.conditions));
+    $("topics-line").hidden = false;
+    $("topics-line").textContent = `Topics: ${e.topics}`;
+    document.querySelectorAll(".section, .end-verdict, #stats").forEach((el) => { el.hidden = true; });
+    const clock = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+    const quote = (q) => `<blockquote class="evidence"><p>“${escapeHtml(q)}”</p></blockquote>`;
+    const check = (ok, text) => `<li class="${ok ? "ok" : "miss"}"><span aria-hidden="true">${ok ? "✓" : "–"}</span> ${text}</li>`;
+    $("behavioural").innerHTML = e.behavioural.map((b) => {
+      const s = b.specificity;
+      const steps = b.steps.map((st) => `<li class="funnel-step${st.quote ? "" : " empty"}"><strong>${escapeHtml(st.step)}</strong>`
+        + (st.quote ? quote(st.quote) : `<p class="fine">Not covered in your answer.</p>`) + `</li>`).join("");
+      const quotes = (list, empty) => (list.length ? list.map(quote).join("") : `<p class="fine">${empty}</p>`);
+      const details = s.details.length ? `<ul class="detail-list">${s.details.map((d) => `<li><span class="chip">${escapeHtml(d.detail)}</span> “${escapeHtml(d.quote)}”</li>`).join("")}</ul>` : "";
+      const flags = b.consistency.length
+        ? b.consistency.map((c) => `<div class="contradiction"><p class="qcard-when">First you said</p>${quote(c.first)}<p class="qcard-when">Then you said</p>${quote(c.probe)}</div>`).join("")
+        : `<p class="fine">No contradiction found between your first answer and the follow-up.</p>`;
+      return `<article class="qcard bq"><header><h3>${escapeHtml(b.q)}</h3><span class="tag">${b.type === "situational" ? "What would you do" : "Tell me about a time"}</span></header>`
+        + `<p class="qcard-time">Time <span class="mono">${clock(b.seconds)}</span> · guide <span class="mono">${clock(b.guide)}</span></p>`
+        + `<p class="bq-question">${escapeHtml(b.question)}</p>`
+        + `<h4>${b.type === "situational" ? "Situation, action, reasoning, expected outcome" : "Situation, task, action, result"}</h4><ol class="funnel">${steps}</ol>`
+        + `<h4>Relevance</h4><p class="qcard-when">Answers the question</p>${quotes(b.relevant, "No quote was marked as answering the question.")}`
+        + (b.drift.length ? `<p class="qcard-when">Drifts away from it</p>${quotes(b.drift, "")}` : "")
+        + `<h4>Specificity</h4><ul class="checklist">`
+        + check(s.outcome_has_number, `${escapeHtml(s.outcome_step)} has a number${s.outcome_numbers.length ? `: <span class="mono">${s.outcome_numbers.map(escapeHtml).join(", ")}</span>` : ""}`)
+        + check(s.action_owned, `Action says “I” at least as often as “we” (I ${s.action_i}, we ${s.action_we})`)
+        + check(s.details.length > 0, `Concrete details quoted: ${s.details.length}`) + `</ul>${details}`
+        + `<h4>Follow-up</h4><p class="fine">Asked about the ${escapeHtml(b.weakest.toLowerCase())}: “${escapeHtml(b.probe)}”</p>`
+        + `<h4>Consistency</h4>${flags}`
+        + `<div class="tip-line"><strong>One thing to practise:</strong> ${escapeHtml(b.tip)}</div>`
+        + (b.dropped_quotes ? `<p class="fine">${b.dropped_quotes} quote${b.dropped_quotes === 1 ? "" : "s"} from the model didn't match your words and ${b.dropped_quotes === 1 ? "was" : "were"} left out.</p>` : "")
+        + (b.model_error ? `<p class="fine">The model couldn't judge one answer, so some steps are empty.</p>` : "")
+        + `</article>`;
+    }).join("");
+    $("behavioural-section").hidden = false;
+    const again = document.querySelector(".end-actions .btn:not(.secondary)");
+    if (again) {
+      again.textContent = "More behavioural questions →";
+      again.href = `/ui/interview?track=${encodeURIComponent(e.track)}`;
+    }
+  }
+
   function render(e) {
+    if (e.behavioural) { showProgress(e); renderBehavioural(e); return; }
 
     const ICON = {
       check: '<path d="M20 6 9 17l-5-5"/>',

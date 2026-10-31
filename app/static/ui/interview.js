@@ -189,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const JOBS = {
     transcription_model: "Transcript of your answer", endpoint_decision: "Whether you had finished",
     challenge_result: "Your committed number", scoring_result: "Quoted reasoning", follow_up_result: "Follow-up (model-matched)",
+    behavioural_judged: "Quotes for each step (model-judged)",
   };
   function modelRow(model, job) {
     if (!model || !model.model) return;
@@ -245,11 +246,13 @@ document.addEventListener("DOMContentLoaded", () => {
         question = event;
         $("puzzle").textContent = event.text;
         $("puzzle-eyebrow").textContent = (event.kind === "check" ? "Drill check"
+          : event.kind === "behavioural" ? `Behavioural question ${event.number} of 2`
           : event.kind === "drill" ? `Drill question ${event.number} of up to 3`
           : placement ? `Placement question ${event.number} of 5` : `Question ${event.number} of up to 4`)
           + ` · guide ${fmt(event.guide_seconds)}`;
         $("puzzle-kind").textContent = ({ twin: "Same puzzle, new numbers", drill: "Aimed at one mistake",
-                                          check: "New numbers, no help" }[event.kind] || "New puzzle")
+                                          check: "New numbers, no help",
+                                          behavioural: `${event.behavioural_type === "situational" ? "What would you do" : "Tell me about a time"} · model-judged, not exact` }[event.kind] || "New puzzle")
           + (event.difficulty ? ` · ${event.difficulty}` : "");
         finishReveals();
         questionStart = Date.now(); answeredThisQuestion = false; offered = false; heard = false;
@@ -320,6 +323,9 @@ document.addEventListener("DOMContentLoaded", () => {
         modelRow(event.model, event.type);
         break;
       case "transcription_model":
+        modelRow(event.model, event.type);
+        break;
+      case "behavioural_judged":
         modelRow(event.model, event.type);
         break;
       case "endpoint_decision":
@@ -744,7 +750,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const topicBox = $("topic");
   let tracks = [], chosenTrack = null, chosenTopics = new Set(), topicsKnown = false, picking = true;
   const trackTopics = () => (tracks.find((t) => t.id === chosenTrack)?.topics || []).filter((o) => o.id !== "Mixed");
-  const allTopics = () => new Set(trackTopics().map((o) => o.id));
+  const BEHAVIOURAL = "Behavioural";  // decision log 24: runs on its own, model-judged
+  const forgeTopics = () => trackTopics().filter((o) => o.id !== BEHAVIOURAL).map((o) => o.id);
+  const allTopics = () => new Set(forgeTopics().length ? forgeTopics() : trackTopics().map((o) => o.id));
   // Topics sent with Start: null (the server's default) when the list failed or there are none.
   const sentTopics = () => (topicsKnown && trackTopics().length ? [...chosenTopics] : null);
   // Drills choose their own questions.
@@ -753,16 +761,21 @@ document.addEventListener("DOMContentLoaded", () => {
   function loadTopics() {
     let saved = null;
     try { saved = JSON.parse(window.UB.store.get(topicKey()) || "null"); } catch { saved = null; }
-    const ids = allTopics();
+    const ids = new Set(trackTopics().map((o) => o.id));
     const kept = Array.isArray(saved) ? saved.filter((id) => ids.has(id)) : [];
-    return kept.length ? new Set(kept) : ids;
+    if (kept.includes(BEHAVIOURAL)) return new Set([BEHAVIOURAL]);
+    return kept.length ? new Set(kept) : allTopics();
   }
   function saveTopics() { window.UB.store.set(topicKey(), JSON.stringify([...chosenTopics])); }
   function syncTopics() {
     topicBox.querySelectorAll("button.topic-chip").forEach((b) => b.setAttribute("aria-pressed", String(chosenTopics.has(b.dataset.topic))));
-    const n = chosenTopics.size, all = trackTopics().length;
-    $("topics-note").textContent = n === 0 ? "Choose at least one topic." : n === all ? "All topics selected." : `${n} of ${all} topics selected.`;
+    const n = chosenTopics.size, all = forgeTopics().length;
+    const behaviouralOn = chosenTopics.has(BEHAVIOURAL);
+    $("topics-note").textContent = n === 0 ? "Choose at least one topic."
+      : behaviouralOn ? "Behavioural: two questions, each with one follow-up. Model-judged, not exact; kept out of your rating."
+      : n === all ? "All topics selected." : `${n} of ${all} topics selected.`;
     $("topics-note").classList.toggle("bad", n === 0);
+    $("levels").hidden = placement || behaviouralOn;  // no difficulty ladder for behavioural questions
     updateGate();
   }
   function showTopics() {
@@ -781,8 +794,10 @@ document.addEventListener("DOMContentLoaded", () => {
   topicBox.addEventListener("click", (e) => {
     const id = e.target.closest("button.topic-chip")?.dataset.topic;
     if (!id) return;
-    const next = new Set(chosenTopics);
-    if (next.has(id)) next.delete(id); else next.add(id);
+    let next = new Set(chosenTopics);
+    if (next.has(id)) next.delete(id);
+    else if (id === BEHAVIOURAL) next = new Set([BEHAVIOURAL]);  // runs on its own
+    else { next.delete(BEHAVIOURAL); next.add(id); }
     setTopics(next);
   });
   $("topics-all").addEventListener("click", selectAllTopics);
