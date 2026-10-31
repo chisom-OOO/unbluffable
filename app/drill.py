@@ -12,6 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field, replace
 from fractions import Fraction
 
+from app import provenance as forge_provenance
 from app import exam_text as say
 from app.interview_session import GUIDE_SECONDS, ExamSession, QuestionLog, SessionClosed, _DECLINE, coarse
 from engine.bank import ForgePuzzle, ForgeTemplate, aimed_puzzle, drill_plan, same_mistake
@@ -126,6 +127,7 @@ class DrillSession(ExamSession):
         q = QuestionLog(len(self.questions) + 1, "check", puzzle, puzzle.text, CHECK_GUIDE_SECONDS, self.clock())
         self.check = q
         await self.send({"type": "question", "number": q.number, "kind": "check", "template": puzzle.template_id,
+                         "provenance_rows": forge_provenance.rows(forge_provenance.provenance(self.interview.template)),
                          "text": puzzle.text, "topic": puzzle.topic or None, "difficulty": puzzle.difficulty or None,
                          "guide_seconds": CHECK_GUIDE_SECONDS})
         await self.say_question(puzzle, say.DRILL_CHECK_INTRO)

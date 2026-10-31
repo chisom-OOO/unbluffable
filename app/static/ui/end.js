@@ -202,6 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
       (c.follow_up ? `<div class="qcard-extra"><p class="qcard-when">Follow-up · model-matched, not scored</p><p class="fine">${escapeHtml(c.follow_up.question)}</p>` +
         quote(c.follow_up.words, c.follow_up.receipt) + `<p class="check-line">${escapeHtml(c.follow_up.verdict)}</p>` +
         receiptHtml(c.follow_up.receipt, { words: false }) + `</div>` : "") +
+      window.UB.provenanceHtml(c.provenance_rows) +
       `</article>`).join("");
 
     // Numbers only: each question's outcome and words are on its evidence card.

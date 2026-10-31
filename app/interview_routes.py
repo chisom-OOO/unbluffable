@@ -158,6 +158,19 @@ def replay_speed() -> float:
     return speed
 
 
+_FORGE: tuple[Bank, bytes] | None = None
+
+
+@router.get("/forge")
+def forge_catalogue():
+    """Every family by track: topic, variants checked, wrong methods verified, and totals."""
+    global _FORGE
+    if _FORGE is None or _FORGE[0] is not bank():
+        from app.provenance import catalogue
+        _FORGE = (bank(), json.dumps(catalogue(bank().templates), separators=(",", ":")).encode())
+    return Response(_FORGE[1], media_type="application/json", headers={"Cache-Control": "public, max-age=300"})
+
+
 @router.get("/topics")
 def topic_list():
     """Tracks with accepted templates; each lists Mixed and its topics with counts. Served

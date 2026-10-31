@@ -72,6 +72,11 @@ def ui_profile():
     return page("profile.html")
 
 
+@app.get("/ui/forge")
+def ui_forge():
+    return page("forge.html")
+
+
 @app.get("/ui/welcome")
 def ui_welcome():
     return page("welcome.html")

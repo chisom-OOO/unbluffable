@@ -12,6 +12,7 @@ from fractions import Fraction
 
 from app import exam_text as say
 from app import receipts
+from app import provenance as forge_provenance
 from app.areas import answer_value, area_for
 from app.drill import DrillSession, drill_targets
 from app.interview_session import ExamSession, QuestionLog
@@ -184,7 +185,7 @@ def card(q: QuestionLog, anchor: str) -> dict | None:
     if len(checked) > 1 and checked[-1].transcript != checked[0].transcript:
         words.append({"when": "Where you ended up", "text": checked[-1].transcript})
     committed = [a for a in checked if a.stated is not None]
-    out = {"q": name(q), "anchor": anchor, "outcome": outcome_text(q), "words": words,
+    out = {"q": name(q), "anchor": anchor, "template_id": q.puzzle.template_id, "outcome": outcome_text(q), "words": words,
            "said": ", then ".join(dict.fromkeys(said(a) for a in committed)) if committed else None,
            "exact": exact(q), "receipt": (committed or checked)[-1].receipt, "part2": None, "follow_up": None}
     p = part2_item(q)
@@ -273,6 +274,13 @@ def rating_items(session: ExamSession, qs: list[QuestionLog]) -> list[dict]:
     return out
 
 
+def attach_provenance(cards: list[dict], templates: dict) -> None:
+    """Each evidence card says where its question came from (forge provenance)."""
+    for c in cards:
+        c["provenance"] = forge_provenance.provenance(templates.get(c["template_id"]))
+        c["provenance_rows"] = forge_provenance.rows(c["provenance"])
+
+
 def build(session: ExamSession, templates: dict | None = None) -> dict:
     iv = session.interview
     qs = [q for q in session.questions if q.scored is not None]
@@ -283,6 +291,7 @@ def build(session: ExamSession, templates: dict | None = None) -> dict:
     forge = any(isinstance(q.puzzle, ForgePuzzle) for q in session.questions)
 
     part = sections(qs, forge)
+    attach_provenance(part["cards"], templates or {})
 
     n = len(qs)
     overall = f"{n} question{'s' if n != 1 else ''}, scored on where you ended up, discounted by the help it took. " + " ".join(
@@ -330,6 +339,7 @@ def build_drill(session: DrillSession) -> dict:
     if session.check is not None and session.check.scored is not None:
         qs.append(session.check)
     part = sections(qs, True)
+    attach_provenance(part["cards"], {session.interview.template.template_id: session.interview.template})
     names = {q.number: name(q) for q in qs}
     for item in part["well"] + part["improve"] + [i for tab in part["breakdown"] for i in tab["items"]]:
         item["seen_names"] = [names[n] for n in item["seen"] if n in names]

@@ -170,7 +170,15 @@
     throw new Error("too large");
   }
 
-  window.UB = { store, photoFromBlob, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
+  // "Where this question came from": the forge's verification record for its family.
+  function provenanceHtml(rows) {
+    if (!rows || !rows.length) return "";
+    return `<details class="receipt provenance"><summary>Where this question came from</summary><div class="receipt-body solo"><div><dl>`
+      + rows.map((r) => `<div><dt>${escapeHtml(r.label)}</dt><dd>${escapeHtml(r.text)}</dd></div>`).join("")
+      + `</dl><p class="receipt-note"><a href="/ui/forge">Every family in the question bank</a></p></div></div></details>`;
+  }
+
+  window.UB = { store, photoFromBlob, provenanceHtml, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
                 refreshProfileLink: initProfileLink };
   document.addEventListener("DOMContentLoaded", () => { initTheme(); initMute(); initProfileLink(); });
   document.addEventListener("ub-account", initProfileLink);
