@@ -26,7 +26,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderTrack() {
-    const track = tracks.find((t) => t.id === current);
+    const found = tracks.find((t) => t.id === current);
+    // Setup redesign: the radar follows the target role's Core chips (the role last chosen for this track).
+    let chosen = null;
+    try { chosen = window.UB.store.get(`ub-role:${current}`); } catch { chosen = null; }
+    const role = (found.roles || []).find((r) => r.id === chosen) || (found.roles || [])[0];
+    const track = role && role.areas.length ? { ...found, areas: role.areas } : found;
     const scores = P.areaScores(profile, current, track.areas);
     const o = P.overall(scores);
     $("rating-track").textContent = track.name;

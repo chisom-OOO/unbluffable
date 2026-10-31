@@ -69,7 +69,8 @@ def test_areas_are_the_listed_axes_at_most_eight_per_track():
 
 def test_topics_api_lists_each_tracks_areas_and_hard():
     data = TestClient(app).get("/api/interview/topics").json()
-    assert {t["id"]: t["areas"] for t in data["tracks"]} == {k: list(v) for k, v in AREAS.items()}
+    # Quant development is a Quant role, not a track (setup redesign).
+    assert {t["id"]: t["areas"] for t in data["tracks"]} == {k: list(v) for k, v in AREAS.items() if k != "quant_dev"}
     assert data["levels"] == ["Easy", "Medium", "Hard"] and data["default_level"] == "Easy"
 
 

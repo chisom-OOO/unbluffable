@@ -670,7 +670,9 @@ def _items(session: CodingSession, log: CodingLog) -> list[dict]:
     """Rating items: Part 1 at the family's difficulty; Part 2 as Hard; the bonus Part 3 as
     Hard and only when right ("bonus": the profile counts it only if it raises the area)."""
     spec, out = log.spec, []
-    area = area_for(session.track, spec["topic"])
+    role = getattr(session, "role", None)  # setup redesign: the role's chips are the rating areas
+    from app import roles
+    area = (roles.area_for(role, spec["topic"]) if role else None) or area_for(session.track, spec["topic"])         or ("Coding" if role is not None and role.opener else None)  # a quant-dev coding topic outside the named chips
     for p in log.parts:
         result, weight = session.scored(log, p.part)
         if result is None or (p.part == 3 and not p.correct):
@@ -736,8 +738,18 @@ def _design(session: CodingSession) -> list:
     return conversational.items(session.design)
 
 
-def pick(pack: str, topics, rng=None, exclude=()) -> dict | None:
-    """A coding problem from the chosen topics (or any), at random, never one already asked."""
+def pick(pack: str, topics, rng=None, exclude=(), weights=None) -> dict | None:
+    """A coding problem from the chosen topics (or any), at random, never one already asked.
+    `weights` (topic -> weight): the role-weighted mix, shared among each topic's problems."""
     pool = [s for s in specs(pack).values() if s["template_id"] not in set(exclude)]
     chosen = [s for s in pool if not topics or s["topic"] in topics] or pool
-    return (rng or random).choice(chosen) if chosen else None
+    if not chosen:
+        return None
+    if weights:
+        per = {}
+        for s in chosen:
+            per[s["topic"]] = per.get(s["topic"], 0) + 1
+        mass = [weights.get(s["topic"], 0.0) / per[s["topic"]] for s in chosen]
+        if sum(mass) > 0:
+            return (rng or random).choices(chosen, weights=mass)[0]
+    return (rng or random).choice(chosen)

@@ -734,3 +734,34 @@ body.coding-mode main { min-height: 0; overflow: hidden; }
 .ws-part2 { padding: 8px 10px; border-left: 3px solid var(--accent); background: var(--stage); border-radius: 0 8px 8px 0; font-size: 15px; }
 .code-large { margin: 4px 0 0; font-size: 13px; }
 body.coding-mode .top .btn, body.coding-mode .top .clock { white-space: nowrap; }
+
+/* ---------- Setup redesign: target role, two-column topic chips, More topics ---------- */
+.role-field { display: grid; gap: 6px; margin: 4px 0 14px; }
+.role-select { position: relative; }
+.role-button { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink);
+  font: 700 14px var(--sans); text-align: left; cursor: pointer; }
+.role-button:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.role-button .icon { width: 18px; height: 18px; flex: none; color: var(--muted); }
+.role-list { position: absolute; z-index: 15; left: 0; right: 0; top: calc(100% + 4px); margin: 0; padding: 4px; list-style: none;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); }
+.role-list:focus-visible { outline: 2px solid var(--ring); }
+.role-option { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 9px 10px;
+  border-radius: 8px; font-size: 14px; cursor: pointer; }
+.role-option:hover, .role-option.active { background: var(--stage); }
+.role-option[aria-selected="true"] { font-weight: 700; }
+.role-option.off { color: var(--muted); cursor: not-allowed; }
+.role-check { color: var(--accent); font-weight: 800; }
+.role-note { margin: 0; }
+.topic-chips.two-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.topic-chips.two-col .topic-chip { display: flex; align-items: center; gap: 10px; border-radius: 10px; font-weight: 600; }
+.topic-chips.two-col .topic-chip[aria-pressed="true"]::before { content: none; }
+.topic-chip .tick { width: 18px; height: 18px; flex: none; border-radius: 50%; border: 2px solid var(--muted); display: grid; place-items: center; }
+.topic-chip[aria-pressed="true"] .tick { border-color: var(--accent); background: var(--accent); }
+.topic-chip[aria-pressed="true"] .tick::after { content: ""; width: 8px; height: 4px; border: 2px solid var(--accent-fg);
+  border-top: 0; border-right: 0; transform: translateY(-1px) rotate(-45deg); }
+.more-topics { margin-top: 10px; }
+.more-topics summary { cursor: pointer; font-weight: 700; font-size: 13px; color: var(--accent); margin-bottom: 8px; }
+.more-topics[hidden] { display: none; }
+@media (max-width: 700px) { .topic-chips.two-col { grid-template-columns: minmax(0, 1fr); } }
+
