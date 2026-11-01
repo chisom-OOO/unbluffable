@@ -1,5 +1,6 @@
 """The coding workspace's syntax themes (decision log 27): every token colour is at least
-4.5:1 against the editor background, in light, dark (system) and dark (toggle)."""
+4.5:1 against the editor background, in light, dark (system) and dark (toggle), for the
+default look and the Trading floor look."""
 
 import re
 from pathlib import Path
@@ -26,8 +27,9 @@ def themes() -> list[dict]:
 
 def test_three_theme_blocks_define_every_token():
     found = themes()
-    assert len(found) == 3  # light, dark by system, dark by toggle
-    assert found[1] == found[2]
+    assert len(found) == 6  # light, dark by system, dark by toggle; default look then floor
+    assert found[1] == found[2] and found[4] == found[5]
+    assert found[4]["bg"] == "#212428"  # the floor's graphite paper, not One Dark's blue-grey
     for theme in found:
         assert set(TOKENS) <= set(theme)
 

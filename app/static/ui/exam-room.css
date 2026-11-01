@@ -723,17 +723,26 @@ h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus { outline: none; }
 /* Market making (decision log 28): the market panel beside the transcript, and the report card. */
 .market-panel { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
 .market-panel h3 { margin: 0 0 8px; font-size: 15px; }
-.market-revealed ul { margin: 0 0 8px; padding-left: 18px; }
-.market-revealed li, .market-settle { font-size: 14px; margin: 2px 0; }
 .market-quotes { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0; }
 .market-quotes th, .market-quotes td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--line); }
 .market-quotes th { font-weight: 600; color: var(--muted); font-size: 12px; }
 .market-quotes tr.latest td { font-weight: 600; }
 .market-quotes td.empty { color: var(--muted); }
-.market-book { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px 14px; margin: 8px 0 0; }
 .market-book div { min-width: 0; }
-.market-book dt { font-size: 12px; color: var(--muted); }
-.market-book dd { margin: 0; font-size: 14px; overflow-wrap: anywhere; }
+/* The scorecard: the latest quote large, one line per trade and reveal, then position and P&L. */
+.market-hint { font-size: 16px; color: var(--muted); margin: 0; }
+.market-card { display: grid; gap: 8px; }
+.market-quote { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 4px 32px; padding-bottom: 6px; }
+.market-quote > div { display: grid; gap: 0; }
+.market-label { font-size: 14px; color: var(--muted); }
+.market-num { font: 500 28px/1.15 var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+.market-stage { flex-basis: 100%; margin: 0; font-size: 14px; color: var(--muted); }
+.market-line { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 12px; margin: 0; font-size: 15px; }
+.market-line[hidden] { display: none; }
+.market-book { display: flex; flex-wrap: wrap; gap: 6px 40px; margin: 6px 0 0; padding-top: 8px; border-top: 1px solid var(--line); }
+.market-book div { display: flex; align-items: baseline; gap: 10px; }
+.market-book dt { font-size: 14px; color: var(--muted); }
+.market-book dd { margin: 0; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
 
 /* ---------- Coding workspace (decision log 27): full viewport, no page scroll ---------- */
 /* Syntax themes: GitHub-like light, One Dark-like dark; every token at least 4.5:1 on --cm-bg
@@ -1043,3 +1052,33 @@ input[type="checkbox"] { accent-color: var(--active, var(--ink)); width: 18px; h
 .voicebar .orb { width: 32px; height: 32px; }
 .voicetext strong { font-size: 17px; }
 .voicetext small { font-size: 14px; }
+
+/* ---------- Coding round in the floor look ---------- */
+/* Editor: the same token hues on the floor's own paper (graphite in dark), not One Dark's blue-grey.
+   Every token stays at least 4.5:1 (tests/test_syntax_contrast.py). */
+:root[data-look="floor"] {
+  --cm-bg: #fefdfb; --cm-gutter: #f8f7f4; --cm-linenum: #585c61; --cm-cursor: #1a1c1f; --cm-selection: #cfe6d8;
+  --cm-text: #1a1c1f; --cm-keyword: #cf222e; --cm-def: #8250df; --cm-variable-2: #953800; --cm-string: #0a3069;
+  --cm-number: #0550ae; --cm-comment: #585c61; --cm-builtin: #953800; --cm-property: #0550ae; --cm-meta: #6639ba;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-look="floor"]:not([data-theme="light"]) {
+    --cm-bg: #212428; --cm-gutter: #1b1d20; --cm-linenum: #a3a9b0; --cm-cursor: #e9ebee; --cm-selection: #2f4a3c;
+    --cm-text: #dfe2e6; --cm-keyword: #d19df0; --cm-def: #6cb6f5; --cm-variable-2: #e8a1a8; --cm-string: #98c379;
+    --cm-number: #e0a872; --cm-comment: #a3a9b0; --cm-builtin: #5fc4d0; --cm-property: #e8a1a8; --cm-meta: #e5c07b;
+  }
+}
+:root[data-look="floor"][data-theme="dark"] {
+  --cm-bg: #212428; --cm-gutter: #1b1d20; --cm-linenum: #a3a9b0; --cm-cursor: #e9ebee; --cm-selection: #2f4a3c;
+  --cm-text: #dfe2e6; --cm-keyword: #d19df0; --cm-def: #6cb6f5; --cm-variable-2: #e8a1a8; --cm-string: #98c379;
+  --cm-number: #e0a872; --cm-comment: #a3a9b0; --cm-builtin: #5fc4d0; --cm-property: #e8a1a8; --cm-meta: #e5c07b;
+}
+/* Test results: 14px throughout; pass/fail carries an icon and a word, not colour alone. */
+.code-results, .code-results h3, .code-case code, .code-case dt, .code-case dd, .code-output, .code-case .code-mark,
+.code-verdict, .ws-tabs.small [role="tab"] { font-size: 14px; }
+.code-case dl div { grid-template-columns: 84px minmax(0, 1fr); }
+.code-case .code-mark { display: inline-flex; align-items: center; gap: 6px; }
+.code-case.ok .code-mark::before, .code-case.bad .code-mark::before { font: 700 15px/1 var(--sans); }
+.code-case.ok .code-mark::before { content: "✓"; }
+.code-case.bad .code-mark::before { content: "✗"; }
+.code-case.bad { border-left-width: 3px; }

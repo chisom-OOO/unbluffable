@@ -259,14 +259,23 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------- Market making (decision log 28): the market panel beside the transcript ----------
   // Fair value is never shown during a round; P&L appears at settlement.
   const signed = (x) => (String(x).startsWith("-") ? `−${String(x).slice(1)}` : `+${x}`);
+  // Before the first quote: one line on how to quote. After: the latest quote large, the
+  // interviewer's trades and the reveals one line each, then position and P&L.
   function marketState(e) {
-    $("market-revealed").innerHTML = e.revealed.length ? `<ul>${e.revealed.map((r) => `<li>${escapeHtml(r)}</li>`).join("")}</ul>`
-      : `<p class="fine">Nothing revealed yet.</p>`;
-    $("market-quotes").innerHTML = e.quotes.length ? e.quotes.map((q, i) =>
-      `<tr${i === e.quotes.length - 1 ? ' class="latest"' : ""}><td>${i > 0 && e.quotes[i - 1].stage === q.stage ? "Tightened" : q.stage === 0 ? "Opening" : `After reveal ${q.stage}`}</td>`
-      + `<td class="mono">${escapeHtml(q.bid)}</td><td class="mono">${escapeHtml(q.ask)}</td></tr>`).join("")
-      : `<tr><td colspan="3" class="empty">No quote yet.</td></tr>`;
-    $("market-trades").textContent = e.trades.length ? e.trades.map((t) => `${t.side > 0 ? "Bought" : "Sold"} at ${t.price}`).join(" · ") : "None yet";
+    const quoted = e.quotes.length > 0;
+    $("market-hint").hidden = quoted;
+    $("market-card").hidden = !quoted;
+    if (!quoted) { $("market-settle-line").hidden = true; return; }
+    const last = e.quotes[e.quotes.length - 1], prev = e.quotes[e.quotes.length - 2];
+    $("market-bid").textContent = last.bid;
+    $("market-ask").textContent = last.ask;
+    $("market-stage").textContent = (prev && prev.stage === last.stage ? "Tightened" : last.stage === 0 ? "Opening quote" : `After reveal ${last.stage}`)
+      + (e.quotes.length > 1 ? ` · earlier ${e.quotes.slice(0, -1).map((q) => `${q.bid} at ${q.ask}`).join(", ")}` : "");
+    // side +1: you bought (the interviewer sold at your bid); -1: you sold (they bought at your offer).
+    $("market-trades").textContent = e.trades.map((t) => t.side > 0 ? `sold to you at ${t.price}` : `bought from you at ${t.price}`).join(" · ");
+    $("market-trade-line").hidden = !e.trades.length;
+    $("market-revealed").textContent = e.revealed.join(" · ");
+    $("market-reveal-line").hidden = !e.revealed.length;
     $("market-position").textContent = e.position === 0 ? "Flat" : `${e.position > 0 ? "Long" : "Short"} ${Math.abs(e.position)}`;
     $("market-pnl").textContent = "At settlement";
   }
@@ -417,13 +426,20 @@ document.addEventListener("DOMContentLoaded", () => {
         addInterviewer(event.text, event.kind, event.receipt, event.speech, event.kind === "question" ? event.transcript : null);
         window.UBCoding.interviewerSaid(event.text);
         if (event.counts) counts(event.counts);
+        // A reveal arrives as a line before the next market state: show it on the scorecard now.
+        if (event.kind === "reveal" && !$("market-panel").hidden) {
+          const said = event.text.replace(/\s*Update your market\.?\s*$/, "");
+          $("market-revealed").textContent = [$("market-revealed").textContent, said].filter(Boolean).join(" · ");
+          $("market-reveal-line").hidden = false;
+        }
         break;
       case "market_state":
         marketState(event);
         break;
       case "market_settle":
         $("market-pnl").textContent = `${signed(event.realised_pnl)} realised · ${signed(event.expected_pnl)} expected`;
-        $("market-revealed").insertAdjacentHTML("beforeend", `<p class="market-settle"><strong>Settled at ${escapeHtml(event.payoff)}</strong> (${escapeHtml(event.draws)})</p>`);
+        $("market-settle").textContent = `pays ${event.payoff} (${event.draws})`;
+        $("market-settle-line").hidden = false;
         break;
       case "market_model":
         modelRow(event.model, event.job);
