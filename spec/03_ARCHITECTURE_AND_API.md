@@ -55,7 +55,7 @@ Code (not the model) locates every quote in the transcript, normalises numbers, 
 
 ## Content sources
 - Puzzle templates are written by us and generated with fresh numbers; no third-party questions are copied into the app or repo.
-- Lemma (a crowd-compiled quant question bank: questions gathered from other apps and user-reported interviews and assessments; provenance unclear) may be used only to see which puzzle types come up most and to collect classic wrong answers. Never copy its questions into the app, repo, prompts or evaluation sets: their wording may belong to other apps, and reported questions may breach candidates' confidentiality agreements. Classic problem ideas are fine when rewritten as our own templates with our own numbers.
+- An earlier crowd-compiled quant question bank (questions gathered from other apps and user-reported interviews and assessments; provenance unclear) may be used only to see which puzzle types come up most and to collect classic wrong answers. Never copy its questions into the app, repo, prompts or evaluation sets: their wording may belong to other apps, and reported questions may breach candidates' confidentiality agreements. Classic problem ideas are fine when rewritten as our own templates with our own numbers.
 
 ## Fast lane (no model) and claim rules
 Runs on every partial. Fires a challenge only when ALL hold:
