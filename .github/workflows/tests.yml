@@ -15,3 +15,8 @@ jobs:
           cache: pip
       - run: python -m pip install -e ".[dev]"
       - run: python -m pytest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Browser-logic suites (Node)
+        run: for f in tests/*.cjs; do node "$f"; done
