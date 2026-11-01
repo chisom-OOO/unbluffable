@@ -7,7 +7,7 @@
 // and what to do. "Can't use a camera or mic?" switches to typed practice, labelled "Not exam
 // conditions"; so does a microphone that fails after Start. Done is a fallback for noisy rooms.
 document.addEventListener("DOMContentLoaded", () => {
-  if (window.UB.desktopOnly()) return;  // decision log 26: laptop or desktop only
+  if (window.UB.desktopOnly()) return;  // decision log 35: laptops and tablets, not phones
   const { highlight, escapeHtml, reducedMotion, receiptHtml, trackCard } = window.UB;
   const voice = window.UBVoice;
   const $ = (id) => document.getElementById(id);
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let muting = 0;  // lines being spoken that mute the microphone (not the device-check test line)
   function speechChanged() {
     const talking = speaking > 0;
-    voice.mute(!headphones.checked && muting > 0);  // no echo without headphones
+    voice.mute(window.UBTurn.micShouldMute({ headphones: headphones.checked, mutingLines: muting }));  // no echo without headphones
     if (capturing && socket?.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({ type: "interviewer_speaking", value: talking, headphones: headphones.checked }));
     }
@@ -105,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
       offset += part.length + 1;
       const u = new SpeechSynthesisUtterance(part);
       u.voice = voice;
+      u.lang = voice?.lang || "en-GB";  // no voice list yet (iPad Safari): still English
       u.rate = T.SPEECH_RATE;
       current = T.guardUtterance(u, {
         text: part, rate: u.rate,
@@ -578,6 +579,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------- Start: the one tap (browsers need a gesture for mic and speech) ----------
   async function begin() {
     if (!gateOpen()) { openGateDialog(); return; }
+    // iPad Safari: audio and speech start only inside the tap, so before any await.
+    if (!typing) voice.unlock();
+    window.UB.unlockSpeech();
     setStatus("");
     consent.disabled = true;
     lockTopics();
@@ -813,11 +817,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return micInputs;
   }
 
+  // iPad and iPhone Safari may list no microphone until one is allowed, and always have a
+  // built-in one: an empty list there means "not asked yet", not "none".
+  const noListYet = () => window.UB.appleTouch() && !voice.isOpen;
   let testing = 0;
   async function testMic(deviceId) {
     const run = ++testing;
     micHeardReset();
-    if (!navigator.mediaDevices?.getUserMedia || !(await listInputs()).length) { voice.close(); setMic("none"); return; }
+    if (!navigator.mediaDevices?.getUserMedia || !(await listInputs()).length && !noListYet()) { voice.close(); setMic("none"); return; }
     try {
       await voice.open(deviceId ? { deviceId } : {});
     } catch (error) {
@@ -840,7 +847,7 @@ document.addEventListener("DOMContentLoaded", () => {
     draw();
   }
   function chooseMic(id) { $("mic-device").value = id; testMic(id); }
-  $("mic-test").addEventListener("click", () => testMic($("mic-device").value || undefined));
+  $("mic-test").addEventListener("click", () => { voice.unlock(); testMic($("mic-device").value || undefined); });
   $("mic-device").addEventListener("change", () => chooseMic($("mic-device").value));
 
   // Start the meter by itself once the microphone is allowed; follow permission and device changes.
@@ -861,7 +868,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!inputs.length) { voice.close(); micHeardReset(); setMic("none"); }
     else if (micStatus === "none") testMic();
   });
-  if (navigator.mediaDevices) listInputs().then((inputs) => { if (!inputs.length) setMic("none"); });
+  if (navigator.mediaDevices) listInputs().then((inputs) => { if (!inputs.length && !noListYet()) setMic("none"); });
   $("speaker-test").addEventListener("click", () => {
     const note = $("speaker-note");
     if (!window.speechSynthesis) { note.textContent = "This browser has no speech voice; lines will appear as text."; note.className = "device-note bad"; return; }
@@ -886,6 +893,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   // One line when the chosen voice isn't a Natural/Online one.
   function voiceTip() { $("voice-tip").hidden = window.UBTurn.naturalVoice(window.UB.pickVoice()); }
+  if (window.UB.appleTouch()) {  // Edge on an iPad has Safari's voices: the tip names the iPad setting
+    $("voice-tip").textContent = "For a more natural voice, download an Enhanced English voice in Settings, Accessibility, Spoken Content, Voices.";
+  }
   if (window.speechSynthesis) {
     listVoices();
     speechSynthesis.addEventListener?.("voiceschanged", listVoices);

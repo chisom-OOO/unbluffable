@@ -41,7 +41,8 @@
       for (const part of PARTS) await load(SDK + part);
       let local = null;
       try { local = window.localStorage; } catch { local = null; }
-      account = window.UBAccountCore.createAccount({ sdk: window.firebase, config: config.config, store: guard(window.UB.profile()), storage: local });
+      account = window.UBAccountCore.createAccount({ sdk: window.firebase, config: config.config, store: guard(window.UB.profile()), storage: local,
+                                                        redirect: window.UB.appleTouch() });
       account.on(() => emit());
       await account.completeEmailLink(location.href, async () => prompt("Which email did you use to sign in?"))
         .then((done) => {

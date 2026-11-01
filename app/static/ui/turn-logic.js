@@ -57,15 +57,22 @@
     return out;
   }
 
+  // Echo safety (decision log 35 keeps it on tablets): the microphone is muted while the
+  // interviewer speaks a line that mutes, unless the candidate is using headphones.
+  const micShouldMute = ({ headphones, mutingLines }) => !headphones && mutingLines > 0;
+
   // The browser's English voices, most human first: natural/neural voices, then Google's
   // UK/US English, then the rest, with robotic desktop voices last; British English first
   // within each group, then American, then other English.
   const NATURAL = /natural|neural|online|premium|enhanced|siri/i;
   const ROBOTIC = /desktop|espeak|compact|eloquence|\bbad\b|robot/i;
+  // Apple's novelty and Eloquence voices (Safari on iPad and Mac): robotic, so ranked last.
+  const APPLE_NOVELTY = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Fred|Junior|Ralph|Kathy|Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley)(\s*\(|$)/;
+  const APPLE_ROBOTIC_URI = /eloquence/i;
   function voiceTier(v) {
     if (NATURAL.test(v.name)) return 0;
     if (/^google (uk|us) english/i.test(v.name)) return 1;
-    if (ROBOTIC.test(v.name)) return 3;
+    if (ROBOTIC.test(v.name) || APPLE_NOVELTY.test(v.name || "") || APPLE_ROBOTIC_URI.test(v.voiceURI || "")) return 3;
     return 2;
   }
   const langRank = (lang) => (/^en[-_]GB/i.test(lang) ? 0 : /^en[-_]US/i.test(lang) ? 1 : 2);
@@ -195,7 +202,7 @@
   // The tip for a voice that isn't one of the natural (Edge "Online (Natural)") voices.
   const naturalVoice = (v) => !!v && /natural|online|neural|premium|enhanced|siri/i.test(v.name || "");
 
-  const api = { shouldOfferHelp, speechTimeoutMs, guardUtterance, gateProblems, rankVoices, voiceTier, onlyRobotic,
+  const api = { micShouldMute, shouldOfferHelp, speechTimeoutMs, guardUtterance, gateProblems, rankVoices, voiceTier, onlyRobotic,
                 groupModelCalls, modelFigures, speakable, sentences, withOpener, naturalVoice, fractionWords,
                 SPEECH_RATE, SENTENCE_PAUSE_MS };
   if (typeof module !== "undefined") module.exports = api;

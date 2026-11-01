@@ -131,6 +131,17 @@ const CONFIG = { apiKey: "public-id", authDomain: "x.firebaseapp.com", projectId
     assert.deepEqual(sdk.calls.find((c) => c[0] === "linkSignIn"), ["linkSignIn", "ada@example.com"]);
     assert.equal(local.getItem("ub-email-for-link"), null);
   }
+  // --- iPhone and iPad (decision log 35): Google sign-in goes straight to a redirect ---
+  {
+    const sdk = fakeSdk();
+    const { store } = memoryStore();
+    const account = createAccount({ sdk, config: CONFIG, store, redirect: true });
+    await account.signInWithGoogle();
+    assert.deepEqual(sdk.calls.filter((c) => ["popup", "redirect"].includes(c[0])), [["redirect", "google"]], "no popup on iOS");
+    const laptop = fakeSdk();
+    await createAccount({ sdk: laptop, config: CONFIG, store: memoryStore().store }).signInWithGoogle();
+    assert.deepEqual(laptop.calls.filter((c) => ["popup", "redirect"].includes(c[0])), [["popup", "google"]], "a popup elsewhere");
+  }
   console.log("account ok");
 })().catch((e) => { console.error(e); process.exit(1); });
 

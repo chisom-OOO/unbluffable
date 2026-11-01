@@ -6,13 +6,26 @@
   let stream = null, context = null, worklet = null, analyser = null;
   let socket = null, capturing = false, pending = [], wanted = "";
 
+  // iPad Safari runs audio only once a context was created or resumed inside a tap: call
+  // unlock() from the tap itself (Start, Test microphone), before any await. Any later tap
+  // resumes a context iOS suspended (a call, Siri, another app's audio).
+  function unlock() {
+    if (!window.AudioContext && !window.webkitAudioContext) return;
+    context ||= new (window.AudioContext || window.webkitAudioContext)();
+    if (context.state !== "running") context.resume().catch(() => {});
+  }
+  document.addEventListener("pointerdown", () => {
+    if (context && context.state !== "running" && context.state !== "closed") context.resume().catch(() => {});
+  }, { capture: true, passive: true });
+
   // `deviceId` (optional) picks an input; a different one closes the open stream first.
   // A track that ends (unplugged, revoked) fires "ub-mic-ended" on the document.
   async function open({ deviceId } = {}) {
     if (deviceId !== undefined && deviceId !== wanted) { close(); wanted = deviceId; }
     if (stream) return;
-    context ||= new AudioContext();
-    const resumed = context.resume();
+    context ||= new (window.AudioContext || window.webkitAudioContext)();
+    // Outside a tap iOS may leave resume() pending: wait at most a second; the next tap resumes it.
+    const resumed = Promise.race([context.resume().catch(() => {}), new Promise((r) => setTimeout(r, 1000))]);
     stream = await navigator.mediaDevices.getUserMedia({
       audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true,
                ...(wanted ? { deviceId: { exact: wanted } } : {}) },
@@ -91,7 +104,7 @@
   }
 
   window.UBVoice = {
-    open, attach, startStreaming, stopStreaming, mute, flush, level, device, close,
+    open, unlock, attach, startStreaming, stopStreaming, mute, flush, level, device, close,
     get isOpen() { return !!stream; },
     get capturing() { return capturing; },
   };

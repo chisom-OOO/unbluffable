@@ -183,11 +183,11 @@
       + `</dl><p class="receipt-note"><a href="/ui/forge">Every family in the question bank</a></p></div></div></details>`;
   }
 
-  // Decision log 26: the interview, setup, profile and report run on a laptop or desktop.
-  // Screens under 900 px wide, or touch-only devices, get a friendly screen instead (with a
-  // Copy link button); page scripts check desktopOnly() and do not start.
-  const tooSmall = () => window.innerWidth < 900
-    || (matchMedia("(pointer: coarse)").matches && !matchMedia("(any-pointer: fine)").matches);
+  // Decision log 35 (amends 26): the interview, setup, profile and report run on laptops and
+  // tablets. Phones (smaller screen side under 700 px) and windows under 700 px wide get a
+  // friendly screen instead (with a Copy link button); page scripts check desktopOnly() and
+  // do not start.
+  const tooSmall = () => window.UBDevice.phoneSized({ screenWidth: screen.width, screenHeight: screen.height, innerWidth: window.innerWidth });
   const desktopOnly = () => document.body?.dataset.desktopOnly === "true" && tooSmall();
   function initDesktopGate() {
     if (document.body.dataset.desktopOnly !== "true") return;
@@ -200,8 +200,8 @@
     gate.id = "gate-main";
     gate.innerHTML = `<section class="panel" aria-labelledby="gate-title">
       <svg class="gate-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></svg>
-      <h1 id="gate-title">Unbluffable runs on a laptop or desktop, like a real interview</h1>
-      <p class="muted">Open this link on a laptop or desktop with a camera and microphone.</p>
+      <h1 id="gate-title">Unbluffable needs a bigger screen, like a real interview</h1>
+      <p class="muted">Open this on a laptop or tablet with a camera and microphone.</p>
       <label class="visually-hidden" for="gate-url">This page's link</label>
       <input class="text-input gate-url" id="gate-url" type="text" readonly value="${escapeHtml(location.href)}">
       <div class="welcome-actions">
@@ -218,7 +218,22 @@
     });
   }
 
-  window.UB = { store, photoFromBlob, provenanceHtml, rankedVoices, desktopOnly, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
+  // iPad Safari plays speech only after a first utterance started inside a tap: call this
+  // from the tap (Start, the speaker test). A silent one-space line, once per page.
+  let speechUnlocked = false;
+  function unlockSpeech() {
+    if (speechUnlocked || !window.speechSynthesis || typeof window.SpeechSynthesisUtterance !== "function") return;
+    speechUnlocked = true;
+    const u = new SpeechSynthesisUtterance(" ");
+    u.volume = 0;
+    try { speechSynthesis.speak(u); } catch { speechUnlocked = false; }
+  }
+  // Touch-only devices (decision log 35), for the coding round's keyboard note.
+  const touchOnly = () => window.UBDevice.touchOnly({ coarse: matchMedia("(pointer: coarse)").matches,
+                                                     anyFine: matchMedia("(any-pointer: fine)").matches });
+  const appleTouch = () => window.UBDevice.appleTouch(navigator);
+
+  window.UB = { store, unlockSpeech, touchOnly, appleTouch, photoFromBlob, provenanceHtml, rankedVoices, desktopOnly, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
                 refreshProfileLink: initProfileLink };
   document.addEventListener("DOMContentLoaded", () => { initDesktopGate(); initTheme(); initMute(); initProfileLink(); });
   document.addEventListener("ub-account", initProfileLink);

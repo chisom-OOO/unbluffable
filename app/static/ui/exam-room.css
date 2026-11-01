@@ -771,3 +771,21 @@ body.coding-mode .top .btn, body.coding-mode .top .clock { white-space: nowrap; 
 .case-exhibit { overflow-x: auto; }
 .exhibit caption { text-align: left; font-size: 13px; color: var(--muted); margin-bottom: 6px; caption-side: top; }
 .exhibit th[scope="row"] { font-weight: 600; color: var(--ink); font-size: 14px; }
+
+/* ---------- Tablets (decision log 35): touch targets, the on-screen keyboard ---------- */
+/* Touch: every control at least 44 px; the 6 px splitters get a wider grab area. */
+@media (pointer: coarse) {
+  .btn-small, .linkbtn, .topic-chip, .mic-device select, .ws-tabs [role="tab"], .ws-tabs.small [role="tab"], .role-option,
+  .profile-link, .checkline, .seg label, .more-topics summary, .receipt summary, .ws-provenance summary, .typed-link button { min-height: 44px; }
+  .linkbtn { min-width: 44px; justify-content: center; }
+  .linkbtn, .more-topics summary, .receipt summary, .ws-provenance summary { display: inline-flex; align-items: center; }
+  .icon-btn, .icon-btn-small, .ws-banner-close { width: 44px; height: 44px; min-width: 44px; }
+  .checkline { align-items: center; }
+  .ws-split, .ws-hsplit { position: relative; }
+  .ws-split::after { content: ""; position: absolute; top: 0; bottom: 0; left: -9px; right: -9px; }
+  .ws-hsplit::after { content: ""; position: absolute; left: 0; right: 0; top: -9px; bottom: -9px; }
+}
+.ws-kbd-note { flex-basis: 100%; font-size: 13px; color: var(--muted); }
+/* The on-screen keyboard is open: the workspace fits the visible area above it. */
+body.coding-mode.keyboard-open .shell { position: fixed; left: 0; right: 0; top: var(--vv-top, 0); height: var(--vv-h, 100dvh); }
+body.coding-mode.keyboard-open .room.coding .coding-pane:not(.console-closed) { grid-template-rows: auto auto minmax(96px, 1fr) 6px minmax(0, 22%); }

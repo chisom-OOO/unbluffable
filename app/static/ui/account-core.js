@@ -8,7 +8,9 @@
   const INTEREST = "interest";
   const INTEREST_ROLES = ["quant", "quant_dev", "ib", "consulting", "software", "other"];  // as firestore.rules
 
-  function createAccount({ sdk, config, store, now = () => new Date().toISOString(), storage = null }) {
+  // `redirect`: sign in with Google by redirect, not a popup (iPhone and iPad Safari block
+  // popups opened after the tap; decision log 35).
+  function createAccount({ sdk, config, store, now = () => new Date().toISOString(), storage = null, redirect = false }) {
     const app = sdk.initializeApp(config);
     const auth = sdk.auth(app);
     const db = sdk.firestore(app);
@@ -64,6 +66,7 @@
       flush(profile) { clearTimeout(pushTimer); return write(profile); },
       async signInWithGoogle() {
         const provider = new sdk.auth.GoogleAuthProvider();
+        if (redirect) return auth.signInWithRedirect(provider);
         try {
           await auth.signInWithPopup(provider);
         } catch (error) {
@@ -104,6 +107,8 @@
           await current.delete();
         } catch (error) {
           if (error?.code !== "auth/requires-recent-login") throw error;
+          // By redirect on iPhone and iPad: the account is deleted on the next tap, once back.
+          if (redirect) return current.reauthenticateWithRedirect(new sdk.auth.GoogleAuthProvider());
           await current.reauthenticateWithPopup(new sdk.auth.GoogleAuthProvider());
           await current.delete();
         }

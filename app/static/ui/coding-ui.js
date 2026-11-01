@@ -272,12 +272,42 @@
       setCode(starter);
     });
     $("ws-banner-close").addEventListener("click", () => { $("ws-banner").hidden = true; });
+    // Decision log 35: on a touch-only device (an iPad without a trackpad keyboard), say a
+    // keyboard helps, and keep the editor above the on-screen keyboard.
+    if (window.UB.touchOnly()) {
+      const note = document.createElement("span");
+      note.className = "ws-kbd-note";
+      note.id = "ws-kbd-note";
+      note.textContent = "A keyboard is recommended for the coding round.";
+      document.querySelector("#coding-pane .ws-toolbar").appendChild(note);
+    }
+    fitViewport();
     // Run: Ctrl+' ; Submit: Ctrl+Enter (not while typing an answer in the Conversation tab).
     document.addEventListener("keydown", (e) => {
       if (!(e.ctrlKey || e.metaKey) || e.target.id === "type-answer") return;
       if (e.key === "'" && !$("run-examples").disabled) { e.preventDefault(); runExamples(); }
       if (e.key === "Enter" && !$("submit-code").disabled) { e.preventDefault(); submit(); }
     });
+  }
+
+  // The on-screen keyboard shrinks the visual viewport, not the page: the workspace follows
+  // window.visualViewport, so the editor and the cursor stay in view while typing.
+  function fitViewport() {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const fit = () => {
+      const f = window.UBDevice.viewportFrame(vv, window.innerHeight);
+      const root = document.documentElement.style;
+      root.setProperty("--vv-h", `${f.height}px`);
+      root.setProperty("--vv-top", `${f.top}px`);
+      const was = document.body.classList.contains("keyboard-open");
+      document.body.classList.toggle("keyboard-open", f.keyboard);
+      if (was !== f.keyboard) editor?.refresh();
+      if (f.keyboard) editor?.scrollIntoView(null, 40);
+    };
+    vv.addEventListener("resize", fit);
+    vv.addEventListener("scroll", fit);
+    fit();
   }
 
   // ---------- The problem tab ----------
