@@ -32,9 +32,16 @@ document.addEventListener("DOMContentLoaded", () => {
   mirror.setAttribute("aria-hidden", "true");
   mirror.style.cssText = "position:absolute;visibility:hidden;white-space:pre;font:inherit;font-weight:500";
   pick.parentElement.appendChild(mirror);
-  function fit() {  // the select is as wide as the chosen track, so the sentence reads as one line
+  // The select is as wide as the chosen track, so the sentence reads as one line; the sentence
+  // keeps room for the longest track, so choosing one never moves the button.
+  function fit() {
+    let widest = 0;
+    for (const option of pick.options) { mirror.textContent = option.text; widest = Math.max(widest, mirror.offsetWidth); }
     mirror.textContent = pick.options[pick.selectedIndex]?.text || "";
     pick.style.width = `calc(${mirror.offsetWidth}px + 1.25em)`;
+    const sentence = pick.closest(".pick");
+    sentence.style.minWidth = "";
+    sentence.style.minWidth = `min(100%, ${sentence.offsetWidth + widest - mirror.offsetWidth}px)`;
   }
   function choose() {
     const href = `/ui/interview?track=${encodeURIComponent(pick.value)}`;
