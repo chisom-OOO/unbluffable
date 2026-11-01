@@ -45,6 +45,8 @@ def test_market_transcript_takes_the_remaining_height_and_follows_the_latest_lin
     assert ".room.market > .stage { align-self: stretch; min-height: 0;" in CSS
     assert ".room.market #log { flex: 1 1 auto; min-height: 0; overflow-y: auto;" in CSS
     assert ".room.market .dock { position: static;" in CSS
-    # Auto-scroll: to the bottom on every change unless you scrolled up to read.
-    assert "if (marketRoom()) { atLatest = true; log.scrollTop = log.scrollHeight; return; }" in JS
-    assert "new MutationObserver(() => { if (marketRoom() && atLatest) log.scrollTop = log.scrollHeight; })" in JS
+    # Auto-scroll (room fixes): the market transcript is its own scroller, followed to the bottom
+    # on every change only while the candidate is at (or within 80 px of) the bottom.
+    assert "const scroller = () => (marketRoom() ? log : log.closest(\".ws-panel\") || document.scrollingElement);" in JS
+    assert "if (s === log) log.scrollTop = log.scrollHeight;" in JS
+    assert "new MutationObserver(() => { if (marketRoom() && follow.following) log.scrollTop = log.scrollHeight; })" in JS
