@@ -235,7 +235,21 @@
 
   window.UB = { store, unlockSpeech, touchOnly, appleTouch, photoFromBlob, provenanceHtml, rankedVoices, desktopOnly, escapeHtml, highlight, reducedMotion, receiptHtml, trackCard, pickVoice, profile, headlineTrack, avatarHtml,
                 refreshProfileLink: initProfileLink };
-  document.addEventListener("DOMContentLoaded", () => { initDesktopGate(); initTheme(); initMute(); initProfileLink(); });
+  // The header's "…" menu (a native <details>): closes on an outside click, on Escape (focus
+  // back on its button) and after the theme is switched.
+  function initMenus() {
+    const menus = [...document.querySelectorAll("details.menu")];
+    if (!menus.length) return;
+    document.addEventListener("click", (e) => {
+      menus.forEach((m) => { if (m.open && (!m.contains(e.target) || e.target.closest(".theme-toggle"))) m.open = false; });
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      menus.forEach((m) => { if (m.open) { m.open = false; m.querySelector("summary").focus(); } });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => { initDesktopGate(); initTheme(); initMute(); initProfileLink(); initMenus(); });
   document.addEventListener("ub-account", initProfileLink);
   // Signed in, the profile is also kept with the account: say so wherever the page says where it lives.
   document.addEventListener("ub-account", (e) => {

@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         el.className = "sampleline" + (line.kind === "challenge" ? " is-challenge" : "");
         const who = line.who === "interviewer" ? `Interviewer${line.kind === "challenge" ? " · Challenge" : ""}` : "Candidate";
-        el.innerHTML = `<b>${who.toUpperCase()}</b><span class="says">“${escapeHtml(line.text)}”</span>`;
+        el.innerHTML = `<b>${who}</b><span class="says">“${escapeHtml(line.text)}”</span>`;
       }
       el.hidden = true;
       el.dataset.index = i;
