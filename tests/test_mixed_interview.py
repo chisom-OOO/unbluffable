@@ -20,7 +20,7 @@ from engine import market as m
 from engine.bank import Bank, BankSource, parse_template
 from engine.interview import Interview
 from test_bank_runtime import ScriptedProvider, _raw_bag
-from test_exam_session import typed
+from test_exam_session import RED, typed
 from test_market_session import FakeSpark
 from voice.recording import VoiceError
 
@@ -74,8 +74,8 @@ def play(begin):
             if e["type"] == "question":
                 kind, text = e["kind"], e["text"]
             if e["type"] == "state" and e["value"] == "listening":
-                answer = (typed(text, "right") if kind in {"new", "twin", "ladder"} or "has" in text and "red" in text
-                          else "0 at 2000" if kind == "market"
+                answer = ("0 at 2000" if kind == "market"
+                          else typed(text, "right") if RED.search(text)
                           else "Last spring I led the work and we hit 3 of 4 goals.")
                 socket.send_json({"type": "typed", "transcript": answer})
             if e["type"] == "session_end":
