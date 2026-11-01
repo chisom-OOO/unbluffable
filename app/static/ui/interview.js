@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastCandidate = null;
   // Device gate (decision log 20): see UBTurn.gateProblems for the states.
   let connection = "checking", micStatus = "unchecked", camera = "off", typedPractice = false, replay = false;
+  let drillMistake = null;
   let micFailurePending = false;  // told to the server between captures
 
   // ---------- Indicator: derived from real state only ----------
@@ -40,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (speaking > 0 && phase !== "finished") shown = "speaking";
     const text = {
       ready: "One tap starts the interview",
-      listening: typing ? "Listening for your typed answer" : "Listening",
+      listening: typing ? "Your turn — type your answer" : "Listening",
       checking: "Checking your working",
       speaking: "Speaking",
       finished: "Interview finished",
@@ -183,21 +184,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- Transcript log ----------
   // Adds a line and speaks it. Muted, reduced motion or no speech voice: the line shows at once.
-  function addInterviewer(text, kind, receipt, speech) {
+  // `transcript` (a question line): the question is already at the top, so the transcript keeps
+  // only what was said around it, "Okay, try this one. (question above)"; the whole line is
+  // spoken as usual and shows at once.
+  function addInterviewer(text, kind, receipt, speech, transcript) {
     const el = document.createElement("div");
     const tag = KIND_TAG[kind];
     el.className = "utterance interviewer" + (tag ? ` is-${kind}` : "");
+    const short = transcript ? [transcript.lead, transcript.above ? "(question above)" : "", transcript.after].filter(Boolean).join(" ") : null;
+    const body = transcript
+      ? [transcript.lead && escapeHtml(transcript.lead), transcript.above ? `<span class="above">(question above)</span>` : "",
+         transcript.after && escapeHtml(transcript.after)].filter(Boolean).join(" ")
+      : "";
     el.innerHTML = `<span class="avatar" aria-hidden="true">I</span><div>` +
       `<div class="speaker"><span>Interviewer</span>${tag ? `<span class="tag tag-${kind}">${tag}</span>` : ""}</div>` +
-      `<p class="says"><span class="visually-hidden">${escapeHtml(text)}</span><span class="typed" aria-hidden="true"></span></p>` +
+      (transcript
+        ? `<p class="says">${body}</p>`
+        : `<p class="says"><span class="visually-hidden">${escapeHtml(text)}</span><span class="typed" aria-hidden="true"></span></p>`) +
       receiptHtml(receipt) + `</div>`;
     log.appendChild(el);
     scrollTo(el);
     // A short rotated opener before some statements (spoken only), never in a question.
     const said = kind === "ack" ? (speech || text) : window.UBTurn.withOpener(speech || text, kind, openers);
     openers.justAcknowledged = kind === "ack";
-    const reveal = revealer(el.querySelector(".typed"), text, window.UBTurn.speakable(said).length);
-    if (reduced || muted() || !window.speechSynthesis) reveal.finish();
+    const reveal = transcript ? revealer(document.createElement("span"), short) : revealer(el.querySelector(".typed"), text, window.UBTurn.speakable(said).length);
+    if (transcript || reduced || muted() || !window.speechSynthesis) reveal.finish();
     speak(said, reveal);
   }
   const openers = { n: 0, lastHadOpener: false, justAcknowledged: false };
@@ -234,8 +245,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!model || !model.model) return;
     modelCalls.push({ ...model, job });
     const groups = window.UBTurn.groupModelCalls(modelCalls);
+    // Muse Spark Open is served from Baseten (llm/client.py); its row says so.
+    const host = (m) => (/muse-spark-open/.test(m) ? `<small class="model-host">open weights · Baseten</small>` : "");
     $("model-rows").innerHTML = groups.map((g) => `<div class="modelrow"><div><strong class="mono">${escapeHtml(g.model)}${g.recorded ? " (recorded)" : ""}</strong>`
-      + `<small>${escapeHtml(JOBS[g.job] || g.job)}</small></div>`
+      + host(g.model) + `<small>${escapeHtml(JOBS[g.job] || g.job)}</small></div>`
       + `<div class="nums mono">${window.UBTurn.modelFigures(g).map(escapeHtml).join("<br>")}</div></div>`).join("");
     $("models-summary-count").textContent = ` · ${modelCalls.length} call${modelCalls.length === 1 ? "" : "s"}`;
   }
@@ -339,6 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
     switch (event.type) {
       case "session":
         sessionId = event.id;
+        drillMistake = event.drill || null;  // the mistake a drill aims at (decision log 16)
         startCountdown(event.session_seconds);
         break;
       case "question":
@@ -369,6 +383,8 @@ document.addEventListener("DOMContentLoaded", () => {
                                           case: "Consulting case · calculations exact, the rest model-judged",
                                           behavioural: `${event.behavioural_type === "situational" ? "What would you do" : "Tell me about a time"} · model-judged, not exact` }[event.kind] || "New puzzle")
           + (event.difficulty ? ` · ${event.difficulty}` : "");
+        // Drill questions name the mistake they aim at; the check (no help) does not.
+        if (event.kind === "drill" && drillMistake) $("puzzle-kind").textContent = `Mistake: ${drillMistake}`;
         finishReveals();
         questionStart = Date.now(); answeredThisQuestion = false; offered = false; heard = false;
         $("why").hidden = true; $("why").open = false;
@@ -378,6 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
       case "scored":
         $("why").hidden = !event.why;
         $("why-text").textContent = event.why || "";
+        $("why").open = !!event.why;  // shown only once the twin is scored, so it opens by itself
         if (event.meter) showMeter(event.meter);
         break;
       case "part2":
@@ -394,7 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
         modelRow(event.model, event.type);
         break;
       case "interviewer_line":
-        addInterviewer(event.text, event.kind, event.receipt, event.speech);
+        addInterviewer(event.text, event.kind, event.receipt, event.speech, event.kind === "question" ? event.transcript : null);
         window.UBCoding.interviewerSaid(event.text);
         if (event.counts) counts(event.counts);
         break;

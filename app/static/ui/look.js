@@ -1,7 +1,7 @@
-// Look "Trading floor" (personality pass, pending approval): /ui?look=floor turns it on and this
-// browser remembers it; /ui?look=default goes back. The inline script in each page's <head> sets
-// data-look before the first paint. This file adds the look's favicon (the ≠ mark) and draws the
-// candidate's waveform on the mic indicator.
+// Look "Trading floor", the default since its approval: <html data-look="floor"> in each
+// template. /ui?look=default switches this browser back to the earlier look (remembered);
+// /ui?look=floor returns. This file adds the look's favicon (the ≠ mark), swaps the landing
+// screenshot, and draws the candidate's waveform on the mic indicator.
 // Display only: the waveform reads the local input level (UBVoice.level(), never sent).
 (() => {
   const look = document.documentElement.dataset.look;
@@ -13,10 +13,6 @@
     const link = Object.assign(document.createElement("link"), { rel, href: `/ui-static/img/${file}${version}` });
     if (type) link.type = type;
     document.head.appendChild(link);
-  }
-  // The browser's chrome colour follows this look's page background.
-  for (const meta of document.querySelectorAll('meta[name="theme-color"]')) {
-    meta.content = /dark/.test(meta.media) ? "#1b1d20" : "#f8f7f4";
   }
 
   // The waveform: the candidate's real input level, a bar every ~70 ms, newest on the right.

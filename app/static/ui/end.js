@@ -15,8 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!sessionId) { unavailable("No report to show yet. A report appears here at the end of an interview."); return; }
   // With accounts, a guest's result is kept only after signing in (the page then reloads).
   const account = window.UBAccount;
-  document.addEventListener("ub-account", (e) => { if (e.detail.user && keepPending) location.reload(); });
-  let keepPending = false;
   Promise.all([fetch(`/api/interview/${encodeURIComponent(sessionId)}/report`)
     .then((r) => (r.ok ? r.json() : Promise.reject(r.status))), account.whenReady])
     .then(([e]) => render(e))
@@ -26,41 +24,18 @@ document.addEventListener("DOMContentLoaded", () => {
   function showProgress(e) {
     const P = window.UBProfile, S = window.UB.profile();
     if (!P || !S || !e.track || !Array.isArray(e.rating_items)) return null;
-    if (account.guest) {
-      keepPending = true;
-      $("progress-body").innerHTML = `<div class="keep-result"><p>Your profile, rating and history are kept only after you sign in.</p>`
-        + `<button class="btn" type="button" id="keep-result">Sign in to keep this result</button></div>`;
-      $("keep-result").addEventListener("click", () => account.openSignIn("Sign in to keep this result in your profile."));
-      $("progress").hidden = false;
-      return null;
-    }
+    // The report no longer shows an estimate panel: the profile is updated here, and the
+    // header link and the profile page show the result. Guests keep nothing until they sign in.
+    if (account.guest) return null;
     const profile = S.load();
     const entry = P.applyReport(profile, e, sessionId, new Date().toISOString().slice(0, 10), null);
     if (!entry) return null;
     S.save(profile);
-    const n = (x) => (x === null ? null : P.shown(x));
-    const changes = entry.areas.map((a) => {
-      const text = a.after === null ? "Not assessed yet" : a.before === null ? `${n(a.after)} (first estimate)` : `${n(a.before)} → ${n(a.after)}`;
-      return `<li><span>${escapeHtml(a.area)}</span><span class="mono">${escapeHtml(text)}</span></li>`;
-    }).join("");
-    const head = entry.after === null ? "<p>No rating estimate yet: an area is assessed after two answers.</p>"
-      : entry.placement ? `<p><strong>Starting rating estimate: <span class="mono">${n(entry.after)}</span></strong> · ${P.band(entry.after)}. Interviews on this track now start at ${P.startLevel(entry.after)}.</p>`
-      : `<p>Overall estimate: <span class="mono">${entry.before === null ? n(entry.after) : `${n(entry.before)} → ${n(entry.after)}`}</span> · ${P.band(entry.after)}</p>`;
-    let radar = "";
-    if (entry.placement && profile.placement[e.track]) {
-      const areas = Object.keys(profile.placement[e.track].scores);
-      if (areas.length) {
-        const chart = P.radar(areas, [{ key: "placement", name: "Placement", values: profile.placement[e.track].scores }],
-          "Placement estimates by strength area, 0 to 100");
-        radar = chart.svg ? `<figure class="radar-figure">${chart.svg}<ul class="legend"><li><span class="swatch swatch-placement" aria-hidden="true"></span>Placement</li></ul></figure>`
-          : `<p class="muted">Answer a few more questions to see your shape.</p>`;
-      }
+    // A first sign-in: "Make it yours" (name and photo) sits with the report's actions.
+    if (account.enabled && account.firstTime && !document.getElementById("make-it-yours")) {
+      document.querySelector(".end-actions")?.insertAdjacentHTML("beforeend",
+        `<a class="btn secondary" id="make-it-yours" href="/ui/welcome?first=1">Make it yours →</a>`);
     }
-    $("progress-body").innerHTML = head + (changes ? `<ul class="change-list">${changes}</ul>` : "") + radar
-      + (S.ok ? "" : `<p class="storage-note">Your browser is blocking storage, so this lasts only for this visit.</p>`)
-      + `<p class="fine">Estimates from your scored answers. <a href="/ui/profile?track=${encodeURIComponent(e.track)}">See your profile</a></p>`
-      + (account.enabled && account.firstTime ? `<a class="btn btn-small" href="/ui/welcome?first=1">Make it yours →</a>` : "");
-    $("progress").hidden = false;
     // The header link shows the new rating.
     const link = document.querySelector("#profile-link .profile-rating");
     const o = P.overall(P.areaScores(profile, window.UB.headlineTrack(profile)));
@@ -132,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("conditions").classList.toggle("warn", !!e.conditions && !/^Exam/.test(e.conditions));
     $("topics-line").hidden = false;
     $("topics-line").textContent = e.topics;
-    document.querySelectorAll(".section:not(#progress), .end-verdict, #stats").forEach((el) => { el.hidden = true; });
+    document.querySelectorAll(".section, .end-verdict, #stats").forEach((el) => { el.hidden = true; });
     const clock = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
     const quote = (q) => `<blockquote class="evidence"><p>“${escapeHtml(q)}”</p></blockquote>`;
     const partLine = (x) => {
@@ -199,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("conditions").classList.toggle("warn", !!e.conditions && !/^Exam/.test(e.conditions));
     $("topics-line").hidden = false;
     $("topics-line").textContent = e.topics;
-    document.querySelectorAll(".section:not(#progress), .end-verdict, #stats").forEach((el) => { el.hidden = true; });
+    document.querySelectorAll(".section, .end-verdict, #stats").forEach((el) => { el.hidden = true; });
     const signed = (x) => (String(x).startsWith("-") ? `−${String(x).slice(1)}` : `+${x}`);
     const pct = (f) => `${Math.round(100 * Number(fractionValue(f)))}%`;
     $("market").innerHTML = e.market.map((r) => {
@@ -285,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("conditions").classList.toggle("warn", !!e.conditions && !/^Exam/.test(e.conditions));
     $("topics-line").hidden = false;
     $("topics-line").textContent = e.topics;
-    document.querySelectorAll(".section:not(#progress), .end-verdict, #stats").forEach((el) => { el.hidden = true; });
+    document.querySelectorAll(".section, .end-verdict, #stats").forEach((el) => { el.hidden = true; });
     const quote = (q) => `<blockquote class="evidence"><p>“${escapeHtml(q)}”</p></blockquote>`;
     const tag = (t) => `<span class="tag">${escapeHtml(t)}</span>`;
     const points = (list) => `<ul class="see-list">${list.map((p) => `<li><strong>${p.quote ? "Covered" : "Not heard"}:</strong> `
@@ -349,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
       $("result-tag").textContent = "Drill complete";
       $("verdict").innerHTML =
         `<p class="verdict ${cleared ? "verdict-supports" : "verdict-misconception"}">${svg(cleared ? "check" : "cross")}<span>${escapeHtml(e.drill.result || "Not finished")}</span></p>` +
-        `<p class="misconception-name">Drilled: ${escapeHtml(e.drill.misconception)}. ${escapeHtml(e.drill.note)}</p>`;
+        `<p class="misconception-name">Mistake: ${escapeHtml(e.drill.misconception)}. ${escapeHtml(e.drill.note)}</p>`;
       $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}, including the check.`;
     } else {
       const L = LABELS[e.label];
@@ -371,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (sessionId && e.drills && e.drills.length) {
       $("drills").hidden = false;
       $("drill-list").innerHTML = e.drills.map((d) =>
-        `<div class="drill-row"><p>${escapeHtml(d.misconception)}</p>` +
+        `<div class="drill-row"><p>Mistake: ${escapeHtml(d.misconception)}</p>` +
         `<a class="btn btn-small" href="/ui/interview?drill=${encodeURIComponent(sessionId)}&m=${d.index}">Drill this mistake</a></div>`).join("");
     }
     $("tip-section").hidden = !e.tip;
