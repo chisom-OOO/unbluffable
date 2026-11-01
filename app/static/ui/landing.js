@@ -1,9 +1,11 @@
 // Landing: the claim, the labelled sample playing out as live type, and the track choice.
 // The sample follows the "Practise for [track]" selector: one per track, each from a real forge
-// family (landing-samples.js), swapped instantly to its finished state.
+// family (landing-samples.js). Choosing a track restarts it from the first line and plays it
+// through, typed in as on first load, and spoken too when sound is on (reduced motion: the
+// finished exchange at once). It ends with the twin: the same puzzle with new numbers, answered.
 // If the visitor hasn't interacted within 3 s, the sample plays silently (browsers block sound
 // without a click): the candidate's line types in, the number they commit to is underlined,
-// the interviewer's challenge appears, then the recovery and "Same puzzle, new numbers."
+// the interviewer's challenge appears, then the recovery and the twin.
 // "Play with sound" speaks it with the browser's speech synthesis: the interviewer reads the
 // question, then each line appears as it is spoken, the interviewer in one voice and the
 // candidate in a second voice (or, with a single voice, at a different pitch and rate). The
@@ -67,8 +69,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------- The sample ----------
   let sample = SAMPLES[pick.value] || SAMPLES.quant;
   $("landing-puzzle").textContent = sample.question;
-  const CODA = { who: "interviewer", kind: "twin", text: "Same puzzle, new numbers." };
-  let lines = [...sample.lines, CODA];
+  // The ending: the twin from the same family, and its correct one-line answer.
+  const LEAD = "Now the same puzzle with new numbers:";
+  const ending = (s) => [
+    { who: "interviewer", kind: "twin", text: `${LEAD} ${s.twin.question}`, speech: `${LEAD} ${s.twin.spoken}` },
+    { who: "candidate", text: s.twin.answer.text },
+  ];
+  let lines = [...sample.lines, ...ending(sample)];
   const body = $("replay-body"), toggle = $("replay-toggle"), note = $("replay-note");
   const toggleLabel = toggle.querySelector("span");
   const synth = window.speechSynthesis && typeof window.SpeechSynthesisUtterance === "function" ? window.speechSynthesis : null;
@@ -130,8 +137,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (reducedMotion()) showAll();
   }).catch(() => {});
 
-  // A new track: its sample replaces the old one at once, finished (a short fade unless reduced
-  // motion). A real recording, once committed, stays whatever the track.
+  // A new track: its sample restarts from the first line and plays through, typed in, and
+  // spoken too when sound is on (the speaker icon). Reduced motion: the finished exchange.
+  // A real recording, once committed, stays whatever the track.
   function swapSample() {
     const next = SAMPLES[pick.value];
     if (real || !next || next === sample) return;
@@ -139,15 +147,16 @@ document.addEventListener("DOMContentLoaded", () => {
     say("");
     sample = next;
     $("landing-puzzle").textContent = sample.question;
-    lines = [...sample.lines, CODA];
+    lines = [...sample.lines, ...ending(sample)];
     nodes = buildNodes();
-    showAll();
-    const scene = body.closest(".scene");
-    scene.classList.remove("swap");
-    if (!reducedMotion()) { void scene.offsetWidth; scene.classList.add("swap"); }
+    restarted = true;
+    if (reducedMotion()) { showAll(); return; }
+    if (synth && !muted()) playSound();
+    else playSilent(false);
   }
 
   let run = 0, timers = [], guards = [], playing = false;
+  let restarted = false;  // a track change has started the sample: the first-load timer leaves it alone
   const later = (id, ms, fn) => timers.push(setTimeout(() => { if (id === run) fn(); }, ms));
   const typed = (i) => nodes[i].querySelector(".typed");
 
@@ -255,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const index = i++;
       if (index < 0) { speakOne(real ? $("landing-puzzle").textContent : sample.spoken, "interviewer", () => {}); return; }
       const line = lines[index];
-      speakOne(line.text, line.who, (u) => {
+      speakOne(line.speech || line.text, line.who, (u) => {
         if (line.who === "candidate" && !real && !reducedMotion()) typeLine(id, index, sayMs(line) / (u.rate || 1));
         else showLine(index);
       });
@@ -287,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ["pointerdown", "keydown"].forEach((e) => addEventListener(e, mark, { once: true }));
   // A visitor who is already clicking or typing gets the finished exchange, not motion.
   setTimeout(() => {
-    if (playing || reducedMotion()) return;
+    if (restarted || playing || reducedMotion()) return;
     if (interacted) { stop("idle"); showAll(); } else playSilent(false);
   }, 3000);
 });

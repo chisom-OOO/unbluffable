@@ -1,16 +1,20 @@
 """The landing samples, one per track, each from a real forge family: the question is the
 family's own, the candidate commits to one of its verified wrong-method values, the challenge
-never gives the answer, and the recovery reaches the stored answer. Every number in every
-line is checked against the family."""
+never gives the answer, and the recovery reaches the stored answer. The ending is the twin the
+engine picks for that mistake, with a correct one-line answer. Every number in every line is
+checked against the family."""
 from fractions import Fraction
 import json
+import random
 from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
 UI = ROOT / "app"
 SAMPLES_JS = UI / "static" / "ui" / "landing-samples.js"
-NUMBER = re.compile(r"(?<![\w.])\d[\d,]*(?:\.\d+)?")
+# A number, with "minus" or "-" as its sign unless it follows another number ("49 minus 73"
+# is a subtraction; "it's minus 79" is negative).
+NUMBER = re.compile(r"(?:(?<![\d,] )(?<!\d)(minus |-|−)(?=\d))?(?<![\w.])(\d[\d,]*(?:\.\d+)?)")
 
 
 def samples() -> dict:
@@ -28,7 +32,7 @@ def family(fid: str) -> dict:
 
 
 def numbers(text: str) -> list[Fraction]:
-    return [Fraction(n.replace(",", "")) for n in NUMBER.findall(text)]
+    return [(-1 if sign else 1) * Fraction(n.replace(",", "")) for sign, n in NUMBER.findall(text)]
 
 
 def test_one_sample_per_track_from_the_right_pack():
@@ -67,6 +71,23 @@ def test_every_number_matches_the_family():
             assert set(numbers(line["text"])) <= allowed, (track, line["text"], set(numbers(line["text"])) - allowed)
 
 
+def test_the_ending_is_the_engines_twin_with_a_correct_answer():
+    from engine.bank import load_bank, twin_choice
+    bank = load_bank()
+    for track, s in samples().items():
+        fam, twin = family(s["family"]), s["twin"]
+        inst = fam["instances"][twin["instance"]]
+        assert twin["instance"] != 0 and twin["question"] == inst["text"] and twin["spoken"] == inst["spoken_text"], track
+        # The engine picks this instance for the sample's mistake (deterministically).
+        picks = {twin_choice(bank.templates[s["family"]], 0, random.Random(seed), s["mistake"])[0] for seed in range(20)}
+        assert picks == {twin["instance"]}, (track, picks)
+        answer = Fraction(inst["answer"])
+        assert Fraction(twin["answer"]["value"]) == answer and answer in numbers(twin["answer"]["text"]), track
+        assert set(numbers(twin["answer"]["text"])) <= set(numbers(inst["text"])) | {answer}, track
+        text = twin["answer"]["text"]
+        assert text[0].isupper() and text.endswith(".") and len(text) <= 110, (track, text)
+
+
 def test_lines_are_full_sentences_short_enough_to_say():
     for track, s in samples().items():
         for line in s["lines"]:
@@ -79,7 +100,13 @@ def test_lines_are_full_sentences_short_enough_to_say():
 def test_landing_follows_the_track_and_reads_the_question_first():
     js = (UI / "static" / "ui" / "landing.js").read_text(encoding="utf-8")
     assert "const SAMPLES = window.UB_SAMPLES;" in js
-    assert "swapSample();" in js and "if (!reducedMotion()) { void scene.offsetWidth; scene.classList.add(\"swap\"); }" in js
+    # A track change restarts the sample and plays it through; with sound only when not muted.
+    assert "swapSample();" in js
+    assert "if (reducedMotion()) { showAll(); return; }\n    if (synth && !muted()) playSound();\n    else playSilent(false);" in js
+    assert "if (restarted || playing || reducedMotion()) return;" in js
+    # The ending is the twin, spoken from its spoken form.
+    assert 'const LEAD = "Now the same puzzle with new numbers:";' in js and "speakOne(line.speech || line.text" in js
+    assert "Same puzzle, new numbers." not in js
     assert 'speakOne(real ? $("landing-puzzle").textContent : sample.spoken, "interviewer"' in js
     assert "const candidate = pickVoice(interviewer);" in js
     html = (UI / "templates" / "landing.html").read_text(encoding="utf-8")
