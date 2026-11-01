@@ -14,7 +14,7 @@ from pathlib import Path
 from fastapi.responses import HTMLResponse
 
 TEMPLATES = Path(__file__).parent / "templates"
-_ASSET = re.compile(r'((?:src|href)="/ui-static/[^"?]+\.(?:js|css))"')
+_ASSET = re.compile(r'((?:src|href)="/ui-static/[^"?]+\.(?:js|css|webp|png|svg))"')
 
 
 def _version() -> str:
