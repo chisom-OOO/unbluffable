@@ -15,6 +15,7 @@ from app.voice_routes import router as voice_router
 from app.firebase_config import router as firebase_router
 from app.interest import router as interest_router
 from app.interview_routes import router as interview_router, warm
+from app.byoq import router as byoq_router
 
 
 @asynccontextmanager
@@ -29,6 +30,7 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title="Unbluffable", lifespan=lifespan)
 app.include_router(voice_router)
 app.include_router(interview_router)
+app.include_router(byoq_router)
 app.include_router(interest_router)
 app.include_router(firebase_router)
 app.mount("/voice-static", StaticFiles(directory=Path(__file__).parent / "static"), name="voice-static")
@@ -92,6 +94,11 @@ def ui_profile():
 @app.get("/ui/forge")
 def ui_forge():
     return page("forge.html")
+
+
+@app.get("/ui/byoq")
+def ui_byoq():
+    return page("byoq.html")
 
 
 @app.get("/ui/welcome")

@@ -7,7 +7,8 @@ from __future__ import annotations
 
 from engine.bank import NAME_SEPARATOR, ForgeTemplate
 
-AUTHORS = {"meta-models/muse-spark-open": "Muse Spark Open", "muse-spark-open": "Muse Spark Open"}
+AUTHORS = {"meta-models/muse-spark-open": "Muse Spark Open", "muse-spark-open": "Muse Spark Open",
+           "muse-spark-1.3": "Muse Spark 1.3"}
 
 
 def author_name(model_id: str | None) -> str:
@@ -44,6 +45,10 @@ def provenance(template: ForgeTemplate | None) -> dict | None:
         "wrong_methods": method_names(template) if verified else [],
         "solver_source": _solver_source(template.template_id),
         "solver_source_stored": _solver_source(template.template_id) is not None,
+        # Decision log 38: a candidate's own question, checked by two separately written programs.
+        "byoq": v.get("mode") == "bring_your_own_question",
+        "checker": author_name(models.get("checker")) if models.get("checker") else None,
+        "second_check": v.get("second_check"),
     }
 
 
@@ -61,6 +66,15 @@ def rows(p: dict | None) -> list[dict]:
     """The receipt rows: label and text, for the page."""
     if not p:
         return []
+    if p.get("byoq"):
+        second = (f"a separate solver by {p['checker']}" if p["second_check"] == "solver"
+                  else f"a separately written simulation that lists every outcome, also by {p['author']}")
+        methods = (f"{len(p['wrong_methods'])} kept, each giving a different value: {', '.join(p['wrong_methods'])}."
+                   if p["wrong_methods"] else "None kept for this question.")
+        return [{"key": "solver", "label": "Checked in code",
+                 "text": f"Your question and {p['variants_checked']} variants: a solver by {p['author']} and {second} agreed exactly."},
+                {"key": "wrong_methods", "label": "Wrong methods", "text": methods},
+                {"key": "source", "label": "Solver code", "text": "Not stored; only the checked values are kept, for this session only."}]
     solver = (f"Written by {p['author']}; reproduced the verified answer on {p['variants_checked']}/{p['variants']} variants"
               + (" exactly." if p["exact"] else " within tolerance.")) if p["solver_passed"] else f"Written by {p['author']}; not verified."
     methods = (f"{len(p['wrong_methods'])} verified in code: {', '.join(p['wrong_methods'])}." if p["wrong_methods_verified"]

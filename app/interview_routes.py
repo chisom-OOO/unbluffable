@@ -16,7 +16,7 @@ from contextlib import suppress
 
 from fastapi import APIRouter, HTTPException, Response, WebSocket, WebSocketDisconnect
 
-from app import behavioural, coding, conversational, interview_report, market, mixed, quant_dev, roles, voice_routes
+from app import behavioural, byoq, coding, conversational, interview_report, market, mixed, quant_dev, roles, voice_routes
 from app.areas import AREAS
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
@@ -331,6 +331,8 @@ def report(session_id: str):
     session = SESSIONS.get(session_id)
     if session is None:
         raise HTTPException(404, "This report is no longer available.")
+    if getattr(session, "byoq", None) is not None:
+        return byoq.report(session, interview_report.build)  # decision log 38: never rated
     if isinstance(session, DrillSession):
         return interview_report.build_drill(session)
     if isinstance(session, mixed.MixedSession):
@@ -363,6 +365,30 @@ def drill_for(request, send, listen, analyzer, deadline: float) -> DrillSession:
         raise VoiceError("That drill is no longer available.")
     target = targets[index]
     return DrillSession(send, listen, analyzer, bank().templates[target.template_id], target, deadline=deadline)
+
+
+def byoq_session(token, send, listen, analyzer, deadline: float) -> ExamSession:
+    """Decision log 38: the candidate's own checked question, then its twin. Not rated."""
+    found = byoq.accepted(token)
+    if found is None:
+        raise VoiceError("That question is no longer available. Upload it again.")
+    template, variants = found
+    session = ExamSession(send, listen, analyzer, Interview(source=byoq.ByoqSource(template)), deadline=deadline)
+    session.byoq = (template, variants)
+    session.topics = byoq.line(variants)
+    return session
+
+
+def family_session(template_id, send, listen, analyzer, deadline: float) -> ExamSession:
+    """One shipped family (offered when a candidate's own question can't be checked): its
+    question and twin, scored and rated like any forge interview."""
+    template = bank().templates.get(template_id) if isinstance(template_id, str) else None
+    if template is None or template.template_id in bank().hidden:
+        raise VoiceError("That question is no longer available.")
+    session = ExamSession(send, listen, analyzer, Interview(source=BankSource(Bank({template_id: template}), MIXED,
+                          template.difficulty, pack=template.pack)), deadline=deadline)
+    session.track, session.topics = template.pack, template.topic
+    return session
 
 
 @router.websocket("/ws")
@@ -455,7 +481,11 @@ async def interview_socket(socket: WebSocket):
             return round_
 
         deadline = time.monotonic() + SESSION_SECONDS
-        if begin.get("drill") is not None:
+        if begin.get("byoq") is not None:
+            session = byoq_session(begin["byoq"], socket.send_json, listen, VoiceAnalyzer(provider), deadline)
+        elif begin.get("family") is not None:
+            session = family_session(begin["family"], socket.send_json, listen, VoiceAnalyzer(provider), deadline)
+        elif begin.get("drill") is not None:
             session = drill_for(begin["drill"], socket.send_json, listen, VoiceAnalyzer(provider), deadline)
         elif begin.get("role") is not None and begin.get("placement") is not True:
             session = role_session(begin, socket.send_json, listen, next_event, provider, deadline, coding_round)
