@@ -389,8 +389,14 @@ document.addEventListener("DOMContentLoaded", () => {
       $("end-sub").textContent = `${e.questions} question${e.questions === 1 ? "" : "s"}. Scored on where you end up, discounted by the help it took.`;
     }
 
-    $("topics-line").hidden = !e.topics;
-    $("topics-line").textContent = e.topics ? `Topics: ${e.topics}` : "";
+    $("topics-line").hidden = !e.topics && !e.byoq;
+    $("topics-line").textContent = e.byoq ? e.byoq.line : e.topics ? `Topics: ${e.topics}` : "";
+    if (e.byoq) {
+      // Decision log 38: the candidate's own question. Never counted toward the rating or profile.
+      $("end-eyebrow").textContent = "Your question";
+      const again = document.querySelector(".end-actions .btn:not(.secondary)");
+      if (again) { again.textContent = "Bring another question →"; again.href = "/ui/byoq"; }
+    }
 
     // Decision log 20: which mode was used.
     $("conditions").hidden = !e.conditions;

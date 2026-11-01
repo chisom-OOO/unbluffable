@@ -667,7 +667,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     socket = new WebSocket(`${location.protocol === "https:" ? "wss:" : "ws:"}//${location.host}/api/interview/ws`);
     const level = document.querySelector('input[name="level"]:checked')?.value || "Easy";
-    socket.onopen = () => socket.send(JSON.stringify(drill
+    socket.onopen = () => socket.send(JSON.stringify(own
+      ? { type: "begin", consent: true, headphones: headphones.checked, ...own, typed_practice: typedPractice }
+      : drill
       ? { type: "begin", consent: true, headphones: headphones.checked, drill }
       : placement
         ? { type: "begin", consent: true, headphones: headphones.checked, pack: chosenTrack, placement: true, typed_practice: typedPractice }
@@ -1023,6 +1025,21 @@ document.addEventListener("DOMContentLoaded", () => {
     $("puzzle-eyebrow").textContent = "Drill · up to 3 questions, then a check";
   }
 
+  // Decision log 38: /ui/interview?byoq=<token>, the candidate's own checked question then its
+  // twin (not rated); /ui/interview?family=<id>, one shipped family offered instead.
+  const own = query.get("byoq") ? { byoq: query.get("byoq") } : query.get("family") ? { family: query.get("family") } : null;
+  if (own) {
+    $("setup").querySelector(".picker").hidden = true;
+    $("byoq-entry").hidden = true;
+    $("setup-title").textContent = own.byoq ? "Practise your question" : "Practise a checked question";
+    $("choose-title").textContent = own.byoq ? "Your question" : "A similar checked question";
+    $("setup-sub").textContent = own.byoq
+      ? "Your question, checked in code, then the same puzzle with new numbers. Not counted toward your rating. Check your camera and microphone, then just talk."
+      : "One question from the bank, then the same puzzle with new numbers. Check your camera and microphone, then just talk.";
+    $("puzzle").textContent = "Press Start and the interviewer will read the question.";
+    $("puzzle-eyebrow").textContent = own.byoq ? "Your question · then new numbers" : "One question · then new numbers";
+  }
+
   // ---------- Track cards, target role, then topics (setup redesign) ----------
   // Each track has target roles; a role's chips are its live topics, Core and Supporting shown,
   // Specialist under "More topics". No chip selected = a role-weighted mix (about 70% Core, 25%
@@ -1101,7 +1118,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const roleKey = () => `ub-role:${chosenTrack}`;
   function renderRoles() {
     const roles = trackOf()?.roles || [];
-    $("role-field").hidden = placement || !!drill || roles.length === 0;
+    $("role-field").hidden = placement || !!drill || !!own || roles.length === 0;
     $("role-list").innerHTML = roles.map((r) => `<li role="option" id="role-${escapeHtml(r.id)}" data-role="${escapeHtml(r.id)}"`
       + ` aria-selected="${r.id === chosenRole}" aria-disabled="${!r.available}" class="role-option${r.available ? "" : " off"}">`
       + `<span class="role-check" aria-hidden="true">${r.id === chosenRole ? "✓" : ""}</span><span>${escapeHtml(r.name)}</span>`
@@ -1180,7 +1197,7 @@ document.addEventListener("DOMContentLoaded", () => {
     levelFromProfile();
   }
   // Software and Quantitative Development are coding rounds; special formats alone have no level.
-  const codingChosen = () => !placement && !drill && !!roleOf()?.coding;
+  const codingChosen = () => !placement && !drill && !own && !!roleOf()?.coding;
   function syncFormat() {
     const role = roleOf();
     $("levels").hidden = placement || codingChosen() || specialOnly();
