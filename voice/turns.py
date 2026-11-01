@@ -24,6 +24,13 @@ class AnswerMerger:
         self.revision = 0
         self.checked_revision = -1
         self.prompted_revision = -1
+        # Candidate speech only (the interviewer's speaking controls also bump `revision`):
+        # the silence prompt needs new speech between two prompts.
+        self.speech_revision = 0
+        self.prompted_speech = -1
+        # The speech revision for which the commitment check found no committed number
+        # (decision log 40: only then may the 20 s prompt follow).
+        self.uncommitted_speech = -1
         self.prompt_s = prompt_s
         self.paused = False
         self.accepted_revision = None
@@ -35,6 +42,12 @@ class AnswerMerger:
     def feed(self, event, now):
         if self.emitted:
             return
+        before = self.revision
+        self._feed(event, now)
+        if self.revision != before:
+            self.speech_revision += 1
+
+    def _feed(self, event, now):
         kind = event.get("type")
         if kind == "speechStart":
             self.active = event["turnId"]
@@ -75,9 +88,14 @@ class AnswerMerger:
         return max(0.0, due - now)
 
     def prompt_remaining(self, now):
-        if self.emitted or self.prompted_revision == self.revision:
+        if self.emitted or self.prompted_revision == self.revision or self.prompted_speech == self.speech_revision:
             return None
         return max(0.0, self.last_activity + self.prompt_s - now)
+
+    def mark_prompted(self):
+        """The 8 s silence point (the commitment check) was reached for this speech."""
+        self.prompted_revision = self.revision
+        self.prompted_speech = self.speech_revision
 
     def finish(self, reason):
         if self.emitted:

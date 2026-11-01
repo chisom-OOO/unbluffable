@@ -447,7 +447,8 @@ async def interview_socket(socket: WebSocket):
                                                             voice_routes.silence_threshold(), replay_speed(),
                                                             silence_check=session.silence_check,
                                                             turn_policy=getattr(session, "turn_policy", lambda: None)(),
-                                                            keywords=getattr(session, "keywords", list)())
+                                                            keywords=getattr(session, "keywords", list)(),
+                                                            silence_prompts=getattr(session, "silence_prompts", lambda: None)())
                     except VoiceError as error:
                         await socket.send_json({"type": "error", "message": str(error)})
                         await socket.send_json({"type": "state", "value": "listening"})

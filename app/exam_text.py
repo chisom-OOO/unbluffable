@@ -32,6 +32,8 @@ FOLLOW_UP_CLOSE = "Thanks. Let's move on."
 # A rounded answer that also rounds from a known wrong value: ask once for more precision.
 ONE_MORE_DIGIT = "That rounds from more than one method. Could you give it to one more decimal place?"
 ASK_WHY = "How did you get that?"
+# Decision log 39: a committed number within 0.1% of the exact answer, but not accepted.
+NEAR_MISS = "Close. How precise is your last step?"
 HELP_ASK = "Sure, what are you stuck on?"
 OFFER_HELP = "Is there anything you're stuck on?"
 # Decision log 27: a number that may have been misheard is confirmed before it is graded.

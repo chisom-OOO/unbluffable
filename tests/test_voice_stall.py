@@ -67,12 +67,14 @@ def test_silence_check_runs_only_at_eight_seconds_and_guards_givens(text, span, 
                 assert merger.finish("silence_commitment") is None
                 assert not browser.prompted.is_set()
             else:
+                # Decision log 40: no commitment at 8 s means keep listening; the prompt waits for 20 s.
+                await asyncio.sleep(.05)
+                assert not browser.prompted.is_set() and not task.done()
+                clock[0] = 20.2
+                changed.set()
                 await asyncio.wait_for(browser.prompted.wait(), 1)
                 assert not task.done() and not merger.emitted
                 assert browser.events[-1] == {"type": "listening_prompt", "message": PROMPT}
-                clock[0] = 20
-                changed.set()
-                await asyncio.sleep(.01)
             assert calls == [(text, False)]
         finally:
             task.cancel()
@@ -126,7 +128,7 @@ def test_failed_silence_extraction_preserves_the_prompt():
             raise VoiceError("Synthetic failure")
 
         task = asyncio.create_task(wait_for_endpoint(merger, Thinking(), browser, asyncio.Event(),
-            lambda: 8.2, silence_check=check))
+            lambda: 20.2, silence_check=check))  # decision log 40: the prompt comes at 20 s
         try:
             await asyncio.wait_for(browser.prompted.wait(), 1)
             assert not task.done()
@@ -165,3 +167,8 @@ def test_silence_check_does_not_wait_for_a_slow_endpoint_classifier():
             await asyncio.gather(task, return_exceptions=True)
 
     asyncio.run(exercise())
+
+
+
+# The "never twice without new speech" test that was here is superseded by decision log 40
+# (at most once per question): tests/test_silence_prompts.py.

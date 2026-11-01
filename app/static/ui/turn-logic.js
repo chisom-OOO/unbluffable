@@ -202,7 +202,43 @@
   // The tip for a voice that isn't one of the natural (Edge "Online (Natural)") voices.
   const naturalVoice = (v) => !!v && /natural|online|neural|premium|enhanced|siri/i.test(v.name || "");
 
-  const api = { micShouldMute, shouldOfferHelp, speechTimeoutMs, guardUtterance, gateProblems, rankVoices, voiceTier, onlyRobotic,
+  // Auto-scroll (room fixes): follow the latest line only when the candidate is at, or within
+  // FOLLOW_SLACK px of, the bottom. Scrolled up to read: the page stays put and the room shows
+  // "New message ↓". Scroll events during our own smooth scroll don't count as scrolling up.
+  const FOLLOW_SLACK = 80;
+  const atBottom = (m, slack = FOLLOW_SLACK) => m.scrollHeight - m.scrollTop - m.clientHeight <= slack;
+  function follower() {
+    let following = true, unseen = false, ownUntil = -Infinity;
+    return {
+      get following() { return following; },
+      get unseen() { return unseen; },
+      scrolled(m, now) {
+        if (now < ownUntil) return;
+        following = atBottom(m);
+        if (following) unseen = false;
+      },
+      newLine() {
+        if (following) return "scroll";
+        unseen = true;
+        return "notify";
+      },
+      autoScrolled(now, ms = 800) { ownUntil = now + ms; },
+      jumped(now, ms = 800) { following = true; unseen = false; ownUntil = now + ms; },
+    };
+  }
+
+  // Model panel: a short name ("Muse Spark Open"); the full ID goes in the tooltip.
+  const MODEL_NAMES = [[/muse-spark-open/, "Muse Spark Open"], [/^muse-voice-transcribe/, "Muse Voice Transcribe"],
+    [/^muse-wonder/, "Muse Wonder"], [/^muse-image/, "Muse Image"], [/^muse-glimmer/, "Muse Glimmer"]];
+  function modelName(id) {
+    const text = String(id || "");
+    const named = MODEL_NAMES.find(([pattern]) => pattern.test(text));
+    if (named) return named[1];
+    const spark = /^muse-spark-(\d+(?:\.\d+)*)$/.exec(text);
+    return spark ? `Muse Spark ${spark[1]}` : text;
+  }
+
+  const api = { micShouldMute, follower, atBottom, FOLLOW_SLACK, modelName, shouldOfferHelp, speechTimeoutMs, guardUtterance, gateProblems, rankVoices, voiceTier, onlyRobotic,
                 groupModelCalls, modelFigures, speakable, sentences, withOpener, naturalVoice, fractionWords,
                 SPEECH_RATE, SENTENCE_PAUSE_MS };
   if (typeof module !== "undefined") module.exports = api;

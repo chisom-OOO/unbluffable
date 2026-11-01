@@ -12,7 +12,8 @@ from llm.http_diagnostics import log_http_exception
 from voice.provider import ASR, KEYWORDS, REALTIME, api_key, metadata
 from voice.recording import VoiceError, redact
 from voice.turns import AnswerMerger
-from voice.endpointing import ANYTHING_TO_ADD, PROMPT, safe_classify
+from voice.endpointing import (ANYTHING_TO_ADD, PATIENCE, PATIENCE_AFTER_S, PROMPT, PROMPT_AFTER_S, SilencePrompts,
+                               safe_classify)
 
 
 async def wait_for_turn_policy(merger, browser, changed, now, policy):
@@ -41,8 +42,25 @@ async def wait_for_turn_policy(merger, browser, changed, now, policy):
                 await signal
 
 
-async def wait_for_endpoint(merger, provider, browser, changed, now, silence_check=None):
-    """Speech keeps flowing during Spark; a newer partial invalidates its result."""
+def quiet_line(merger, prompts, now):
+    """Decision log 40: (seconds until, line) for the next silence line, or (None, None). Only once
+    the 8 s commitment check found no committed number for the latest speech, never while the
+    interviewer speaks or the candidate is mid-turn; each line at most once per question."""
+    if (merger.emitted or merger.paused or merger.active is not None
+            or merger.uncommitted_speech != merger.speech_revision):
+        return None, None
+    silent = now - merger.last_activity
+    if not prompts.prompted:
+        return max(0.0, PROMPT_AFTER_S - silent), PROMPT
+    if not prompts.patient:
+        return max(0.0, PATIENCE_AFTER_S - silent), PATIENCE
+    return None, None
+
+
+async def wait_for_endpoint(merger, provider, browser, changed, now, silence_check=None, prompts=None):
+    """Speech keeps flowing during Spark; a newer partial invalidates its result. `prompts` is the
+    question's SilencePrompts, shared by its recordings (decision log 40)."""
+    prompts = prompts if prompts is not None else SilencePrompts()
     pending = None
     snapshot = None
     silence_pending = None
@@ -81,7 +99,7 @@ async def wait_for_endpoint(merger, provider, browser, changed, now, silence_che
                             merger.accepted_revision = silence_snapshot
                             return "silence_commitment"
                     else:
-                        await browser.send_json({"type": "listening_prompt", "message": PROMPT})
+                        merger.uncommitted_speech = merger.speech_revision  # the 20 s prompt may follow
             check = None if merger.paused else merger.remaining(now())
             if check == 0 and pending is None:
                 snapshot = merger.revision
@@ -89,15 +107,24 @@ async def wait_for_endpoint(merger, provider, browser, changed, now, silence_che
                 pending = asyncio.create_task(safe_classify(provider, merger.transcript))
             prompt = None if merger.paused else merger.prompt_remaining(now())
             if prompt == 0:
-                merger.prompted_revision = merger.revision
-                if silence_check is None:
-                    await browser.send_json({"type": "listening_prompt", "message": PROMPT})
+                merger.mark_prompted()  # the 8 s point, once per speech
+                if silence_check is None or not merger.transcript.strip():
+                    merger.uncommitted_speech = merger.speech_revision  # nothing committed to check
                 else:
                     silence_snapshot = merger.revision
                     silence_pending = asyncio.create_task(silence_check(merger.transcript))
+            wait, line = quiet_line(merger, prompts, now())
+            if wait == 0:
+                if line == PROMPT:
+                    prompts.prompted = True
+                else:
+                    prompts.patient = True
+                await browser.send_json({"type": "listening_prompt", "message": line})
+                wait, line = quiet_line(merger, prompts, now())
             delays = [value for value in (
                 None if merger.paused else merger.remaining(now()),
                 None if merger.paused else merger.prompt_remaining(now()),
+                wait,
             ) if value is not None]
             signal = asyncio.create_task(changed.wait())
             try:
@@ -141,7 +168,7 @@ async def replay_realtime(browser, provider, start, silence_s, speed=1):
 
 
 async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=1, connect=None, silence_check=None,
-                          turn_policy=None, keywords=()):
+                          turn_policy=None, keywords=(), silence_prompts=None):
     if not math.isfinite(silence_s) or silence_s <= 0:
         raise VoiceError("Silence threshold must be finite and positive.")
     if provider.mode == "replay":
@@ -225,8 +252,11 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
             def boundary():
                 clock = lambda: asyncio.get_running_loop().time() - audio_start  # noqa: E731
                 return asyncio.create_task(wait_for_turn_policy(merger, browser, changed, clock, turn_policy) if turn_policy
-                                           else wait_for_endpoint(merger, provider, browser, changed, clock, silence_check=silence_check))
+                                           else wait_for_endpoint(merger, provider, browser, changed, clock, silence_check=silence_check,
+                                                                  prompts=prompts))
 
+            # Decision log 40: the question's own silence lines when the session keeps them, else this answer's.
+            prompts = silence_prompts if silence_prompts is not None else SilencePrompts()
             timer = boundary()
             tasks = [reader, writer, timer]
             while True:

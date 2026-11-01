@@ -7,6 +7,20 @@ from voice.recording import VoiceError
 
 
 PROMPT = "Want to talk me through where you are?"
+# Decision log 40: at 8 s of silence the commitment check may still end the turn; with no committed
+# number, PROMPT waits for 20 s of silence and is said at most once per question; past 60 s one
+# PATIENCE line, also once per question. Silence counts from the candidate's last speech or the
+# end of the interviewer's last line.
+PATIENCE = "Take your time. Say your answer when you're ready, or press Done."
+PROMPT_AFTER_S = 20
+PATIENCE_AFTER_S = 60
+
+
+@dataclass
+class SilencePrompts:
+    """What has been said about silence in one question (decision log 40)."""
+    prompted: bool = False
+    patient: bool = False
 
 
 @dataclass(frozen=True)

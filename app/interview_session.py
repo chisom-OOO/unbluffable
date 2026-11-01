@@ -27,7 +27,7 @@ from engine.help import position, strength, weight_for
 from engine.interview import Interview, Question
 from engine.templates import POPULATIONS, Puzzle
 from voice.answers import RESTATED_GIVEN, given_number, restated_given
-from voice.endpointing import cues
+from voice.endpointing import SilencePrompts, cues
 from voice.numbers import number_from_text
 from voice.recording import VoiceError
 from voice.schemas import CONTEXT, FULL, FULL_PROMPT, MINIMAL, MINIMAL_PROMPT
@@ -270,6 +270,23 @@ def coarse(puzzle: Puzzle, analysis: Analysis) -> bool:
     return any(puzzle.accepts(stated, v) for v in others if v != puzzle.answer)
 
 
+NEAR_MISS_SHARE = Fraction(1, 1000)  # decision log 39: within 0.1% (relative) of the exact answer
+
+
+def near_miss(puzzle: Puzzle, analysis: Analysis) -> bool:
+    """Decision log 39: a committed number that was not accepted, is no known wrong method,
+    and is within 0.1% of the exact answer (exact fractions; never when the answer is 0).
+    Only the interviewer's next line changes; the answer is still coded wrong."""
+    obs = analysis.observation if analysis is not None else None
+    stated = analysis.stated if analysis is not None else None
+    if obs is None or obs.outcome is not Outcome.OTHER_WRONG or obs.matched or stated is None:
+        return False
+    exact = Fraction(puzzle.answer)
+    if exact == 0 or any(Fraction(nv.value) == stated.value for nv in getattr(puzzle, "named_values", ())):
+        return False
+    return abs(stated.value - exact) <= abs(exact) * NEAR_MISS_SHARE
+
+
 @dataclass
 class Part2Log:
     """A follow-up part, asked only after a correct answer (decision log 15). It is
@@ -309,6 +326,7 @@ class QuestionLog:
     part2: Part2Log | None = None
     follow_up: follow_up.FollowUpLog | None = None
     asked_digit: bool = False  # asked once for one more decimal place (`coarse`)
+    silence: SilencePrompts = field(default_factory=SilencePrompts)  # decision log 40, shared by its recordings
 
     @property
     def position(self) -> int:
@@ -499,11 +517,15 @@ class ExamSession:
                 await self.line("close", say.NOT_RECOVERED_CLOSE, receipt=scored.receipt)
                 return
             rounds += 1
+            close = near_miss(q.puzzle, analysis)  # decision log 39: point at precision, no help load
             if not challenged:
                 challenged = True
                 q.challenges += 1
-                await self.line("challenge", self._challenge_text(q, obs, analysis),
+                await self.line("challenge", say.NEAR_MISS if close else self._challenge_text(q, obs, analysis),
                                 receipt=receipts.redacted(answer.receipt))
+            elif close:
+                q.nudges += 1
+                await self.line("nudge", say.NEAR_MISS, receipt=receipts.redacted(answer.receipt))
             else:
                 await self.nudge(q, obs)
 
@@ -661,6 +683,10 @@ class ExamSession:
             rounds = [int(x) for x in q.numbers if x.denominator == 1 and int(x) in POPULATIONS]
             if rounds:
                 q.population = rounds[0]
+
+    def silence_prompts(self) -> SilencePrompts | None:
+        """Decision log 40: the current question's silence lines (at most one prompt per question)."""
+        return self.questions[-1].silence if self.questions else None
 
     async def silence_check(self, text: str) -> bool:
         """Passed to voice.relay.realtime_answer: a committed answer to the current question
