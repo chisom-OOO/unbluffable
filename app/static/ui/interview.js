@@ -58,16 +58,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function setStatus(message) { status.textContent = message || ""; status.hidden = !message; }
 
-  function scrollTo(el) {
-    if (marketRoom()) { atLatest = true; log.scrollTop = log.scrollHeight; return; }
-    el.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
-  }
-  // Market making: the transcript has its own scroll under the scorecard. It follows the latest
-  // line (including lines still typing in) unless you have scrolled up to read.
+  // Auto-scroll (room fixes): a new line moves the transcript only when the candidate is at, or
+  // within 80 px of, the bottom (UBTurn.follower). Scrolled up to read, the page stays put and
+  // "New message ↓" jumps to the latest line. One rule for the page (spoken room), the coding
+  // room's conversation panel and the market room's own transcript scroll.
   const marketRoom = () => $("room").classList.contains("market");
-  let atLatest = true;
-  log.addEventListener("scroll", () => { atLatest = log.scrollHeight - log.scrollTop - log.clientHeight < 40; });
-  new MutationObserver(() => { if (marketRoom() && atLatest) log.scrollTop = log.scrollHeight; })
+  const follow = window.UBTurn.follower();
+  const scroller = () => (marketRoom() ? log : log.closest(".ws-panel") || document.scrollingElement);
+  const metrics = (s) => ({ scrollHeight: s.scrollHeight, scrollTop: s.scrollTop, clientHeight: s.clientHeight });
+  const latest = () => (!$("finish").hidden ? $("finish") : !live.hidden ? live : log.lastElementChild || log);
+  const newLine = document.createElement("button");
+  newLine.type = "button";
+  newLine.className = "btn secondary btn-small new-line";
+  newLine.textContent = "New message ↓";
+  newLine.hidden = true;
+  function jumpTo(el) {
+    const s = scroller();
+    follow.autoScrolled(performance.now(), reduced ? 100 : 800);
+    if (s === log) log.scrollTop = log.scrollHeight;
+    else el.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
+  }
+  function scrollTo(el) {
+    if (follow.newLine() === "scroll") { newLine.hidden = true; jumpTo(el); return; }
+    if (log.nextElementSibling !== newLine) log.after(newLine);  // the coding room moves the log
+    const page = scroller() === document.scrollingElement;
+    newLine.style.setProperty("--dock-h", page ? `${document.querySelector(".dock")?.offsetHeight || 0}px` : "0px");
+    newLine.hidden = false;
+  }
+  newLine.addEventListener("click", () => {
+    follow.jumped(performance.now(), reduced ? 100 : 800);
+    newLine.hidden = true;
+    jumpTo(latest());
+  });
+  // Scroll events don't bubble; capturing them on the document sees the page, the coding panel
+  // and the market transcript alike.
+  document.addEventListener("scroll", () => {
+    follow.scrolled(metrics(scroller()), performance.now());
+    if (!follow.unseen) newLine.hidden = true;
+  }, { capture: true, passive: true });
+  // Lines still typing in grow without a new element: keep the latest in view while following.
+  new MutationObserver(() => { if (marketRoom() && follow.following) log.scrollTop = log.scrollHeight; })
     .observe(log, { childList: true, subtree: true, characterData: true });
 
   // ---------- Speech: real SpeechSynthesis events drive "Speaking" ----------
@@ -260,7 +290,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const groups = window.UBTurn.groupModelCalls(modelCalls);
     // Muse Spark Open is served from Baseten (llm/client.py); its row says so.
     const host = (m) => (/muse-spark-open/.test(m) ? `<small class="model-host">open weights · Baseten</small>` : "");
-    $("model-rows").innerHTML = groups.map((g) => `<div class="modelrow"><div><strong class="mono">${escapeHtml(g.model)}${g.recorded ? " (recorded)" : ""}</strong>`
+    // The short name on one line; the full model ID on hover (and read out to screen readers).
+    $("model-rows").innerHTML = groups.map((g) => `<div class="modelrow"><div><strong class="model-name" title="${escapeHtml(g.model)}">`
+      + `${escapeHtml(window.UBTurn.modelName(g.model))}${g.recorded ? " (recorded)" : ""}<span class="visually-hidden"> (${escapeHtml(g.model)})</span></strong>`
       + host(g.model) + `<small>${escapeHtml(JOBS[g.job] || g.job)}</small></div>`
       + `<div class="nums mono">${window.UBTurn.modelFigures(g).map(escapeHtml).join("<br>")}</div></div>`).join("");
     $("models-summary-count").textContent = ` · ${modelCalls.length} call${modelCalls.length === 1 ? "" : "s"}`;
@@ -658,6 +690,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("practice-tag").hidden = !typedPractice;
     $("selfview").hidden = !window.UBCamera?.attachSelf();  // the camera stays on, local only
     window.scrollTo(0, 0);
+    follow.jumped(performance.now());  // the room starts following its latest line
     $("puzzle").textContent = "";  // the question itself replaces it once asked
     phase = "starting";
     render();

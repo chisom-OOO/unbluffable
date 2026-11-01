@@ -425,6 +425,9 @@ mark, mark.challenged { background: var(--amberbg); color: var(--amber); padding
 .utterance .says .above { color: var(--muted); }
 .modelrow { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 12px; min-width: 0; }
 .modelrow strong { display: block; font-size: 12px; font-weight: 500; color: var(--ink); overflow-wrap: anywhere; }
+/* Room fixes: the short model name stays on one line; the full ID is its tooltip. */
+.modelrow > div:first-child { min-width: 0; }
+.modelrow .model-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; overflow-wrap: normal; cursor: help; }
 .modelrow small { display: block; color: var(--muted); font-size: 12px; }
 .modelrow .nums { text-align: right; white-space: nowrap; font-size: 12px; color: var(--muted); }
 .models .fine { margin-top: 8px; }
@@ -1136,3 +1139,8 @@ input[type="checkbox"] { accent-color: var(--active, var(--ink)); width: 18px; h
 .byoq-verdict { font: 400 clamp(24px, 3vw, 32px)/1.2 var(--serif); letter-spacing: -.01em; }
 @media (prefers-reduced-motion: reduce) { .byoq-drop { transition: none; } }
 @media (max-width: 760px) { .byoq { padding-left: 16px; padding-right: 16px; } }
+
+/* ---------- Room fixes: "New message ↓" when the candidate has scrolled up to read ---------- */
+.new-line { position: sticky; bottom: calc(var(--dock-h, 0px) + 12px); z-index: 6; align-self: center; margin: 8px auto;
+  display: flex; background: var(--paper); box-shadow: 0 2px 10px color-mix(in srgb, var(--ink) 14%, transparent); }
+.new-line[hidden] { display: none; }
