@@ -49,20 +49,46 @@ document.addEventListener("DOMContentLoaded", () => {
     $("practise-link").href = `/ui/interview?track=${encodeURIComponent(current)}`;
     $("placement-link").hidden = $("practise-link").hidden = !track.available;
 
-    const placed = profile.placement[current]?.scores || {};
-    const now = Object.fromEntries(scores.map((s) => [s.area, s.score]));
-    const chart = P.radar(track.areas, [
-      { key: "placement", name: "Placement", values: placed },
-      { key: "now", name: "Now", values: now },
-    ], `${track.name} strength areas: placement and now, 0 to 100`);
+    // The radar: by the role's Core areas once three of them are assessed; until then by the
+    // track's areas, which a placement interview always fills (it asks five of them, whatever
+    // the role). Placement on the role's areas comes from the placement answers' topics.
+    const stored = profile.placement[current]?.scores || {};
+    function placedFor(areas, topics) {
+      if (!topics) return stored;
+      const mine = profile.answers.filter((a) => a.t === current && a.p);
+      const last = mine.length ? mine[mine.length - 1].s : null;
+      const out = {};
+      for (const area of areas) {
+        const t = topics[area] ? new Set(topics[area]) : null;
+        const hits = mine.filter((a) => a.s === last && (a.a === area || (t && a.tp && t.has(a.tp))));
+        if (hits.length) out[area] = (100 * hits.reduce((sum, a) => sum + a.v, 0)) / hits.length;
+        else if (stored[area] !== undefined) out[area] = stored[area];
+      }
+      return out;
+    }
+    const title = `${track.name} strength areas: placement and now, 0 to 100`;
+    const draw = (areas, topics) => {
+      const rows = P.areaScores(profile, current, areas, topics), placedHere = placedFor(areas, topics);
+      const now = Object.fromEntries(rows.map((r) => [r.area, r.score]));
+      return { rows, placed: placedHere, chart: P.radar(areas, [{ key: "placement", name: "Placement", values: placedHere }, { key: "now", name: "Now", values: now }], title) };
+    };
+    let shown = draw(track.areas, byRole ? role.area_topics : null), fellBack = false;
+    if (byRole && !shown.chart.svg) {
+      const wide = draw(found.areas, null);
+      if (wide.chart.svg) { shown = wide; fellBack = true; }
+    }
+    const { chart, placed } = shown;
     // Fewer than 3 assessed areas: no shape, the table below carries the numbers.
     $("radar-figure").hidden = !chart.svg;
     $("radar-empty").hidden = !!chart.svg;
     $("radar").innerHTML = chart.svg;
-    $("radar-missing").hidden = !chart.missing.length;
-    $("radar-missing").textContent = chart.missing.length ? `Not assessed yet: ${chart.missing.join(", ")}.` : "";
+    const notes = [];
+    if (fellBack) notes.push(`Shown by the track's areas until three of the ${role.name} Core areas are assessed.`);
+    if (chart.missing.length) notes.push(`Not assessed yet: ${chart.missing.join(", ")}.`);
+    $("radar-missing").hidden = !notes.length;
+    $("radar-missing").textContent = notes.join(" ");
     const cell = (v) => (v === null || v === undefined ? `<td class="num muted-cell">Not assessed yet</td>` : `<td class="num">${P.shown(v)}</td>`);
-    $("area-rows").innerHTML = scores.map((s) =>
+    $("area-rows").innerHTML = shown.rows.map((s) =>
       `<tr><th scope="row">${escapeHtml(s.area)}</th>${cell(placed[s.area])}${cell(s.score)}<td class="num">${s.total}</td></tr>`).join("");
   }
 
