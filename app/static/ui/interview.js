@@ -76,8 +76,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // estimated length plus 2 s, whichever comes first (UBTurn.guardUtterance).
   // `mutes: false` (the device check's test line) never mutes the microphone.
   const guards = new Set();
-  // A more human delivery: the line is said sentence by sentence (about 250 ms apart) at rate
-  // 0.97, with numbers as words and no symbols (UBTurn.speakable). The whole line counts as one
+  // A more human delivery: the line is said sentence by sentence (about 400 ms apart) at rate
+  // 0.92, with numbers as words and no symbols (UBTurn.speakable). The whole line counts as one
   // spoken line: "Speaking" and the echo-safety mute hold through the pauses.
   function speak(text, reveal, { mutes = true } = {}) {
     if (muted() || !window.speechSynthesis) { reveal?.finish(); return; }

@@ -118,7 +118,7 @@
   }
 
   // ---------- A more human delivery (browser speech only) ----------
-  const SPEECH_RATE = 0.97, SENTENCE_PAUSE_MS = 250;
+  const SPEECH_RATE = 0.92, SENTENCE_PAUSE_MS = 400;  // a little slower, with a short pause between sentences
   const ONES = ("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen "
                 + "sixteen seventeen eighteen nineteen").split(" ");
   const TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split(" ");

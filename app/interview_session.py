@@ -19,7 +19,7 @@ from app import exam_text as say
 from app import provenance as forge_provenance
 from app import follow_up, hint_ladder, receipts
 from engine.answers import StatedNumber, matches, normalise_numbers, parse_number
-from engine import mathtext
+from engine import mathtext, speakability
 from engine.bank import ForgePuzzle
 from engine.checker import parse_value, values_in
 from engine.coding import Observation, Outcome, code_answer
@@ -341,6 +341,7 @@ class ExamSession:
         self._acks = 0
         self._scored: list[QuestionLog] = []
         self._followed: set[str] = set()  # templates whose follow-up was asked
+        self._lead_ins = 0  # spoken lead-ins said so far (they rotate)
         self.conditions = "exam"  # decision log 20: exam / typed / replay, set by the route
         self.topics = None  # the selected topics for the report header, set by the route
         self.track = None  # the track (template pack), set by the route
@@ -361,11 +362,18 @@ class ExamSession:
             event["speech"] = speech
         await self.send(event)
 
-    async def say_question(self, puzzle: Puzzle, before: str = "", after: str = "") -> None:
-        """A question line: the text shown, and its spoken form said aloud."""
+    async def say_question(self, puzzle: Puzzle, before: str = "", after: str = "", lead_in: bool = False) -> None:
+        """A question line: the full text shown, and what is said aloud (engine.speakability):
+        the spoken form, or for a question hard to hear, "The numbers are on your screen." and
+        its final question sentence. `lead_in`: a new question; aloud, a short natural lead-in
+        from a fixed list ("Okay, try this one.") replaces `before`."""
         shown = say.puzzle_text(puzzle)
-        join = lambda body: " ".join(part for part in (before, body, after) if part)
-        await self.line("question", join(shown), speech=join(getattr(puzzle, "speech", "") or shown))
+        join = lambda first, body: " ".join(part for part in (first, body, after) if part)
+        spoken = speakability.spoken_question(shown, getattr(puzzle, "speech", "") or None)
+        if lead_in:
+            lead = speakability.LEAD_INS[self._lead_ins % len(speakability.LEAD_INS)]
+            self._lead_ins += 1
+        await self.line("question", join(before, shown), speech=join(lead if lead_in else before, spoken))
 
     def _counts(self) -> dict:
         q = self.questions[-1] if self.questions else None
@@ -413,9 +421,9 @@ class ExamSession:
         elif question.kind in {"twin", "drill"}:
             await self.say_question(question.puzzle, say.TWIN_INTRO)
         elif question.number > 1:
-            await self.say_question(question.puzzle, say.NEW_PUZZLE_INTRO)
+            await self.say_question(question.puzzle, say.NEW_PUZZLE_INTRO, lead_in=True)
         else:
-            await self.say_question(question.puzzle, after=say.OPENING)
+            await self.say_question(question.puzzle, after=say.OPENING, lead_in=True)
 
     async def question_loop(self, q: QuestionLog) -> None:
         question = self.interview.next_question()

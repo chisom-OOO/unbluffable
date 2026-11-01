@@ -949,7 +949,11 @@ def test_question_lines_carry_speech_only_when_it_differs(bank):
         shown = [e for e in events if e["type"] == "question"]
         assert all("$" not in e["text"] and "\\" not in e["text"] for e in shown)
     _, plain, _ = _dice_interview(bank)
-    assert not any("speech" in e for e in plain if e["type"] == "interviewer_line")
+    from engine import speakability
+    lines = [e for e in plain if e["type"] == "interviewer_line"]
+    # Only a new question's spoken lead-in differs from the screen; every other line has no speech.
+    assert all(e["speech"].split(".")[0] + "." in speakability.LEAD_INS for e in lines if "speech" in e)
+    assert all(e["kind"] == "question" for e in lines if "speech" in e)
 
 
 def test_several_misconception_names_for_one_value_are_one_mistake():
@@ -1413,3 +1417,24 @@ def test_cached_topics_follow_a_new_bank(monkeypatch):
     assert interview_routes.topics() is one  # cached
     monkeypatch.setattr(interview_routes, "_BANK", _packed_bank(("a", None, "Statistics")))
     assert [o["id"] for o in interview_routes.topics()["tracks"][0]["topics"]] == ["Mixed", "Statistics", "Market making"]
+
+
+def test_new_questions_get_a_spoken_lead_in_and_the_screen_keeps_the_full_text(bank):
+    """Freeze-day voice fix: aloud, a short lead-in from a fixed list, rotating; on screen,
+    the full question as before. A twin keeps its own intro."""
+    from engine import speakability
+
+    def policy(session, events):
+        return f"My answer is {frac(session.questions[-1].puzzle.answer)}, because red over all balls."
+    session, events, _ = run(BankSource(_bag_bank(_bag(spoken=True, latex=True)), "Probability", "Easy", rng=random.Random(3)), policy)
+    asked = [e for e in events if e["type"] == "interviewer_line" and e["kind"] == "question"]
+    shown = {e["number"]: e for e in events if e["type"] == "question"}
+    firsts = [e for e in asked if not e["text"].startswith((say.TWIN_INTRO, say.REPEAT_INTRO))]
+    assert firsts[0]["speech"].startswith(speakability.LEAD_INS[0])
+    assert all(e["speech"].split(".")[0] + "." in speakability.LEAD_INS for e in firsts)
+    assert not any(lead in e["text"] for e in asked for lead in speakability.LEAD_INS), "never shown"
+    assert all("n = " in e["text"] for e in asked) and all("n = " in s["text"] for s in shown.values())
+    twins = [e for e in asked if e["text"].startswith(say.TWIN_INTRO)]
+    assert all(e["speech"].startswith(say.TWIN_INTRO) for e in twins)
+    if len(firsts) > 1:
+        assert firsts[1]["speech"].startswith(speakability.LEAD_INS[1]), "the lead-ins rotate"

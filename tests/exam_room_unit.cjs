@@ -140,8 +140,8 @@ console.log("coding workspace helpers ok");
   assert.ok(!/[%$=+*_#/<>()[\]{}|`^]/.test(T.speakable("a*b + c/d = (e) [f] {g} <h> #i `j` |k| ^l 50% $3")), "no symbol is read");
   // Sentence by sentence, but never at a decimal point or "e.g.".
   assert.deepEqual(T.sentences("Good. Now 3.5 is close, e.g. near four. Next?"), ["Good.", "Now 3.5 is close, e.g. near four.", "Next?"]);
-  assert.equal(T.SPEECH_RATE >= 0.95 && T.SPEECH_RATE <= 1, true);
-  assert.equal(T.SENTENCE_PAUSE_MS, 250);
+  assert.equal(T.SPEECH_RATE, 0.92, "slightly slower than normal");
+  assert.equal(T.SENTENCE_PAUSE_MS, 400, "a short pause between sentences");
   // Openers: rotated, never before a question or right after an acknowledgement, never twice in a row.
   const st = {};
   const a = T.withOpener("That is the end of the interview.", "close", st);
