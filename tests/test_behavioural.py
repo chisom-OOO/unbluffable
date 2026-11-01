@@ -162,8 +162,8 @@ def test_behavioural_is_a_topic_in_ib_and_consulting_only(ib_routes):
     assert "Behavioural" not in topics["quant"] and topics["software"] == []
     assert interview_routes.topic_label("ib", ["Behavioural"]) == "Behavioural"
     assert interview_routes.topic_label("ib", None) == "All topics"  # Mixed stays the forge topics
-    with pytest.raises(VoiceError, match="on their own"):
-        interview_routes.selection("ib", ["Behavioural", "Valuation"])
+    # Decision log 37: behavioural questions mix with the technical topics.
+    assert interview_routes.selection("ib", ["Behavioural", "Valuation"])[1] == ("Behavioural", "Valuation")
 
 
 def test_behavioural_over_the_socket(ib_routes):

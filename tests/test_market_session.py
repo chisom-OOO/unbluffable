@@ -120,10 +120,8 @@ def test_the_quant_track_lists_market_making_on_its_own(monkeypatch):
     quant = next(t for t in TestClient(app).get("/api/interview/topics").json()["tracks"] if t["id"] == "quant")
     assert "Market making" in [o["id"] for o in quant["topics"]]
     assert interview_routes.selection("quant", ["Market making"])[1] == "Market making"
-    import pytest
-    from voice.recording import VoiceError
-    with pytest.raises(VoiceError):
-        interview_routes.selection("quant", ["Market making", "Probability"])
+    # Decision log 37: market making mixes with the forge topics.
+    assert interview_routes.selection("quant", ["Market making", "Probability"])[1] == ("Market making", "Probability")
     assert interview_routes.selection("quant", ["Probability"])[1] == "Mixed"  # market making isn't a forge topic
     monkeypatch.setenv("MARKET_MAKING", "0")
     monkeypatch.setattr(interview_routes, "_TOPICS", None)
