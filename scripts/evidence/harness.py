@@ -11,7 +11,8 @@ original question and its transcript ("careful_first_only", "careful_answers_fir
 the same prompts); careful and plain Spark see the original and the twin, as in run 1;
 Unbluffable runs as above, on the original and the twin. The headline comparison is
 Unbluffable against careful_first_only (HEADLINE_ARM, by provenance["design"]); every other
-chatbot arm is a secondary exact McNemar row. An item file that names its design ("design":
+chatbot arm is a secondary exact McNemar row. Run 2's headline follows decision log 34
+(run2_rule): bluffs caught, exact McNemar on the bluff items; win, tie or loss. An item file that names its design ("design":
 "run2") runs only with that --design.
 
 Each arm runs `--runs` times (3 by default). Outputs results.json and results.md:
@@ -76,15 +77,36 @@ CHATBOT_EFFORT = "low"  # the same for every chatbot arm
 VERDICT = obj({"verdict": {"type": "string", "enum": list(stats.LABELS)}})
 HEADLINE = "Sounding right isn't the same as being right"
 HEADLINE_IF_CLOSE = "a careful chatbot needs a verified answer key; the forge supplies one"
-# Run 2's close-result line: its headline arm judges the first answer alone, with no answer key.
-HEADLINE_IF_CLOSE_RUN2 = ("No significant difference from a careful chatbot judging the first answer alone "
-                          "(exact McNemar p = {p}).")
+CLOSE_ITEMS = 2  # decision log 15: within 2 items of Unbluffable (run 1's rule)
+# Run 2 (decision log 34): the result lines for a tie and a loss; a win takes HEADLINE.
+RUN2_TIE = "No significant difference from a careful chatbot judging the first answer alone (exact McNemar p = {p})."
+RUN2_LOSS = "A careful chatbot judging the first answer alone did as well or better on this set (exact McNemar p = {p})."
+RUN2_ALPHA = 0.05
+RUN2_FALSE_FLAG_MARGIN = 1  # a win allows at most 1 more false flag on genuine items
 
 
-def close_headline(design: str, p: float) -> str:
-    """The headline when Unbluffable is within CLOSE_ITEMS of the headline arm."""
-    return HEADLINE_IF_CLOSE_RUN2.format(p=f"{p:.4g}") if design == "run2" else HEADLINE_IF_CLOSE
-CLOSE_ITEMS = 2  # decision log 15: within 2 items of Unbluffable
+def run2_rule(labels: dict[str, str], ours: dict, theirs: dict, compared_with: str) -> dict:
+    """Decision log 34, on majority verdicts. Primary metric: bluffs caught, Unbluffable against
+    the headline arm, exact McNemar (two-sided) on the bluff items alone.
+      loss: the headline arm catches more bluffs, or Unbluffable has 2+ more false flags;
+      win:  otherwise, if significant (p < 0.05; Unbluffable then catches more);
+      tie:  otherwise (not significant, any gap)."""
+    bluffs = {i: v for i, v in labels.items() if v == stats.NOT_UNDERSTANDS}
+    test = stats.compare(bluffs, ours["verdicts"], theirs["verdicts"])
+    caught = {who: sum(1 for i in bluffs if m["verdicts"][i] == stats.NOT_UNDERSTANDS)
+              for who, m in (("unbluffable", ours), ("compared", theirs))}
+    extra_flags = ours["false_flags"] - theirs["false_flags"]
+    if caught["compared"] > caught["unbluffable"] or extra_flags > RUN2_FALSE_FLAG_MARGIN:
+        outcome, headline = "loss", RUN2_LOSS.format(p=f"{test['p']:.4g}")
+    elif test["p"] < RUN2_ALPHA:
+        outcome, headline = "win", HEADLINE
+    else:
+        outcome, headline = "tie", RUN2_TIE.format(p=f"{test['p']:.4g}")
+    return {"design": "run2", "compared_with": compared_with, "bluffs": len(bluffs),
+            "unbluffable_caught": caught["unbluffable"], "compared_caught": caught["compared"],
+            "bluff_mcnemar": test, "unbluffable_false_flags": ours["false_flags"],
+            "compared_false_flags": theirs["false_flags"], "extra_false_flags": extra_flags,
+            "outcome": outcome, "headline": headline}
 # Optional rows (not pre-registered): the careful arm and Unbluffable again on Muse Spark Open
 # (backend open_weights), reported separately; the four arms above and the headline rule are unchanged.
 OPEN_WEIGHTS_ARMS = {"careful_open_weights": "careful", "unbluffable_open_weights": "unbluffable"}
@@ -358,15 +380,15 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
         "headline_comparison": key,
         "secondary_comparisons": [arm for arm in mcnemar if arm != key],
         "open_weights": open_rows,
-        "headline_rule": {
+        "headline_rule": run2_rule(labels, ours["majority"], arms[key]["majority"], key)
+        if provenance.get("design") == "run2" else {
             "unbluffable_correct": ours["majority"]["correct"],
             "compared_correct": arms[key]["majority"]["correct"],
             "compared_with": key,
             "gap": gap,
             "within": CLOSE_ITEMS,
             "close": abs(gap) <= CLOSE_ITEMS,
-            "headline": (close_headline(provenance.get("design", "run1"), mcnemar[key]["majority"]["p"])
-                         if abs(gap) <= CLOSE_ITEMS else HEADLINE),
+            "headline": HEADLINE_IF_CLOSE if abs(gap) <= CLOSE_ITEMS else HEADLINE,
         },
     }
 
@@ -434,9 +456,18 @@ def markdown(results: dict) -> str:
                   f"| Unbluffable on Open vs careful Open | {a['b']} | {a['c']} | {a['p']:.4g} |",
                   f"| Unbluffable vs Unbluffable on Open | {b['b']} | {b['c']} | {b['p']:.4g} |"]
     h = results["headline_rule"]
-    lines += ["", "## Pre-registered headline rule", "",
-              f"Unbluffable {h['unbluffable_correct']}/{n} correct; {names[h['compared_with']]} "
-              f"{h['compared_correct']}/{n}. Gap {h['gap']} item(s); the rule triggers within {h['within']}.",
+    if h.get("design") == "run2":
+        t = h["bluff_mcnemar"]
+        rule = [f"Bluffs caught (majority verdicts): Unbluffable {h['unbluffable_caught']}/{h['bluffs']}; "
+                f"{names[h['compared_with']]} {h['compared_caught']}/{h['bluffs']}. Exact McNemar on the bluff items: "
+                f"b = {t['b']}, c = {t['c']}, p = {t['p']:.4g}.",
+                f"False flags on genuine items: Unbluffable {h['unbluffable_false_flags']}, "
+                f"{names[h['compared_with']]} {h['compared_false_flags']}.",
+                "", f"Outcome (decision log 34): **{h['outcome']}**"]
+    else:
+        rule = [f"Unbluffable {h['unbluffable_correct']}/{n} correct; {names[h['compared_with']]} "
+                f"{h['compared_correct']}/{n}. Gap {h['gap']} item(s); the rule triggers within {h['within']}."]
+    lines += ["", "## Pre-registered headline rule", ""] + rule + [
               "", f"Headline: **{h['headline']}**", "",
               "## Provenance", "",
               f"- Commit: `{results['git_commit']}`",

@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "scripts" / "evidence"))
 import freeze  # noqa: E402
 import from_sessions  # noqa: E402
 import harness  # noqa: E402
+import stats  # noqa: E402
 from engine import mathtext  # noqa: E402
 from test_evidence_harness import BANNED, ITEMS, FIXTURE, extraction, instance  # noqa: E402
 
@@ -73,35 +74,100 @@ def test_run2_arms_and_summary():
     assert results["mcnemar_vs_unbluffable"]["careful_first_only"]["majority"]["b"] == 1
     assert results["mcnemar_vs_unbluffable"]["plain"]["majority"]["b"] == 2
     rule = results["headline_rule"]
-    assert rule["compared_with"] == "careful_first_only" and (rule["unbluffable_correct"], rule["compared_correct"]) == (4, 3)
+    # Decision log 34: bluffs caught on the bluff items alone (2 here): 2 against 1, b = 1, c = 0, p = 1.
+    assert rule["compared_with"] == "careful_first_only" and rule["bluffs"] == 2
+    assert (rule["unbluffable_caught"], rule["compared_caught"]) == (2, 1)
+    assert rule["bluff_mcnemar"] == {"b": 1, "c": 0, "p": 1.0} and rule["outcome"] == "tie"
     md = harness.markdown(results)
     assert "| Careful Spark, original only | 3/4 |" in md and "| Unbluffable | 4/4 |" in md
     head, secondary = md.split("Secondary comparisons:")
     assert "Headline comparison: Unbluffable against Careful Spark, original only." in head
     assert "| Careful Spark, original only | 1 | 0 |" in head.split("Headline comparison:")[1]
     assert all(f"| {name} |" in secondary.split("## ")[0] for name in ("Careful Spark", "Plain Spark"))
-    assert "Careful Spark, original only 3/4" in md
-    # Close (gap 1): run 2's own line with the headline comparison's exact p, and no answer-key wording.
-    p = results["mcnemar_vs_unbluffable"]["careful_first_only"]["majority"]["p"]
-    line = f"No significant difference from a careful chatbot judging the first answer alone (exact McNemar p = {p:.4g})."
-    assert rule["close"] and rule["headline"] == line and f"Headline: **{line}**" in md
+    assert "Unbluffable 2/2; Careful Spark, original only 1/2." in md
+    assert "False flags on genuine items: Unbluffable 0, Careful Spark, original only 0." in md
+    line = TIE.format(p="1")
+    assert rule["headline"] == line and f"Headline: **{line}**" in md and "Outcome (decision log 34): **tie**" in md
+    assert "b = 1, c = 0, p = 1." in md and "Gap" not in md.split("## Pre-registered headline rule")[1]
     assert "answer key" not in md and harness.HEADLINE_IF_CLOSE not in md
-    # The builder's run-2 line says "first answer" (which answer the chatbot sees), not a priority claim.
+    # The builder's run-2 lines say "first answer" (which answer the chatbot sees), not a priority claim.
     assert not any(word in md.replace(line, "").lower() for word in BANNED)
 
 
-def test_run2_headline_lines_by_gap():
-    """Run 1 keeps its close-result line; run 2 names its p; a gap beyond two items uses the main headline."""
-    assert harness.close_headline("run1", 0.0625) == harness.HEADLINE_IF_CLOSE
-    assert harness.close_headline("run2", 0.0625) == (
-        "No significant difference from a careful chatbot judging the first answer alone (exact McNemar p = 0.0625).")
-    assert harness.close_headline("run2", 1.0).endswith("(exact McNemar p = 1).")
-    # Unbluffable right on four items the first-only chatbot gets wrong: not close, so the main headline.
-    items = [{**ITEMS[1], "id": f"r{i}"} for i in range(4)] + [ITEMS[0]]
-    verdicts = asyncio.run(harness.evaluate(items, Run2Spark(), runs=1, design="run2"))
-    results = harness.summarise(items, verdicts, {**RUN2_PROVENANCE, "runs": 1, "prompt_sha256": {}})
+# --- Decision log 34: win, tie or loss on bluffs caught ---------------------------------------
+
+TIE = "No significant difference from a careful chatbot judging the first answer alone (exact McNemar p = {p})."
+LOSS = "A careful chatbot judging the first answer alone did as well or better on this set (exact McNemar p = {p})."
+CAUGHT, MISSED = "does_not_understand", "understands"
+
+
+def row34(ours_caught, theirs_caught, both_caught=0, bluffs=10, genuine=10, ours_flags=0, theirs_flags=0):
+    """Majority verdicts for 10 bluffs and 10 genuine answers: `both_caught` bluffs caught by
+    both arms, then `ours_caught` by Unbluffable only and `theirs_caught` by the chatbot only;
+    the first `*_flags` genuine answers flagged by each."""
+    labels = {f"b{i}": CAUGHT for i in range(bluffs)} | {f"g{i}": MISSED for i in range(genuine)}
+    ours, theirs = {}, {}
+    for i in range(bluffs):
+        ours[f"b{i}"] = CAUGHT if i < both_caught + ours_caught else MISSED
+        theirs[f"b{i}"] = CAUGHT if i < both_caught or both_caught + ours_caught <= i < both_caught + ours_caught + theirs_caught else MISSED
+    for i in range(genuine):
+        ours[f"g{i}"] = CAUGHT if i < ours_flags else MISSED
+        theirs[f"g{i}"] = CAUGHT if i < theirs_flags else MISSED
+    majority = lambda v: {**stats.score(labels, v), "verdicts": v}  # noqa: E731
+    return harness.run2_rule(labels, majority(ours), majority(theirs), "careful_first_only")
+
+
+def test_win_is_significant_with_at_most_one_more_false_flag():
+    rule = row34(6, 0)  # 6-0 discordant: p = 1/32
+    assert rule["bluff_mcnemar"] == {"b": 6, "c": 0, "p": 0.03125}
+    assert rule["outcome"] == "win" and rule["headline"] == harness.HEADLINE
+    rule = row34(8, 1, ours_flags=3, theirs_flags=2)  # 8-1: p = 20/512; one more false flag is allowed
+    assert rule["bluff_mcnemar"]["p"] == 0.0390625 and rule["extra_false_flags"] == 1
+    assert rule["outcome"] == "win" and rule["headline"] == harness.HEADLINE
+
+
+def test_a_significant_gap_with_two_more_false_flags_is_a_loss():
+    rule = row34(6, 0, ours_flags=2)
+    assert rule["bluff_mcnemar"]["p"] == 0.03125 and rule["extra_false_flags"] == 2
+    assert rule["outcome"] == "loss" and rule["headline"] == LOSS.format(p="0.03125")
+
+
+def test_a_three_item_gap_that_is_not_significant_is_a_tie():
+    rule = row34(3, 0, both_caught=2)  # Unbluffable 5, the chatbot 2: p = 1/4
+    assert (rule["unbluffable_caught"], rule["compared_caught"]) == (5, 2)
+    assert rule["bluff_mcnemar"] == {"b": 3, "c": 0, "p": 0.25}
+    assert rule["outcome"] == "tie" and rule["headline"] == TIE.format(p="0.25")
+    assert row34(5, 1)["outcome"] == "tie"  # 5-1: p = 0.21875, still not significant
+    even = row34(0, 0, both_caught=7)  # any gap, including none
+    assert even["outcome"] == "tie" and even["headline"] == TIE.format(p="1")
+
+
+def test_a_gap_in_the_wrong_direction_is_a_loss():
+    rule = row34(1, 3, both_caught=4)  # the chatbot catches 7, Unbluffable 5: not significant, still a loss
+    assert (rule["unbluffable_caught"], rule["compared_caught"]) == (5, 7)
+    assert rule["bluff_mcnemar"] == {"b": 1, "c": 3, "p": 0.625}
+    assert rule["outcome"] == "loss" and rule["headline"] == LOSS.format(p="0.625")
+    assert row34(0, 6)["headline"] == LOSS.format(p="0.03125")
+
+
+def test_a_tie_with_two_more_false_flags_is_a_loss():
+    rule = row34(2, 2, ours_flags=4, theirs_flags=2)
+    assert rule["outcome"] == "loss" and rule["headline"] == LOSS.format(p="1")
+
+
+def test_false_flags_alone_never_win():
+    """The primary metric is bluffs caught: fewer false flags with no bluff difference is a tie."""
+    rule = row34(0, 0, both_caught=5, ours_flags=0, theirs_flags=6)
+    assert rule["outcome"] == "tie"
+
+
+def test_run1_keeps_the_two_item_rule():
+    verdicts = asyncio.run(harness.evaluate(ITEMS, Run2Spark(), runs=1, design="run1"))
+    results = harness.summarise(ITEMS, verdicts, {**RUN2_PROVENANCE, "design": "run1", "runs": 1, "prompt_sha256": {}})
     rule = results["headline_rule"]
-    assert rule["gap"] == 4 and not rule["close"] and rule["headline"] == harness.HEADLINE
+    assert set(rule) == {"unbluffable_correct", "compared_correct", "compared_with", "gap", "within", "close", "headline"}
+    assert rule["compared_with"] == "careful_answers" and rule["within"] == 2
+    assert rule["headline"] in {harness.HEADLINE_IF_CLOSE, harness.HEADLINE}
 
 
 def test_the_headline_arm_must_have_run():
