@@ -193,23 +193,61 @@ textarea::placeholder { color: var(--muted); }
 a.track:hover, button.track:not([aria-disabled="true"]):hover { border-color: var(--ink); text-decoration: none; }
 
 /* ---------- Landing ---------- */
-.landinggrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 64px; align-items: start; padding: 56px 40px 24px; }
-.hero h1 { font-size: clamp(40px, 5.2vw, 64px); line-height: 1.02; letter-spacing: -.025em; max-width: 12ch; }
-.hero > p { color: var(--muted); line-height: 1.6; font-size: 18px; margin: 20px 0 28px; max-width: 44ch; }
-.hero .tracks { margin: 0 0 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 460px; }
-.hero > .btn { min-width: 220px; }
-.landing-side { display: grid; gap: 40px; min-width: 0; }
-.sample { min-width: 0; }
-.sample-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
-.sampleq { font: 400 22px/1.4 var(--serif); }
-.replay-body { margin-top: 6px; }
-.sampleline { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 16px; padding: 10px 0; font-size: 16px; }
-.sampleline b { color: var(--muted); font-size: 13px; font-weight: 500; padding-top: 3px; }
-.sampleline.is-challenge b, .sampleline.is-challenge .says { color: var(--amber); }
-.replay-progress { height: 2px; background: var(--line); overflow: hidden; margin: 16px 0 14px; }
-.replay-progress span { display: block; height: 100%; width: 0; background: var(--active, var(--ink)); transition: width .4s linear; }
+/* One stage, full width: the claim, then the challenge playing out as live type, then the
+   choice. No cards and no tiles; the only motion on the page is the sample itself. */
+.landing-stage { padding: clamp(32px, 4vw, 56px) 40px 64px; }
+.headline { font: 400 clamp(44px, 8.4vw, 120px)/.94 var(--serif); letter-spacing: -.035em; text-wrap: balance; }
+.headline > .l { display: block; white-space: nowrap; }
+.neq svg { display: inline-block; height: .72em; width: auto; vertical-align: -.03em; margin-right: .02em; overflow: visible; }
+.neq path { fill: none; stroke: var(--brand, var(--ink)); stroke-linecap: round; }
+.neq .bars { stroke-width: 2.3; }
+.neq .slash { stroke-width: 2.1; }
+
+.scene { margin-top: clamp(32px, 3.6vw, 48px); max-width: 880px; }
+.scene .line { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 24px; padding: 8px 0; align-items: baseline; }
+.scene .who { font-size: 14px; font-weight: 500; color: var(--muted); }
+.scene .sampleq { font: 400 20px/1.45 var(--serif); }
+.scene .says { position: relative; font-size: 20px; line-height: 1.45; }
+.scene .ghost { visibility: hidden; }
+.scene .typed { position: absolute; inset: 0; }
+.scene .pending .who, .scene .pending .typed { visibility: hidden; }
+.scene .is-challenge .who, .scene .is-challenge .typed { color: var(--amber); }
+.scene .caret { display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; vertical-align: -.17em; background: currentColor; }
+/* The committed number: an amber underline drawn once the line is said. */
+.scene .hit { background: linear-gradient(var(--amber), var(--amber)) 0 100% / 0 3px no-repeat; padding-bottom: 2px; transition: background-size .25s var(--ease); }
+.scene .hit.on { background-size: 100% 3px; }
+.scene-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 18px; margin-top: 10px; padding-left: calc(8rem + 24px); }
+.scene-foot .play { display: inline-flex; align-items: center; gap: 6px; }
+.scene-foot .play .icon { width: 14px; height: 14px; }
+.scene-foot .replay-note { flex-basis: 100%; }
+.replay-body.real { max-height: 420px; overflow-y: auto; }
+
+.go { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-top: clamp(36px, 4.4vw, 56px); }
+.pick { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .35em; font-size: clamp(20px, 2vw, 24px); }
+.select-wrap { position: relative; display: inline-block; }
+.select-wrap select { appearance: none; -webkit-appearance: none; font: inherit; font-weight: 500; color: var(--ink); background: transparent; border: 0; border-bottom: 2px solid var(--ink);
+  border-radius: 0; padding: 2px 1.15em 2px 1px; min-height: 44px; cursor: pointer; }
+.select-wrap::after { content: ""; position: absolute; right: .25em; top: 50%; width: .38em; height: .38em; border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink);
+  transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+.select-wrap select:hover { border-bottom-color: var(--muted); }
+.go .btn { min-height: 52px; padding: 12px 26px; font-size: 16px; }
+.go .hero-actions { margin: 0; }
+.proof { margin-top: 22px; font: 400 13px/1.6 var(--mono); }
+.proof a { color: var(--muted); text-decoration-color: color-mix(in srgb, var(--muted) 45%, transparent); }
+.proof a:hover { color: var(--ink); text-decoration-color: currentColor; }
+
+.room-shot { padding: 56px 40px 32px; border-top: 1px solid var(--line); }
+.room-shot h2 { font: 400 clamp(28px, 3vw, 36px)/1.15 var(--serif); letter-spacing: -.015em; }
+.room-shot > p { color: var(--muted); font-size: 17px; line-height: 1.6; max-width: 62ch; margin: 10px 0 28px; }
+@media (max-width: 1080px) { .landing-stage, .room-shot { padding-left: 28px; padding-right: 28px; } }
+@media (max-width: 760px) {
+  .landing-stage, .room-shot { padding-left: 18px; padding-right: 18px; }
+  .scene .line { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .scene-foot { padding-left: 0; }
+  .scene .says, .scene .sampleq { font-size: 18px; }
+}
 .shot { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; min-width: 0; }
-.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; }
+.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; }
 .shot-dark { display: none !important; }
 :root[data-theme="dark"] .shot-light { display: none !important; }
 :root[data-theme="dark"] .shot-dark { display: block !important; }
@@ -218,11 +256,6 @@ a.track:hover, button.track:not([aria-disabled="true"]):hover { border-color: va
   :root:not([data-theme="light"]) .shot-dark { display: block !important; }
 }
 .shot figcaption { font-size: 13px; color: var(--muted); }
-.how { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); }
-.how h2 { font-size: 15px; font-weight: 600; }
-.how ol { padding: 0 0 0 1.4em; margin-top: 12px; display: grid; gap: 10px; font-size: 16px; max-width: 48ch; }
-.how li::marker { color: var(--muted); font: 500 14px var(--mono); }
-.how li { padding-left: 6px; text-wrap: pretty; }
 
 /* ---------- Setup and device check ---------- */
 .setuphead { padding: 48px 40px 8px; }
@@ -498,7 +531,6 @@ blockquote.evidence footer { font-size: 13px; color: var(--muted); margin-top: 4
   .room { grid-template-columns: minmax(0, 1fr); grid-template-areas: "q" "conv" "rail"; padding: 28px 28px 0; }
   .rail { position: static; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; border-top: 1px solid var(--line); padding-top: 20px; margin-top: 8px; }
   .models { border-top: 0; padding-top: 0; }
-  .landinggrid { grid-template-columns: minmax(0, 1fr); gap: 48px; padding: 40px 28px 16px; }
   .reportgrid { grid-template-columns: minmax(0, 1fr) 280px; gap: 40px; }
   .setupgrid { gap: 40px; }
   .top, .setuphead, .setupgrid, .reportwrap, .disclosure { padding-left: 28px; padding-right: 28px; }
@@ -508,10 +540,8 @@ blockquote.evidence footer { font-size: 13px; color: var(--muted); margin-top: 4
 }
 @media (max-width: 760px) {
   .rail { grid-template-columns: minmax(0, 1fr); }
-  .utterance > div, .sampleline { grid-template-columns: minmax(0, 1fr); }
-  .utterance > div > .speaker { grid-row: auto; padding-top: 0; flex-direction: row; gap: 8px; }
+  .utterance > div,   .utterance > div > .speaker { grid-row: auto; padding-top: 0; flex-direction: row; gap: 8px; }
   .top, .setuphead, .setupgrid, .reportwrap, .disclosure, .room { padding-left: 18px; padding-right: 18px; }
-  .landinggrid { padding: 28px 18px 8px; }
   .receipt-body { grid-template-columns: minmax(0, 1fr); }
   .receipt-body > div + div { border-left: 0; border-top: 1px solid var(--line); padding-top: 8px; }
   .selfview { width: 100px; }
@@ -641,7 +671,6 @@ h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus { outline: none; }
 .forge-table tfoot td { font-weight: 600; border-bottom: 0; }
 @media (max-width: 760px) { .forge-table .hide-narrow { display: none; } }
 .export-recording { display: grid; gap: 8px; margin-top: 12px; justify-items: start; font-size: 12px; }
-.replay-body.real { max-height: 420px; overflow-y: auto; display: grid; gap: 10px; }
 /* ---------- Laptop or desktop only (decision log 26) ---------- */
 .desktop-gated .shell > main:not(.desktop-gate), .desktop-gated .shell > footer { display: none !important; }
 .desktop-gate { padding: 28px 16px 40px; display: grid; justify-items: center; }
@@ -932,10 +961,13 @@ body.coding-mode.keyboard-open .room.coding .coding-pane:not(.console-closed) { 
   --orbline: #e9ebee; --orbbar: #e9ebee; --series-now: #e9ebee;
 }
 /* Logo: the ≠ mark in a small square, then the wordmark in the interface sans. */
-[data-look="floor"] .brand { font: 600 19px/1 var(--sans); letter-spacing: -.01em; gap: 10px; align-items: center; }
-[data-look="floor"] .logo { display: block; width: 26px; height: 26px; flex: none; }
+[data-look="floor"] .brand { font: 500 19px/1 var(--sans); letter-spacing: -.025em; gap: 10px; align-items: center; }
+[data-look="floor"] .logo { display: block; width: 28px; height: 28px; flex: none; }
 [data-look="floor"] .logo rect { fill: var(--brand); }
-[data-look="floor"] .logo path { fill: none; stroke: var(--brand-fg); stroke-width: 2.6; stroke-linecap: round; }
+[data-look="floor"] .logo path { fill: none; stroke: var(--brand-fg); stroke-linecap: round; }
+/* Optical weights: the bars a touch heavier than the slash, which reads darker on the diagonal. */
+[data-look="floor"] .logo .bars { stroke-width: 2.9; }
+[data-look="floor"] .logo .slash { stroke-width: 2.6; }
 [data-look="floor"] .brand-note { font-weight: 400; }
 /* Primary buttons in the brand; hover darkens towards the ink, never a glow. */
 [data-look="floor"] .btn:not(.secondary):not(.btn-quiet):not(.not-ready):hover { background: color-mix(in srgb, var(--brand) 88%, var(--ink)); }

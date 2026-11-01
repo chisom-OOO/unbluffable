@@ -1,11 +1,13 @@
-// Landing: track cards from the real template packs; the puzzle; the labelled sample.
-// If the visitor hasn't interacted within 3 s, the sample previews silently (browsers block
-// sound without a click). "Play with sound" speaks it with the browser's speech synthesis,
-// each line appearing as it is spoken: the interviewer in one voice, the candidate in another
-// (or, with a single voice, at a different pitch and rate). The mute setting is respected.
+// Landing: the claim, the labelled sample playing out as live type, and the track choice.
+// If the visitor hasn't interacted within 3 s, the sample plays silently (browsers block sound
+// without a click): the candidate's line types in, the number they commit to is underlined,
+// the interviewer's challenge appears, then the recovery and "Same puzzle, new numbers."
+// "Play with sound" speaks it with the browser's speech synthesis, each line appearing as it is
+// spoken: the interviewer in one voice, the candidate in another (or, with a single voice, at a
+// different pitch and rate). The mute setting is respected. Reduced motion shows the final state.
 document.addEventListener("DOMContentLoaded", () => {
   // The landing page never redirects: every visitor, phones included (whose other pages
-  // show the gate), stays here with the recorded replay. "Try an interview" goes straight to
+  // show the gate), stays here with the recorded replay. "Start an interview" goes straight to
   // setup; the welcome page (onboarding) is reached from the profile or the report, not forced.
   // With accounts, guests are offered sign-in first.
   const account = window.UBAccount;
@@ -19,53 +21,77 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("signin-cta").addEventListener("click", () => account.openSignIn());
 
   const data = window.UB_FAKE;
-  const { highlight, escapeHtml, reducedMotion, trackCard, pickVoice } = window.UB;
+  const { escapeHtml, reducedMotion, pickVoice } = window.UB;
   const $ = (id) => document.getElementById(id);
 
-  const tracks = $("tracks");
-  tracks.setAttribute("role", "list");
+  // ---------- "Practise for [track] interviews" ----------
+  // The options come from the real template packs; the static ones stand in until they load.
+  const pick = $("track-pick");
+  const starts = [$("prepare"), document.querySelector("#account-cta a")];
+  const mirror = document.createElement("span");
+  mirror.setAttribute("aria-hidden", "true");
+  mirror.style.cssText = "position:absolute;visibility:hidden;white-space:pre;font:inherit;font-weight:500";
+  pick.parentElement.appendChild(mirror);
+  function fit() {  // the select is as wide as the chosen track, so the sentence reads as one line
+    mirror.textContent = pick.options[pick.selectedIndex]?.text || "";
+    pick.style.width = `calc(${mirror.offsetWidth}px + 1.25em)`;
+  }
+  function choose() {
+    const href = `/ui/interview?track=${encodeURIComponent(pick.value)}`;
+    starts.forEach((a) => { if (a) a.href = href; });
+    fit();
+  }
+  pick.addEventListener("change", choose);
   fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {
-    tracks.removeAttribute("aria-busy");
-    tracks.innerHTML = t.tracks.map((track) =>
-      trackCard(track, { href: `/ui/interview?track=${encodeURIComponent(track.id)}` })).join("");
-  }).catch(() => { tracks.hidden = true; });
+    const live = t.tracks.filter((track) => track.available);
+    if (!live.length) return;
+    const keep = pick.value;
+    pick.innerHTML = live.map((track) => `<option value="${escapeHtml(track.id)}">${escapeHtml(track.name)}</option>`).join("");
+    pick.value = live.some((track) => track.id === keep) ? keep : live[0].id;
+    choose();
+  }).catch(() => {});
+  document.fonts?.ready.then(fit);
+  fit();
 
+  // ---------- The sample ----------
   $("landing-puzzle").textContent = data.puzzle.text;
-
-  let lines = data.replay.lines;
-  const body = $("replay-body"), bar = $("replay-bar"), toggle = $("replay-toggle"), note = $("replay-note");
+  const CODA = { who: "interviewer", kind: "twin", text: "Same puzzle, new numbers." };
+  let lines = [...data.replay.lines, CODA];
+  const body = $("replay-body"), toggle = $("replay-toggle"), note = $("replay-note");
   const toggleLabel = toggle.querySelector("span");
   const synth = window.speechSynthesis && typeof window.SpeechSynthesisUtterance === "function" ? window.speechSynthesis : null;
   const muted = () => $("mute")?.getAttribute("aria-pressed") === "true";
 
-  // Build lines up front (hidden) so layout doesn't jump when they appear. A real recording
-  // uses the interview's own layout (avatars, speaker and the challenge/nudge/hint tags).
-  const TAG = { challenge: "Challenge", nudge: "Nudge", hint: "Hint" };
+  // Every line is in the page from the start, for screen readers and so the layout never
+  // jumps: an invisible full copy holds the space, and the visible copy is typed over it.
+  const LABEL = { challenge: "Interviewer · Challenge", nudge: "Interviewer · Nudge", hint: "Interviewer · Hint" };
   let real = false;
+  function parts(line) {  // the committed words (the ones the challenge quotes), if any
+    const at = line.challenge ? line.text.indexOf(line.challenge) : -1;
+    return at < 0 ? null : [at, at + line.challenge.length];
+  }
+  function markup(line, n = line.text.length, lit = false) {
+    const t = line.text, hit = parts(line);
+    if (!hit) return escapeHtml(t.slice(0, n));
+    const [a, b] = hit;
+    return escapeHtml(t.slice(0, Math.min(n, a)))
+      + (n > a ? `<span class="hit${lit ? " on" : ""}">${escapeHtml(t.slice(a, Math.min(n, b)))}</span>` : "")
+      + (n > b ? escapeHtml(t.slice(b, n)) : "");
+  }
   function buildNodes() {
     body.innerHTML = "";
-    return lines.map((line, i) => {
+    return lines.map((line) => {
       const el = document.createElement("div");
-      if (real) {
-        const interviewer = line.who === "interviewer", tag = interviewer && TAG[line.kind];
-        el.className = `utterance ${interviewer ? "interviewer" : "candidate"}${tag ? ` is-${line.kind}` : ""}`;
-        el.innerHTML = `<span class="avatar" aria-hidden="true">${interviewer ? "I" : "Y"}</span><div>`
-          + `<div class="speaker"><span>${interviewer ? "Interviewer" : "Candidate"}</span>${tag ? `<span class="tag tag-${line.kind}">${tag}</span>` : ""}</div>`
-          + `<p class="says">${escapeHtml(line.text)}</p></div>`;
-      } else {
-        el.className = "sampleline" + (line.kind === "challenge" ? " is-challenge" : "");
-        const who = line.who === "interviewer" ? `Interviewer${line.kind === "challenge" ? " · Challenge" : ""}` : "Candidate";
-        el.innerHTML = `<b>${who}</b><span class="says">“${escapeHtml(line.text)}”</span>`;
-      }
-      el.hidden = true;
-      el.dataset.index = i;
-      el.dataset.who = line.who;
+      const interviewer = line.who === "interviewer";
+      el.className = `line pending${line.kind === "challenge" ? " is-challenge" : ""}${line.kind === "twin" ? " coda" : ""}`;
+      el.innerHTML = `<span class="who">${interviewer ? LABEL[line.kind] || "Interviewer" : "Candidate"}</span>`
+        + `<p class="says"><span class="ghost" aria-hidden="true">${markup(line)}</span>`
+        + `<span class="typed" aria-hidden="true"></span><span class="visually-hidden">${escapeHtml(line.text)}</span></p>`;
       body.appendChild(el);
       return el;
     });
   }
   let nodes = buildNodes();
-  let marked = lines.findIndex((l) => l.challenge);
 
   // A recording exported from a real interview (content/landing/recorded-interview.json), once
   // one is committed, replaces the scripted sample. Text only: lines, answers and timings.
@@ -86,28 +112,42 @@ document.addEventListener("DOMContentLoaded", () => {
     real = true;
     lines = recording.lines;
     nodes = buildNodes();
-    marked = -1;
     body.classList.add("real");
     $("landing-puzzle").textContent = recording.puzzle;
-    document.querySelector(".sample-head .tag").textContent = "A real recorded interview";
+    $("sample-tag").textContent = "A real recorded interview";
+    if (reducedMotion()) showAll();
   }).catch(() => {});
 
-  function reset() {
-    nodes.forEach((n) => { n.hidden = true; });
-    if (marked >= 0) nodes[marked].querySelector(".says").textContent = `“${lines[marked].text}”`;
-    bar.style.width = "0%";
-  }
-  function showLine(i) {
-    nodes[i].hidden = false;
-    if (real) body.scrollTop = body.scrollHeight;
-    bar.style.width = `${((i + 1) / nodes.length) * 100}%`;
-    // Once the challenge lands, mark the words it quotes in the candidate's line.
-    if (lines[i].kind === "challenge" && marked >= 0) {
-      nodes[marked].querySelector(".says").innerHTML = `“${highlight(lines[marked].text, lines[marked].challenge)}”`;
-    }
-  }
-
   let run = 0, timers = [], guards = [], playing = false;
+  const later = (id, ms, fn) => timers.push(setTimeout(() => { if (id === run) fn(); }, ms));
+  const typed = (i) => nodes[i].querySelector(".typed");
+
+  function reset() {
+    nodes.forEach((n, i) => { n.classList.add("pending"); typed(i).innerHTML = ""; });
+  }
+  // A whole line at once: the interviewer's, a recording's, or any line under reduced motion.
+  function showLine(i, lit = true) {
+    nodes[i].classList.remove("pending");
+    typed(i).innerHTML = markup(lines[i], undefined, lit);
+    if (real) body.scrollTop = body.scrollHeight;
+  }
+  function showAll() { lines.forEach((_, i) => showLine(i)); }
+  // The candidate's line, typed at about speaking pace; then the committed number is underlined.
+  function typeLine(id, i, ms, done) {
+    const line = lines[i], total = line.text.length, step = Math.max(18, ms / total);
+    nodes[i].classList.remove("pending");
+    for (let n = 1; n <= total; n++) {
+      later(id, n * step, () => { typed(i).innerHTML = markup(line, n) + (n < total ? '<span class="caret"></span>' : ""); });
+    }
+    later(id, total * step + 120, () => {
+      typed(i).querySelector(".hit")?.classList.add("on");
+      done?.();
+    });
+    return total * step;
+  }
+  // How long a line takes to say or read, in ms (used for typing pace and the silent gaps).
+  const sayMs = (line) => Math.min(4200, 650 + line.text.length * 42);
+
   function setButton(state) {
     toggleLabel.textContent = state === "playing" ? "Stop" : state === "done" ? "Play again with sound" : "Play with sound";
   }
@@ -128,10 +168,20 @@ document.addEventListener("DOMContentLoaded", () => {
     stop(manual ? "playing" : "idle");
     const id = run;
     playing = manual;
+    if (reducedMotion()) { showAll(); finished(id); if (!manual) setButton("idle"); return; }
     reset();
-    const step = reducedMotion() ? 900 : 2600;
-    nodes.forEach((_, i) => timers.push(setTimeout(() => { if (id === run) showLine(i); }, i * step + 300)));
-    timers.push(setTimeout(() => (manual ? finished(id) : id === run && setButton("idle")), nodes.length * step));
+    let t = 300;
+    lines.forEach((line, i) => {
+      if (line.who === "candidate" && !real) {
+        const ms = sayMs(line) * 0.8;
+        later(id, t, () => typeLine(id, i, ms));
+        t += ms + 900;
+      } else {
+        later(id, t, () => showLine(i));
+        t += real ? 2200 : sayMs(line) * 0.6 + 700;
+      }
+    });
+    later(id, t, () => (manual ? finished(id) : setButton("idle")));
   }
 
   // With sound: each line appears when its speech starts; the next follows when it ends.
@@ -157,7 +207,12 @@ document.addEventListener("DOMContentLoaded", () => {
         u.voice = interviewer;
       }
       let shown = false;
-      const show = () => { if (!shown && id === run) { shown = true; showLine(index); } };
+      const show = () => {
+        if (shown || id !== run) return;
+        shown = true;
+        if (line.who === "candidate" && !real && !reducedMotion()) typeLine(id, index, sayMs(line) / (u.rate || 1));
+        else showLine(index);
+      };
       const guard = window.UBTurn.guardUtterance(u, {
         text: u.text, rate: u.rate, onStart: show,
         onDone: (why) => {
@@ -176,20 +231,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   toggle.addEventListener("click", () => {
-    if (playing) { stop(); return; }
+    if (playing) { stop(); showAll(); return; }
     if (!synth) { say("Your browser has no speech voice, so the sample plays as text."); playSilent(true); return; }
     if (muted()) { say("Sound is off. Unmute with the speaker button at the top to hear it."); playSilent(true); return; }
     say("");
     playSound();
   });
   document.addEventListener("ub-mute", (e) => {
-    if (e.detail.muted && playing) { stop(); say("Sound is off. Unmute with the speaker button at the top to hear it."); }
+    if (e.detail.muted && playing) { stop(); showAll(); say("Sound is off. Unmute with the speaker button at the top to hear it."); }
     if (!e.detail.muted) say("");
   });
 
-  // Silent preview after 3 s of no interaction (spec/01 Landing).
+  // Reduced motion: the final state from the start. Otherwise the candidate's turn waits with
+  // a caret, and the silent preview starts after 3 s of no interaction (spec/01 Landing).
+  if (reducedMotion()) showAll();
+  else {
+    const first = lines.findIndex((l) => l.who === "candidate");
+    if (first >= 0) { nodes[first].classList.remove("pending"); typed(first).innerHTML = '<span class="caret"></span>'; }
+  }
   let interacted = false;
   const mark = () => { interacted = true; };
   ["pointerdown", "keydown"].forEach((e) => addEventListener(e, mark, { once: true }));
-  setTimeout(() => { if (!interacted) playSilent(false); }, 3000);
+  // A visitor who is already clicking or typing gets the finished exchange, not motion.
+  setTimeout(() => {
+    if (playing || reducedMotion()) return;
+    if (interacted) { stop("idle"); showAll(); } else playSilent(false);
+  }, 3000);
 });
