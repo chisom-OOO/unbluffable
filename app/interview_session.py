@@ -27,7 +27,7 @@ from engine.help import position, strength, weight_for
 from engine.interview import Interview, Question
 from engine.templates import POPULATIONS, Puzzle
 from voice.answers import RESTATED_GIVEN, given_number, restated_given
-from voice.endpointing import cues
+from voice.endpointing import SilencePrompts, cues
 from voice.numbers import number_from_text
 from voice.recording import VoiceError
 from voice.schemas import CONTEXT, FULL, FULL_PROMPT, MINIMAL, MINIMAL_PROMPT
@@ -326,6 +326,7 @@ class QuestionLog:
     part2: Part2Log | None = None
     follow_up: follow_up.FollowUpLog | None = None
     asked_digit: bool = False  # asked once for one more decimal place (`coarse`)
+    silence: SilencePrompts = field(default_factory=SilencePrompts)  # decision log 40, shared by its recordings
 
     @property
     def position(self) -> int:
@@ -682,6 +683,10 @@ class ExamSession:
             rounds = [int(x) for x in q.numbers if x.denominator == 1 and int(x) in POPULATIONS]
             if rounds:
                 q.population = rounds[0]
+
+    def silence_prompts(self) -> SilencePrompts | None:
+        """Decision log 40: the current question's silence lines (at most one prompt per question)."""
+        return self.questions[-1].silence if self.questions else None
 
     async def silence_check(self, text: str) -> bool:
         """Passed to voice.relay.realtime_answer: a committed answer to the current question

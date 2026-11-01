@@ -28,6 +28,9 @@ class AnswerMerger:
         # the silence prompt needs new speech between two prompts.
         self.speech_revision = 0
         self.prompted_speech = -1
+        # The speech revision for which the commitment check found no committed number
+        # (decision log 40: only then may the 20 s prompt follow).
+        self.uncommitted_speech = -1
         self.prompt_s = prompt_s
         self.paused = False
         self.accepted_revision = None
@@ -90,7 +93,7 @@ class AnswerMerger:
         return max(0.0, self.last_activity + self.prompt_s - now)
 
     def mark_prompted(self):
-        """The silence prompt (or its commitment check) fired at this point of the answer."""
+        """The 8 s silence point (the commitment check) was reached for this speech."""
         self.prompted_revision = self.revision
         self.prompted_speech = self.speech_revision
 
