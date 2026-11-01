@@ -288,7 +288,7 @@ From the voice worktree, with BASETEN_API_KEY already exported:
 
 ```powershell
 $env:LLM_BACKEND = "open_weights"
-.\.venv\Scripts\python.exe -m forge.family_run --mode live --csv "C:\Users\chiso\unbluffable\data\bank\quant_interview_7575.csv" --budget-usd 5 --work-dir data/forge/families1
+.\.venv\Scripts\python.exe -m forge.family_run --mode live --csv "data\bank\quant_interview_7575.csv" --budget-usd 5 --work-dir data/forge/families1
 ```
 
 Only Spark Open is called. MODEL_API_KEY is not needed for this workflow.

@@ -94,7 +94,7 @@ key, run this command from the worktree; every endpoint-model response is record
 outside both repositories:
 
 ```powershell
-.\.venv\Scripts\python.exe -m voice.acceptance --mode live --capture-root "C:\Users\chiso\unbluffable\scripts\gate\runs" --records "$env:TEMP\unbluffable-turn-taking"
+.\.venv\Scripts\python.exe -m voice.acceptance --mode live --capture-root "scripts\gate\runs" --records "$env:TEMP\unbluffable-turn-taking"
 ```
 
 `MODEL_API_KEY` must already be exported in that PowerShell session. Re-run with

@@ -2,7 +2,7 @@
 
 > `CLAUDE.md` (Claude Code) and `AGENTS.md` (Codex, Muse Code) must stay identical. Edit both together.
 
-This repo builds **Unbluffable** for the Meta Global AI Developer Hackathon (Indie track). The authoritative specification is in `spec/` (frozen v12). Read `ADVISOR_BRIEFING.md` and `STATUS.md` for context, then `spec/00_START_HERE.md`, then the files your task needs:
+This repo builds **Unbluffable** for the Meta Global AI Developer Hackathon (Indie track). The authoritative specification is in `spec/` (frozen v12). Read `spec/00_START_HERE.md`, then `spec/DECISION_LOG.md` for every change since the plan, then the files your task needs:
 - `spec/01_PRODUCT_SPEC.md`: screens, flows, labels, copy rules
 - `spec/02_ENGINE_SPEC.md`: templates, likelihood tables, selection, labels, pinned tests
 - `spec/03_ARCHITECTURE_AND_API.md`: stack, repo layout, Meta API facts, schema, voice path, realtime gate
