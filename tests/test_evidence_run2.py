@@ -85,7 +85,12 @@ def test_run2_arms_and_summary():
     assert "| Careful Spark, original only | 1 | 0 |" in head.split("Headline comparison:")[1]
     assert all(f"| {name} |" in secondary.split("## ")[0] for name in ("Careful Spark", "Plain Spark"))
     assert "Unbluffable 2/2; Careful Spark, original only 1/2." in md
-    assert "False flags on genuine items: Unbluffable 0, Careful Spark, original only 0." in md
+    # Decision log 34: each arm's false flags with an exact one-sided 95% upper bound (0 of 2: 77.6%).
+    assert all(a["majority"]["false_flag_upper_95"] == stats.upper_bound(a["majority"]["false_flags"], 2)
+               for a in results["arms"].values())
+    assert "False flags on genuine items: Unbluffable 0 (one-sided 95% upper bound 77.6%), " \
+           "Careful Spark, original only 0 (one-sided 95% upper bound 77.6%)." in md
+    assert "| Unbluffable | 4/4 | 100.0%, 100.0%, 100.0% | 0.0% (0/2; 95% upper bound 77.6%) |" in md
     line = TIE.format(p="1")
     assert rule["headline"] == line and f"Headline: **{line}**" in md and "Outcome (decision log 34): **tie**" in md
     assert "b = 1, c = 0, p = 1." in md and "Gap" not in md.split("## Pre-registered headline rule")[1]
@@ -168,6 +173,27 @@ def test_run1_keeps_the_two_item_rule():
     assert set(rule) == {"unbluffable_correct", "compared_correct", "compared_with", "gap", "within", "close", "headline"}
     assert rule["compared_with"] == "careful_answers" and rule["within"] == 2
     assert rule["headline"] in {harness.HEADLINE_IF_CLOSE, harness.HEADLINE}
+    # Run 1's results are unchanged: no upper bounds.
+    assert all("false_flag_upper_95" not in a["majority"] for a in results["arms"].values())
+    assert "upper bound" not in harness.markdown(results)
+
+
+def test_run2_bounds_count_flags_among_genuine_items_only():
+    """Two genuine answers flagged out of three: the bound is on 2 of 3, not of all items."""
+    items = [ITEMS[0], {**ITEMS[0], "id": "sound2"}, {**ITEMS[3], "id": "dec"}, ITEMS[1], ITEMS[2]]
+
+    class FlagsTwo(Run2Spark):
+        async def structured(self, text, kind, effort, schema, prompt):
+            if kind == "evidence_plain":
+                return {"verdict": "does_not_understand" if "36 outcomes" in text and "1/18" in text else "understands"}, {}
+            return await super().structured(text, kind, effort, schema, prompt)
+
+    verdicts = asyncio.run(harness.evaluate(items, FlagsTwo(), runs=1, design="run2"))
+    results = harness.summarise(items, verdicts, {**RUN2_PROVENANCE, "runs": 1, "prompt_sha256": {}})
+    plain = results["arms"]["plain"]["majority"]
+    assert (plain["false_flags"], results["n_understands"]) == (2, 3)
+    assert plain["false_flag_upper_95"] == stats.upper_bound(2, 3)
+    assert "(2/3; 95% upper bound" in harness.markdown(results)
 
 
 def test_the_headline_arm_must_have_run():
