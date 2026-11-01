@@ -36,3 +36,15 @@ def test_code_results_are_14px_with_an_icon_and_a_word():
     rule = CSS[CSS.index(".code-results, .code-results h3, .code-case code"):]
     assert rule[:rule.index("}")].endswith("{ font-size: 14px; ")
     assert '"Passed" : "Failed"' in (APP / "static" / "ui" / "coding-ui.js").read_text(encoding="utf-8")
+
+
+def test_market_transcript_takes_the_remaining_height_and_follows_the_latest_line():
+    # The room is one screen tall in a market round; the transcript stretches, wraps and scrolls.
+    assert '$("room").classList.toggle("market", event.kind === "market");' in JS
+    assert ".room.market { height: calc(100vh - 61px); height: calc(100dvh - 61px);" in CSS
+    assert ".room.market > .stage { align-self: stretch; min-height: 0;" in CSS
+    assert ".room.market #log { flex: 1 1 auto; min-height: 0; overflow-y: auto;" in CSS
+    assert ".room.market .dock { position: static;" in CSS
+    # Auto-scroll: to the bottom on every change unless you scrolled up to read.
+    assert "if (marketRoom()) { atLatest = true; log.scrollTop = log.scrollHeight; return; }" in JS
+    assert "new MutationObserver(() => { if (marketRoom() && atLatest) log.scrollTop = log.scrollHeight; })" in JS

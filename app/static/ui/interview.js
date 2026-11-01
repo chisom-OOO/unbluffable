@@ -58,7 +58,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function setStatus(message) { status.textContent = message || ""; status.hidden = !message; }
 
-  function scrollTo(el) { el.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" }); }
+  function scrollTo(el) {
+    if (marketRoom()) { atLatest = true; log.scrollTop = log.scrollHeight; return; }
+    el.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
+  }
+  // Market making: the transcript has its own scroll under the scorecard. It follows the latest
+  // line (including lines still typing in) unless you have scrolled up to read.
+  const marketRoom = () => $("room").classList.contains("market");
+  let atLatest = true;
+  log.addEventListener("scroll", () => { atLatest = log.scrollHeight - log.scrollTop - log.clientHeight < 40; });
+  new MutationObserver(() => { if (marketRoom() && atLatest) log.scrollTop = log.scrollHeight; })
+    .observe(log, { childList: true, subtree: true, characterData: true });
 
   // ---------- Speech: real SpeechSynthesis events drive "Speaking" ----------
   let muting = 0;  // lines being spoken that mute the microphone (not the device-check test line)
@@ -377,6 +387,7 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle").textContent = event.text;
         $("provenance").innerHTML = window.UB.provenanceHtml(event.provenance_rows);
         $("market-panel").hidden = event.kind !== "market";
+        $("room").classList.toggle("market", event.kind === "market");
         $("case-panel").hidden = event.kind !== "case";
         $("puzzle-eyebrow").textContent = (event.opener ? "Spoken opener · then a coding round"
           : event.kind === "check" ? "Drill check"

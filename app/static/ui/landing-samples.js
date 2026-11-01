@@ -23,8 +23,8 @@ window.UB_SAMPLES = {
     mistake: "adds_supplier_credit_days",
     lines: [
       { who: "candidate", text: "I'd add all three: 88, 49 and 73, so the cycle is 210 days.", challenge: "210 days", value: "210" },
-      { who: "interviewer", kind: "challenge", text: "You said 210 days. Do payable days keep your cash tied up longer, or give it back sooner?" },
-      { who: "candidate", text: "Sooner, so I subtract them. 88 plus 49 minus 73 is 64 days.", value: "64" },
+      { who: "interviewer", kind: "challenge", text: "You said 210 days. Does paying your suppliers later lengthen or shorten the time your cash is tied up?" },
+      { who: "candidate", text: "Shorten, so I subtract them. 88 plus 49 minus 73 is 64 days.", value: "64" },
     ],
   },
   consulting: {

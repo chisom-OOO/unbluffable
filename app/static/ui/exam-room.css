@@ -1085,3 +1085,23 @@ input[type="checkbox"] { accent-color: var(--active, var(--ink)); width: 18px; h
 /* Landing: a new track's sample fades in once (reduced motion: no animation). */
 .scene.swap .replay-body, .scene.swap .asks { animation: sample-in .18s var(--ease); }
 @keyframes sample-in { from { opacity: 0; } }
+
+/* Market making: the room is one screen tall. The question and a compact scorecard sit on top;
+   the transcript takes the remaining height, wraps and scrolls on its own (following the
+   latest line); the answer dock sits under it. Short windows fall back to page scroll. */
+.room.market { height: calc(100vh - 61px); height: calc(100dvh - 61px); min-height: 600px;
+  grid-template-rows: auto minmax(0, 1fr); padding-top: 24px; padding-bottom: 0; }
+.room.market > .question { padding-bottom: 14px; }
+.room.market .qhelp { margin-top: 4px; }
+.room.market .market-panel { margin-top: 10px; padding-top: 10px; }
+.room.market .market-panel h3 { margin-bottom: 2px; }
+.room.market .market-card { gap: 4px; }
+.room.market .market-quote { padding-bottom: 0; }
+.room.market .market-num { font-size: 24px; }
+.room.market > .stage { align-self: stretch; min-height: 0; padding-top: 8px; }
+.room.market #log { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 8px; }
+.room.market .utterance { scroll-margin-bottom: 0; }
+.room.market .dock { position: static; margin-top: 0; }
+.room.market > .rail { align-self: stretch; position: static; min-height: 0; overflow-y: auto; }
+.room.market .qtext { font-size: clamp(24px, 2.2vw, 30px); line-height: 1.2; }
+.room.market .type-answer { height: 72px; min-height: 0; }

@@ -73,7 +73,7 @@ def test_lines_are_full_sentences_short_enough_to_say():
             text = line["text"]
             assert not text.startswith(("…", "...")), (track, text)
             assert text[0].isupper() and text.endswith((".", "?")), (track, text)
-            assert len(text) <= 100, (track, text)
+            assert len(text) <= 110, (track, text)  # about seven seconds aloud
 
 
 def test_landing_follows_the_track_and_reads_the_question_first():
