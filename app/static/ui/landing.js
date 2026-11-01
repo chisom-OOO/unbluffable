@@ -1,10 +1,13 @@
 // Landing: the claim, the labelled sample playing out as live type, and the track choice.
+// The sample follows the "Practise for [track]" selector: one per track, each from a real forge
+// family (landing-samples.js), swapped instantly to its finished state.
 // If the visitor hasn't interacted within 3 s, the sample plays silently (browsers block sound
 // without a click): the candidate's line types in, the number they commit to is underlined,
 // the interviewer's challenge appears, then the recovery and "Same puzzle, new numbers."
-// "Play with sound" speaks it with the browser's speech synthesis, each line appearing as it is
-// spoken: the interviewer in one voice, the candidate in another (or, with a single voice, at a
-// different pitch and rate). The mute setting is respected. Reduced motion shows the final state.
+// "Play with sound" speaks it with the browser's speech synthesis: the interviewer reads the
+// question, then each line appears as it is spoken, the interviewer in one voice and the
+// candidate in a second voice (or, with a single voice, at a different pitch and rate). The
+// mute setting is respected. Reduced motion shows the final state.
 document.addEventListener("DOMContentLoaded", () => {
   // The landing page never redirects: every visitor, phones included (whose other pages
   // show the gate), stays here with the recorded replay. "Start an interview" goes straight to
@@ -20,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("ub-account", (e) => showAccount(e.detail));
   document.getElementById("signin-cta").addEventListener("click", () => account.openSignIn());
 
-  const data = window.UB_FAKE;
+  const SAMPLES = window.UB_SAMPLES;
   const { escapeHtml, reducedMotion, pickVoice } = window.UB;
   const $ = (id) => document.getElementById(id);
 
@@ -47,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const href = `/ui/interview?track=${encodeURIComponent(pick.value)}`;
     starts.forEach((a) => { if (a) a.href = href; });
     fit();
+    swapSample();
   }
   pick.addEventListener("change", choose);
   fetch("/api/interview/topics").then((r) => (r.ok ? r.json() : Promise.reject())).then((t) => {
@@ -61,9 +65,10 @@ document.addEventListener("DOMContentLoaded", () => {
   fit();
 
   // ---------- The sample ----------
-  $("landing-puzzle").textContent = data.puzzle.text;
+  let sample = SAMPLES[pick.value] || SAMPLES.quant;
+  $("landing-puzzle").textContent = sample.question;
   const CODA = { who: "interviewer", kind: "twin", text: "Same puzzle, new numbers." };
-  let lines = [...data.replay.lines, CODA];
+  let lines = [...sample.lines, CODA];
   const body = $("replay-body"), toggle = $("replay-toggle"), note = $("replay-note");
   const toggleLabel = toggle.querySelector("span");
   const synth = window.speechSynthesis && typeof window.SpeechSynthesisUtterance === "function" ? window.speechSynthesis : null;
@@ -124,6 +129,23 @@ document.addEventListener("DOMContentLoaded", () => {
     $("sample-tag").textContent = "A real recorded interview";
     if (reducedMotion()) showAll();
   }).catch(() => {});
+
+  // A new track: its sample replaces the old one at once, finished (a short fade unless reduced
+  // motion). A real recording, once committed, stays whatever the track.
+  function swapSample() {
+    const next = SAMPLES[pick.value];
+    if (real || !next || next === sample) return;
+    stop("idle");
+    say("");
+    sample = next;
+    $("landing-puzzle").textContent = sample.question;
+    lines = [...sample.lines, CODA];
+    nodes = buildNodes();
+    showAll();
+    const scene = body.closest(".scene");
+    scene.classList.remove("swap");
+    if (!reducedMotion()) { void scene.offsetWidth; scene.classList.add("swap"); }
+  }
 
   let run = 0, timers = [], guards = [], playing = false;
   const later = (id, ms, fn) => timers.push(setTimeout(() => { if (id === run) fn(); }, ms));
@@ -191,8 +213,9 @@ document.addEventListener("DOMContentLoaded", () => {
     later(id, t, () => (manual ? finished(id) : setButton("idle")));
   }
 
-  // With sound: each line appears when its speech starts; the next follows when it ends.
-  // A line whose speech never starts or never ends still moves on (UBTurn.guardUtterance).
+  // With sound: the interviewer reads the question, then each line appears when its speech
+  // starts and the next follows when it ends. A line whose speech never starts or never ends
+  // still moves on (UBTurn.guardUtterance).
   function playSound() {
     stop("playing");
     const id = run;
@@ -201,31 +224,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const interviewer = pickVoice();
     const candidate = pickVoice(interviewer);
     const distinct = candidate && interviewer && candidate !== interviewer;
-    let i = 0;
-    const next = () => {
-      if (id !== run) return;
-      if (i >= lines.length) { finished(id); return; }
-      const index = i++, line = lines[index];
-      const u = new SpeechSynthesisUtterance(line.text.replace(/^[…\s.]+/, ""));
-      if (line.who === "candidate") {
+    const speakOne = (text, who, show) => {
+      const u = new SpeechSynthesisUtterance(text);
+      if (who === "candidate") {
         u.voice = distinct ? candidate : interviewer;
         if (!distinct) { u.pitch = 1.45; u.rate = 1.15; }
       } else {
         u.voice = interviewer;
       }
       let shown = false;
-      const show = () => {
-        if (shown || id !== run) return;
-        shown = true;
-        if (line.who === "candidate" && !real && !reducedMotion()) typeLine(id, index, sayMs(line) / (u.rate || 1));
-        else showLine(index);
-      };
+      const once = () => { if (!shown && id === run) { shown = true; show(u); } };
       const guard = window.UBTurn.guardUtterance(u, {
-        text: u.text, rate: u.rate, onStart: show,
+        text: u.text, rate: u.rate, onStart: once,
         onDone: (why) => {
           guards = guards.filter((g) => g !== guard);
           if (why === "cancel" && id !== run) return;
-          show();
+          once();
           timers.push(setTimeout(next, reducedMotion() ? 150 : 450));
         },
       });
@@ -233,6 +247,18 @@ document.addEventListener("DOMContentLoaded", () => {
       // Speech that never starts (no voice, a busy queue): show the line and carry on.
       timers.push(setTimeout(() => { if (!guard.started && id === run) { synth.cancel(); guard.cancel(); } }, 2500));
       synth.speak(u);
+    };
+    let i = -1;  // -1: the question, read by the interviewer
+    const next = () => {
+      if (id !== run) return;
+      if (i >= lines.length) { finished(id); return; }
+      const index = i++;
+      if (index < 0) { speakOne(real ? $("landing-puzzle").textContent : sample.spoken, "interviewer", () => {}); return; }
+      const line = lines[index];
+      speakOne(line.text, line.who, (u) => {
+        if (line.who === "candidate" && !real && !reducedMotion()) typeLine(id, index, sayMs(line) / (u.rate || 1));
+        else showLine(index);
+      });
     };
     next();
   }
