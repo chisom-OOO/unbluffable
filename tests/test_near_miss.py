@@ -42,8 +42,7 @@ def test_a_near_miss_gets_the_precision_line_and_is_never_correct():
 
     session, events, _ = run(source(), policy)
     first = session.questions[0]
-    assert first.answers[0].outcome is Outcome.OTHER_WRONG  # not accepted, not Correct
-    assert first.answers[0].outcome is not Outcome.CORRECT
+    assert first.answers[0].outcome == Outcome.OTHER_WRONG.value  # not accepted, not Correct
     assert lines(events, "challenge")[0] == say.NEAR_MISS == "Close. How precise is your last step?"
     assert first.challenges == 1 and first.help_load == 0  # counts as the challenge, no help load
 
@@ -62,7 +61,7 @@ def test_a_near_miss_after_the_challenge_replaces_the_nudge_without_help_load():
     assert lines(events, "challenge")[0].startswith("You said")
     assert lines(events, "nudge")[0] == say.NEAR_MISS
     assert first.nudges == 1 and first.help_load == 0
-    assert all(a.outcome is not Outcome.CORRECT for a in first.answers[:2])
+    assert all(a.outcome != Outcome.CORRECT.value for a in first.answers[:2])
 
 
 def test_beyond_a_tenth_of_a_percent_is_the_usual_challenge():

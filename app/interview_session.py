@@ -270,6 +270,23 @@ def coarse(puzzle: Puzzle, analysis: Analysis) -> bool:
     return any(puzzle.accepts(stated, v) for v in others if v != puzzle.answer)
 
 
+NEAR_MISS_SHARE = Fraction(1, 1000)  # decision log 39: within 0.1% (relative) of the exact answer
+
+
+def near_miss(puzzle: Puzzle, analysis: Analysis) -> bool:
+    """Decision log 39: a committed number that was not accepted, is no known wrong method,
+    and is within 0.1% of the exact answer (exact fractions; never when the answer is 0).
+    Only the interviewer's next line changes; the answer is still coded wrong."""
+    obs = analysis.observation if analysis is not None else None
+    stated = analysis.stated if analysis is not None else None
+    if obs is None or obs.outcome is not Outcome.OTHER_WRONG or obs.matched or stated is None:
+        return False
+    exact = Fraction(puzzle.answer)
+    if exact == 0 or any(Fraction(nv.value) == stated.value for nv in getattr(puzzle, "named_values", ())):
+        return False
+    return abs(stated.value - exact) <= abs(exact) * NEAR_MISS_SHARE
+
+
 @dataclass
 class Part2Log:
     """A follow-up part, asked only after a correct answer (decision log 15). It is
@@ -499,11 +516,15 @@ class ExamSession:
                 await self.line("close", say.NOT_RECOVERED_CLOSE, receipt=scored.receipt)
                 return
             rounds += 1
+            close = near_miss(q.puzzle, analysis)  # decision log 39: point at precision, no help load
             if not challenged:
                 challenged = True
                 q.challenges += 1
-                await self.line("challenge", self._challenge_text(q, obs, analysis),
+                await self.line("challenge", say.NEAR_MISS if close else self._challenge_text(q, obs, analysis),
                                 receipt=receipts.redacted(answer.receipt))
+            elif close:
+                q.nudges += 1
+                await self.line("nudge", say.NEAR_MISS, receipt=receipts.redacted(answer.receipt))
             else:
                 await self.nudge(q, obs)
 
