@@ -72,7 +72,7 @@
         <section class="panel" id="setup" aria-labelledby="choose-title">
           <h2 id="choose-title">Interview selection</h2>
           <div class="picker">
-            <div class="tracks" id="track" role="radiogroup" aria-label="Track" aria-busy="true"><span class="skeleton skeleton-card" aria-hidden="true"></span><span class="skeleton skeleton-card" aria-hidden="true"></span><span class="skeleton skeleton-card" aria-hidden="true"></span><span class="skeleton skeleton-card" aria-hidden="true"></span></div>
+            <div class="tracks" id="track" role="radiogroup" aria-label="Track" aria-busy="true"></div>
             <!-- Setup redesign: the target role decides the topic chips (Core / Supporting; Specialist under More topics). -->
             <div class="field role-field" id="role-field" hidden>
               <span class="field-label" id="role-label">Target role</span>
@@ -101,7 +101,7 @@
                   <button type="button" class="linkbtn" id="topics-clear">Clear</button>
                 </span>
               </div>
-              <div class="topic-chips two-col" id="topic" role="group" aria-labelledby="topics-label" aria-describedby="topics-note" aria-busy="true"><span class="skeleton skeleton-chip" style="width:96px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:120px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:84px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:132px" aria-hidden="true"></span><span class="skeleton skeleton-chip" style="width:104px" aria-hidden="true"></span></div>
+              <div class="topic-chips two-col" id="topic" role="group" aria-labelledby="topics-label" aria-describedby="topics-note" aria-busy="true"></div>
               <details class="more-topics" id="more-topics" hidden>
                 <summary>More topics</summary>
                 <div class="topic-chips two-col" id="topic-more" role="group" aria-label="More topics"></div>
@@ -122,8 +122,10 @@
             <span>I'm using headphones (lets me talk over the interviewer).</span>
           </label>
           <div class="gate">
-            <button class="btn wide not-ready" type="button" id="start" aria-describedby="gate-note">Start interview →</button>
-            <p class="gate-note" id="gate-note" aria-live="polite"></p>
+            <div class="start-row">
+              <button class="btn not-ready" type="button" id="start" aria-describedby="gate-note">Start interview →</button>
+              <p class="gate-note" id="gate-note" aria-live="polite"></p>
+            </div>
             <p class="typed-link" id="typed-practice-row">
               <button type="button" id="typed-practice">Can't use a camera or mic?</button>
               <span class="tag warn">Not exam conditions</span>
@@ -134,6 +136,11 @@
 
         <section class="panel" id="device-check" aria-labelledby="device-title">
           <h2 id="device-title">Device check</h2>
+          <div class="devrow all-passed" id="all-passed" hidden>
+            <strong class="check-state ok">All checks passed</strong>
+            <button class="linkbtn" type="button" id="show-checks" aria-expanded="false" aria-controls="device-details">Show checks</button>
+          </div>
+          <div class="device-details" id="device-details">
           <figure class="camsetup">
             <video id="camera-video" autoplay muted playsinline hidden aria-label="Your camera, shown only on this screen"></video>
             <p class="camera-off" id="camera-off">Camera off</p>
@@ -176,6 +183,7 @@
             <span class="check-state" id="connection-state">Checking</span>
           </div>
           <p class="device-note" id="connection-note">Checking…</p>
+          </div>
         </section>
       </div>
     </div>
@@ -186,7 +194,7 @@
         <p class="qmeta" id="puzzle-eyebrow">Question 1 of up to 4 · guide 2:00</p>
         <h2 id="puzzle-title" class="visually-hidden">The question</h2>
         <span class="tag" id="puzzle-kind">New puzzle</span>
-        <p class="qtext puzzle" id="puzzle">The interviewer reads the first question when you start.</p>
+        <p class="qtext puzzle" id="puzzle">Press Start and the interviewer will read the first question.</p>
         <p class="qhelp">Clarifying questions are free. Talk through your reasoning.</p>
         <div id="coding-examples"></div>
         <section class="market-panel case-panel" id="case-panel" aria-labelledby="case-title" hidden>
@@ -220,13 +228,9 @@
         <div class="stagehead">
           <div>
             <h2 id="conv-title">Interview transcript</h2>
-            <p class="fine" id="help-count" aria-live="polite">Challenges 0 · Nudges 0 · Hints 0</p>
+            <p class="fine" id="help-count" aria-live="polite" hidden></p>
             <span class="tag warn" id="practice-tag" hidden>Typed practice: not exam conditions</span>
           </div>
-          <figure class="selfview" id="selfview" hidden>
-            <video id="camera-self" autoplay muted playsinline aria-label="Your camera, shown only on this screen"></video>
-            <figcaption>You</figcaption>
-          </figure>
         </div>
         <div id="log" role="log" aria-live="polite" aria-relevant="additions text"></div>
         <div class="dock">
@@ -257,7 +261,7 @@
             <div class="orb mic" id="mic" data-state="idle" aria-hidden="true"><i></i><i></i><i></i></div>
             <div class="voicetext">
               <strong class="mic-state" id="mic-state" role="status" aria-live="polite"></strong>
-              <small id="mic-sub">Speak naturally · hands-free</small>
+              <small id="mic-sub">Your answer ends when you pause, or press Done.</small>
             </div>
             <button class="btn secondary btn-small" type="button" id="done" disabled aria-keyshortcuts="Space" aria-describedby="done-note">
               Done <kbd aria-hidden="true">Space</kbd>
@@ -329,6 +333,10 @@
       </section>
 
       <aside class="rail" id="rail" aria-label="Evidence and models">
+        <figure class="selfview" id="selfview" hidden>
+          <video id="camera-self" autoplay muted playsinline aria-label="Your camera, shown only on this screen"></video>
+          <figcaption>You</figcaption>
+        </figure>
         <section class="evidence-meter" id="meter" aria-labelledby="meter-title">
           <h2 id="meter-title">Evidence so far</h2>
           <p>Model estimates (assumed likelihoods), updated after each scored answer. The label at the end is what counts.</p>

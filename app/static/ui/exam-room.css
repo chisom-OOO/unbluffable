@@ -141,9 +141,9 @@ kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); 
 .btn-small { min-height: 36px; padding: 6px 12px; font-size: 14px; }
 .btn.wide { width: 100%; }
 .btn:disabled, .btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
-/* Start before the checks pass: still a button (it opens the dialog), visibly not ready. */
-.btn.not-ready { background: transparent; color: var(--ink); border: 1px dashed var(--muted); }
-.btn.not-ready:hover { background: var(--soft); }
+/* Start before the checks pass: still the solid primary (it opens the dialog), faded. */
+.btn.not-ready { opacity: .4; }
+.btn.not-ready:hover { background: var(--accent); }
 /* Tags are text, not pills; only the challenge is coloured. */
 .tag { display: inline; background: none; padding: 0; color: var(--muted); font-size: 13px; font-weight: 500; white-space: nowrap; }
 .tag.warn { color: var(--muted); }
@@ -211,7 +211,7 @@ a.track:hover, button.track:not([aria-disabled="true"]):hover { border-color: va
 .neq .bars { stroke-width: 2.3; }
 .neq .slash { stroke-width: 2.1; }
 
-.scene { margin-top: clamp(32px, 3.6vw, 48px); max-width: 880px; }
+.scene { margin-top: clamp(40px, 4.4vw, 64px); max-width: 880px; }
 .scene .line { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 24px; padding: 8px 0; align-items: baseline; }
 .scene .who { font-size: 14px; font-weight: 500; color: var(--muted); }
 .scene .sampleq { font: 400 20px/1.45 var(--serif); }
@@ -230,7 +230,7 @@ a.track:hover, button.track:not([aria-disabled="true"]):hover { border-color: va
 .scene-foot .replay-note { flex-basis: 100%; }
 .replay-body.real { max-height: 420px; overflow-y: auto; }
 
-.go { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-top: clamp(36px, 4.4vw, 56px); }
+.go { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-top: clamp(24px, 3vw, 40px); }
 .pick { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .35em; font-size: clamp(20px, 2vw, 24px); }
 .select-wrap { position: relative; display: inline-block; }
 .select-wrap select { appearance: none; -webkit-appearance: none; font: inherit; font-weight: 500; color: var(--ink); background: transparent; border: 0; border-bottom: 2px solid var(--ink);
@@ -241,9 +241,10 @@ a.track:hover, button.track:not([aria-disabled="true"]):hover { border-color: va
 .select-wrap select:hover { border-bottom-color: var(--muted); }
 .go .btn { min-height: 52px; padding: 12px 26px; font-size: 16px; }
 .go .hero-actions { margin: 0; }
-.proof { margin-top: 22px; font: 400 13px/1.6 var(--mono); }
-.proof a { color: var(--muted); text-decoration-color: color-mix(in srgb, var(--muted) 45%, transparent); }
-.proof a:hover { color: var(--ink); text-decoration-color: currentColor; }
+.proof { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; padding: 0; list-style: none; }
+.proof a { display: inline-flex; align-items: center; min-height: 34px; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px;
+  font: 400 14px/1.3 var(--sans); color: var(--ink); text-decoration: none; transition: border-color .15s var(--ease); }
+.proof a:hover { border-color: var(--muted); text-decoration: none; }
 
 /* "Why these numbers?": one real twin from the bank, set as the room's receipt (always open). */
 .why-example { padding: 56px 40px 48px; border-top: 1px solid var(--line); }
@@ -990,3 +991,55 @@ body.coding-mode.keyboard-open .room.coding .coding-pane:not(.console-closed) { 
 [data-look="floor"] .orb.live i { display: none; }
 [data-look="floor"] .orb.live .wave { display: block; width: 24px; height: 18px; color: var(--live); }
 [data-look="floor"] .ws-pill[data-state="listening"]::before { background: var(--live); }
+
+/* ---------- UI council fixes ---------- */
+/* Every checkbox the same: brand green, one size. */
+input[type="checkbox"] { accent-color: var(--active, var(--ink)); width: 18px; height: 18px; }
+
+/* Setup: Start with its blockers listed beside it. */
+.start-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
+.start-row .gate-note { flex: 1; min-width: 200px; font-size: 14px; margin: 0; }
+.all-passed { margin-bottom: 0; }
+.all-passed .check-state { font-size: 15px; }
+
+/* Selector focus: a clear green ring, offset from the underline. */
+.select-wrap select:focus-visible { outline: 2px solid var(--brand, var(--ink)); outline-offset: 3px; border-radius: 2px; }
+
+/* Room readability (it is recorded for video): bigger transcript, ≥14px labels and rail,
+   and the room's grey a step nearer the ink in each theme. */
+.room { --muted: #4a443b; }
+:root[data-theme="dark"] .room { --muted: #bdb7ad; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .room { --muted: #bdb7ad; } }
+:root[data-look="floor"] .room { --muted: #46494e; }
+:root[data-look="floor"][data-theme="dark"] .room { --muted: #bcc1c7; }
+@media (prefers-color-scheme: dark) { :root[data-look="floor"]:not([data-theme="light"]) .room { --muted: #bcc1c7; } }
+.room .says { font-size: 18px; line-height: 1.5; }
+.room .speaker { font-size: 14px; }
+.rail, .rail h2, .rail > section > p, .meter-row dt, .meter-pct, .railnote, .models summary,
+.modelrow, .modelrow strong, .modelrow small, .modelrow .nums { font-size: 14px; }
+.market-quotes th, .market-book dt { font-size: 14px; }
+
+/* Camera: a fixed thumbnail at the top of the right column. */
+.rail .selfview { width: 160px; max-width: 100%; }
+.rail .selfview figcaption { font-size: 12px; }
+
+/* The verdict, inline under the answer: what you said, checked in code. */
+.verdict-row { display: flex; flex-wrap: wrap; gap: 2px 0; margin-top: 8px; font-size: 15px; color: var(--muted); }
+.verdict-row > span + span::before { content: "·"; margin: 0 .55em; color: var(--muted); }
+.verdict-row b { font-weight: 600; color: var(--ink); }
+.verdict-row.ok > span:nth-child(2) { color: var(--brand, var(--ink)); font-weight: 600; }
+.verdict-row.wrong, .verdict-row.wrong b { color: var(--amber); }
+.verdict-row.wrong > span:nth-child(2) { font-weight: 600; }
+/* The challenge, as on the landing: amber words, the challenged number underlined. */
+.room .is-challenge .speaker > span:first-child { color: var(--amber); }
+.room mark, .room mark.challenged { background: linear-gradient(var(--amber), var(--amber)) 0 100% / 100% 3px no-repeat; color: inherit; padding: 0 0 2px; border-radius: 0;
+  font-weight: inherit; animation: hit-in .25s var(--ease); }
+@keyframes hit-in { from { background-size: 0 3px; } }
+
+/* One clear turn indicator: a larger icon, a larger label, a faint tint by whose turn it is. */
+.voicebar { border-top: 0; padding: 12px 14px; border-radius: 6px; background: var(--soft); transition: background-color .2s var(--ease); }
+.voicebar[data-turn="listening"] { background: color-mix(in srgb, var(--brand, var(--ink)) 12%, var(--bg)); }
+.voicebar[data-turn="checking"] { background: color-mix(in srgb, var(--ink) 8%, var(--bg)); }
+.voicebar .orb { width: 32px; height: 32px; }
+.voicetext strong { font-size: 17px; }
+.voicetext small { font-size: 14px; }

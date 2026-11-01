@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const WORD_MS = 320;
 
   let config = null, socket = null, sessionId = null;
-  let phase = "ready";           // ready | listening | checking | finished
+  let phase = "ready";           // ready | starting | listening | checking | finished
   let speaking = 0, speechGen = 0;
   let typing = false, capturing = false, captureRequested = false;
   let question = null, questionStart = 0, answeredThisQuestion = false, offered = false;
@@ -41,16 +41,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (speaking > 0 && phase !== "finished") shown = "speaking";
     const text = {
       ready: "One tap starts the interview",
-      listening: typing ? "Your turn — type your answer" : "Listening",
-      checking: "Checking your working",
-      speaking: "Speaking",
+      starting: "Starting the interview",
+      listening: typing ? "Your turn — type your answer" : "Your turn — speak when ready",
+      checking: "Checking your working",  // only after an answer
+      speaking: "Interviewer speaking",
       finished: "Interview finished",
     }[shown];
-    mic.dataset.state = shown === "checking" ? "thinking" : (shown === "ready" || shown === "finished" ? "idle" : shown);
+    mic.dataset.state = shown === "checking" ? "thinking" : (["ready", "starting", "finished"].includes(shown) ? "idle" : shown);
+    document.querySelector(".action-bar").dataset.turn = shown;
     micState.textContent = text;
     window.UBCoding?.status(shown === "ready" ? "waiting" : shown);
     done.disabled = phase !== "listening" || (!typing && !capturing);
-    $("mic-sub").textContent = typing ? "Type your answer, then Done or Ctrl+Enter" : "Speak naturally · hands-free";
+    $("mic-sub").textContent = typing ? "Type your answer, then Done or Ctrl+Enter" : "Your answer ends when you pause, or press Done.";
     document.querySelector(".action-bar").classList.toggle("ready", phase === "ready");
   }
 
@@ -225,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function counts(c) {
     $("help-count").textContent = `Challenges ${c.challenges} · Nudges ${c.nudges} · Hints ${c.hints}`;
+    $("help-count").hidden = !(c.challenges || c.nudges || c.hints);  // nothing to count yet
   }
 
   // What each model call did, by the event that reports it.
@@ -485,9 +488,12 @@ document.addEventListener("DOMContentLoaded", () => {
         addInterviewer(event.acknowledgement, "ack");
         break;
       case "challenge_result":
+        stated = event.stated_number || null;
         modelRow(event.model, event.type);
         break;
       case "scoring_result":
+        verdictRow(stated || event.extraction?.committed_answer_text, event.observation);
+        stated = null;
         modelRow(event.model, event.type);
         break;
       case "transcription_model":
@@ -538,6 +544,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const said = event.text.match(/^You said (.+?)\. /);
       if (said) lastCandidate.querySelector(".says").innerHTML = highlight(lastCandidate.querySelector(".says").textContent, said[1]);
     }
+  }
+
+  // ---------- The verdict, inline under the answer ----------
+  // The number you committed to, checked in code. The exact answer itself is not shown while
+  // the question is open (a challenge must not give it away); the report shows it.
+  let stated = null;
+  const VERDICT = { correct: ["ok", "matches the exact answer"], named_wrong: ["wrong", "not the exact answer"],
+                    other_wrong: ["wrong", "not the exact answer"], recited: ["wrong", "not the exact answer"] };
+  function verdictRow(number, observation) {
+    const v = VERDICT[observation];
+    if (!v || !number || !lastCandidate) return;
+    lastCandidate.querySelector(".verdict-row")?.remove();
+    lastCandidate.querySelector(".says").insertAdjacentHTML("afterend",
+      `<p class="verdict-row ${v[0]}"><span>You said <b class="mono">${escapeHtml(number)}</b></span>`
+      + `<span>${v[1]}</span><span>checked in code</span></p>`);
   }
 
   // ---------- Evidence meter (decision log 16): model estimates after each scored answer ----------
@@ -610,7 +631,8 @@ document.addEventListener("DOMContentLoaded", () => {
     $("practice-tag").hidden = !typedPractice;
     $("selfview").hidden = !window.UBCamera?.attachSelf();  // the camera stays on, local only
     window.scrollTo(0, 0);
-    phase = "checking";
+    $("puzzle").textContent = "";  // the question itself replaces it once asked
+    phase = "starting";
     render();
     if (!typing) {
       // Before the socket opens: the begin message then says typed practice.
@@ -667,8 +689,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const problems = () => window.UBTurn.gateProblems({
     exempt: typedPractice || replay, mic: micStatus, camera, connection, consent: consent.checked, topics: topicCount() });
   const gateOpen = () => problems().length === 0;
+  let showChecks = false;
+  $("show-checks").addEventListener("click", () => { showChecks = !showChecks; updateGate(); });
   function updateGate() {
     const need = problems();
+    const allOk = micStatus === "ok" && camera === "ok" && connection === "ok";
+    $("all-passed").hidden = !allOk;
+    $("device-details").hidden = allOk && !showChecks;
+    $("show-checks").textContent = showChecks ? "Hide checks" : "Show checks";
+    $("show-checks").setAttribute("aria-expanded", String(showChecks));
     start.classList.toggle("not-ready", need.length > 0);
     $("gate-note").textContent = need.length ? need.map((p) => p.action).join(" · ")
       : replay ? "Recorded replay mode: answers are typed." : typedPractice ? "Typed practice: not exam conditions." : "Ready when you are.";
@@ -963,7 +992,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("setup-title").textContent = "Prepare your drill";
     $("choose-title").textContent = "Drill one mistake";
     $("setup-sub").textContent = "Up to 3 questions aimed at one mistake, then a check with new numbers. Check your camera and microphone, then just talk.";
-    $("puzzle").textContent = "The interviewer reads the first drill question when you start.";
+    $("puzzle").textContent = "Press Start and the interviewer will read the first drill question.";
     $("puzzle-eyebrow").textContent = "Drill · up to 3 questions, then a check";
   }
 
