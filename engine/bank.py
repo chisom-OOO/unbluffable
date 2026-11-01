@@ -44,6 +44,9 @@ from engine.templates import NamedValue, Puzzle
 LOG = logging.getLogger(__name__)
 
 DEFAULT_DIR = Path(__file__).resolve().parents[1] / "content" / "forge"
+# Families kept out of the spoken interview pool because most of their variants are hard to
+# follow by ear (forge/speakability_scan.py writes it). Reversible: remove an id to restore it.
+UNSPOKEN_FILE = Path(__file__).resolve().with_name("unspoken.json")
 DIFFICULTIES = ("Easy", "Medium", "Hard")
 START_LEVELS = ("Easy", "Medium")
 MIXED = "Mixed"
@@ -255,15 +258,20 @@ def parse_template(raw: dict, where: str = "template") -> ForgeTemplate:
 class Bank:
     templates: dict[str, ForgeTemplate] = field(default_factory=dict)
     errors: list[str] = field(default_factory=list)  # files skipped, with the reason
+    hidden: frozenset[str] = frozenset()  # out of the spoken pool (UNSPOKEN_FILE); still in templates
 
     def packs(self) -> list[str]:
         """Packs with at least one template, in PACKS order."""
-        found = {t.pack for t in self.templates.values()}
+        found = {t.pack for t in self.spoken()}
         return [p for p in PACKS if p in found]
+
+    def spoken(self) -> list[ForgeTemplate]:
+        """Templates in the spoken interview pool (not hidden)."""
+        return [t for t in self.templates.values() if t.template_id not in self.hidden]
 
     def topics(self, pack: str | None = None) -> list[tuple[str, int]]:
         counts: dict[str, int] = {}
-        for t in self.templates.values():
+        for t in self.spoken():
             if pack is None or t.pack == pack:
                 counts[t.topic] = counts.get(t.topic, 0) + 1
         return sorted(counts.items(), key=lambda kv: kv[0].lower())
@@ -272,13 +280,24 @@ class Bank:
         """Templates in the pack for one topic, a selection of topics, or MIXED (all)."""
         chosen = {topic} if isinstance(topic, str) else set(topic)
         everything = MIXED in chosen
-        return [t for t in self.templates.values()
+        return [t for t in self.spoken()
                 if (pack is None or t.pack == pack) and (everything or t.topic in chosen)]
 
 
-def load_bank(directory: Path | str | None = None) -> Bank:
-    """Every valid template in the directory; an invalid file is skipped and logged."""
-    bank = Bank()
+def unspoken(path: Path | str | None = None) -> frozenset[str]:
+    """The family ids kept out of the spoken pool; none when the file is missing."""
+    path = Path(path) if path is not None else UNSPOKEN_FILE
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return frozenset()
+    return frozenset(str(f) for f in raw.get("hidden", {})) if isinstance(raw, dict) else frozenset()
+
+
+def load_bank(directory: Path | str | None = None, hidden: frozenset[str] | None = None) -> Bank:
+    """Every valid template in the directory; an invalid file is skipped and logged. `hidden`
+    (default: UNSPOKEN_FILE for the default directory, none for any other) leaves the spoken pool."""
+    bank = Bank(hidden=hidden if hidden is not None else (unspoken() if directory is None else frozenset()))
     directory = Path(directory) if directory is not None else DEFAULT_DIR
     for path in sorted(directory.glob("*.json")) if directory.is_dir() else []:
         try:
