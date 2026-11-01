@@ -12,7 +12,7 @@ so anyone can know what the room feels like before they're in it.
 ![Theme](https://img.shields.io/badge/theme-Build_for_Your_World-0866FF)
 ![Open weights](https://img.shields.io/badge/open_weights-Muse_Spark_Open-6E40C9)
 ![Python](https://img.shields.io/badge/python-3.12-3776AB)
-![Tests](https://img.shields.io/badge/tests-900%2B-2EA043)
+[![Tests](https://github.com/chisom-OOO/unbluffable/actions/workflows/tests.yml/badge.svg)](https://github.com/chisom-OOO/unbluffable/actions/workflows/tests.yml)
 
 [How it works](#how-it-works) · [Meta models](#meta-models-and-their-roles) · [Measured so far](#measured-so-far) · [Run it](#run-it-locally) · [Decision log](spec/DECISION_LOG.md)
 
