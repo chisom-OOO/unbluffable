@@ -1,7 +1,7 @@
 // Look "Trading floor", the default since its approval: <html data-look="floor"> in each
 // template. /ui?look=default switches this browser back to the earlier look (remembered);
-// /ui?look=floor returns. This file adds the look's favicon (the ≠ mark), swaps the landing
-// screenshot, and draws the candidate's waveform on the mic indicator.
+// /ui?look=floor returns. This file adds the look's favicon (the ≠ mark) and draws the
+// candidate's waveform on the mic indicator.
 // Display only: the waveform reads the local input level (UBVoice.level(), never sent).
 (() => {
   const look = document.documentElement.dataset.look;
@@ -20,10 +20,6 @@
   // room is listening; the interviewer's speaking state keeps its own muted bars. Reduced
   // motion keeps static bars (the stylesheet colours them).
   document.addEventListener("DOMContentLoaded", () => {
-    // The landing's screenshot of the interview screen, taken in this look.
-    for (const img of document.querySelectorAll(".shot img")) {
-      img.src = img.getAttribute("src").replace(/interview-(light|dark)\.webp/, "interview-floor-$1.webp");
-    }
     const mic = document.getElementById("mic");
     if (!mic) return;
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
