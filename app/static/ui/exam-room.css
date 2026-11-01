@@ -153,6 +153,14 @@ kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); 
 .panel > h2 + * { margin-top: 10px; }
 .field { margin: 18px 0; min-width: 0; }
 .field > label, .field > legend, .levels legend { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; padding: 0; }
+/* Native select popups follow the theme: the select carries the theme's color-scheme (the
+   popup's own chrome), and every option its background and text from the tokens. Without this,
+   a transparent select on Windows opens a white popup with light text in dark mode. */
+select { color-scheme: light; }
+:root[data-theme="dark"] select { color-scheme: dark; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) select { color-scheme: dark; } }
+select option, select optgroup { background-color: var(--paper); color: var(--ink); }
+select option:disabled { color: var(--muted); }
 select, textarea { width: 100%; min-height: 44px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--ink); padding: 10px 11px; }
 textarea { resize: vertical; line-height: 1.5; }
 textarea::placeholder { color: var(--muted); }
