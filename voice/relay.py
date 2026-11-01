@@ -89,7 +89,7 @@ async def wait_for_endpoint(merger, provider, browser, changed, now, silence_che
                 pending = asyncio.create_task(safe_classify(provider, merger.transcript))
             prompt = None if merger.paused else merger.prompt_remaining(now())
             if prompt == 0:
-                merger.prompted_revision = merger.revision
+                merger.mark_prompted()  # never again until the candidate speaks
                 if silence_check is None:
                     await browser.send_json({"type": "listening_prompt", "message": PROMPT})
                 else:

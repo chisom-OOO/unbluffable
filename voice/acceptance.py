@@ -80,7 +80,7 @@ async def replay_clip(rows, provider):
             if pending and pending[0] <= now:
                 continue
         if merger.prompt_remaining(now) == 0:
-            merger.prompted_revision = merger.revision
+            merger.mark_prompted()
         choices = [limit + 1]
         if index < len(events):
             choices.append(events[index][0])
