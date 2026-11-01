@@ -1,8 +1,10 @@
 """Speakability scan over every spoken family in content/forge (engine.speakability).
 
 A variant is flagged for a list, brackets, a tuple, a subscript or underscore, "proportional
-to [", more than 6 numbers, more than 45 words, or jargon ("toy payoff", "fill indicator").
-A family where most variants (more than half) are flagged leaves the spoken interview pool,
+to [", more than 6 numbers, more than 60 words (only with none of those), or jargon ("toy payoff", "fill indicator").
+Coding-round families (sw_, swf_, qd_) are exempt: never removed (the interviewer says
+the problem is on screen). Any other family where most variants (more than half) are flagged
+leaves the spoken interview pool,
 except that no topic may end up empty: then its least-bad family (fewest flagged variants,
 then fewest flags) stays, and the report says so.
 
@@ -35,7 +37,8 @@ def family_report(template: ForgeTemplate) -> dict:
 def scan(directory: Path | str | None = None) -> dict:
     bank = load_bank(directory or DEFAULT_DIR, hidden=frozenset())
     families = {tid: family_report(t) for tid, t in sorted(bank.templates.items())}
-    mostly = {tid for tid, f in families.items() if f["flagged"] * 2 > f["variants"]}
+    mostly = {tid for tid, f in families.items()
+              if f["flagged"] * 2 > f["variants"] and not speakability.coding_family(tid)}
     kept: dict[str, dict] = {}
     by_topic: dict[tuple[str, str], list[str]] = {}
     for tid, f in families.items():

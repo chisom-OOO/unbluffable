@@ -370,6 +370,11 @@ class ExamSession:
         shown = say.puzzle_text(puzzle)
         join = lambda first, body: " ".join(part for part in (first, body, after) if part)
         spoken = speakability.spoken_question(shown, getattr(puzzle, "speech", "") or None)
+        if speakability.coding_family(getattr(puzzle, "template_id", None)):
+            # A coding-round family: one fixed line sends the candidate to the screen (it already
+            # asks them to talk it through, so no lead-in and no closing line).
+            await self.line("question", join(before, shown), speech=" ".join(p for p in (before, speakability.CODING_LINE) if p))
+            return
         if lead_in:
             lead = speakability.LEAD_INS[self._lead_ins % len(speakability.LEAD_INS)]
             self._lead_ins += 1

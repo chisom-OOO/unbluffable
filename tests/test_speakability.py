@@ -67,15 +67,21 @@ def test_final_question_sentence():
 
 
 def test_scan_only_flags_length_jargon_and_proportional():
-    long = " ".join(["word"] * 46) + "?"
-    assert S.flags(long).reasons == ["46 words"] and not S.flags(long).screen_only
+    assert S.MAX_WORDS == 60
+    assert S.flags(" ".join(["word"] * 60) + "?").reasons == [], "60 words is fine"
+    long = " ".join(["word"] * 61) + "?"
+    assert S.flags(long).reasons == ["61 words"] and not S.flags(long).screen_only
+    # Length only counts for questions with no list, brackets, tuple or subscript.
+    assert S.flags("Values [1, 2] " + " ".join(["word"] * 61) + "?").reasons == ["list", "brackets"]
+    assert S.flags("Start at (2, 3) " + " ".join(["word"] * 61) + "?").reasons == ["brackets", "tuple"]
+    assert S.flags("Let x_k " + " ".join(["word"] * 61) + "?").reasons == ["subscript"]
     assert "jargon: toy payoff" in S.flags("In a toy payoff game, what do you win?").reasons
     assert "jargon: fill indicator" in S.flags("The fill indicator is one. What next?").reasons
     assert "proportional to [" in S.flags("The prior is proportional to [1, 2]. What next?").reasons
 
 
 def test_lead_ins_are_a_fixed_short_list():
-    assert S.LEAD_INS[:2] == ("Okay, try this one.", "Here's the next one.")
+    assert S.LEAD_INS == ("Okay, try this one.", "Here's the next one.", "Right, here's one for you.", "Let's try this one.")
     assert all(len(x.split()) <= 5 and x.endswith(".") for x in S.LEAD_INS)
 
 
@@ -119,3 +125,16 @@ def test_no_role_loses_a_topic_chip():
     for role in roles.ROLES.values() if isinstance(roles.ROLES, dict) else roles.ROLES:
         names = lambda b: [c.name for _, c in roles.live_chips(b, role)]  # noqa: E731
         assert names(bank) == names(full), role
+
+
+def test_coding_families_are_exempt_from_removal():
+    assert all(S.coding_family(t) for t in ("sw_F001", "swf_F015", "qd_F009", "sw_F001.part2"))
+    assert not any(S.coding_family(t) for t in ("family_F004", "qx_F013", "ib_F015", "co_F004", None, ""))
+    result = speakability_scan.scan()
+    assert not any(S.coding_family(t) for t in result["hidden"]) and not any(S.coding_family(t) for t in result["kept_least_bad"])
+    # Restored: every coding family is in the spoken pool again.
+    bank = load_bank()
+    coding = [t for t in bank.templates if S.coding_family(t)]
+    assert coding and all(t not in bank.hidden for t in coding)
+    # Some of them are still hard to read aloud: exempt, not unflagged.
+    assert any(result["families"][t]["flagged"] * 2 > result["families"][t]["variants"] for t in coding)

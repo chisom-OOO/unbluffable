@@ -7,7 +7,7 @@ your screen." and its final question sentence; any other question is said in ful
 said aloud contains brackets, underscores or tuple notation.
 
 The scan (forge/speakability_scan.py) flags variants by the same tests plus length (more than
-45 words) and jargon; families where most variants are flagged leave the spoken pool.
+60 words, only when nothing above applies) and jargon; families where most variants are flagged leave the spoken pool.
 """
 from __future__ import annotations
 
@@ -15,11 +15,19 @@ import re
 from dataclasses import dataclass, field
 
 MAX_NUMBERS = 6
-MAX_WORDS = 45
+MAX_WORDS = 60  # only for questions with no list, brackets, tuple or subscript
 ON_SCREEN = "The numbers are on your screen."
 # Lead-ins said before a new question (never shown on screen), in rotation.
 LEAD_INS = ("Okay, try this one.", "Here's the next one.", "Right, here's one for you.", "Let's try this one.")
 JARGON = ("toy payoff", "fill indicator")
+# Coding-round families are never removed from the pool; aloud, the interviewer sends the
+# candidate to the screen instead of reading the problem.
+CODING_PREFIXES = ("sw_", "swf_", "qd_")
+CODING_LINE = "Here's the problem — it's on your screen. Read it through, then talk me through your approach."
+
+
+def coding_family(template_id: str | None) -> bool:
+    return bool(template_id) and str(template_id).split(".")[0].startswith(CODING_PREFIXES)
 
 _NUMBER = re.compile(r"(?<![\w./])\d+(?:[.,/]\d+)*(?![\w])|(?<=[a-zA-Z_])\d+")  # "1/8" and "0.25" are one number
 _LIST = re.compile(r"\[[^\]]*,[^\]]*\]|\{[^}]*,[^}]*\}|\d[\d.]*\s*,\s*\d[\d.]*\s*,\s*(?:and\s+|or\s+)?\d")
@@ -54,7 +62,7 @@ class Flags:
             out.append("proportional to [")
         if self.numbers > MAX_NUMBERS:
             out.append(f"{self.numbers} numbers")
-        if self.words > MAX_WORDS:
+        if self.words > MAX_WORDS and not (self.list or self.brackets or self.tuple or self.subscript):
             out.append(f"{self.words} words")
         out += [f"jargon: {j}" for j in self.jargon]
         return out

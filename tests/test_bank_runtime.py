@@ -1438,3 +1438,23 @@ def test_new_questions_get_a_spoken_lead_in_and_the_screen_keeps_the_full_text(b
     assert all(e["speech"].startswith(say.TWIN_INTRO) for e in twins)
     if len(firsts) > 1:
         assert firsts[1]["speech"].startswith(speakability.LEAD_INS[1]), "the lead-ins rotate"
+
+
+@pytest.mark.parametrize("family", ["sw_F001", "swf_F004", "qd_F003"])
+def test_coding_round_families_send_the_candidate_to_the_screen(bank, family):
+    """Coding families: aloud, one fixed line (no lead-in, no reading of the problem); on
+    screen, the full question."""
+    from engine import speakability
+
+    def policy(session, events):
+        return f"My answer is {frac(session.questions[-1].puzzle.answer)}, because red over all balls."
+    t = _bag(template_id=family)
+    session, events, _ = run(BankSource(_bag_bank(t), "Probability", "Easy", rng=random.Random(3)), policy)
+    asked = [e for e in events if e["type"] == "interviewer_line" and e["kind"] == "question"]
+    assert asked[0]["speech"] == speakability.CODING_LINE
+    assert speakability.CODING_LINE == ("Here's the problem \u2014 it's on your screen. "
+                                        "Read it through, then talk me through your approach.")
+    assert all(e["speech"].endswith(speakability.CODING_LINE) and "blue" not in e["speech"] for e in asked)
+    assert all("blue" in e["text"] for e in asked), "the screen keeps the full question"
+    twins = [e for e in asked if e["text"].startswith(say.TWIN_INTRO)]
+    assert all(e["speech"] == f"{say.TWIN_INTRO} {speakability.CODING_LINE}" for e in twins)
