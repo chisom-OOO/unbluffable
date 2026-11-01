@@ -53,6 +53,23 @@ def test_exact_mcnemar():
     assert stats.mcnemar_exact(3, 3) == 1.0
 
 
+@pytest.mark.parametrize("k, n, bound", [
+    (0, 10, 0.25887), (1, 10, 0.39416), (2, 20, 0.28262), (9, 10, 0.99488), (0, 2, 0.77639)])
+def test_clopper_pearson_one_sided_upper_bounds(k, n, bound):
+    """Published exact one-sided 95% values; at the bound P(X <= k) is exactly 5%."""
+    assert stats.upper_bound(k, n) == pytest.approx(bound, abs=5e-6)
+    assert stats.binomial_cdf(k, n, stats.upper_bound(k, n)) == pytest.approx(0.05, abs=1e-9)
+
+
+def test_clopper_pearson_edges():
+    assert stats.upper_bound(0, 20) == pytest.approx(1 - 0.05 ** (1 / 20), abs=1e-12)  # closed form at k = 0
+    assert stats.upper_bound(7, 7) == 1.0
+    assert stats.upper_bound(1, 10, confidence=0.99) > stats.upper_bound(1, 10)
+    for k, n in ((-1, 5), (6, 5), (0, 0)):
+        with pytest.raises(ValueError):
+            stats.upper_bound(k, n)
+
+
 def test_majority_flips_and_scores():
     assert stats.majority(["understands", "understands", "error"]) == "understands"
     assert stats.majority(["understands", "does_not_understand", "error"]) == "no_majority"

@@ -337,6 +337,11 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
             "flip_rate": len(flipped) / len(labels) if labels else 0.0,
             "flipped_items": flipped,
         }
+    if provenance.get("design") == "run2":  # decision log 34: false flags with exact one-sided 95% upper bounds
+        genuine = sum(1 for v in labels.values() if v == stats.UNDERSTANDS)
+        for a in arms.values():
+            a["majority"]["false_flag_upper_95"] = (stats.upper_bound(a["majority"]["false_flags"], genuine)
+                                                    if genuine else None)
     ours = arms["unbluffable"]
     key = HEADLINE_ARM[provenance.get("design", "run1")]
     if key not in arms:
@@ -410,11 +415,17 @@ def markdown(results: dict) -> str:
         "| Arm | Correct (majority) | Accuracy per run | False-flag rate (majority) | Verdict flip rate | Errors (majority) |",
         "|---|---|---|---|---|---|",
     ]
+    def flags(m):  # run 2: the count with its exact one-sided 95% upper bound (decision log 34)
+        if "false_flag_upper_95" not in m:
+            return pct(m["false_flag_rate"])
+        bound = "n/a" if m["false_flag_upper_95"] is None else pct(m["false_flag_upper_95"])
+        return f"{pct(m['false_flag_rate'])} ({m['false_flags']}/{results['n_understands']}; 95% upper bound {bound})"
+
     for arm in [a for a in results["arms"] if a not in OPEN_WEIGHTS_ARMS]:
         a = results["arms"][arm]
         per_run = ", ".join(pct(r["accuracy"]) for r in a["runs"])
         lines.append(f"| {names[arm]} | {a['majority']['correct']}/{n} | {per_run} | "
-                     f"{pct(a['majority']['false_flag_rate'])} | {pct(a['flip_rate'])} | {a['majority']['errors']} |")
+                     f"{flags(a['majority'])} | {pct(a['flip_rate'])} | {a['majority']['errors']} |")
     if results.get("status") == INVALID:
         cf = results["call_failures"]
         kinds = ", ".join(f"{kind} {n}" for kind, n in cf["by_type"].items())
@@ -449,7 +460,7 @@ def markdown(results: dict) -> str:
             a = results["arms"][arm]
             per_run = ", ".join(pct(r["accuracy"]) for r in a["runs"])
             lines.append(f"| {names[arm]} | {a['majority']['correct']}/{n} | {per_run} | "
-                         f"{pct(a['majority']['false_flag_rate'])} | {pct(a['flip_rate'])} | {a['majority']['errors']} |")
+                         f"{flags(a['majority'])} | {pct(a['flip_rate'])} | {a['majority']['errors']} |")
         ow = results["open_weights"]
         a, b = ow["unbluffable_open_weights_vs_careful_open_weights"], ow["unbluffable_vs_unbluffable_open_weights"]
         lines += ["", "| Comparison (exact McNemar, majority) | b | c | p (two-sided) |", "|---|---|---|---|",
@@ -458,11 +469,15 @@ def markdown(results: dict) -> str:
     h = results["headline_rule"]
     if h.get("design") == "run2":
         t = h["bluff_mcnemar"]
+        bound = lambda arm: results["arms"][arm]["majority"]["false_flag_upper_95"]  # noqa: E731
+        fmt = lambda b: "n/a" if b is None else pct(b)  # noqa: E731
         rule = [f"Bluffs caught (majority verdicts): Unbluffable {h['unbluffable_caught']}/{h['bluffs']}; "
                 f"{names[h['compared_with']]} {h['compared_caught']}/{h['bluffs']}. Exact McNemar on the bluff items: "
                 f"b = {t['b']}, c = {t['c']}, p = {t['p']:.4g}.",
-                f"False flags on genuine items: Unbluffable {h['unbluffable_false_flags']}, "
-                f"{names[h['compared_with']]} {h['compared_false_flags']}.",
+                f"False flags on genuine items: Unbluffable {h['unbluffable_false_flags']} "
+                f"(one-sided 95% upper bound {fmt(bound('unbluffable'))}), "
+                f"{names[h['compared_with']]} {h['compared_false_flags']} "
+                f"(one-sided 95% upper bound {fmt(bound(h['compared_with']))}).",
                 "", f"Outcome (decision log 34): **{h['outcome']}**"]
     else:
         rule = [f"Unbluffable {h['unbluffable_correct']}/{n} correct; {names[h['compared_with']]} "

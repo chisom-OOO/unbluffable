@@ -25,6 +25,25 @@ def mcnemar_exact(b: int, c: int) -> float:
     return float(min(Fraction(1), 2 * tail))
 
 
+def binomial_cdf(k: int, n: int, p: float) -> float:
+    """P(X <= k) for X ~ Binomial(n, p)."""
+    return sum(comb(n, i) * p ** i * (1 - p) ** (n - i) for i in range(k + 1))
+
+
+def upper_bound(k: int, n: int, confidence: float = 0.95) -> float:
+    """Exact one-sided Clopper-Pearson upper bound for a rate seen k times in n: the largest p
+    with P(X <= k | n, p) >= 1 - confidence (1 when k = n). Bisection to below 1e-12."""
+    if not 0 <= k <= n or n == 0:
+        raise ValueError("need 0 <= k <= n and n > 0")
+    if k == n:
+        return 1.0
+    alpha, lo, hi = 1 - confidence, k / n, 1.0
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        lo, hi = (mid, hi) if binomial_cdf(k, n, mid) > alpha else (lo, mid)
+    return lo
+
+
 def majority(verdicts: list[str]) -> str:
     value, count = Counter(verdicts).most_common(1)[0]
     return value if count * 2 > len(verdicts) else "no_majority"
