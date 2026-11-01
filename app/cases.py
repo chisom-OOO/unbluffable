@@ -217,6 +217,7 @@ class CaseSession:
         self.track, self.topics, self.placement, self.conditions = "consulting", FULL_CASE, False, "exam"
         self.finished = self.timed_out = False
         self.exact_stage = False
+        self.ends_session = True  # False: a segment of a mixed interview (decision log 37)
 
     async def line(self, kind: str, text: str) -> None:
         await self.send({"type": "interviewer_line", "kind": kind, "text": text, "target_step": None,
@@ -344,6 +345,9 @@ class CaseSession:
                 log.twist = await self.answer(question)
                 log.twist_quoted = await self.model(await quote_points(self.provider, question, log.twist, twist["what_should_change"]))
             log.seconds = self.clock() - started
+            if not self.ends_session:
+                self.finished = True
+                return
             await self.line("close", say.TIME_CLOSE if self.timed_out else say.SESSION_CLOSE)
             self.finished = True
             await self.send({"type": "session_end", "label": None, "case": True, "timed_out": self.timed_out})

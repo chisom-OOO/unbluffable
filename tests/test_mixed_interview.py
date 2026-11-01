@@ -234,7 +234,9 @@ def test_bayesian_label_is_the_same_inside_a_mixed_interview():
 
         async def listen():
             return typed(questions[-1], "right")
-        return ExamSession(record, listen, VoiceAnalyzer(ScriptedProvider()), Interview(rng=random.Random(5), source=source))
+        session = ExamSession(record, listen, VoiceAnalyzer(ScriptedProvider()), Interview(rng=random.Random(5), source=source))
+        session.track = "quant"  # as the route sets it
+        return session
 
     alone = _run(fresh(_ignore))
     inside = fresh(_ignore)
