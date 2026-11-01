@@ -53,7 +53,7 @@ h1 { font: 400 clamp(32px, 4vw, 44px)/1.1 var(--serif); letter-spacing: -.015em;
 h2 { font-size: 15px; font-weight: 600; }
 h3 { font-size: 15px; font-weight: 600; }
 p { text-wrap: pretty; }
-a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a { color: var(--link, var(--ink)); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { text-decoration-thickness: 2px; }
 ::selection { background: var(--amberbg); color: var(--ink); }
 button, select, textarea, input { font: inherit; color: inherit; }
@@ -77,7 +77,7 @@ kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); 
 .top { min-height: 60px; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 40px; border-bottom: 1px solid var(--line); }
 .brand { font: 500 22px/1 var(--serif); letter-spacing: -.01em; color: var(--ink); display: flex; gap: 12px; align-items: baseline; white-space: nowrap; text-decoration: none; }
 .brand:hover { text-decoration: none; }
-.brandmark { display: none; }
+.brandmark, .logo { display: none; }
 .brand-note { font: 400 14px var(--sans); color: var(--muted); letter-spacing: 0; }
 .topright { display: flex; gap: 4px; align-items: center; min-width: 0; }
 .icon-btn { width: 40px; height: 40px; display: inline-grid; place-items: center; border-radius: 5px; border: 0; background: transparent; color: var(--ink); padding: 0; }
@@ -157,13 +157,13 @@ select, textarea { width: 100%; min-height: 44px; border: 1px solid var(--line);
 textarea { resize: vertical; line-height: 1.5; }
 textarea::placeholder { color: var(--muted); }
 .checkline { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; margin: 12px 0; }
-.checkline input { accent-color: var(--ink); height: 18px; width: 18px; flex-shrink: 0; margin: 2px 0 0; }
+.checkline input { accent-color: var(--active, var(--ink)); height: 18px; width: 18px; flex-shrink: 0; margin: 2px 0 0; }
 .levels { border: 0; padding: 0; margin: 18px 0; min-width: 0; }
 .seg { display: flex; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
 .seg label { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 44px; font-size: 14px; cursor: pointer; transition: background-color .15s var(--ease); }
 .seg label + label { border-left: 1px solid var(--line); }
 .seg input { position: absolute; opacity: 0; pointer-events: none; }
-.seg label:has(input:checked) { background: var(--soft); font-weight: 600; box-shadow: inset 0 -2px 0 var(--ink); }
+.seg label:has(input:checked) { background: var(--soft); font-weight: 600; box-shadow: inset 0 -2px 0 var(--active, var(--ink)); }
 .seg label:has(input:focus-visible) { outline: 2px solid var(--ring); outline-offset: -2px; }
 .seg label:has(input:disabled) { opacity: .6; cursor: default; }
 /* Disclosures: a quiet text control with a drawn chevron. */
@@ -186,7 +186,7 @@ textarea::placeholder { color: var(--muted); }
 .track strong { display: block; font-size: 14px; font-weight: 500; line-height: 1.3; overflow-wrap: anywhere; }
 .track small { font-size: 12px; color: var(--muted); }
 .track:not([aria-disabled="true"]) small { display: none; }  /* "Live" on every track says nothing */
-.track[aria-checked="true"] { background: var(--soft); border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.track[aria-checked="true"] { background: var(--soft); border-color: var(--active, var(--ink)); box-shadow: inset 0 0 0 1px var(--active, var(--ink)); }
 .track[aria-checked="true"] strong { font-weight: 600; }
 .track[aria-disabled="true"] { border-style: dashed; cursor: not-allowed; }
 .track[aria-disabled="true"] strong { color: var(--muted); }
@@ -207,7 +207,7 @@ a.track:hover, button.track:not([aria-disabled="true"]):hover { border-color: va
 .sampleline b { color: var(--muted); font-size: 13px; font-weight: 500; padding-top: 3px; }
 .sampleline.is-challenge b, .sampleline.is-challenge .says { color: var(--amber); }
 .replay-progress { height: 2px; background: var(--line); overflow: hidden; margin: 16px 0 14px; }
-.replay-progress span { display: block; height: 100%; width: 0; background: var(--ink); transition: width .4s linear; }
+.replay-progress span { display: block; height: 100%; width: 0; background: var(--active, var(--ink)); transition: width .4s linear; }
 .shot { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; min-width: 0; }
 .shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; }
 .shot-dark { display: none !important; }
@@ -255,7 +255,7 @@ a.track:hover, button.track:not([aria-disabled="true"]):hover { border-color: va
 .topics-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin-bottom: 6px; }
 .field-label { font-size: 14px; font-weight: 600; }
 .topic-actions { display: flex; gap: 12px; }
-.linkbtn { background: none; border: 0; padding: 6px 0; min-height: 32px; color: var(--ink); font-size: 14px; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.linkbtn { background: none; border: 0; padding: 6px 0; min-height: 32px; color: var(--link, var(--ink)); font-size: 14px; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .linkbtn:disabled { color: var(--muted); text-decoration: none; }
 .topic-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 /* Placeholders while tracks and topics load. */
@@ -264,7 +264,7 @@ a.track:hover, button.track:not([aria-disabled="true"]):hover { border-color: va
 .skeleton-card { min-height: 52px; border-radius: 5px; }
 @keyframes pulse { to { opacity: .45; } }
 .topic-chip { min-height: 40px; max-width: 100%; padding: 8px 12px; border-radius: 5px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 14px; overflow-wrap: anywhere; text-align: left; }
-.topic-chip[aria-pressed="true"] { background: var(--soft); border-color: var(--ink); }
+.topic-chip[aria-pressed="true"] { background: var(--soft); border-color: var(--active, var(--ink)); }
 .topic-chip:disabled { opacity: .6; }
 .topics-note { margin-top: 8px; }
 .topics-note.bad { color: var(--bad); }
@@ -286,7 +286,7 @@ a.track:hover, button.track:not([aria-disabled="true"]):hover { border-color: va
 .gate-step .devicebar { width: 100%; }
 .substeps { padding-left: 20px; display: grid; gap: 2px; }
 .dialog-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
-.typed-link button { background: none; border: 0; padding: 4px 0; color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-align: left; }
+.typed-link button { background: none; border: 0; padding: 4px 0; color: var(--link, var(--ink)); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-align: left; }
 .status { font-size: 14px; padding: 10px 0 0; color: var(--ink); margin-top: 12px; border-top: 1px solid var(--line); }
 
 /* ---------- Interview room ---------- */
@@ -439,7 +439,7 @@ mark, mark.challenged { background: var(--amberbg); color: var(--amber); padding
 .chip { font-size: 13px; font-weight: 600; color: var(--ink); }
 .tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--line); margin: 12px 0 14px; }
 .tab { border: 0; border-bottom: 2px solid transparent; padding: 9px 2px; margin-right: 18px; color: var(--muted); background: transparent; font-size: 14px; min-height: 44px; }
-.tab[aria-selected="true"] { border-color: var(--ink); color: var(--ink); font-weight: 600; }
+.tab[aria-selected="true"] { border-color: var(--active, var(--ink)); color: var(--ink); font-weight: 600; }
 .tab-panel { display: grid; gap: 14px; }
 .tab-sub { font-size: 14px; color: var(--muted); }
 blockquote.evidence { padding: 2px 0 2px 16px; border-left: 1px solid var(--line); margin-top: 8px; }
@@ -863,8 +863,8 @@ body.coding-mode .top .btn, body.coding-mode .top .clock { white-space: nowrap; 
 .topic-chips.two-col .topic-chip[aria-pressed="true"] { background: transparent; font-weight: 500; }
 .topic-chips.two-col .topic-chip[aria-pressed="true"]::before { content: none; }
 .topic-chip .tick { width: 16px; height: 16px; flex: none; border-radius: 3px; border: 1.5px solid var(--muted); display: grid; place-items: center; }
-.topic-chip[aria-pressed="true"] .tick { border-color: var(--ink); background: var(--ink); }
-.topic-chip[aria-pressed="true"] .tick::after { content: ""; width: 8px; height: 4px; border: 2px solid var(--accent-fg);
+.topic-chip[aria-pressed="true"] .tick { border-color: var(--active, var(--ink)); background: var(--active, var(--ink)); }
+.topic-chip[aria-pressed="true"] .tick::after { content: ""; width: 8px; height: 4px; border: 2px solid var(--active-fg, var(--accent-fg));
   border-top: 0; border-right: 0; transform: translateY(-1px) rotate(-45deg); }
 .more-topics { margin-top: 10px; }
 .more-topics summary { font-size: 14px; color: var(--ink); margin: 12px 0 8px; }
@@ -895,3 +895,57 @@ body.coding-mode .top .btn, body.coding-mode .top .clock { white-space: nowrap; 
 /* The on-screen keyboard is open: the workspace fits the visible area above it. */
 body.coding-mode.keyboard-open .shell { position: fixed; left: 0; right: 0; top: var(--vv-top, 0); height: var(--vv-h, 100dvh); }
 body.coding-mode.keyboard-open .room.coding .coding-pane:not(.console-closed) { grid-template-rows: auto auto minmax(96px, 1fr) 6px minmax(0, 22%); }
+
+/* ---------- Look: Trading floor (pending approval; /ui?look=floor, ui/look.js) ---------- */
+/* Graphite in dark, a warm near-white in light (each designed, not inverted). One brand
+   colour, a signal green, only for the logo mark, primary buttons, active and selected states,
+   links and the candidate's waveform; never borders or numbers. Amber stays the challenge.
+   Every text colour here is at least 4.5:1 on every surface (checked in both themes). */
+:root[data-look="floor"] {
+  color-scheme: light;
+  --bg: #f8f7f4; --paper: #fefdfb; --stage: #efeee9; --ink: #1a1c1f; --muted: #585c61; --line: #dfddd7;
+  --soft: #e9e7e1; --softink: #1a1c1f; --neutral: #8a8e93; --warn: #585c61; --warnbg: #efeee9; --warnline: #8a8e93;
+  --good: #1a1c1f; --goodbg: #efeee9; --goodline: #585c61; --bad: #a1301f; --ring: #1a1c1f;
+  --brand: #0a7642; --brand-fg: #ffffff;
+  --amber: #8f5300; --amberbg: #f5dfb0; --amberline: #c4841a;
+  --accent: var(--brand); --accent-fg: var(--brand-fg); --link: var(--brand); --active: var(--brand); --active-fg: var(--brand-fg); --live: var(--brand);
+  --orbline: #1a1c1f; --orbbar: #1a1c1f; --series-now: #1a1c1f;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-look="floor"]:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #1b1d20; --paper: #212428; --stage: #26292e; --ink: #e9ebee; --muted: #a3a9b0; --line: #33373d;
+    --soft: #2c3035; --softink: #e9ebee; --neutral: #7a8087; --warn: #a3a9b0; --warnbg: #26292e; --warnline: #7a8087;
+    --good: #e9ebee; --goodbg: #26292e; --goodline: #a3a9b0; --bad: #f2a497; --ring: #e9ebee;
+    --brand: #4fd394; --brand-fg: #0b1a12;
+    --amber: #f0b35a; --amberbg: #3d2c10; --amberline: #c4841a;
+    --orbline: #e9ebee; --orbbar: #e9ebee; --series-now: #e9ebee;
+  }
+}
+:root[data-look="floor"][data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1b1d20; --paper: #212428; --stage: #26292e; --ink: #e9ebee; --muted: #a3a9b0; --line: #33373d;
+  --soft: #2c3035; --softink: #e9ebee; --neutral: #7a8087; --warn: #a3a9b0; --warnbg: #26292e; --warnline: #7a8087;
+  --good: #e9ebee; --goodbg: #26292e; --goodline: #a3a9b0; --bad: #f2a497; --ring: #e9ebee;
+  --brand: #4fd394; --brand-fg: #0b1a12;
+  --amber: #f0b35a; --amberbg: #3d2c10; --amberline: #c4841a;
+  --orbline: #e9ebee; --orbbar: #e9ebee; --series-now: #e9ebee;
+}
+/* Logo: the ≠ mark in a small square, then the wordmark in the interface sans. */
+[data-look="floor"] .brand { font: 600 19px/1 var(--sans); letter-spacing: -.01em; gap: 10px; align-items: center; }
+[data-look="floor"] .logo { display: block; width: 26px; height: 26px; flex: none; }
+[data-look="floor"] .logo rect { fill: var(--brand); }
+[data-look="floor"] .logo path { fill: none; stroke: var(--brand-fg); stroke-width: 2.6; stroke-linecap: round; }
+[data-look="floor"] .brand-note { font-weight: 400; }
+/* Primary buttons in the brand; hover darkens towards the ink, never a glow. */
+[data-look="floor"] .btn:not(.secondary):not(.btn-quiet):not(.not-ready):hover { background: color-mix(in srgb, var(--brand) 88%, var(--ink)); }
+/* Mic indicator: the candidate's turn is the brand colour; the interviewer speaking keeps
+   muted bars, so the two never look alike. While the microphone is live the bars give way
+   to the waveform canvas (look.js); typed answers and reduced motion keep static bars. */
+[data-look="floor"] .orb[data-state="listening"] { border-color: var(--live); }
+[data-look="floor"] .orb[data-state="listening"] i { background: var(--live); }
+[data-look="floor"] .orb .wave { display: none; }
+[data-look="floor"] .orb.live { border-color: var(--live); }
+[data-look="floor"] .orb.live i { display: none; }
+[data-look="floor"] .orb.live .wave { display: block; width: 24px; height: 18px; color: var(--live); }
+[data-look="floor"] .ws-pill[data-state="listening"]::before { background: var(--live); }
