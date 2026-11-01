@@ -4,21 +4,17 @@
 // each line appearing as it is spoken: the interviewer in one voice, the candidate in another
 // (or, with a single voice, at a different pitch and rate). The mute setting is respected.
 document.addEventListener("DOMContentLoaded", () => {
-  // First visit (decision log 23): without accounts, the one-screen onboarding, unless
-  // storage is blocked (then a skip couldn't be remembered). With accounts, guests are
-  // offered sign-in first; onboarding follows a first sign-in.
-  const store = window.UB.profile();
+  // The landing page never redirects: every visitor, phones included (whose other pages
+  // show the gate), stays here with the recorded replay. "Try an interview" goes straight to
+  // setup; the welcome page (onboarding) is reached from the profile or the report, not forced.
+  // With accounts, guests are offered sign-in first.
   const account = window.UBAccount;
   const showAccount = (s) => {
     const guest = s.enabled && !s.user;
     document.getElementById("account-cta").hidden = !guest;
     document.getElementById("prepare").hidden = guest;
-    if (s.enabled && s.user && account.firstTime) location.href = "/ui/welcome?first=1";
   };
-  account.whenReady.then((s) => {
-    if (!s.enabled && store && store.ok && !store.load().onboarded) { location.replace("/ui/welcome"); return; }
-    showAccount(s);
-  });
+  account.whenReady.then(showAccount);
   document.addEventListener("ub-account", (e) => showAccount(e.detail));
   document.getElementById("signin-cta").addEventListener("click", () => account.openSignIn());
 

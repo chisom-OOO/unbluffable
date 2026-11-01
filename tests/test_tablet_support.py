@@ -91,8 +91,31 @@ def test_coding_round_recommends_a_keyboard_on_touch_only_devices():
     assert re.search(r'<textarea id="code-editor"[^>]*autocapitalize="off"[^>]*autocorrect="off"', html)
 
 
-def test_google_sign_in_redirects_on_iphone_and_ipad():
+def test_google_sign_in_on_iphone_and_ipad_is_a_popup_in_the_tap_with_an_email_fallback():
     account = read(STATIC / "ui" / "account.js")
-    assert "redirect: window.UB.appleTouch()" in account
+    assert "popupOnly: window.UB.appleTouch()" in account and "redirect:" not in account
+    handler = account[account.index('querySelector("#signin-google").addEventListener("click"'):]
+    handler = handler[:handler.index("\n      });")]
+    # Nothing awaited before the sign-in call, so the popup opens inside the tap.
+    assert handler.index("account.signInWithGoogle()") < handler.index("await") + len("await ") + 1
+    assert "Use an email link instead." in handler and '#signin-email' in handler and "focus()" in handler
+    core = read(STATIC / "ui" / "account-core.js")
+    sign_in = core[core.index("async signInWithGoogle()"):core.index("async sendEmailLink")]
+    assert sign_in.index("auth.signInWithPopup(provider)") < sign_in.index("await")
+    assert "!popupOnly &&" in sign_in, "no redirect fallback on iOS"
     ui = read(STATIC / "ui" / "ui.js")
     assert "window.UBDevice.appleTouch(navigator)" in ui
+
+
+def test_landing_never_redirects_so_phones_see_the_replay():
+    """Phones are gated on /ui/welcome and /ui/interview; /ui must never send them there,
+    and nobody is sent to onboarding or placement on a first visit."""
+    js = read(STATIC / "ui" / "landing.js")
+    assert "/ui/welcome" not in js and "location.replace" not in js and "location.href =" not in js
+    assert "placement" not in js
+    html = read(TEMPLATES / "landing.html")
+    assert 'data-desktop-only' not in html
+    assert 'id="replay-body"' in html
+    # "Try an interview" and "Prepare interview" go straight to setup.
+    assert 'href="/ui/interview">Try an interview without an account</a>' in html
+    assert 'href="/ui/interview" id="prepare"' in html

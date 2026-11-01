@@ -8,9 +8,11 @@
   const INTEREST = "interest";
   const INTEREST_ROLES = ["quant", "quant_dev", "ib", "consulting", "software", "other"];  // as firestore.rules
 
-  // `redirect`: sign in with Google by redirect, not a popup (iPhone and iPad Safari block
-  // popups opened after the tap; decision log 35).
-  function createAccount({ sdk, config, store, now = () => new Date().toISOString(), storage = null, redirect = false }) {
+  // `popupOnly` (iPhone and iPad, decision log 35): Google by popup only, never by redirect
+  // (redirects fail on Safari's storage rules). The popup must open inside the tap, so
+  // signInWithGoogle and deleteAccount call it before their first await; a failure is
+  // thrown for the page to offer the email link.
+  function createAccount({ sdk, config, store, now = () => new Date().toISOString(), storage = null, popupOnly = false }) {
     const app = sdk.initializeApp(config);
     const auth = sdk.auth(app);
     const db = sdk.firestore(app);
@@ -66,11 +68,11 @@
       flush(profile) { clearTimeout(pushTimer); return write(profile); },
       async signInWithGoogle() {
         const provider = new sdk.auth.GoogleAuthProvider();
-        if (redirect) return auth.signInWithRedirect(provider);
+        const popup = auth.signInWithPopup(provider);  // synchronously, inside the tap
         try {
-          await auth.signInWithPopup(provider);
+          await popup;
         } catch (error) {
-          if (/popup-blocked|operation-not-supported/.test(error?.code || "")) return auth.signInWithRedirect(provider);
+          if (!popupOnly && /popup-blocked|operation-not-supported/.test(error?.code || "")) return auth.signInWithRedirect(provider);
           throw error;
         }
       },
@@ -101,14 +103,15 @@
       async deleteAccount() {
         if (!user) return;
         clearTimeout(pushTimer);
+        // iPhone and iPad: re-authenticate first, by popup, inside the tap (a popup after the
+        // awaits below would be blocked); nothing is deleted if it fails.
+        if (popupOnly) await auth.currentUser.reauthenticateWithPopup(new sdk.auth.GoogleAuthProvider());
         await doc().delete();
         const current = auth.currentUser;
         try {
           await current.delete();
         } catch (error) {
           if (error?.code !== "auth/requires-recent-login") throw error;
-          // By redirect on iPhone and iPad: the account is deleted on the next tap, once back.
-          if (redirect) return current.reauthenticateWithRedirect(new sdk.auth.GoogleAuthProvider());
           await current.reauthenticateWithPopup(new sdk.auth.GoogleAuthProvider());
           await current.delete();
         }

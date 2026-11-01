@@ -42,7 +42,7 @@
       let local = null;
       try { local = window.localStorage; } catch { local = null; }
       account = window.UBAccountCore.createAccount({ sdk: window.firebase, config: config.config, store: guard(window.UB.profile()), storage: local,
-                                                        redirect: window.UB.appleTouch() });
+                                                        popupOnly: window.UB.appleTouch() });
       account.on(() => emit());
       await account.completeEmailLink(location.href, async () => prompt("Which email did you use to sign in?"))
         .then((done) => {
@@ -81,9 +81,19 @@
         <p class="status" id="signin-status" role="status" hidden></p>`;
       document.body.appendChild(dialog);
       const say = (text) => { const el = dialog.querySelector("#signin-status"); el.textContent = text; el.hidden = !text; };
+      // The popup opens synchronously in this tap (no await before signInWithGoogle).
       dialog.querySelector("#signin-google").addEventListener("click", async () => {
         say("");
-        try { await account.signInWithGoogle(); dialog.close(); } catch (error) { say(`Couldn't sign in with Google${error?.code ? ` (${error.code})` : ""}. Try again or use the email link.`); }
+        try { await account.signInWithGoogle(); dialog.close(); } catch (error) {
+          if (window.UB.appleTouch()) {  // iPhone and iPad: straight to the email link
+            say("Use an email link instead.");
+            const field = dialog.querySelector("#signin-email");
+            field.scrollIntoView({ block: "nearest" });
+            field.focus();
+            return;
+          }
+          say(`Couldn't sign in with Google${error?.code ? ` (${error.code})` : ""}. Try again or use the email link.`);
+        }
       });
       dialog.querySelector("#signin-email-form").addEventListener("submit", async (e) => {
         e.preventDefault();

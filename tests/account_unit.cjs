@@ -131,16 +131,50 @@ const CONFIG = { apiKey: "public-id", authDomain: "x.firebaseapp.com", projectId
     assert.deepEqual(sdk.calls.find((c) => c[0] === "linkSignIn"), ["linkSignIn", "ada@example.com"]);
     assert.equal(local.getItem("ub-email-for-link"), null);
   }
-  // --- iPhone and iPad (decision log 35): Google sign-in goes straight to a redirect ---
+  // --- iPhone and iPad (decision log 35): a popup opened inside the tap, never a redirect ---
   {
     const sdk = fakeSdk();
-    const { store } = memoryStore();
-    const account = createAccount({ sdk, config: CONFIG, store, redirect: true });
-    await account.signInWithGoogle();
-    assert.deepEqual(sdk.calls.filter((c) => ["popup", "redirect"].includes(c[0])), [["redirect", "google"]], "no popup on iOS");
+    const account = createAccount({ sdk, config: CONFIG, store: memoryStore().store, popupOnly: true });
+    const pending = account.signInWithGoogle();
+    // Called synchronously: the popup is already open before anything is awaited.
+    assert.deepEqual(sdk.calls.filter((c) => ["popup", "redirect"].includes(c[0])), [["popup", "google"]], "popup in the tap");
+    await pending;
+    // A blocked or closed popup is thrown to the page (which offers the email link), never redirected.
+    for (const code of ["auth/popup-blocked", "auth/popup-closed-by-user", "auth/operation-not-supported-in-this-environment"]) {
+      const failing = fakeSdk();
+      failing.auth().signInWithPopup = async () => { failing.calls.push(["popup"]); throw { code }; };
+      await assert.rejects(createAccount({ sdk: failing, config: CONFIG, store: memoryStore().store, popupOnly: true }).signInWithGoogle(),
+                           (e) => e.code === code);
+      assert.equal(failing.calls.some((c) => c[0] === "redirect"), false, `${code}: no redirect on iOS`);
+    }
+    // Laptops are unchanged: a popup, and a blocked popup still falls back to a redirect.
     const laptop = fakeSdk();
+    laptop.auth().signInWithPopup = async () => { laptop.calls.push(["popup"]); throw { code: "auth/popup-blocked" }; };
     await createAccount({ sdk: laptop, config: CONFIG, store: memoryStore().store }).signInWithGoogle();
-    assert.deepEqual(laptop.calls.filter((c) => ["popup", "redirect"].includes(c[0])), [["popup", "google"]], "a popup elsewhere");
+    assert.deepEqual(laptop.calls.filter((c) => ["popup", "redirect"].includes(c[0])).map((c) => c[0]), ["popup", "redirect"]);
+  }
+
+  // --- Delete on iPhone and iPad: re-authenticate by popup first, inside the tap ---
+  {
+    const sdk = fakeSdk(new Map([["users/u4", { profile: { ...P.empty(), onboarded: "done" } }]]));
+    const { store } = memoryStore();
+    const account = createAccount({ sdk, config: CONFIG, store, popupOnly: true });
+    await sdk.as({ uid: "u4", email: "y@example.com", stale: true });
+    await account.whenReady;
+    const pending = account.deleteAccount();
+    assert.deepEqual(sdk.calls.at(-1), ["reauth"], "the re-auth popup opens before any await");
+    await pending;
+    const order = sdk.calls.map((c) => c[0]).filter((c) => ["delete", "deleteUser", "reauth"].includes(c));
+    assert.deepEqual(order, ["reauth", "delete", "deleteUser"]);
+    assert.equal(sdk.docs.has("users/u4"), false);
+    // A failed re-auth deletes nothing.
+    const kept = fakeSdk(new Map([["users/u5", { profile: { ...P.empty(), onboarded: "done" } }]]));
+    const a2 = createAccount({ sdk: kept, config: CONFIG, store: memoryStore().store, popupOnly: true });
+    await kept.as({ uid: "u5", email: "z@example.com" });
+    await a2.whenReady;
+    kept.auth().currentUser.reauthenticateWithPopup = async () => { throw { code: "auth/popup-closed-by-user" }; };
+    await assert.rejects(a2.deleteAccount());
+    assert.equal(kept.docs.has("users/u5"), true, "nothing deleted");
   }
   console.log("account ok");
 })().catch((e) => { console.error(e); process.exit(1); });
