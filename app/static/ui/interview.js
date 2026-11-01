@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle-eyebrow").textContent = (event.opener ? "Spoken opener · then a coding round"
           : event.kind === "check" ? "Drill check"
           : event.kind === "market" ? `Market ${event.number} of ${event.market.rounds}`
-          : event.kind === "behavioural" ? `Behavioural question ${event.number} of 2`
+          : event.kind === "behavioural" ? `Behavioural question ${event.number} of ${event.of || 2}`
           : event.kind === "conversational" ? `${event.topic} question ${event.number} of ${event.conversational.of}`
           : event.kind === "case" ? `Full case · ${event.case.title}`
           : event.kind === "coding" ? "Coding round"
@@ -1030,12 +1030,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const trackBox = $("track");
   const topicBox = $("topic");
   let tracks = [], chosenTrack = null, chosenRole = null, chosenTopics = new Set(), topicsKnown = false, picking = true;
-  const BEHAVIOURAL = "Behavioural";  // decision log 24: runs on its own, model-judged
-  const MARKET = "Market making";  // decision log 28: runs on its own, graded exactly
+  const BEHAVIOURAL = "Behavioural";  // decision log 24: model-judged
+  const MARKET = "Market making";  // decision log 28: graded exactly
   const trackOf = () => tracks.find((t) => t.id === chosenTrack);
   const roleOf = () => (trackOf()?.roles || []).find((r) => r.id === chosenRole) || null;
   const chips = () => roleOf()?.chips || [];
-  const isSolo = (id) => chips().some((c) => c.id === id && c.kind !== "topic");  // runs on its own
+  // Decision log 37: chips combine freely (mix.js); only special formats chosen = no level to pick.
+  const isSpecial = (id) => chips().some((c) => c.id === id && c.kind !== "topic");
   // Topics sent with Start: the chosen chips ([] = the role-weighted mix); null when topics failed to load.
   const sentTopics = () => (topicsKnown ? [...chosenTopics] : null);
   // A role needs no chip (none = the mix); drills and placement choose their own questions.
@@ -1045,19 +1046,20 @@ document.addEventListener("DOMContentLoaded", () => {
     let saved = null;
     try { saved = JSON.parse(window.UB.store.get(topicKey()) || "null"); } catch { saved = null; }
     const ids = new Set(chips().map((c) => c.id));
-    const kept = Array.isArray(saved) ? saved.filter((id) => ids.has(id)) : [];
-    const solo = kept.find(isSolo);
-    return solo ? new Set([solo]) : new Set(kept);
+    return new Set(Array.isArray(saved) ? saved.filter((id) => ids.has(id)) : []);
   }
   function saveTopics() { window.UB.store.set(topicKey(), JSON.stringify([...chosenTopics])); }
-  const soloOn = () => [...chosenTopics].some(isSolo);
+  const specialOnly = () => chosenTopics.size > 0 && [...chosenTopics].every(isSpecial);
   function syncTopics() {
     document.querySelectorAll("#topic button.topic-chip, #topic-more button.topic-chip")
       .forEach((b) => b.setAttribute("aria-pressed", String(chosenTopics.has(b.dataset.topic))));
     const n = chosenTopics.size, role = roleOf();
     const behaviouralOn = chosenTopics.has(BEHAVIOURAL), marketOn = chosenTopics.has(MARKET);
     const talkOn = chips().some((c) => chosenTopics.has(c.id) && (c.kind === "conversational" || c.kind === "design"));
-    $("topics-note").textContent = n === 0 ? (role?.opener ? "No specific topics selected - a probability or expected-value opener, then a coding round."
+    // Several chips with a special format: what runs, in order ("Probability, Mental math, then a market-making game.").
+    const mix = window.UBMix.note(chips(), [...chosenTopics], trackOf()?.mix);
+    $("topics-note").textContent = mix ? mix
+      : n === 0 ? (role?.opener ? "No specific topics selected - a probability or expected-value opener, then a coding round."
                                                            : "No specific topics selected - use a role-weighted mix.")
       : behaviouralOn ? "Behavioural: two questions, each with one follow-up. Model-judged, not exact; kept out of your rating."
       : marketOn ? "Market making: two games. Quote a bid and an offer; the interviewer trades against you. Graded exactly."
@@ -1089,11 +1091,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const chipClick = (e) => {
     const id = e.target.closest("button.topic-chip")?.dataset.topic;
     if (!id) return;
-    let next = new Set(chosenTopics);
-    if (next.has(id)) next.delete(id);
-    else if (isSolo(id)) next = new Set([id]);  // runs on its own
-    else { [...next].filter(isSolo).forEach((s) => next.delete(s)); next.add(id); }
-    setTopics(next);
+    setTopics(new Set(window.UBMix.toggle([...chosenTopics], id)));
   };
   topicBox.addEventListener("click", chipClick);
   $("topic-more").addEventListener("click", chipClick);
@@ -1181,12 +1179,12 @@ document.addEventListener("DOMContentLoaded", () => {
     showTopics();
     levelFromProfile();
   }
-  // Software and Quantitative Development are coding rounds; special chips run on their own.
+  // Software and Quantitative Development are coding rounds; special formats alone have no level.
   const codingChosen = () => !placement && !drill && !!roleOf()?.coding;
   function syncFormat() {
     const role = roleOf();
-    $("levels").hidden = placement || codingChosen() || soloOn();
-    $("coding-note").hidden = !codingChosen() || soloOn();
+    $("levels").hidden = placement || codingChosen() || specialOnly();
+    $("coding-note").hidden = !codingChosen() || specialOnly();
     $("coding-note").textContent = role?.opener
       ? "Quantitative development: one spoken probability or expected-value question, then a coding round in Python (talk through your approach, code it while you explain, then run the tests)."
       : "Software interviews are a coding round in Python: talk through your approach, code it in the editor while you explain, then run the tests.";
