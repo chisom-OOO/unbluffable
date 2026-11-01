@@ -67,12 +67,14 @@ def test_silence_check_runs_only_at_eight_seconds_and_guards_givens(text, span, 
                 assert merger.finish("silence_commitment") is None
                 assert not browser.prompted.is_set()
             else:
+                # Decision log 40: no commitment at 8 s means keep listening; the prompt waits for 20 s.
+                await asyncio.sleep(.05)
+                assert not browser.prompted.is_set() and not task.done()
+                clock[0] = 20.2
+                changed.set()
                 await asyncio.wait_for(browser.prompted.wait(), 1)
                 assert not task.done() and not merger.emitted
                 assert browser.events[-1] == {"type": "listening_prompt", "message": PROMPT}
-                clock[0] = 20
-                changed.set()
-                await asyncio.sleep(.01)
             assert calls == [(text, False)]
         finally:
             task.cancel()
@@ -126,7 +128,7 @@ def test_failed_silence_extraction_preserves_the_prompt():
             raise VoiceError("Synthetic failure")
 
         task = asyncio.create_task(wait_for_endpoint(merger, Thinking(), browser, asyncio.Event(),
-            lambda: 8.2, silence_check=check))
+            lambda: 20.2, silence_check=check))  # decision log 40: the prompt comes at 20 s
         try:
             await asyncio.wait_for(browser.prompted.wait(), 1)
             assert not task.done()
@@ -167,57 +169,6 @@ def test_silence_check_does_not_wait_for_a_slow_endpoint_classifier():
     asyncio.run(exercise())
 
 
-def interviewer_speaking(merger, value, now, headphones=False):
-    """What voice.relay does when the browser says the interviewer started or stopped speaking."""
-    merger.paused = bool(value) and not headphones
-    merger.last_activity = now
-    merger.revision += 1
 
-
-@pytest.mark.parametrize("silence_check", [False, True])
-def test_the_silence_prompt_is_never_spoken_twice_without_new_speech(silence_check):
-    """Live mic test: the prompt was spoken, the interviewer's own speech bumped the revision,
-    and 8 s later the same prompt came again although the candidate had said nothing."""
-    async def exercise():
-        clock = [0.0]
-        merger, browser, changed = AnswerMerger(), Browser(), asyncio.Event()
-        prompts = lambda: sum(e["type"] == "listening_prompt" for e in browser.events)  # noqa: E731
-
-        async def check(text):
-            return False  # nothing committed: the prompt is due
-
-        task = asyncio.create_task(wait_for_endpoint(merger, Thinking(), browser, changed, lambda: clock[0],
-                                                     silence_check=check if silence_check else None))
-        try:
-            await asyncio.sleep(.01)
-            clock[0] = 8.0
-            changed.set()
-            await asyncio.wait_for(browser.prompted.wait(), 1)
-            assert prompts() == 1
-            # The interviewer speaks the prompt (the mic pauses without headphones), then stops.
-            interviewer_speaking(merger, True, 8.1)
-            changed.set()
-            await asyncio.sleep(.01)
-            interviewer_speaking(merger, False, 10.0)
-            changed.set()
-            await asyncio.sleep(.01)
-            for t in (18.0, 30.0, 60.0):
-                clock[0] = t
-                changed.set()
-                await asyncio.sleep(.02)
-            assert prompts() == 1, "a second prompt with no speech in between"
-            # New speech from the candidate, then silence again: one more prompt is allowed.
-            merger.feed({"type": "speechStart", "turnId": 1}, 61.0)
-            merger.feed({"type": "speechComplete", "turnId": 1, "transcript": "I have the first count."}, 61.5)
-            clock[0] = 70.0
-            changed.set()
-            for _ in range(50):
-                await asyncio.sleep(.01)
-                if prompts() == 2:
-                    break
-            assert prompts() == 2
-        finally:
-            task.cancel()
-            await asyncio.gather(task, return_exceptions=True)
-
-    asyncio.run(exercise())
+# The "never twice without new speech" test that was here is superseded by decision log 40
+# (at most once per question): tests/test_silence_prompts.py.

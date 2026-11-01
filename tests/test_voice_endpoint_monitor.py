@@ -32,19 +32,23 @@ def test_long_thinking_pause_prompts_once_then_listens_for_a_closer():
             changed.set()
             await asyncio.sleep(.01)
             assert not task.done() and not merger.emitted
-            clock[0] = 8.2
+            clock[0] = 8.2  # decision log 40: no prompt yet at 8 s
+            changed.set()
+            await asyncio.sleep(.01)
+            assert not browser.prompt.is_set()
+            clock[0] = 20.2
             changed.set()
             await asyncio.wait_for(browser.prompt.wait(), 1)
             prompts = [event for event in browser.events if event["type"] == "listening_prompt"]
             assert prompts == [{"type": "listening_prompt", "message": PROMPT}]
             assert not task.done()
-            clock[0] = 20
+            clock[0] = 40
             changed.set()
             await asyncio.sleep(.01)
             assert len([event for event in browser.events if event["type"] == "listening_prompt"]) == 1
-            merger.feed({"type": "speechStart", "turnId": 2}, 20)
-            merger.feed({"type": "speechComplete", "turnId": 2, "transcript": "That's my answer."}, 20.1)
-            clock[0] = 20.1
+            merger.feed({"type": "speechStart", "turnId": 2}, 40)
+            merger.feed({"type": "speechComplete", "turnId": 2, "transcript": "That's my answer."}, 40.1)
+            clock[0] = 40.1
             changed.set()
             assert await asyncio.wait_for(task, 1) == "explicit_closer"
             assert merger.finish("explicit_closer") and merger.finish("done") is None
