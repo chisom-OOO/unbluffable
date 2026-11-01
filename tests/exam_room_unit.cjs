@@ -166,3 +166,49 @@ console.log("interviewer delivery ok");
   assert.equal(sameList([null, "5"], [null]), false);
 }
 console.log("class specs in the page ok");
+
+// Room fixes (live mic test): follow the latest line only when the candidate is at, or within
+// 80 px of, the bottom; otherwise leave the page alone and offer "New message ↓".
+{
+  const { follower, atBottom, FOLLOW_SLACK } = require(path.resolve(__dirname, "../app/static/ui/turn-logic.js"));
+  const at = (gap) => ({ scrollHeight: 2000, clientHeight: 600, scrollTop: 2000 - 600 - gap });
+  assert.equal(FOLLOW_SLACK, 80);
+  assert.equal(atBottom(at(0)), true);
+  assert.equal(atBottom(at(80)), true, "within 80 px counts as the bottom");
+  assert.equal(atBottom(at(81)), false);
+  const f = follower();
+  assert.equal(f.newLine(), "scroll", "following from the start");
+  f.scrolled(at(400), 1000);  // the candidate scrolls up to read
+  assert.equal(f.following, false);
+  assert.equal(f.newLine(), "notify", "a new line does not move the page");
+  assert.equal(f.unseen, true);
+  assert.equal(f.newLine(), "notify");
+  f.scrolled(at(30), 2000);  // back near the bottom by hand
+  assert.equal(f.following, true);
+  assert.equal(f.unseen, false, "the button goes once they are back at the bottom");
+  assert.equal(f.newLine(), "scroll");
+  // Scroll events from our own smooth scroll do not count as the candidate scrolling up.
+  f.autoScrolled(3000, 800);
+  f.scrolled(at(500), 3400);
+  assert.equal(f.following, true);
+  f.scrolled(at(500), 3900);
+  assert.equal(f.following, false, "after the animation window, a real scroll up counts");
+  f.newLine();
+  f.jumped(4000);  // "New message ↓"
+  assert.equal(f.following, true);
+  assert.equal(f.unseen, false);
+  assert.equal(f.newLine(), "scroll");
+}
+console.log("room auto-scroll ok");
+
+// Model panel: the short model name, the full ID on hover.
+{
+  const { modelName } = require(path.resolve(__dirname, "../app/static/ui/turn-logic.js"));
+  assert.equal(modelName("meta-models/muse-spark-open-1026"), "Muse Spark Open");
+  assert.equal(modelName("muse-voice-transcribe-1.0"), "Muse Voice Transcribe");
+  assert.equal(modelName("muse-spark-1.3"), "Muse Spark 1.3");
+  assert.equal(modelName("muse-wonder-1.0"), "Muse Wonder");
+  assert.equal(modelName("some-other-model"), "some-other-model", "unknown IDs stay as they are");
+  assert.equal(modelName(""), "");
+}
+console.log("model names ok");
