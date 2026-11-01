@@ -76,6 +76,14 @@ CHATBOT_EFFORT = "low"  # the same for every chatbot arm
 VERDICT = obj({"verdict": {"type": "string", "enum": list(stats.LABELS)}})
 HEADLINE = "Sounding right isn't the same as being right"
 HEADLINE_IF_CLOSE = "a careful chatbot needs a verified answer key; the forge supplies one"
+# Run 2's close-result line: its headline arm judges the first answer alone, with no answer key.
+HEADLINE_IF_CLOSE_RUN2 = ("No significant difference from a careful chatbot judging the first answer alone "
+                          "(exact McNemar p = {p}).")
+
+
+def close_headline(design: str, p: float) -> str:
+    """The headline when Unbluffable is within CLOSE_ITEMS of the headline arm."""
+    return HEADLINE_IF_CLOSE_RUN2.format(p=f"{p:.4g}") if design == "run2" else HEADLINE_IF_CLOSE
 CLOSE_ITEMS = 2  # decision log 15: within 2 items of Unbluffable
 # Optional rows (not pre-registered): the careful arm and Unbluffable again on Muse Spark Open
 # (backend open_weights), reported separately; the four arms above and the headline rule are unchanged.
@@ -357,7 +365,8 @@ def summarise(items: list[dict], verdicts: dict[str, list[dict[str, str]]], prov
             "gap": gap,
             "within": CLOSE_ITEMS,
             "close": abs(gap) <= CLOSE_ITEMS,
-            "headline": HEADLINE_IF_CLOSE if abs(gap) <= CLOSE_ITEMS else HEADLINE,
+            "headline": (close_headline(provenance.get("design", "run1"), mcnemar[key]["majority"]["p"])
+                         if abs(gap) <= CLOSE_ITEMS else HEADLINE),
         },
     }
 

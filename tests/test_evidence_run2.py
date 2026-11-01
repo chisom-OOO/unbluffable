@@ -81,7 +81,27 @@ def test_run2_arms_and_summary():
     assert "| Careful Spark, original only | 1 | 0 |" in head.split("Headline comparison:")[1]
     assert all(f"| {name} |" in secondary.split("## ")[0] for name in ("Careful Spark", "Plain Spark"))
     assert "Careful Spark, original only 3/4" in md
-    assert not any(word in md.lower() for word in BANNED)
+    # Close (gap 1): run 2's own line with the headline comparison's exact p, and no answer-key wording.
+    p = results["mcnemar_vs_unbluffable"]["careful_first_only"]["majority"]["p"]
+    line = f"No significant difference from a careful chatbot judging the first answer alone (exact McNemar p = {p:.4g})."
+    assert rule["close"] and rule["headline"] == line and f"Headline: **{line}**" in md
+    assert "answer key" not in md and harness.HEADLINE_IF_CLOSE not in md
+    # The builder's run-2 line says "first answer" (which answer the chatbot sees), not a priority claim.
+    assert not any(word in md.replace(line, "").lower() for word in BANNED)
+
+
+def test_run2_headline_lines_by_gap():
+    """Run 1 keeps its close-result line; run 2 names its p; a gap beyond two items uses the main headline."""
+    assert harness.close_headline("run1", 0.0625) == harness.HEADLINE_IF_CLOSE
+    assert harness.close_headline("run2", 0.0625) == (
+        "No significant difference from a careful chatbot judging the first answer alone (exact McNemar p = 0.0625).")
+    assert harness.close_headline("run2", 1.0).endswith("(exact McNemar p = 1).")
+    # Unbluffable right on four items the first-only chatbot gets wrong: not close, so the main headline.
+    items = [{**ITEMS[1], "id": f"r{i}"} for i in range(4)] + [ITEMS[0]]
+    verdicts = asyncio.run(harness.evaluate(items, Run2Spark(), runs=1, design="run2"))
+    results = harness.summarise(items, verdicts, {**RUN2_PROVENANCE, "runs": 1, "prompt_sha256": {}})
+    rule = results["headline_rule"]
+    assert rule["gap"] == 4 and not rule["close"] and rule["headline"] == harness.HEADLINE
 
 
 def test_the_headline_arm_must_have_run():
