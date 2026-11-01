@@ -2,7 +2,9 @@
 // (content/forge/<family>.json, instance 1): the question and its spoken form are the family's
 // own; the candidate commits to one of the family's verified wrong-method values; the
 // challenge is a Socratic question about their own words that never gives the answer; the
-// recovery reaches the family's stored answer. tests/test_landing_sample.py checks every number.
+// recovery reaches the family's stored answer. Then the twin: the same family's instance that
+// the engine picks for that mistake, and a one-line correct answer.
+// tests/test_landing_sample.py checks every number.
 // `challenge` marks the words the challenge quotes; `value` is the number a line commits to.
 window.UB_SAMPLES = {
   quant: {
@@ -15,6 +17,13 @@ window.UB_SAMPLES = {
       { who: "interviewer", kind: "challenge", text: "You said 60. How long do the two machines run, compared with the five?" },
       { who: "candidate", text: "Eight hours, not six. So 60 times 8 over 6, which is 80 parts.", value: "80" },
     ],
+    // The twin: the engine's own choice for this mistake (instance 36).
+    twin: {
+      instance: 35,
+      question: "3 identical machines make 60 parts in 2 hours at a constant rate. How many parts would 8 machines make in 10 hours?",
+      spoken: "three identical machines make sixty parts in two hours at a constant rate. How many parts would eight machines make in ten hours?",
+      answer: { text: "That's 10 parts per machine-hour, times 8 machines and 10 hours, so 800 parts.", value: "800" },
+    },
   },
   ib: {
     family: "ibx_F015",
@@ -26,6 +35,13 @@ window.UB_SAMPLES = {
       { who: "interviewer", kind: "challenge", text: "You said 210 days. Does paying your suppliers later lengthen or shorten the time your cash is tied up?" },
       { who: "candidate", text: "Shorten, so I subtract them. 88 plus 49 minus 73 is 64 days.", value: "64" },
     ],
+    // The twin: the engine's own choice for this mistake (instance 29).
+    twin: {
+      instance: 28,
+      question: "Consider a publisher. Receivable days are 15, inventory days are 15, and payable days are 109. What is the cash conversion cycle, in days?",
+      spoken: "Consider a publisher. Receivable days are fifteen, inventory days are fifteen, and payable days are one hundred and nine. What is the cash conversion cycle, in days?",
+      answer: { text: "Add 15 and 15, take away 109, so it's minus 79 days.", value: "-79" },
+    },
   },
   consulting: {
     family: "co_F025",
@@ -37,6 +53,13 @@ window.UB_SAMPLES = {
       { who: "interviewer", kind: "challenge", text: "You said 0.6 dollars. What unit is the campaign spend in?" },
       { who: "candidate", text: "Thousands of dollars. So it's 600 thousand over 1,000, which is 600 dollars per customer.", value: "600" },
     ],
+    // The twin: the engine's own choice for this mistake (instance 9).
+    twin: {
+      instance: 8,
+      question: "A campaign spends 700 thousand dollars and acquires 400 new customers. What is average acquisition cost, in dollars per new customer?",
+      spoken: "A campaign spends seven hundred thousand dollars and acquires four hundred new customers. What is average acquisition cost, in dollars per new customer?",
+      answer: { text: "It's 700 thousand over 400, so 1,750 dollars per customer.", value: "1750" },
+    },
   },
   software: {
     family: "swf_F015",
@@ -48,5 +71,12 @@ window.UB_SAMPLES = {
       { who: "interviewer", kind: "challenge", text: "You said it returns 12. Read the condition again: what does strictly greater rule out?" },
       { who: "candidate", text: "It rules out 12 itself, so the search should return 27.", value: "27" },
     ],
+    // The twin: the engine's own choice for this mistake (instance 27).
+    twin: {
+      instance: 26,
+      question: "In sorted values 8, 9, 38, 40, 47, 49, 60, find the first value strictly greater than 9. Return minus one if none qualifies. What integer should your function return?",
+      spoken: "In sorted values eight, nine, thirty-eight, forty, forty-seven, forty-nine, sixty, find the first value strictly greater than nine. Return minus one if none qualifies. What integer should your function return?",
+      answer: { text: "Strictly greater than 9 skips the 9 itself, so it returns 38.", value: "38" },
+    },
   },
 };
