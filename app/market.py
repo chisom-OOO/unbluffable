@@ -126,6 +126,7 @@ class MarketSession:
             o = g.sample(self.rng)
             self.rounds.append(RoundLog(g, o, max(0, min(self.rng.choice([2, 3]), len(o.draws) - 1))))
         self.asked_question = False
+        self.ends_session = True  # False: a segment of a mixed interview (decision log 37)
 
     def pick_games(self) -> list[m.Game]:
         kinds = ["dice_sum", "dice_max", "dice_product", "heads", "cards", "event", "distinct", "pay_per_head"]
@@ -261,6 +262,9 @@ class MarketSession:
                     self.timed_out = True
                     self.rounds = self.rounds[:n]
                     break
+            if not self.ends_session:
+                self.finished = True
+                return
             await self.line("close", say.TIME_CLOSE if self.timed_out else say.SESSION_CLOSE)
             self.finished = True
             await self.send({"type": "session_end", "label": None, "market": True, "timed_out": self.timed_out})

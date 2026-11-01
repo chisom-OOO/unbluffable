@@ -16,7 +16,7 @@ from contextlib import suppress
 
 from fastapi import APIRouter, HTTPException, Response, WebSocket, WebSocketDisconnect
 
-from app import behavioural, coding, conversational, interview_report, market, quant_dev, roles, voice_routes
+from app import behavioural, coding, conversational, interview_report, market, mixed, quant_dev, roles, voice_routes
 from app.areas import AREAS
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
@@ -89,6 +89,8 @@ def _build_topics() -> dict:
         tracks.append({"id": pack, "name": name, "count": count, "available": bool(options),
                        "topics": options, "default": options[0]["id"] if options else None,
                        "areas": list(AREAS[pack]),
+                       # Decision log 37: the order a mixed interview runs in, for the setup note.
+                       "mix": mixed.mix_view(pack),
                        # Decision log 27: with verified specs (content/coding/), the track is always a coding round.
                        "coding": bool(coding.specs(pack)),
                        # Setup redesign: the track's target roles, each with its live topic chips by tier.
@@ -98,6 +100,11 @@ def _build_topics() -> dict:
     # Easy and Medium are chosen in setup; Hard is the start for a rating of 70+ (decision log 23).
     return {"tracks": tracks, "default_track": default, "levels": list(DIFFICULTIES),
             "default_level": START_LEVELS[0]}
+
+
+# Topic ids (pack-based setup) that are a format of their own, and the format each runs as.
+SPECIAL_TOPICS = {behavioural.BEHAVIOURAL: "behavioural", market.MARKET: "market",
+                  conversational.TOPIC["ib"]: "conversational", conversational.TOPIC["software"]: "design"}
 
 
 def selection(pack, topic) -> tuple[dict, str | tuple[str, ...]]:
@@ -117,12 +124,10 @@ def selection(pack, topic) -> tuple[dict, str | tuple[str, ...]]:
         raise VoiceError("Choose at least one topic.")
     if not all(isinstance(t, str) and t in known for t in chosen):
         raise VoiceError("Choose topics from this track.")
-    for solo in (behavioural.BEHAVIOURAL, market.MARKET, *conversational.TOPIC.values()):
-        if solo in chosen:
-            if len(chosen) > 1:
-                raise VoiceError("Behavioural questions run on their own; choose them without other topics."
-                                 if solo == behavioural.BEHAVIOURAL else f"{solo} runs on its own; choose it without other topics.")
-            return track, solo
+    picked = tuple(dict.fromkeys(chosen))
+    if any(t in SPECIAL_TOPICS for t in picked):
+        # Decision log 37: a special topic alone runs on its own; with others, a mixed interview.
+        return track, picked[0] if len(picked) == 1 else picked
     forge = known - {MIXED, behavioural.BEHAVIOURAL, market.MARKET, *conversational.TOPIC.values()}
     if MIXED in chosen or set(chosen) == forge:
         return track, MIXED
@@ -159,9 +164,25 @@ def role_session(begin, send, listen, next_event, provider, deadline, coding_rou
                                             coding_round(pack, code_topics, deadline), deadline=deadline,
                                             track=track, opener_choice=opener)
         session.opener.role = session.coding.role = role
+    elif special and len(chosen) > 1 and role.coding:
+        # Decision log 37: Software mixes inside the coding round (design concepts after the code).
+        topics = sorted({t for tier, c in roles.topic_chips(role, chosen) for t in c.topics}) or None
+        session = coding_round(track, topics, deadline, None if topics else roles.weights(role, roles.live_topics(bank(), role)),
+                               design_questions=mixed.FORMATS["design"].count)
+    elif special and len(chosen) > 1:
+        # Decision log 37: special formats with regular topics, or with each other, in one interview.
+        forge_chips = [c for c in chosen if live[c]["kind"] == "topic"]
+        formats = {mixed.KIND_FORMAT[k] for k in special} | ({"forge"} if forge_chips else set())
+        case_chips = [x for tier, xs in role.tiers() for x in xs if x.id in chosen and x.kind == roles.CASES]
+        types = [x.case_type for x in case_chips]
+        case_type = None if not types or None in types else random.choice(types)  # "Full case": any type
+
+        def forge_interview():
+            return Interview(source=roles.weighted_source(bank(), role, level, random.Random(), forge_chips, pack=track)[0])
+
+        session = mixed_session(send, listen, provider, track, formats, forge_interview,
+                                f"{', '.join(forge_chips)} ({role.name})", label, case_type)
     elif special:
-        if len(chosen) != 1:
-            raise VoiceError(f"{chosen[0]} runs on its own; choose it without other topics.")
         kind = special[0]
         if kind == roles.MARKET:
             session = market.MarketSession(send, listen, provider, deadline=deadline)
@@ -184,9 +205,58 @@ def role_session(begin, send, listen, next_event, provider, deadline, coding_rou
         source, _ = roles.weighted_source(bank(), role, level, random.Random(), chosen or None, pack=track)
         session = ExamSession(send, listen, VoiceAnalyzer(provider), Interview(source=source), deadline=deadline)
     session.track, session.role = track, role
-    if not role.opener and not special:
+    if not role.opener and (not special or len(chosen) > 1):
         session.topics = label
     return session
+
+
+def mixed_session(send, listen, provider, track: str, formats, forge_interview, forge_label: str, topics: str,
+                  case_type: str | None = None) -> mixed.MixedSession:
+    """Decision log 37: one interview from several formats, each run by its own session, in the
+    track's default order, sharing the interview's usual length (a case's when one is chosen)."""
+    guard = mixed.Guard(listen)
+    total = CASE_SECONDS if "cases" in formats else SESSION_SECONDS
+    segments = []
+    for f in mixed.order(track, formats):
+        count = mixed.FORMATS[f].count
+        if f == "forge":
+            session = ExamSession(send, guard.listen, VoiceAnalyzer(provider), forge_interview())
+            session.topics = forge_label
+        elif f == "market":
+            session = market.MarketSession(send, guard.listen, provider)
+            session.rounds = session.rounds[:count]
+        elif f == "behavioural":
+            session = behavioural.BehaviouralSession(send, guard.listen, provider, track)
+            session.asked = session.asked[:count]
+        elif f == "conversational":
+            session = conversational.ConversationalSession(send, guard.listen, provider, "ib", count=count)
+        elif f == "cases":
+            from app import cases
+            session = cases.CaseSession(send, guard.listen, provider, case_type=case_type)
+        else:
+            raise VoiceError("That format can't be mixed yet.")
+        segments.append(mixed.Segment(f, session))
+    return mixed.MixedSession(send, segments, time.monotonic() + total, track, topics, guard=guard, session_seconds=total)
+
+
+def legacy_mix(begin: dict):
+    """The pack-based start (no role): a mix of forge topics and special ones, or None. Returns a
+    builder taking (send, listen, provider)."""
+    if begin.get("role") is not None or begin.get("placement") is True or begin.get("drill") is not None:
+        return None
+    chosen = begin["topics"] if begin.get("topics") is not None else begin.get("topic")
+    track, picked = selection(begin.get("pack"), chosen)
+    if coding.specs(track["id"]) or not isinstance(picked, tuple) or not any(t in SPECIAL_TOPICS for t in picked):
+        return None
+    forge = [t for t in picked if t not in SPECIAL_TOPICS]
+    formats = {SPECIAL_TOPICS[t] for t in picked if t in SPECIAL_TOPICS} | ({"forge"} if forge else set())
+    level = begin.get("level", START_LEVELS[0])
+
+    def forge_interview():
+        return interview_for(track["id"], forge, level)
+
+    return lambda send, listen, provider: mixed_session(send, listen, provider, track["id"], formats, forge_interview,
+                                                         topic_label(track["id"], forge) if forge else "", ", ".join(picked))
 
 
 def placement_for(pack) -> tuple[str, Interview]:
@@ -263,6 +333,8 @@ def report(session_id: str):
         raise HTTPException(404, "This report is no longer available.")
     if isinstance(session, DrillSession):
         return interview_report.build_drill(session)
+    if isinstance(session, mixed.MixedSession):
+        return mixed.report(session, bank().templates)
     if isinstance(session, coding.CodingSession):
         return coding.report(session)
     if isinstance(session, behavioural.BehaviouralSession):
@@ -396,6 +468,9 @@ async def interview_socket(socket: WebSocket):
             # Decision log 30: conversational questions (the behavioural flow plus a twist), on their own.
             track = selection(begin.get("pack"), None)[0]["id"]
             session = conversational.ConversationalSession(socket.send_json, listen, provider, track, deadline=deadline)
+        elif legacy_mix(begin) is not None:
+            # Decision log 37: special topics mixed with forge topics, or with each other.
+            session = legacy_mix(begin)(socket.send_json, listen, provider)
         elif begin.get("pack") == quant_dev.TRACK and quant_dev.available(bank()):
             # A spoken opener (probability or expectations), then the coding round on quant_dev families.
             deadline = time.monotonic() + coding.INTERVIEW_SECONDS
@@ -405,6 +480,7 @@ async def interview_socket(socket: WebSocket):
             # Decision log 27: a track with coding specs (Software) is always a coding round (Python).
             track = selection(begin.get("pack"), None)[0]["id"]
             topics = begin.get("topics") if isinstance(begin.get("topics"), list) else None
+            topics = [t for t in topics or [] if t not in SPECIAL_TOPICS] or None  # design concepts follow the code anyway
             deadline = time.monotonic() + coding.INTERVIEW_SECONDS  # a 45-minute coding interview
             session = coding_round(track, topics, deadline)
         elif selection(begin.get("pack"), begin["topics"] if begin.get("topics") is not None else begin.get("topic"))[1]                 == market.MARKET:
@@ -425,8 +501,10 @@ async def interview_socket(socket: WebSocket):
         session_id = keep(session)
         long = isinstance(session, (coding.CodingSession, quant_dev.QuantDevSession))
         case = type(session).__name__ == "CaseSession"
+        seconds = getattr(session, "session_seconds", None) or (
+            coding.INTERVIEW_SECONDS if long else CASE_SECONDS if case else SESSION_SECONDS)
         await socket.send_json({"type": "session", "id": session_id, "mode": provider.mode,
-                                "session_seconds": coding.INTERVIEW_SECONDS if long else CASE_SECONDS if case else SESSION_SECONDS,
+                                "session_seconds": seconds,
                                 "drill": session.target.misconception if isinstance(session, DrillSession) else None})
         await session.run()
     except (WebSocketDisconnect, SessionClosed):

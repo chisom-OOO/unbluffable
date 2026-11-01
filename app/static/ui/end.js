@@ -295,12 +295,66 @@ document.addEventListener("DOMContentLoaded", () => {
     if (again) { again.textContent = "Another case →"; again.href = "/ui/interview?track=consulting"; }
   }
 
+  // Decision log 37: a mixed interview, one section per segment in the order they ran. Each special
+  // segment renders into its own section with its own renderer; the forge segment fills the
+  // questions sections (label, evidence cards, breakdown). The profile is updated once, with
+  // the segments' own rating items.
+  function renderMixed(e) {
+    const entry = showProgress(e);
+    const parts = e.segments || [];
+    const RENDER = { market: renderMarket, behavioural: renderBehavioural, conversational: renderConversational, cases: renderCase };
+    const SECTION = { market: "market-section", behavioural: "behavioural-section", conversational: "conversational-section", cases: "case-section" };
+    // The special renderers set the page header, hide the questions sections and relabel the main
+    // action; keep what they change and restore it after.
+    const shown = [...document.querySelectorAll(".section, .end-verdict, #stats")].map((el) => [el, el.hidden]);
+    const again = document.querySelector(".end-actions .btn:not(.secondary)");
+    const action = again ? [again.textContent, again.getAttribute("href")] : null;
+    for (const p of parts) if (RENDER[p.format]) RENDER[p.format](p.report);
+    shown.forEach(([el, hidden]) => { el.hidden = hidden; });
+    if (again && action) { again.textContent = action[0]; again.setAttribute("href", action[1]); }
+    const forge = parts.find((p) => p.format === "forge");
+    if (forge) {
+      renderQuestions(forge.report, entry);
+      $("questions-title").textContent = forge.heading;
+      $("questions-title").hidden = false;
+    } else {
+      document.querySelectorAll(".section, .end-verdict, #stats").forEach((el) => { el.hidden = true; });
+    }
+    for (const p of parts) if (SECTION[p.format]) $(SECTION[p.format]).querySelector("h2").textContent = p.heading;
+    // The page follows the interview's order.
+    const main = $("main"), grid = document.querySelector(".reportgrid");
+    for (const p of parts) {
+      const nodes = p.format === "forge"
+        ? [$("questions-title"), document.querySelector(".end-verdict"), $("stats").closest("section"), grid]
+        : [$(SECTION[p.format])];
+      nodes.filter(Boolean).forEach((n) => main.append(n));
+    }
+    if (!forge) main.append(grid);  // the actions stay at the end
+    const names = parts.map((p) => p.heading.replace(/ \(.*\)$/, "").toLowerCase());
+    $("end-eyebrow").textContent = "Interview report";
+    $("end-title").textContent = "How it went";
+    $("end-sub").textContent = `${parts.length} parts, in order: ${names.length > 1 ? `${names.slice(0, -1).join(", ")}, then ${names[names.length - 1]}` : names[0]}.`;
+    $("result-tag").hidden = false;
+    $("result-tag").textContent = "Mixed interview";
+    $("topics-line").hidden = !e.topics;
+    $("topics-line").textContent = e.topics ? `Topics: ${e.topics}` : "";
+    $("conditions").hidden = !e.conditions;
+    $("conditions").textContent = e.conditions || "";
+    $("conditions").classList.toggle("warn", !!e.conditions && !/^Exam/.test(e.conditions));
+  }
+
   function render(e) {
+    if (e.mixed) { renderMixed(e); return; }
     if (e.case) { showProgress(e); renderCase(e); return; }
     if (e.conversational) { renderConversational(e); return; }
     if (e.coding) { showProgress(e); renderCoding(e); if (e.design?.length) { $("conversational-title").textContent = "Design concepts (model-judged, not exact)"; $("conversational").innerHTML = conversationalCards(e.design); $("conversational-section").hidden = false; } return; }
     if (e.market) { showProgress(e); renderMarket(e); return; }
     if (e.behavioural) { showProgress(e); renderBehavioural(e); return; }
+    renderQuestions(e, showProgress(e));
+  }
+
+  // Forge questions: the label, evidence cards, stats and breakdown.
+  function renderQuestions(e, entry) {
 
     const ICON = {
       check: '<path d="M20 6 9 17l-5-5"/>',
@@ -390,7 +444,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Numbers only: each question's outcome and words are on its evidence card.
     // Numbers only, one row. Each question's time is on its evidence card.
-    const entry = showProgress(e);
     const P = window.UBProfile;
     const stat = (dt, dd, small) => `<div class="stat"><dt>${dt}</dt><dd>${dd}${small ? `<small>${small}</small>` : ""}</dd></div>`;
     $("stats").innerHTML = (e.placement

@@ -258,6 +258,7 @@ class BehaviouralSession:
         self.track, self.topics, self.placement, self.conditions = track, BEHAVIOURAL, False, "exam"
         self.finished = self.timed_out = False
         self._acks = 0
+        self.ends_session = True  # False: a segment of a mixed interview (decision log 37)
 
     async def line(self, kind: str, text: str) -> None:
         await self.send({"type": "interviewer_line", "kind": kind, "text": text, "target_step": None,
@@ -298,7 +299,7 @@ class BehaviouralSession:
                 started = self.clock()
                 await self.send({"type": "question", "number": n, "kind": "behavioural", "template": a.row.id,
                                  "text": a.row.question, "topic": BEHAVIOURAL, "difficulty": None,
-                                 "guide_seconds": GUIDE_SECONDS, "behavioural_type": a.row.type})
+                                 "guide_seconds": GUIDE_SECONDS, "behavioural_type": a.row.type, "of": len(self.asked)})
                 await self.line("question", a.row.question)
                 a.first = await self.answer(a, a.row.question)
                 a.judged = await judge(self.provider, a.row, a.first)
@@ -318,6 +319,9 @@ class BehaviouralSession:
                     self.timed_out = True
                     self.asked = self.asked[:n]
                     break
+            if not self.ends_session:
+                self.finished = True
+                return
             await self.line("close", say.TIME_CLOSE if self.timed_out else say.SESSION_CLOSE)
             self.finished = True
             await self.send({"type": "session_end", "label": None, "behavioural": True, "timed_out": self.timed_out})
