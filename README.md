@@ -80,6 +80,10 @@ I started building this for quant interviews, my own field. But the problem isn'
 | **Which model did what** | Every turn shows which model ran, for which job, with latency and cost. |
 | **Privacy** | Audio and video are never saved; answer text is kept only with consent. The camera self-view stays on this device: never recorded, uploaded or sent to a model. |
 
+## Bring your own question
+
+Upload a screenshot or photo of one question from your own notes or a practice set, or paste it ([/ui/byoq](https://unbluffable-ptz1.onrender.com/ui/byoq)). A Meta model reads the image into text you can correct; it is never asked for the answer, and the image is read once and not stored. The question is practised only if it passes a check in code: two separately written programs (a solver from each of two models, or on the hosted app a solver and an exhaustive simulation) must agree exactly, as fractions, on your question and on at least 10 versions with new numbers, and match the answer in your notes if they show one. Common wrong methods are kept only if they give different values. Then it runs in the normal room: the same challenge of the number you commit to, then the same puzzle with new numbers. The report says "Your question · checked in code on N variants". A question that can't be checked isn't scored, and your own questions never count toward your rating ([decision log 38](spec/DECISION_LOG.md)). Use your own notes or practice questions, not real interview or assessment questions.
+
 ## How it works
 
 ```mermaid
@@ -136,8 +140,8 @@ sequenceDiagram
 | Model | Runs on | Job |
 | --- | --- | --- |
 | **Muse Voice Transcribe** · `muse-voice-transcribe-1.0` | Meta Model API, realtime | Live speech-to-text for the hands-free interview |
-| **Muse Spark** · `muse-spark-1.3` | Meta Model API | Extracts the committed answer and verbatim quotes, judges whether an answer is finished, judges behavioural answers (local runs) |
-| **Muse Spark Open** · `meta-models/muse-spark-open-1026` | Baseten (open weights) | Every reasoning call on the hosted app (`LLM_BACKEND=open_weights`), including judging behavioural answers. Offline, it wrote each question family's solver, wrong-method values and coding tests: a solver written from two worked examples, then run on every variant. A family ships only if its solver reproduces every stored answer in code. The questions, variants and stored answers were generated with ChatGPT |
+| **Muse Spark** · `muse-spark-1.3` | Meta Model API | Extracts the committed answer and verbatim quotes, judges whether an answer is finished, judges behavioural answers (local runs). For Bring your own question (local runs), reads the uploaded image or pasted text into the question text (image input, strict JSON schema; it is not asked to solve it) and writes the second, independent solver that checks it |
+| **Muse Spark Open** · `meta-models/muse-spark-open-1026` | Baseten (open weights) | Every reasoning call on the hosted app (`LLM_BACKEND=open_weights`), including judging behavioural answers and, for Bring your own question, reading the uploaded image and writing both of its checks (a solver and, in a separate call, an exhaustive simulation). In local runs it writes a BYOQ question's template, solver and wrong methods, all run in a sandbox, never in the web process. Offline, it wrote each question family's solver, wrong-method values and coding tests: a solver written from two worked examples, then run on every variant. A family ships only if its solver reproduces every stored answer in code. The questions, variants and stored answers were generated with ChatGPT |
 | **Exact maths** | Our code | Every number check and every score |
 
 ### Why open weights
