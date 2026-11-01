@@ -146,6 +146,20 @@ def test_clarifying_question_repeats_the_puzzle_for_free():
     assert session.questions[0].weight == 1
 
 
+def test_question_lines_carry_a_transcript_that_does_not_repeat_the_question():
+    """The question is shown at the top of the room; the transcript keeps only what was said
+    around it: the spoken lead-in (or the twin's or repeat's intro) and the closing line."""
+    from engine import speakability
+    _, events = run_session(["clarify", "right", "right"])
+    first, again, twin = lines(events, "question")
+    assert first["transcript"] == {"lead": speakability.LEAD_INS[0], "after": say.OPENING, "above": True}
+    assert again["transcript"] == {"lead": say.REPEAT_INTRO, "after": "", "above": True}
+    assert twin["transcript"] == {"lead": say.TWIN_INTRO, "after": "", "above": True}
+    assert twin["transcript"]["lead"] == "Now the same puzzle with new numbers."
+    # The full question is still sent (spoken, and for the recording); only the transcript is short.
+    assert all(e["transcript"]["lead"] not in ("", None) and len(e["text"]) > len(e["transcript"]["lead"]) for e in (first, again, twin))
+
+
 def test_no_to_offered_help_costs_nothing():
     session, _ = run_session(["no", "right", "right"])
     assert session.questions[0].weight == 1 and len(session.questions[0].answers) == 1

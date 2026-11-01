@@ -350,16 +350,19 @@ class ExamSession:
 
     # --- events ---
     async def line(self, kind: str, text: str, target: int | None = None, receipt: dict | None = None,
-                   speech: str | None = None) -> None:
+                   speech: str | None = None, transcript: dict | None = None) -> None:
         """`receipt`: the computation behind a judgement (decision log 16); redacted while
         the question is open. `speech`: what is said aloud when it differs from the text
-        shown (a forge instance's spoken_text, or its LaTeX read as words)."""
+        shown (a forge instance's spoken_text, or its LaTeX read as words). `transcript`: for a
+        question line, what the transcript shows instead of the full question (lead, after)."""
         if self.questions and kind in {"challenge", "nudge", "hint"}:
             self.questions[-1].help_lines.append((kind, text))
         event = {"type": "interviewer_line", "kind": kind, "text": text, "target_step": target,
                  "counts": self._counts(), "receipt": receipt}
         if speech and speech != text:
             event["speech"] = speech
+        if transcript:
+            event["transcript"] = transcript
         await self.send(event)
 
     async def say_question(self, puzzle: Puzzle, before: str = "", after: str = "", lead_in: bool = False) -> None:
@@ -373,12 +376,17 @@ class ExamSession:
         if speakability.coding_family(getattr(puzzle, "template_id", None)):
             # A coding-round family: one fixed line sends the candidate to the screen (it already
             # asks them to talk it through, so no lead-in and no closing line).
-            await self.line("question", join(before, shown), speech=" ".join(p for p in (before, speakability.CODING_LINE) if p))
+            said = " ".join(p for p in (before, speakability.CODING_LINE) if p)
+            await self.line("question", join(before, shown), speech=said, transcript={"lead": said, "after": "", "above": False})
             return
         if lead_in:
             lead = speakability.LEAD_INS[self._lead_ins % len(speakability.LEAD_INS)]
             self._lead_ins += 1
-        await self.line("question", join(before, shown), speech=join(lead if lead_in else before, spoken))
+        # The transcript does not repeat the question shown at the top: it keeps what was said
+        # around it ("Okay, try this one. (question above)").
+        opening = lead if lead_in else before
+        await self.line("question", join(before, shown), speech=join(opening, spoken),
+                        transcript={"lead": opening, "after": after, "above": True})
 
     def _counts(self) -> dict:
         q = self.questions[-1] if self.questions else None
