@@ -154,7 +154,9 @@ def test_four_arms_three_runs_and_summary():
     assert arms["plain"]["runs"][1]["false_flags"] == 1 and arms["plain"]["majority"]["false_flag_rate"] == 0
     assert results["mcnemar_vs_unbluffable"]["plain"]["majority"] == {"b": 2, "c": 0, "p": 0.5}
     rule = results["headline_rule"]
-    assert (rule["unbluffable_correct"], rule["careful_answers_correct"], rule["close"]) == (4, 4, True)
+    assert (rule["unbluffable_correct"], rule["compared_correct"], rule["close"]) == (4, 4, True)
+    assert rule["compared_with"] == results["headline_comparison"] == "careful_answers"  # run 1 (no design given)
+    assert results["secondary_comparisons"] == ["plain", "careful"]
     assert rule["headline"] == harness.HEADLINE_IF_CLOSE
     md = harness.markdown(results)
     assert "| Unbluffable | 4/4 |" in md and "Exact McNemar" in md

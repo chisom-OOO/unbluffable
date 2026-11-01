@@ -24,8 +24,9 @@ def test_first_only_messages_hold_the_original_alone():
     assert "Verified exact answer to question 1" in answers and "question 2" not in answers.lower().split("verified")[-1]
 
 
-class FirstOnlySpark:
-    """A careful chatbot that sees one answer: it says "understands" unless the number is a named error."""
+class Run2Spark:
+    """First-only arms see one answer and say "understands" unless it is a named error; careful
+    sees both and flags a repeat or a named error; plain says "understands" to everything."""
 
     def __init__(self):
         self.calls = []
@@ -34,33 +35,103 @@ class FirstOnlySpark:
         self.calls.append((kind, text))
         if not kind.startswith("evidence_"):
             return extraction(kind, text), {"model": "fake"}
-        assert "Question 2" not in text  # run 2: the chatbots never see the twin
-        return {"verdict": "does_not_understand" if "1/11" in text else "understands"}, {"model": "fake"}
+        if kind.endswith("_first_only"):
+            assert "Question 2" not in text  # the first-only chatbots never see the twin
+            return {"verdict": "does_not_understand" if "1/11" in text else "understands"}, {"model": "fake"}
+        assert "Question 2" in text  # careful and plain see the original and the twin, as in run 1
+        if kind == "evidence_plain":
+            return {"verdict": "understands"}, {"model": "fake"}
+        answers = re.findall(r"answer is (.+?)[,.]\s", text)
+        ok = answers[0] != answers[1] and "1/11" not in text
+        return {"verdict": "understands" if ok else "does_not_understand"}, {"model": "fake"}
+
+
+RUN2_PROVENANCE = {"design": "run2", "runs": 3, "backend": "fake", "model": "fake", "git_commit": "abc",
+                   "items_file": "items.json", "items_sha256": "0" * 64, "created_at": "now"}
 
 
 def test_run2_arms_and_summary():
-    provider = FirstOnlySpark()
+    provider = Run2Spark()
     verdicts = asyncio.run(harness.evaluate(ITEMS, provider, runs=3, design="run2"))
-    assert set(verdicts) == {"careful_first_only", "careful_answers_first_only", "unbluffable"}
-    # Same prompts as the run-1 careful arms.
+    assert list(verdicts) == ["careful_first_only", "careful_answers_first_only", "careful", "plain", "unbluffable"]
+    # Same prompts as the run-1 arms.
     prompts = harness.load_prompts()
     sent = {k: t for k, t in provider.calls if k.startswith("evidence_")}
-    assert set(sent) == {"evidence_careful_first_only", "evidence_careful_answers_first_only"}
+    assert set(sent) == {"evidence_careful_first_only", "evidence_careful_answers_first_only",
+                         "evidence_careful", "evidence_plain"}
     assert "Verified exact answer to question 1" in sent["evidence_careful_answers_first_only"]
     # The recited twin (memorised) fools a chatbot that sees only the original; the engine uses the twin.
     assert verdicts["careful_first_only"][0]["recited"] == "understands"
+    assert verdicts["careful"][0]["recited"] == "does_not_understand"
     assert verdicts["unbluffable"][0]["recited"] == "does_not_understand"
-    results = harness.summarise(ITEMS, verdicts, {"design": "run2", "runs": 3, "backend": "fake", "model": "fake", "git_commit": "abc",
-                                                  "items_file": "items.json", "items_sha256": "0" * 64,
-                                                  "prompt_sha256": {k: harness.sha256(v) for k, v in prompts.items()},
-                                                  "created_at": "now"})
-    assert set(results["mcnemar_vs_unbluffable"]) == {"careful_first_only", "careful_answers_first_only"}
+    results = harness.summarise(ITEMS, verdicts, {**RUN2_PROVENANCE,
+                                                  "prompt_sha256": {k: harness.sha256(v) for k, v in prompts.items()}})
+    # The headline comparison is read from the design: Unbluffable against careful_first_only.
+    assert results["headline_comparison"] == "careful_first_only"
+    assert results["secondary_comparisons"] == ["careful_answers_first_only", "careful", "plain"]
+    assert list(results["mcnemar_vs_unbluffable"])[0] == "careful_first_only"
     assert results["mcnemar_vs_unbluffable"]["careful_first_only"]["majority"]["b"] == 1
+    assert results["mcnemar_vs_unbluffable"]["plain"]["majority"]["b"] == 2
     rule = results["headline_rule"]
-    assert rule["compared_with"] == "careful_answers_first_only" and rule["gap"] == 1
+    assert rule["compared_with"] == "careful_first_only" and (rule["unbluffable_correct"], rule["compared_correct"]) == (4, 3)
     md = harness.markdown(results)
     assert "| Careful Spark, original only | 3/4 |" in md and "| Unbluffable | 4/4 |" in md
-    assert not any(word in md.lower() for word in BANNED)
+    head, secondary = md.split("Secondary comparisons:")
+    assert "Headline comparison: Unbluffable against Careful Spark, original only." in head
+    assert "| Careful Spark, original only | 1 | 0 |" in head.split("Headline comparison:")[1]
+    assert all(f"| {name} |" in secondary.split("## ")[0] for name in ("Careful Spark", "Plain Spark"))
+    assert "Careful Spark, original only 3/4" in md
+    # Close (gap 1): run 2's own line with the headline comparison's exact p, and no answer-key wording.
+    p = results["mcnemar_vs_unbluffable"]["careful_first_only"]["majority"]["p"]
+    line = f"No significant difference from a careful chatbot judging the first answer alone (exact McNemar p = {p:.4g})."
+    assert rule["close"] and rule["headline"] == line and f"Headline: **{line}**" in md
+    assert "answer key" not in md and harness.HEADLINE_IF_CLOSE not in md
+    # The builder's run-2 line says "first answer" (which answer the chatbot sees), not a priority claim.
+    assert not any(word in md.replace(line, "").lower() for word in BANNED)
+
+
+def test_run2_headline_lines_by_gap():
+    """Run 1 keeps its close-result line; run 2 names its p; a gap beyond two items uses the main headline."""
+    assert harness.close_headline("run1", 0.0625) == harness.HEADLINE_IF_CLOSE
+    assert harness.close_headline("run2", 0.0625) == (
+        "No significant difference from a careful chatbot judging the first answer alone (exact McNemar p = 0.0625).")
+    assert harness.close_headline("run2", 1.0).endswith("(exact McNemar p = 1).")
+    # Unbluffable right on four items the first-only chatbot gets wrong: not close, so the main headline.
+    items = [{**ITEMS[1], "id": f"r{i}"} for i in range(4)] + [ITEMS[0]]
+    verdicts = asyncio.run(harness.evaluate(items, Run2Spark(), runs=1, design="run2"))
+    results = harness.summarise(items, verdicts, {**RUN2_PROVENANCE, "runs": 1, "prompt_sha256": {}})
+    rule = results["headline_rule"]
+    assert rule["gap"] == 4 and not rule["close"] and rule["headline"] == harness.HEADLINE
+
+
+def test_the_headline_arm_must_have_run():
+    verdicts = asyncio.run(harness.evaluate(ITEMS, Run2Spark(), runs=1, design="run1"))
+    try:
+        harness.summarise(ITEMS, verdicts, {**RUN2_PROVENANCE, "prompt_sha256": {}})
+    except ValueError as error:
+        assert "careful_first_only" in str(error)
+    else:
+        raise AssertionError("a run-1 run summarised as run 2 must be refused")
+
+
+def test_a_run2_item_file_only_runs_with_design_run2(tmp_path, monkeypatch, capsys):
+    started = []
+    for name in ("evaluate", "load_items", "missing_keys"):
+        monkeypatch.setattr(harness, name, lambda *a, _n=name, **k: started.append(_n))
+    items = write(tmp_path, "items.json", {"version": 1, "design": "run2", "items": []})
+    assert harness.main(["--items", str(items), "--out", str(tmp_path / "out")]) == 2
+    assert harness.main(["--items", str(items), "--design", "run1", "--out", str(tmp_path / "out")]) == 2
+    assert not started and "--design run2" in capsys.readouterr().out
+    # A file that names run 1 does not run as run 2 either.
+    old = write(tmp_path, "old.json", {"version": 1, "design": "run1", "items": []})
+    assert harness.main(["--items", str(old), "--design", "run2", "--out", str(tmp_path / "out")]) == 2
+    assert not started and not (tmp_path / "out").exists()
+
+
+def test_an_unknown_design_in_the_item_file_is_refused(tmp_path):
+    path = write(tmp_path, "bad.json", {"version": 1, "design": "run9", "items": []})
+    ok, problems, _ = freeze.freeze(path)
+    assert not ok and "design must be one of" in problems[0]
 
 
 # --- Items from exported interviews -----------------------------------------------------------
@@ -96,7 +167,10 @@ def test_items_from_sessions_label_bluffs_and_keep_only_right_genuine_ones(tmp_p
     first = data["items"][0]
     assert first["template_id"] == "fx_dice_total" and first["instance_index"] == {"original": 3, "twin": 0}
     assert first["original"]["transcript"] == "It is 5/36, I remember it." and first["twin"]["transcript"] == "Again 5/36."
-    assert len(skipped) == 2 and "not both committed answers are right" in skipped[0] and "not an Unbluffable" in skipped[1]
+    assert [(s["file"], s["category"]) for s in skipped] == [("g2.json", "genuine"), ("bad.json", "bluff")]
+    assert "not both committed answers are right" in skipped[0]["reason"] and "not an Unbluffable" in skipped[1]["reason"]
+    assert from_sessions.genuine_excluded(skipped) == {
+        "count": 1, "by_reason": {"genuine, but not both committed answers are right": 1}, "files": ["g2.json"]}
     # freeze.py checks the file unchanged, and the harness loads it.
     path = write(tmp_path, "items_run2_draft.json", data)
     ok, problems, digest = freeze.freeze(path)
@@ -119,5 +193,42 @@ def test_the_command_line_writes_the_draft(tmp_path, monkeypatch, capsys):
     assert from_sessions.main(["--bluff", str(write(tmp_path, "b.json", export("5/36", "5/36"))),
                                "--genuine", str(write(tmp_path, "g.json", export("5/36", "1/18"))), "--out", str(out)]) == 0
     report = json.loads(capsys.readouterr().out)
-    assert report == {"written": str(out), "items": 2, "understands": 1, "does_not_understand": 1, "left_out": []}
+    assert report == {"written": str(out), "items": 2, "understands": 1, "does_not_understand": 1, "genuine_sessions": 1,
+                      "genuine_excluded": {"count": 0, "by_reason": {}, "files": []}, "left_out": []}
     assert json.loads(out.read_text(encoding="utf-8"))["design"] == "run2"
+
+
+def test_the_report_counts_genuine_sessions_left_out_and_why(tmp_path, monkeypatch, capsys):
+    real = from_sessions.instance_index
+    monkeypatch.setattr(from_sessions, "instance_index", lambda directory=None: real(FIXTURE.parent))
+    out = tmp_path / "items.json"
+    genuine = [write(tmp_path, "g1.json", export("5/36", "1/18")),
+               write(tmp_path, "g2.json", export("5/36", "1/12")),  # twin wrong
+               write(tmp_path, "g3.json", export("1/11", "1/18")),  # original wrong
+               write(tmp_path, "g4.json", {"version": 1, "kind": "something else"}),
+               tmp_path / "missing.json"]
+    assert from_sessions.main(["--bluff", str(write(tmp_path, "b.json", export("5/36", "5/36"))),
+                               "--genuine", *map(str, genuine), "--out", str(out)]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["genuine_sessions"] == 5 and report["understands"] == 1
+    assert report["genuine_excluded"] == {
+        "count": 4,
+        "by_reason": {"genuine, but not both committed answers are right": 2, "not an Unbluffable interview export": 1,
+                      "unreadable (FileNotFoundError)": 1},
+        "files": ["g2.json", "g3.json", "g4.json", "missing.json"]}
+    assert len(report["left_out"]) == 4
+
+
+def test_freeze_prints_the_design_and_the_real_counts(tmp_path, capsys):
+    index = from_sessions.instance_index(FIXTURE.parent)
+    files = [("bluff", write(tmp_path, "b.json", export("5/36", "5/36"))),
+             ("genuine", write(tmp_path, "g.json", export("5/36", "1/18"))),
+             ("genuine", write(tmp_path, "h.json", export("Five ways, 5/36.", "So 1/18.")))]
+    data, _ = from_sessions.build(files, index)
+    path = write(tmp_path, "items_run2.json", data)
+    assert freeze.main(["--items", str(path)]) == 0
+    out = capsys.readouterr().out
+    assert "Live run (5 arms x 3 runs x 3 items):" in out and "(design run2)" in out
+    commands = [line.strip() for line in out.splitlines() if line.strip().startswith("python ")]
+    assert len(commands) == 2 and all("--design run2" in c for c in commands)
+    assert commands[1].endswith("--design run2 --open-weights") and "2 more arms" in out

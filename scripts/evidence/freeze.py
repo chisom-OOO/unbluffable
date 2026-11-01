@@ -29,13 +29,16 @@ def freeze(path: Path) -> tuple[bool, list[str], str]:
     return not found, found, digest
 
 
-def command(path: Path, digest: str) -> str:
+RUNS = 3
+
+
+def command(path: Path, digest: str, design: str = "run1") -> str:
     try:
         shown = path.resolve().relative_to(itemcheck.ROOT).as_posix()
     except ValueError:
         shown = str(path)
-    return (f"python scripts/evidence/harness.py --items {shown} --backend meta_api --runs 3 "
-            f"--expect-items-sha256 {digest}")
+    return (f"python scripts/evidence/harness.py --items {shown} --backend meta_api --runs {RUNS} "
+            f"--expect-items-sha256 {digest}" + (f" --design {design}" if design != "run1" else ""))
 
 
 def main(argv=None) -> int:
@@ -48,13 +51,17 @@ def main(argv=None) -> int:
         for line in found:
             print(f"  - {line}")
         return 1
-    print(f"Frozen: {args.items}")
+    design = harness.file_design(args.items) or "run1"
+    items, _ = harness.load_items(args.items)
+    arms = len(harness.DESIGNS[design])
+    print(f"Frozen: {args.items} (design {design})")
     print(f"sha256 {digest}")
     print(f"Slip items are labelled {itemcheck.SLIP_LABEL!r}.")
-    print("Live run (4 arms x 3 runs x 40 items):")
-    print(f"  {command(args.items, digest)}")
-    print("With the careful arm and Unbluffable also on Muse Spark Open (separate rows):")
-    print(f"  {command(args.items, digest)} --open-weights")
+    print(f"Live run ({arms} arms x {RUNS} runs x {len(items)} items):")
+    print(f"  {command(args.items, digest, design)}")
+    print(f"With the careful arm and Unbluffable also on Muse Spark Open "
+          f"({len(harness.OPEN_WEIGHTS_ARMS)} more arms, separate rows):")
+    print(f"  {command(args.items, digest, design)} --open-weights")
     return 0
 
 
