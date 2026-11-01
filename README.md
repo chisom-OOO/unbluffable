@@ -17,7 +17,7 @@ so anyone can know what the room feels like before they're in it.
 **▶ Live:** https://unbluffable-ptz1.onrender.com (laptop or iPad, Chrome or Safari, allow camera and mic; first load can take ~30 s)<br/>
 **▶ 3-minute video:** VIDEO_LINK_TODO
 
-[How it works](#how-it-works) · [Meta models](#meta-models-and-their-roles) · [Measured so far](#measured-so-far) · [Run it](#run-it-locally) · [Decision log](spec/DECISION_LOG.md)
+[How it works](#how-it-works) · [Meta models](#meta-models-used) · [Measured so far](#measured-so-far) · [Run it](#run-it-locally) · [Decision log](spec/DECISION_LOG.md)
 
 </div>
 
@@ -39,9 +39,17 @@ Voice mock interviews for quant, banking, consulting and software roles. You ans
 | Criterion | What to look at | Where |
 | --- | --- | --- |
 | **Impact** | Interview practice that questions the number you said, for people with no coach or network to practise against; four tracks | [Why](#why), [live app](https://unbluffable-ptz1.onrender.com) |
-| **Meta tooling** | Three Meta models with separate jobs: Voice Transcribe hears, Spark extracts and quotes, Spark Open (open weights) runs the hosted app and wrote the question families' solvers | [Meta models](#meta-models-and-their-roles), `llm/`, `voice/`, `forge/` |
+| **Meta tooling** | Three Meta models with separate jobs: Voice Transcribe hears, Spark extracts and quotes, Spark Open (open weights) runs the hosted app and wrote the question families' solvers | [Meta models](#meta-models-used), `llm/`, `voice/`, `forge/` |
 | **Technical depth** | Exact maths with fractions (no model grades a number), a Bayesian engine with a help discount, held-out gate results, a pre-registered comparison, 1,200+ tests | `engine/`, [Measured so far](#measured-so-far), [decision log](spec/DECISION_LOG.md) |
-| **Demo** | Live app, sample replays per track, the 3-minute video | Links above |
+| **Demo** | Live app, sample replays per track, the 3-minute video | Links above, [screenshots](#screenshots) |
+
+## Screenshots
+
+| Landing | Interview room, mid-challenge | Report |
+| --- | --- | --- |
+| ![Landing page: the headline, a track picker and the sample exchange ending with the same puzzle with new numbers](docs/assets/landing.png) | ![Interview room: the candidate said 11/24, the code marked it not the exact answer, and the interviewer asks how they got there](docs/assets/room-challenge.png) | ![Interview report: the label, the counts of challenges and help, and each question's quoted words beside the exact value](docs/assets/report.png) |
+
+<sub>Taken from the local app in replay mode, with no key. The room and report show a scripted session from the test suite, not a real user.</sub>
 
 ## Why
 
@@ -123,7 +131,7 @@ sequenceDiagram
 - **Help accounting.** Each hint or nudge is scored by how many solution steps it gives away beyond where you already were (help load H). A correct answer after help counts for less: its evidence weight is w = 2 / (2 + H), and needing a challenge counts as one more step ([spec/02 §7](spec/02_ENGINE_SPEC.md)).
 - **No model grades a number.** Models extract and phrase; code computes. A quote is kept only if it appears word for word in your transcript.
 
-## Meta models and their roles
+## Meta models used
 
 | Model | Runs on | Job |
 | --- | --- | --- |
@@ -149,7 +157,7 @@ The hosted app runs on Muse Spark Open because, from our cloud host, Meta's API 
 | **Interrupting mid-sentence** with realtime keyword rules | 2/10 wrong answers caught on the initial gate. Rules widened from the failure types reached 8/10 on those clips but **1/10 on 30 new held-out clips**, with 0/20 false challenges in both runs. We dropped it for a challenge right after the answer ([decision log](spec/DECISION_LOG.md) rows 1–1b). |
 | **End-of-answer detection** on 60 recorded clips | **0 early cut-offs.** 32/60 completed exactly once; every miss was the app waiting too long, never interrupting. A silence check was added afterwards (rows 11–12). |
 | **Last word to spoken acknowledgement** | About 2 s in a timed run, most of it one Muse Spark call |
-| **Question families shipped** | **275** families across four tracks (129 quant, 18 quant developer, 60 investment banking, 30 consulting, 38 software engineering), 50 or 75 variants each, plus 54 coding specs. For each family Muse Spark Open wrote a solver from two worked examples; the family ships only if that solver reproduces the stored answer on every variant (270 exactly, 5 within the stated tolerance). Families that missed any variant were not shipped, e.g. 2 of the 101 in the main quant pack. 230 families also have wrong-method values verified in code, which the interviewer uses to name a misconception. |
+| **Question families shipped** | **275** of 286 families attempted (decision log rows 19, 21–22 and 30) across four tracks (129 quant, 18 quant developer, 60 investment banking, 30 consulting, 38 software engineering), 50 or 75 variants each, plus 54 coding specs. For each family Muse Spark Open wrote a solver from two worked examples; the family ships only if that solver reproduces the stored answer on every variant (270 exactly, 5 within the stated tolerance). Families that missed any variant were not shipped, e.g. 2 of the 101 in the main quant pack. 230 families also have wrong-method values verified in code, which the interviewer uses to name a misconception. |
 | **Automated tests** | 1,200+ (pytest, 1,224 in the last full run), including pinned values for the engine maths, plus five Node suites for the browser logic |
 
 Every change from the original plan is in the [decision log](spec/DECISION_LOG.md), with the evidence that forced it, including what failed.
@@ -222,7 +230,7 @@ Open **http://localhost:8000/ui** and start an interview. Wear headphones if you
 | `llm/` | Model clients (Meta Model API and open weights), structured extraction, record/replay |
 | `voice/` | Realtime transcription relay, end-of-answer detection |
 | `content/` | Question families (`content/forge/`), coding specs, behavioural questions, likelihood tables |
-| `docs/` | Measured capability sheet for the Meta APIs |
+| `docs/` | Measured capability sheet for the Meta APIs, README screenshots (`docs/assets/`) |
 | `spec/` | The plan written before kickoff, and the decision log |
 | `forge/` | Offline question forge: Muse Spark Open writes solvers and wrong-method values, code verifies them |
 | `scripts/` | Latency probes, the turn-taking gate harness and the evidence harness (`scripts/evidence/`) |
