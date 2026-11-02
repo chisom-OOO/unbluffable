@@ -38,15 +38,24 @@ document.addEventListener("DOMContentLoaded", () => {
   mirror.style.cssText = "position:absolute;visibility:hidden;white-space:pre;font:inherit;font-weight:500";
   pick.parentElement.appendChild(mirror);
   // The select is as wide as the chosen track, so the sentence reads as one line; the sentence
-  // keeps room for the longest track, so choosing one never moves the button.
+  // keeps room for the longest track, so choosing one never moves the button. The width is the
+  // text plus the select's own padding (room for the arrow) and border, plus slack for the
+  // browser's inner padding; then it grows until nothing is clipped.
+  const SLACK_EM = 0.5;
+  const textWidth = (text) => { mirror.textContent = text; return mirror.getBoundingClientRect().width; };
   function fit() {
-    let widest = 0;
-    for (const option of pick.options) { mirror.textContent = option.text; widest = Math.max(widest, mirror.offsetWidth); }
-    mirror.textContent = pick.options[pick.selectedIndex]?.text || "";
-    pick.style.width = `calc(${mirror.offsetWidth}px + 1.25em)`;
+    const style = getComputedStyle(pick);
+    const frame = ["paddingLeft", "paddingRight", "borderLeftWidth", "borderRightWidth"]
+      .reduce((sum, side) => sum + (parseFloat(style[side]) || 0), 0);
+    const slack = SLACK_EM * (parseFloat(style.fontSize) || 16);
+    const room = (text) => Math.ceil(textWidth(text) + frame + slack);  // whole pixels, so the button never shifts
+    const widest = Math.max(0, ...[...pick.options].map((option) => room(option.text)));
+    let width = room(pick.options[pick.selectedIndex]?.text || "");
+    pick.style.width = `${width}px`;
+    for (let grow = 0; grow < 40 && pick.scrollWidth > pick.clientWidth; grow += 1) pick.style.width = `${++width}px`;
     const sentence = pick.closest(".pick");
     sentence.style.minWidth = "";
-    sentence.style.minWidth = `min(100%, ${sentence.offsetWidth + widest - mirror.offsetWidth}px)`;
+    sentence.style.minWidth = `min(100%, ${sentence.getBoundingClientRect().width + Math.max(0, widest - width)}px)`;
   }
   function choose() {
     const href = `/ui/interview?track=${encodeURIComponent(pick.value)}`;
@@ -64,6 +73,8 @@ document.addEventListener("DOMContentLoaded", () => {
     choose();
   }).catch(() => {});
   document.fonts?.ready.then(fit);
+  let refit;
+  window.addEventListener("resize", () => { clearTimeout(refit); refit = setTimeout(fit, 120); });
   fit();
 
   // ---------- The sample ----------
