@@ -63,3 +63,9 @@ def test_edge_line_under_interviewer_voice_when_no_natural_voice():
     assert html.index("</details>", html.index("<summary>Interviewer voice</summary>")) < html.index(line)
     js = read(UI / "interview.js")
     assert '$("voice-tip").hidden = !window.UBTurn.noNaturalVoice(window.speechSynthesis.getVoices())' in js
+
+
+def test_robotic_voice_note_points_to_edge_only():
+    js = read(UI / "interview.js")
+    assert '"This browser only has robotic-sounding voices. Microsoft Edge has more natural voices."' in js
+    assert "Edge or Chrome" not in js
