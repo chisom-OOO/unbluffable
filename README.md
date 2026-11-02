@@ -184,15 +184,9 @@ Pre-registered and frozen before any model saw it ([decision log](spec/DECISION_
 
 **What it shows.** No arm is significantly better than another (exact McNemar, smallest p = 0.0625). Every arm caught every recited and every misconceived answer: the bluffs in this set were too easy to spot, because 39 of the 40 transcripts were written by a model (Claude) and give themselves away. The arms differ only on the five arithmetic slips, which Unbluffable marks as not yet shown in a frozen transcript; in a live interview it would challenge the number instead. One item labelled correct (e05) was scored Vague by Unbluffable. Replaying the recorded calls showed this was not a bug: the answer (22) was extracted correctly, but the item's transcript only read out the question's own figures before the number, with no reasoning, and Unbluffable codes a right number without supporting reasoning as Vague by design. The flaw is in that model-written item. Muse Spark Open coded the same reasoning as valid, so the open-weights arm scored it Correct. Unbluffable on open weights matched Unbluffable on Muse Spark, with no verdict changing across runs.
 
-**What it doesn't show.** It doesn't test the live interview, where Unbluffable picks numbers that expose a suspected mistake and challenges the number you commit to. A second run with real candidates' fluent answers is pre-registered and in progress.
+**What it doesn't show.** It doesn't test the live interview, where Unbluffable picks numbers that expose a suspected mistake and challenges the number you commit to.
 
-## What's next
-
-> [!IMPORTANT]
-> In progress. None of this is claimed as a result yet.
-
-- **Comparison, run 2.** The same pre-registered test on fluent answers from real candidates, including answers read from a chatbot, frozen before any arm runs.
-- **Real users** from a university quant society, with consent.
+Run 2 (pre-registered, decision log row 34): not run, because no testers were available before the deadline.
 
 ## Run it locally
 
