@@ -188,13 +188,6 @@ Pre-registered and frozen before any model saw it ([decision log](spec/DECISION_
 
 Run 2 (pre-registered, decision log row 34): not run, because no testers were available before the deadline.
 
-## What's next
-
-> [!IMPORTANT]
-> In progress. None of this is claimed as a result yet.
-
-- **Real users** from a university quant society, with consent.
-
 ## Run it locally
 
 **Needs:** Python 3.12, ffmpeg (for uploaded audio files) and a Meta Model API key.
