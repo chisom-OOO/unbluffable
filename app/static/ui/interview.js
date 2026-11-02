@@ -995,7 +995,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("voice-select").innerHTML = ranked.map((v) =>
       `<option value="${escapeHtml(v.voiceURI)}"${v === chosen ? " selected" : ""}>${escapeHtml(v.name)} (${escapeHtml(v.lang)})</option>`).join("");
     if (window.UBTurn.onlyRobotic(window.speechSynthesis.getVoices())) {
-      $("speaker-note").textContent = "This browser only has robotic-sounding voices. Edge or Chrome have more natural ones.";
+      $("speaker-note").textContent = "This browser only has robotic-sounding voices. Microsoft Edge has more natural voices.";
     }
     voiceTip();
   }
