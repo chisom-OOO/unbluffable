@@ -201,6 +201,8 @@
 
   // The tip for a voice that isn't one of the natural (Edge "Online (Natural)") voices.
   const naturalVoice = (v) => !!v && /natural|online|neural|premium|enhanced|siri/i.test(v.name || "");
+  // Decision log 41: English voices have loaded, but none is natural (Chrome, Opera): the Edge line.
+  const noNaturalVoice = (voices) => { const ranked = rankVoices(voices || []); return ranked.length > 0 && !ranked.some(naturalVoice); };
 
   // Auto-scroll (room fixes): follow the latest line only when the candidate is at, or within
   // FOLLOW_SLACK px of, the bottom. Scrolled up to read: the page stays put and the room shows
@@ -239,7 +241,7 @@
   }
 
   const api = { micShouldMute, follower, atBottom, FOLLOW_SLACK, modelName, shouldOfferHelp, speechTimeoutMs, guardUtterance, gateProblems, rankVoices, voiceTier, onlyRobotic,
-                groupModelCalls, modelFigures, speakable, sentences, withOpener, naturalVoice, fractionWords,
+                groupModelCalls, modelFigures, speakable, sentences, withOpener, naturalVoice, noNaturalVoice, fractionWords,
                 SPEECH_RATE, SENTENCE_PAUSE_MS };
   if (typeof module !== "undefined") module.exports = api;
   else window.UBTurn = api;

@@ -999,8 +999,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     voiceTip();
   }
-  // One line when the chosen voice isn't a Natural/Online one.
-  function voiceTip() { $("voice-tip").hidden = window.UBTurn.naturalVoice(window.UB.pickVoice()); }
+  // Decision log 41: one line when the browser has no Natural/Online English voice at all.
+  function voiceTip() { $("voice-tip").hidden = !window.UBTurn.noNaturalVoice(window.speechSynthesis.getVoices()); }
   if (window.UB.appleTouch()) {  // Edge on an iPad has Safari's voices: the tip names the iPad setting
     $("voice-tip").textContent = "For a more natural voice, download an Enhanced English voice in Settings, Accessibility, Spoken Content, Voices.";
   }
@@ -1010,7 +1010,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   $("voice-select").addEventListener("change", () => {
     window.UB.store.set("ub-voice", $("voice-select").value);
-    voiceTip();
     $("speaker-test").click();  // hear it straight away
   });
 
