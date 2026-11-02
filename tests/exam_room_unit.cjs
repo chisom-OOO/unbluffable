@@ -154,6 +154,13 @@ console.log("coding workspace helpers ok");
   assert.equal(T.withOpener("Is this a question about something?", "close", {}), "Is this a question about something?");
   assert.equal(T.naturalVoice({ name: "Microsoft Libby Online (Natural) - English (United Kingdom)" }), true);
   assert.equal(T.naturalVoice({ name: "Google UK English Female" }), false);
+  // Decision log 41: the Edge line shows only when the browser has English voices but no natural one.
+  const vv = (name, lang = "en-GB") => ({ name, lang, voiceURI: name });
+  const chrome = [vv("Google UK English Female"), vv("Google US English", "en-US"), vv("Microsoft George - English (United Kingdom)")];
+  assert.equal(T.noNaturalVoice(chrome), true, "Chrome/Opera: Google and desktop voices only");
+  assert.equal(T.noNaturalVoice([...chrome, vv("Microsoft Sonia Online (Natural) - English (United Kingdom)")]), false, "Edge");
+  assert.equal(T.noNaturalVoice([]), false, "voices not loaded yet: no line");
+  assert.equal(T.noNaturalVoice([vv("Microsoft Denise Online (Natural) - French (France)", "fr-FR"), ...chrome]), true, "only English voices count");
 }
 console.log("interviewer delivery ok");
 

@@ -52,3 +52,14 @@ def test_forge_page_says_which_code_is_stored():
 
 def test_transcript_question_lines_point_up():
     assert '"(question above)"' in read(UI / "interview.js")
+
+
+def test_edge_line_under_interviewer_voice_when_no_natural_voice():
+    # Decision log 41: visible under the "Interviewer voice" disclosure (not inside it), and
+    # shown when the browser has no Natural/Online English voice, whichever voice is chosen.
+    html = read(TEMPLATES / "interview.html")
+    line = '<p class="fine voice-tip" id="voice-tip" hidden>For a more natural interviewer voice, open this in Microsoft Edge.</p>'
+    assert line in html
+    assert html.index("</details>", html.index("<summary>Interviewer voice</summary>")) < html.index(line)
+    js = read(UI / "interview.js")
+    assert '$("voice-tip").hidden = !window.UBTurn.noNaturalVoice(window.speechSynthesis.getVoices())' in js
