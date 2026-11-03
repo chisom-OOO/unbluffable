@@ -62,6 +62,12 @@
 
   // ---------- The page ----------
   const CM = "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/";
+  // Subresource Integrity (decision log 42): cdnjs's published SHA-512 for each pinned file.
+  const CM_SRI = {
+    "codemirror.min.css": "sha512-uf06llspW44/LZpHzHT6qBOIVODjWtv4MxCricRxkzvopAlSWnTf6hpZTFxuuZcuNE9CBQhqE0Seu1CoRk84nQ==",
+    "codemirror.min.js": "sha512-OeZ4Yrb/W7d2W4rAMOO0HQ9Ro/aWLtpW9BUSR2UOWnSV2hprXLkkYnnCGc9NeLUxxE4ZG7zN16UuT1Elqq8Opg==",
+    "mode/python/python.min.js": "sha512-Vs2GKxnxnTQBRW7o2xXZ9A28njjmu5RToS42efiKNEWmikov0inZY522EtGVK5CcVo0M/FQwmXsTfl9skgRnvw==",
+  };
   const PAUSE_MS = 20000;            // a 20 s typing pause may prompt a question about the code
   const EDIT_SETTLE_MS = 3000, EDIT_LINES = 4;  // a notable edit: 4+ changed lines, then 3 s still
   const EXAMPLES_MS = 15000, TESTS_MS = 30000;  // after Python has loaded
@@ -72,15 +78,17 @@
   const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
                   set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private window */ } } };
 
-  function loadScript(src) {
+  function loadScript(name) {
     return new Promise((resolve, reject) => {
-      const tag = Object.assign(document.createElement("script"), { src });
+      const tag = Object.assign(document.createElement("script"),
+                                { src: CM + name, integrity: CM_SRI[name], crossOrigin: "anonymous" });
       tag.onload = resolve; tag.onerror = reject;
       document.head.appendChild(tag);
     });
   }
-  function loadCss(href) {
-    document.head.appendChild(Object.assign(document.createElement("link"), { rel: "stylesheet", href }));
+  function loadCss(name) {
+    document.head.appendChild(Object.assign(document.createElement("link"),
+                                            { rel: "stylesheet", href: CM + name, integrity: CM_SRI[name], crossOrigin: "anonymous" }));
   }
 
   // ---------- Python in a worker; a run that takes too long ends the worker ----------
@@ -145,9 +153,9 @@
     const area = $("code-editor");
     area.value = initial;
     try {
-      loadCss(CM + "codemirror.min.css");
-      await loadScript(CM + "codemirror.min.js");
-      await loadScript(CM + "mode/python/python.min.js");
+      loadCss("codemirror.min.css");
+      await loadScript("codemirror.min.js");
+      await loadScript("mode/python/python.min.js");
       editor = window.CodeMirror.fromTextArea(area, { mode: "python", lineNumbers: true, indentUnit: 4, tabSize: 4,
                                                       indentWithTabs: false,
                                                       extraKeys: { Tab: (cm) => cm.replaceSelection("    ") } });

@@ -17,6 +17,7 @@ import logging
 
 import httpx
 
+from app import limits
 from llm import backends
 from llm.client import MissingKey, _key
 from llm.http_diagnostics import request_id
@@ -97,6 +98,15 @@ async def convert_to_wav(audio):
     if not valid or len(wav) > 32_000_000:
         raise VoiceError("Recording must be at most ten minutes and 32 MB after conversion.")
     return wav
+
+
+def wav_seconds(wav):
+    """Audio length for the daily cost meter (decision log 42); 16 kHz mono 16-bit if unreadable."""
+    try:
+        with wave.open(io.BytesIO(wav), "rb") as parsed:
+            return parsed.getnframes() / parsed.getframerate()
+    except (wave.Error, EOFError, ZeroDivisionError):
+        return len(wav) / 32000
 
 
 class IncompleteOutput(VoiceError):
@@ -287,10 +297,14 @@ class MetaVoice:
             record = self.store.find("file", request)
         else:
             wav = await convert_to_wav(audio)
-            record = await self.post("file", request, "/asr/transcribe", files={
-                "request": (None, json.dumps(settings), "application/json"),
-                "audio": ("answer.wav", wav, "audio/wav"),
-            })
+            seconds = wav_seconds(wav)
+            try:
+                record = await self.post("file", request, "/asr/transcribe", files={
+                    "request": (None, json.dumps(settings), "application/json"),
+                    "audio": ("answer.wav", wav, "audio/wav"),
+                })
+            finally:
+                limits.GUARD.add_audio(seconds)  # decision log 42: sent audio counts, even on a failure
         transcript = record["response"].get("transcript")
         if not isinstance(transcript, str) or not transcript.strip():
             raise VoiceError("No intelligible speech was found. Edit the transcript or type your answer.")

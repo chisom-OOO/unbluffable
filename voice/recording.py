@@ -7,6 +7,8 @@ from pathlib import Path
 import re
 import uuid
 
+from llm.replay import recording_on
+
 
 class VoiceError(Exception):
     """Client-safe message only; provider exception text must never be exposed."""
@@ -39,6 +41,8 @@ class Record:
 
     def save(self):
         self.data = redact(self.data, self.key)
+        if not recording_on():
+            return  # decision log 42: on the hosted app the record stays in memory only
         self.store.root.mkdir(parents=True, exist_ok=True)
         path = self.store.root / (self.data["run_id"] + ".json")
         temporary = path.with_suffix(".tmp")

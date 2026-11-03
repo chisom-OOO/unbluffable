@@ -17,6 +17,7 @@ import os
 
 import httpx
 
+from app import limits
 from llm.client import (
     BASE_URL,
     BASETEN_URL,
@@ -58,7 +59,13 @@ async def _acomplete(backend, request, transport=None):
     if response.status_code != 200 or not isinstance(body, dict) or body.get("error") or body.get("type") == "error":
         log_http_failure(backend.name + " /chat/completions", response, (key,))
         raise BackendResponseError(response)
+    spent(request, body)
     return body
+
+
+def spent(request: dict, body) -> None:
+    """Decision log 42: every live call adds its estimated cost to the daily meter."""
+    limits.GUARD.add_tokens(request.get("model"), body.get("usage") if isinstance(body, dict) else None)
 
 
 class MetaAPIBackend:
@@ -76,10 +83,12 @@ class MetaAPIBackend:
         if self._client is None:
             self._client = make_meta_client()
         try:
-            return self._client.chat.completions.create(**request).model_dump()
+            body = self._client.chat.completions.create(**request).model_dump()
         except Exception as error:
             log_http_exception("meta_api /chat/completions", error, (getattr(self._client, "api_key", None),))
             raise
+        spent(request, body)
+        return body
 
     async def acomplete(self, request: dict, *, transport=None) -> dict:
         assert_standard_model(request["model"])
@@ -104,10 +113,12 @@ class OpenWeightsBackend:
         if self._client is None:
             self._client = make_baseten_client()
         try:
-            return self._client.chat.completions.create(**request).model_dump()
+            body = self._client.chat.completions.create(**request).model_dump()
         except Exception as error:
             log_http_exception("open_weights /chat/completions", error, (getattr(self._client, "api_key", None),))
             raise
+        spent(request, body)
+        return body
 
     async def acomplete(self, request: dict, *, transport=None) -> dict:
         if request["model"] != self.model:

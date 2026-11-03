@@ -33,6 +33,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request
 
+from app import limits
 from engine.bank import MIXED, Bank, BankSource, ForgeTemplate, instance_puzzle, parse_template
 from forge import byoq as gate
 from forge.errors import Reject
@@ -206,6 +207,14 @@ def image_kind(data: bytes, declared: str) -> str | None:
     return declared if any(data.startswith(s) for s in SIGNATURES.get(declared, ())) else None
 
 
+def admit(kind: str, request: Request) -> None:
+    """Decision log 42: the per-IP limit and the daily cost cap, before any model call."""
+    try:
+        limits.admit(kind, request)
+    except limits.Refused as refused:
+        raise HTTPException(refused.status, refused.message) from None
+
+
 READ_FAILED = "We couldn't read that. Try a sharper photo, or paste the question as text."
 
 
@@ -223,6 +232,7 @@ async def read_endpoint(request: Request):
                 raise HTTPException(400, "Send the question as text.") from None
             if not isinstance(text, str) or not text.strip() or len(text) > gate.MAX_TEXT:
                 raise HTTPException(400, f"Paste a question of at most {gate.MAX_TEXT} characters.")
+            admit("byoq_read", request)
             return await asyncio.to_thread(read_text, text)
         if declared not in SIGNATURES:
             raise HTTPException(415, "Upload a PNG or JPEG image, or paste the question as text.")
@@ -240,6 +250,7 @@ async def read_endpoint(request: Request):
         try:
             if not data or image_kind(data, declared) is None:
                 raise HTTPException(415, "That file isn't a PNG or JPEG image.")
+            admit("byoq_read", request)
             return await asyncio.to_thread(read_image, data, declared)
         finally:
             del data  # the image is not kept anywhere once the read returns
@@ -344,6 +355,7 @@ async def check_endpoint(request: Request):
     topic = topic if topic in gate.TOPICS else "Other"
     if _running >= MAX_RUNNING:
         raise HTTPException(429, "Several questions are being checked right now. Try again in a minute.")
+    admit("byoq_check", request)
     _running += 1
     job_id = secrets.token_urlsafe(12)
     job = {"stage": "solvers"}
