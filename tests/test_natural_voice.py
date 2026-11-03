@@ -12,6 +12,7 @@ from app.main import app
 ROOT = Path(__file__).resolve().parents[1]
 UI = ROOT / "app" / "static" / "ui"
 NATURAL = (UI / "natural-voice.js").read_text(encoding="utf-8")
+WORKER = (UI / "natural-voice-worker.js").read_text(encoding="utf-8")
 INTERVIEW = (UI / "interview.js").read_text(encoding="utf-8")
 PAGE = (ROOT / "app" / "templates" / "interview.html").read_text(encoding="utf-8")
 BUNDLE_SHA384 = "suR1TeKe6Fe8fT0n/uTWoohnPJrp1zu3z0bj4VH2anmmq739wlmFSnMFJyMYszAC"
@@ -39,16 +40,19 @@ def test_one_speaking_path_for_both_voices():
 
 
 def test_only_jsdelivr_and_hugging_face_are_contacted_and_no_text_is_sent():
-    hosts = set(re.findall(r"https://([a-z0-9.-]+)/", NATURAL))
-    assert hosts == {"cdn.jsdelivr.net", "huggingface.co"}, hosts
-    assert "/api/" not in NATURAL and "WebSocket" not in NATURAL and "method:" not in NATURAL
+    for source in (NATURAL, WORKER):
+        hosts = set(re.findall(r"https://([a-z0-9.-]+)/", source))
+        assert hosts <= {"cdn.jsdelivr.net", "huggingface.co"}, hosts
+        assert "/api/" not in source and "WebSocket" not in source and "method:" not in source
 
 
-def test_the_bundle_is_hash_checked_before_it_runs():
-    assert BUNDLE_SHA384 in NATURAL
-    assert 'crypto.subtle.digest("SHA-384"' in NATURAL and 'crypto.subtle.digest("SHA-256"' in NATURAL
-    assert NATURAL.index('digest("SHA-384"') < NATURAL.index("await import(")
-    assert 'dtype: PIN.dtype' in NATURAL and '"fp32"' not in NATURAL
+def test_the_bundle_is_hash_checked_before_it_runs_in_a_worker():
+    assert BUNDLE_SHA384 in NATURAL  # the pins travel to the worker
+    assert 'crypto.subtle.digest("SHA-384"' in WORKER and 'crypto.subtle.digest("SHA-256"' in WORKER
+    assert WORKER.index('digest("SHA-384"') < WORKER.index("await import(")
+    assert "dtype: pin.dtype, device: pin.device" in WORKER and "fp32" not in WORKER + NATURAL.replace("never the 326 MB fp32", "")
+    # Kokoro never runs on the page's main thread: WASM synthesis would freeze the interview.
+    assert "import(" not in NATURAL and 'new Worker(WORKER, { type: "module" })' in NATURAL
 
 
 def test_no_model_weights_are_committed():

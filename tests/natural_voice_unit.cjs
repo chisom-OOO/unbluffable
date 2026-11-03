@@ -49,6 +49,7 @@ function controller({ saved, load } = {}) {
   assert.equal(N.PIN.model, "onnx-community/Kokoro-82M-v1.0-ONNX");
   assert.equal(N.PIN.revision, "1939ad2a8e416c0acfeecc08a694d14ef25f2231");
   assert.equal(N.PIN.dtype, "q8", "the 92 MB 8-bit model, never fp32");
+  assert.equal(N.PIN.device, "wasm", "8-bit misbehaves on WebGPU: WASM only (decision log 43)");
   assert.equal(N.PIN.voice, "af_heart");
   assert.equal(N.START_TIMEOUT_MS, 20000);
   assert.equal(N.SENTENCE_TIMEOUT_MS, 8000);
