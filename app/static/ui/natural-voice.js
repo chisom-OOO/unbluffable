@@ -25,6 +25,10 @@
       "voices/af_heart.bin": "d583ccff3cdca2f7fae535cb998ac07e9fcb90f09737b9a41fa2734ec44a8f0b",
     },
   };
+  // Decision log 46: garbled, glitching audio in a live test (Opera, Windows). Not offered to
+  // anyone until that is fixed: the switch stays hidden, nothing is probed or downloaded, and a
+  // remembered "on" does nothing. The code stays; set true to offer it again (WebGPU only).
+  const OFFERED = false;
   const STORE_KEY = "ub-natural-voice";
   const START_TIMEOUT_MS = 20000;    // the model must be ready 20 s after Start
   const SENTENCE_TIMEOUT_MS = 8000;  // a sentence not ready by then counts as failing to play
@@ -153,7 +157,7 @@
     };
   }
 
-  const exported = { PIN, STORE_KEY, START_TIMEOUT_MS, SENTENCE_TIMEOUT_MS, PROGRESS_LINE, FALLBACK_LINE, READY_LINE,
+  const exported = { OFFERED, PIN, STORE_KEY, START_TIMEOUT_MS, SENTENCE_TIMEOUT_MS, PROGRESS_LINE, FALLBACK_LINE, READY_LINE,
                      pinnedUrl, createController, speakLine, busy };
   if (typeof module !== "undefined") {
     module.exports = exported;
@@ -226,6 +230,7 @@
 
   // Decision log 44: offered only with a WebGPU adapter (and a worker, audio and crypto to run it).
   (async () => {
+    if (!OFFERED) { controller.setAvailable(false); return; }
     const basics = !!(window.Worker && window.crypto?.subtle && (window.AudioContext || window.webkitAudioContext));
     let adapter = null;
     try { adapter = basics && navigator.gpu ? await navigator.gpu.requestAdapter() : null; } catch { adapter = null; }
