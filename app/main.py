@@ -16,6 +16,7 @@ from app.firebase_config import router as firebase_router
 from app.interest import router as interest_router
 from app.interview_routes import router as interview_router, warm
 from app.byoq import router as byoq_router
+from app.security import SecurityHeaders
 
 
 @asynccontextmanager
@@ -28,6 +29,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="Unbluffable", lifespan=lifespan)
+app.add_middleware(SecurityHeaders)  # decision log 42
 app.include_router(voice_router)
 app.include_router(interview_router)
 app.include_router(byoq_router)
@@ -40,6 +42,11 @@ app.mount("/ui-static", StaticFiles(directory=Path(__file__).parent / "static" /
 @app.get("/", include_in_schema=False)
 def home():
     return RedirectResponse("/ui", status_code=307)
+
+
+@app.get("/privacy", include_in_schema=False)
+def privacy_short():
+    return RedirectResponse("/ui/privacy", status_code=307)
 
 
 @app.get("/practice", include_in_schema=False)
@@ -104,3 +111,8 @@ def ui_byoq():
 @app.get("/ui/welcome")
 def ui_welcome():
     return page("welcome.html")
+
+
+@app.get("/ui/privacy")
+def ui_privacy():
+    return page("privacy.html")
