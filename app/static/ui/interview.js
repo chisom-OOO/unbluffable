@@ -81,9 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function scrollTo(el) {
     if (follow.newLine() === "scroll") { newLine.hidden = true; jumpTo(el); return; }
-    if (log.nextElementSibling !== newLine) log.after(newLine);  // the coding room moves the log
-    const page = scroller() === document.scrollingElement;
-    newLine.style.setProperty("--dock-h", page ? `${document.querySelector(".dock")?.offsetHeight || 0}px` : "0px");
+    // Live bug (Opera, ~1900 px): floating over the transcript, it covered the interviewer's line.
+    // In the spoken and market rooms it is a right-aligned row in the dock, above the turn bar, so it
+    // never covers transcript text; the coding room moves the log into a panel with no dock.
+    const dock = log.parentElement.querySelector(":scope > .dock");
+    if (dock) { if (dock.firstElementChild !== newLine) dock.prepend(newLine); }
+    else if (log.nextElementSibling !== newLine) log.after(newLine);
     newLine.hidden = false;
   }
   newLine.addEventListener("click", () => {
@@ -441,7 +444,15 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle").textContent = event.text;
         $("provenance").innerHTML = window.UB.provenanceHtml(event.provenance_rows);
         $("market-panel").hidden = event.kind !== "market";
+        const enteringMarket = event.kind === "market" && !marketRoom();
         $("room").classList.toggle("market", event.kind === "market");
+        // A mixed interview (decision log 37): the questions scrolled the page; the market room is one
+        // screen tall and scrolls its own transcript, so the page goes back to the top (live bug: blank view).
+        if (enteringMarket) {
+          window.scrollTo(0, 0);
+          log.scrollTop = log.scrollHeight;
+          follow.jumped(performance.now());
+        }
         $("case-panel").hidden = event.kind !== "case";
         $("puzzle-eyebrow").textContent = (event.opener ? "Spoken opener · then a coding round"
           : event.kind === "check" ? "Drill check"

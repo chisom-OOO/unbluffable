@@ -29,6 +29,14 @@ def test_switch_sits_under_interviewer_voice_and_is_off_by_default():
     assert PAGE.index('src="/ui-static/natural-voice.js"') < PAGE.index('src="/ui-static/interview.js"')
 
 
+def test_the_switch_is_hidden_for_everyone_until_the_glitching_is_fixed():
+    # Decision log 46: garbled audio in a live test (Opera, Windows). The code stays; it is not offered.
+    assert "const OFFERED = false;" in NATURAL
+    glue = NATURAL[NATURAL.index("// ---------- The browser"):]
+    assert "controller.setAvailable(false)" in glue  # the row is hidden and a remembered "on" does nothing
+    assert glue.index("if (!OFFERED)") < glue.index("requestAdapter")  # no WebGPU probe, no download
+
+
 def test_switch_shows_only_when_webgpu_is_confirmed():
     wiring = INTERVIEW[INTERVIEW.index("the natural voice switch"):INTERVIEW.index('$("voice-select").addEventListener')]
     assert 'kind === "unavailable"' in wiring and '$("natural-row").hidden = true' in wiring
