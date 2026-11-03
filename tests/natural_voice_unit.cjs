@@ -39,7 +39,7 @@ function controller({ saved, load, available = true } = {}) {
     loadEngine: () => { const d = deferred(); loads.push(d); return load ? load() : d.promise; },
     store: s, setTimer: c.setTimer, clearTimer: c.clearTimer, onNotice: (kind, text) => notices.push([kind, text]),
   });
-  if (available !== null) ctl.setAvailable(available);
+  if (available !== null) { ctl.setAvailable(available); notices.length = 0; }  // the page's availability signal
   return { ctl, c, s, notices, loads };
 }
 
