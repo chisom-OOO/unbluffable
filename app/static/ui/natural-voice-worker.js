@@ -1,5 +1,5 @@
-// Natural voice (beta), decision log 43: Kokoro runs in this worker, never on the page's main
-// thread (WASM synthesis would otherwise freeze the interview for the whole sentence). The page
+// Natural voice (beta), decision logs 43-44: Kokoro runs in this worker on WebGPU, never on the
+// page's main thread (synthesis there would freeze the interview while a sentence is made). The page
 // sends the pins and then one sentence at a time; this sends back the samples, or an error.
 // No text leaves the browser: the only network use is the pinned library and model downloads.
 let pin = null, tts = null;

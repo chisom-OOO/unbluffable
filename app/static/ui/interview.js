@@ -1036,15 +1036,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const naturalSwitch = $("natural-voice"), naturalNote = $("natural-note");
   if (window.UBNatural) {
     naturalSwitch.checked = window.UBNatural.enabled();
+    $("natural-row").hidden = !window.UBNatural.available();  // decision log 44: only once WebGPU is confirmed
     window.UBNatural.onNotice((kind, text) => {
+      if (kind === "available") { $("natural-row").hidden = false; naturalSwitch.checked = window.UBNatural.enabled(); return; }
+      if (kind === "unavailable") { $("natural-row").hidden = true; naturalNote.hidden = true; return; }
       if (kind === "fallback" && !$("room").hidden) setStatus(text);  // one line, in the room
       naturalNote.textContent = kind === "off" ? "" : text;
       naturalNote.hidden = kind === "off" || !text;
       naturalNote.classList.toggle("bad", kind === "fallback");
     });
     naturalSwitch.addEventListener("change", () => window.UBNatural.setEnabled(naturalSwitch.checked));
-  } else {
-    naturalSwitch.closest("label").hidden = true;
   }
 
   $("voice-select").addEventListener("change", () => {

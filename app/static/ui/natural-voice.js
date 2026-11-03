@@ -1,5 +1,6 @@
-// Natural voice (beta), decision log 43: Kokoro-82M via kokoro-js, run only in this browser
-// (WASM: 8-bit misbehaves on WebGPU, see PIN.device). Off by default; off means the browser voice, unchanged.
+// Natural voice (beta), decision logs 43-44: Kokoro-82M via kokoro-js, run only in this browser,
+// on WebGPU (fp16). Off by default; off means the browser voice, unchanged. Without WebGPU the
+// switch is hidden and nothing is downloaded.
 // No text is sent to any server for speech: the only network use is downloading the pinned
 // library (jsDelivr) and the pinned model and voice (Hugging Face), which the browser caches.
 //
@@ -13,14 +14,14 @@
     bundleSha384: "suR1TeKe6Fe8fT0n/uTWoohnPJrp1zu3z0bj4VH2anmmq739wlmFSnMFJyMYszAC",
     model: "onnx-community/Kokoro-82M-v1.0-ONNX",
     revision: "1939ad2a8e416c0acfeecc08a694d14ef25f2231",
-    dtype: "q8",  // the 92 MB 8-bit model, never the 326 MB fp32
-    // Decision log 43: WASM only, because 8-bit misbehaves on WebGPU. Measured 3 Nov in Edge on
-    // an Intel Iris Xe laptop: 8-bit took 26.4 s on WebGPU for an 8 s sentence, against 22.6 s on WASM.
-    device: "wasm",
+    // Decision log 44: the 163 MB fp16 model on WebGPU, never the 326 MB fp32. Measured 3 Nov in
+    // Edge on an Intel Iris Xe laptop: 3.9 s to make an 8 s sentence (8-bit took 22-26 s).
+    dtype: "fp16",
+    device: "webgpu",
     voice: "af_heart",
     // Hugging Face's LFS SHA-256 at that revision; checked before the files are used.
     sha256: {
-      "onnx/model_quantized.onnx": "fbae9257e1e05ffc727e951ef9b9c98418e6d79f1c9b6b13bd59f5c9028a1478",
+      "onnx/model_fp16.onnx": "ba4527a874b42b21e35f468c10d326fdff3c7fc8cac1f85e9eb6c0dfc35c334a",
       "voices/af_heart.bin": "d583ccff3cdca2f7fae535cb998ac07e9fcb90f09737b9a41fa2734ec44a8f0b",
     },
   };
@@ -39,7 +40,9 @@
 
   // ---------- The switch and the fallback (pure: engine, storage and timers are injected) ----------
   function createController({ loadEngine, store, setTimer = setTimeout, clearTimer = clearTimeout, onNotice = () => {} }) {
-    let enabled = store.get(STORE_KEY) === "on";
+    const remembered = store.get(STORE_KEY) === "on";
+    let enabled = remembered;
+    let available = null;        // WebGPU: null until checked, then true or false (decision log 44)
     let state = "off";           // off | loading | ready | failed
     let engine = null, fellBack = false, startTimer = null;
 
@@ -50,7 +53,7 @@
       onNotice("fallback", FALLBACK_LINE);
     };
     const load = () => {
-      if (state !== "off") return;
+      if (state !== "off" || available !== true) return;
       state = "loading";
       onNotice("progress", PROGRESS_LINE);
       let loading;
@@ -63,14 +66,22 @@
         if (enabled) fallBack();
       });
     };
-    if (enabled) load();
-
     return {
       enabled: () => enabled,
+      available: () => available,
+      // Without WebGPU the page hides the switch; a remembered "on" is kept but does nothing here.
+      setAvailable(yes) {
+        available = !!yes;
+        if (!available) { enabled = false; onNotice("unavailable", ""); return; }
+        enabled = remembered || enabled;
+        onNotice("available", "");
+        if (enabled) load();
+      },
       state: () => state,
       engine: () => engine,
       usable: () => enabled && state === "ready" && !fellBack,
       setEnabled(on) {
+        if (available !== true) return;
         enabled = !!on;
         store.set(STORE_KEY, enabled ? "on" : "off");
         if (!enabled) { onNotice("off", ""); return; }
@@ -80,7 +91,7 @@
       },
       // Start was pressed: the model has 20 s to be ready; the download itself is never cut off.
       started() {
-        if (!enabled || state === "ready" || fellBack || startTimer) return;
+        if (!enabled || available !== true || state === "ready" || fellBack || startTimer) return;
         if (state === "failed") { fallBack(); return; }
         startTimer = setTimer(() => { if (state !== "ready") fallBack(); }, START_TIMEOUT_MS);
       },
@@ -177,9 +188,6 @@
   }
 
   function loadEngine() {
-    if (!window.Worker || !window.crypto?.subtle || (!window.AudioContext && !window.webkitAudioContext)) {
-      return Promise.reject(new Error("Not supported here."));
-    }
     return new Promise((resolve, reject) => {
       const worker = new Worker(WORKER, { type: "module" });
       const waiting = new Map();
@@ -216,10 +224,19 @@
     onNotice: (kind, text) => { last = [kind, text]; for (const fn of listeners) fn(kind, text); },
   });
 
+  // Decision log 44: offered only with a WebGPU adapter (and a worker, audio and crypto to run it).
+  (async () => {
+    const basics = !!(window.Worker && window.crypto?.subtle && (window.AudioContext || window.webkitAudioContext));
+    let adapter = null;
+    try { adapter = basics && navigator.gpu ? await navigator.gpu.requestAdapter() : null; } catch { adapter = null; }
+    controller.setAvailable(!!adapter);
+  })();
+
   window.UBNatural = {
     ...exported,
     controller,
     onNotice: (fn) => { listeners.add(fn); if (last) fn(...last); },
+    available: controller.available,
     enabled: controller.enabled,
     usable: controller.usable,
     setEnabled: controller.setEnabled,
