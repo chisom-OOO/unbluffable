@@ -3,7 +3,23 @@
 // case's return value as exact text (ints and fractions as written, floats as repr), or the
 // error, and what the code printed (the console's Output tab). The page terminates this
 // worker if a run takes too long.
-importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js");
+//
+// Decision log 42: importScripts has no integrity option, so pyodide.js is fetched, checked
+// against its SHA-384 and only then run (from a blob of the checked bytes). Its WASM and
+// packages, which Pyodide loads itself from INDEX, are not checked here.
+const INDEX = "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/";
+const PYODIDE_SHA384 = "tVslJOEkg7nVRW3Y3/ReGX0NnonNrbcmt1R5qFbQXQdGa2chRkoJYHAjAsv3zoTq";
+
+async function checkedPyodide() {
+  const response = await fetch(INDEX + "pyodide.js", { credentials: "omit" });
+  if (!response.ok) throw new Error("Python could not be downloaded.");
+  const bytes = await response.arrayBuffer();
+  const digest = new Uint8Array(await crypto.subtle.digest("SHA-384", bytes));
+  if (btoa(String.fromCharCode(...digest)) !== PYODIDE_SHA384) throw new Error("Python failed its integrity check.");
+  const url = URL.createObjectURL(new Blob([bytes], { type: "text/javascript" }));
+  try { importScripts(url); } finally { URL.revokeObjectURL(url); }
+  return loadPyodide({ indexURL: INDEX });
+}
 
 const HARNESS = `
 import io
@@ -121,7 +137,7 @@ def _ub_scale(code, fn, generator, config_json, keys_json, seed, n):
         sys.stdout = real
 `;
 
-const ready = loadPyodide().then((py) => { py.runPython(HARNESS); return py; });
+const ready = checkedPyodide().then((py) => { py.runPython(HARNESS); return py; });
 ready.then(() => postMessage({ ready: true }), (e) => postMessage({ failed: String(e) }));
 
 onmessage = async ({ data }) => {
