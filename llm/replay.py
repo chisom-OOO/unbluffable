@@ -34,6 +34,16 @@ def request_hash(backend: str, request: dict) -> str:
 _KEY_VARIABLES = ("MODEL_API_KEY", "BASETEN_API_KEY")
 
 
+def recording_on() -> bool:
+    """Decision log 42: records hold answer and question text, so the hosted app (Render sets
+    RENDER=true) writes none unless RECORD_MODEL_CALLS=1. Development records every live call
+    (CLAUDE.md rule 8) unless RECORD_MODEL_CALLS=0."""
+    setting = os.environ.get("RECORD_MODEL_CALLS", "").strip()
+    if setting in {"0", "1"}:
+        return setting == "1"
+    return os.environ.get("RENDER", "").strip().lower() != "true"
+
+
 def sanitize(value, keys: tuple[str, ...] | None = None):
     if keys is None:
         keys = tuple(k for k in (os.environ.get(v, "").strip() for v in _KEY_VARIABLES) if k)
@@ -70,6 +80,8 @@ class CallStore:
             "request": request,
             "response": response,
         })
+        if not recording_on():
+            return record  # kept in memory for this call only, never written
         path = self.path(backend, request)
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".tmp")
