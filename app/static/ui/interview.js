@@ -123,14 +123,26 @@ document.addEventListener("DOMContentLoaded", () => {
   // A more human delivery: the line is said sentence by sentence (about 400 ms apart) at rate
   // 0.92, with numbers as words and no symbols (UBTurn.speakable). The whole line counts as one
   // spoken line: "Speaking" and the echo-safety mute hold through the pauses.
+  // Decision log 43: with the natural voice on and ready, the same line goes to Kokoro first;
+  // its start and end are this line's start and end, and a failure hands the rest of the line
+  // (from the sentence that failed) to the browser voice for the rest of the session.
+  const natural = window.UBNatural || { usable: () => false, busy: () => 0, started() {}, lineFailed() {} };
   function speak(text, reveal, { mutes = true } = {}) {
-    if (muted() || !window.speechSynthesis) { reveal?.finish(); return; }
+    if (muted() || (!window.speechSynthesis && !natural.usable())) { reveal?.finish(); return; }
     const T = window.UBTurn;
     const parts = T.sentences(T.speakable(text));
     const voice = window.UB.pickVoice();
     const gen = speechGen;
-    let counted = false, finished = false, index = 0, offset = 0, current = null, pause = null;
+    let counted = false, finished = false, index = 0, offset = 0, current = null, pause = null, kokoro = null;
     const line = { started: false };
+    const started = () => {
+      if (gen !== speechGen) return;
+      line.started = true;
+      if (counted) return;
+      counted = true; speaking++; if (mutes) muting++;
+      speechChanged();
+      reveal?.start();
+    };
     const end = () => {
       if (finished) return;
       finished = true;
@@ -142,9 +154,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (mutes) muting = Math.max(0, muting - 1);
       speechChanged();
     };
-    line.cancel = () => { current?.cancel(); end(); };
+    line.cancel = () => { current?.cancel(); kokoro?.cancel(); end(); };
     const next = () => {
-      if (finished || gen !== speechGen || index >= parts.length) { end(); return; }
+      if (finished || gen !== speechGen || index >= parts.length || !window.speechSynthesis) { end(); return; }
       const part = parts[index++], at = offset;
       offset += part.length + 1;
       const u = new SpeechSynthesisUtterance(part);
@@ -153,14 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
       u.rate = T.SPEECH_RATE;
       current = T.guardUtterance(u, {
         text: part, rate: u.rate,
-        onStart: () => {
-          if (gen !== speechGen) return;
-          line.started = true;
-          if (counted) return;
-          counted = true; speaking++; if (mutes) muting++;
-          speechChanged();
-          reveal?.start();
-        },
+        onStart: started,
         onDone: (reason) => {
           current = null;
           if (reason === "cancel" || gen !== speechGen) { end(); return; }
@@ -171,7 +176,23 @@ document.addEventListener("DOMContentLoaded", () => {
       speechSynthesis.speak(u);
     };
     guards.add(line);
-    next();
+    if (natural.usable()) {
+      kokoro = natural.speakLine(parts, {
+        pauseMs: T.SENTENCE_PAUSE_MS,
+        onStart: started,
+        onDone: () => { kokoro = null; end(); },
+        onFail: (failed) => {
+          kokoro = null;
+          natural.lineFailed();  // the browser voice from here on, and one line says so
+          if (finished || gen !== speechGen) return;
+          index = failed;
+          offset = parts.slice(0, failed).reduce((n, p) => n + p.length + 1, 0);
+          next();
+        },
+      });
+    } else {
+      next();
+    }
     reveal?.watch(() => line.started);
   }
 
@@ -212,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!reveals.has(r)) return;
         watchdog = setInterval(() => {
           if (started()) { clearInterval(watchdog); return; }
-          if (!speechSynthesis.speaking && !speechSynthesis.pending) r.finish();
+          if (!window.speechSynthesis?.speaking && !window.speechSynthesis?.pending && !natural.busy()) r.finish();
         }, 1000);
       },
       finish() {
@@ -251,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const said = kind === "ack" ? (speech || text) : window.UBTurn.withOpener(speech || text, kind, openers);
     openers.justAcknowledged = kind === "ack";
     const reveal = transcript ? revealer(document.createElement("span"), short) : revealer(el.querySelector(".typed"), text, window.UBTurn.speakable(said).length);
-    if (transcript || reduced || muted() || !window.speechSynthesis) reveal.finish();
+    if (transcript || reduced || muted() || (!window.speechSynthesis && !natural.usable())) reveal.finish();
     speak(said, reveal);
   }
   const openers = { n: 0, lastHadOpener: false, justAcknowledged: false };
@@ -681,6 +702,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // iPad Safari: audio and speech start only inside the tap, so before any await.
     if (!typing) voice.unlock();
     window.UB.unlockSpeech();
+    natural.started();  // decision log 43: audio resumes inside the tap; the model has 20 s from here
     setStatus("");
     consent.disabled = true;
     lockTopics();
@@ -981,9 +1003,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (navigator.mediaDevices) listInputs().then((inputs) => { if (!inputs.length && !noListYet()) setMic("none"); });
   $("speaker-test").addEventListener("click", () => {
     const note = $("speaker-note");
-    if (!window.speechSynthesis) { note.textContent = "This browser has no speech voice; lines will appear as text."; note.className = "device-note bad"; return; }
+    if (!window.speechSynthesis && !natural.usable()) { note.textContent = "This browser has no speech voice; lines will appear as text."; note.className = "device-note bad"; return; }
     if (mute.getAttribute("aria-pressed") === "true") { note.textContent = "The interviewer is muted; unmute to hear the test line."; return; }
-    speechSynthesis.cancel();
+    if (natural.usable()) cancelSpeech(); else speechSynthesis.cancel();
     speak("Okay. Talk me through how you'd approach this, and tell me the number you commit to.", null, { mutes: false });  // never mutes the microphone check
     note.textContent = "Playing a preview.";
   });
@@ -1010,6 +1032,22 @@ document.addEventListener("DOMContentLoaded", () => {
     listVoices();
     speechSynthesis.addEventListener?.("voiceschanged", listVoices);
   }
+  // Decision log 43: the natural voice switch, off by default and remembered in this browser.
+  const naturalSwitch = $("natural-voice"), naturalNote = $("natural-note");
+  if (window.UBNatural) {
+    naturalSwitch.checked = window.UBNatural.enabled();
+    $("natural-row").hidden = !window.UBNatural.available();  // decision log 44: only once WebGPU is confirmed
+    window.UBNatural.onNotice((kind, text) => {
+      if (kind === "available") { $("natural-row").hidden = false; naturalSwitch.checked = window.UBNatural.enabled(); return; }
+      if (kind === "unavailable") { $("natural-row").hidden = true; naturalNote.hidden = true; return; }
+      if (kind === "fallback" && !$("room").hidden) setStatus(text);  // one line, in the room
+      naturalNote.textContent = kind === "off" ? "" : text;
+      naturalNote.hidden = kind === "off" || !text;
+      naturalNote.classList.toggle("bad", kind === "fallback");
+    });
+    naturalSwitch.addEventListener("change", () => window.UBNatural.setEnabled(naturalSwitch.checked));
+  }
+
   $("voice-select").addEventListener("change", () => {
     window.UB.store.set("ub-voice", $("voice-select").value);
     $("speaker-test").click();  // hear it straight away
