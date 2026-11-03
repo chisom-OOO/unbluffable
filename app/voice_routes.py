@@ -7,6 +7,7 @@ import os
 
 from fastapi import APIRouter, HTTPException, Request, WebSocket, WebSocketDisconnect
 
+from app import limits
 from voice.answers import QUESTION, analyse_answer, silence_commitment_check
 from voice.provider import MetaVoice
 from voice.recording import VoiceError
@@ -45,9 +46,19 @@ async def file_transcription(request: Request):
         if len(audio) > 32_000_000:
             raise HTTPException(413, "Recording exceeds 32 MB.")
     try:
+        limits.admit("transcription", request)
+    except limits.Refused as refused:
+        raise HTTPException(refused.status, refused.message) from None
+    try:
         return await provider().transcribe(bytes(audio))
     except VoiceError as error:
         raise HTTPException(422, str(error)) from None
+
+
+async def refuse(socket, refused):
+    """A start the limits or the daily cap turned away: one final message, then close."""
+    with suppress(WebSocketDisconnect, RuntimeError):
+        await socket.send_json({"type": "error", "message": refused.message, "final": True})
 
 
 def same_origin(socket):
@@ -66,7 +77,10 @@ async def typed_answer(socket: WebSocket):
         text = message.get("transcript")
         if not isinstance(text, str) or not text.strip() or len(text) > 20_000:
             raise VoiceError("Enter a nonempty answer of at most 20,000 characters.")
+        limits.admit("transcription", socket)
         await analyse_answer(provider(), text, socket.send_json)
+    except limits.Refused as refused:
+        await refuse(socket, refused)
     except WebSocketDisconnect:
         return
     except VoiceError as error:
@@ -91,6 +105,7 @@ async def live_answer(socket: WebSocket):
         start = await asyncio.wait_for(socket.receive_json(), 10)
         if start.get("type") != "start":
             raise VoiceError("Start a recording before sending audio.")
+        limits.admit("interview", socket)  # decision log 42: a stream counts as an interview start
         current = provider()
         speed = float(os.environ.get("VOICE_REPLAY_SPEED", "1"))
         if not math.isfinite(speed) or speed < 0:
@@ -131,6 +146,8 @@ async def live_answer(socket: WebSocket):
                     analyses.remove(completed)
     except WebSocketDisconnect:
         return
+    except limits.Refused as refused:
+        await refuse(socket, refused)
     except VoiceError as error:
         with suppress(WebSocketDisconnect, RuntimeError):
             await socket.send_json({"type": "error", "message": str(error)})

@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let connection = "checking", micStatus = "unchecked", camera = "off", typedPractice = false, replay = false;
   let drillMistake = null;
   let micFailurePending = false;  // told to the server between captures
+  let closingMessage = "";  // a final server message (a limit or "Busy right now"), kept after the socket closes
 
   // ---------- Indicator: derived from real state only ----------
   function render() {
@@ -589,6 +590,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setStatus(event.message);
         break;
       case "error":
+        if (event.final) closingMessage = event.message;  // decision log 42: the start was turned away
         capturing = false; captureRequested = false;
         voice.stopStreaming();
         // Coding rounds close captures to send code; an empty one is not worth a message.
@@ -710,7 +712,7 @@ document.addEventListener("DOMContentLoaded", () => {
             typed_practice: typedPractice, ...(chosenRole ? { role: chosenRole } : {}) }));
     socket.onmessage = ({ data }) => handle(JSON.parse(data));
     socket.onclose = () => {
-      if (phase !== "finished") { phase = "finished"; voice.close(); setStatus("The connection closed. Reload to start again."); render(); }
+      if (phase !== "finished") { phase = "finished"; voice.close(); setStatus(closingMessage || "The connection closed. Reload to start again."); render(); }
     };
     startClock();
   }

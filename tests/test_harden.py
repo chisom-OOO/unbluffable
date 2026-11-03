@@ -1,6 +1,7 @@
 """Decision log 42: spend protection (per-IP limits, a global daily cost cap), security headers,
 Subresource Integrity on the pinned CDN files, and the /privacy page."""
 
+import asyncio
 from decimal import Decimal
 from pathlib import Path
 
@@ -283,18 +284,12 @@ def test_sync_backend_calls_add_their_cost():
     assert limits.GUARD.spent_today() == Decimal("0.0055")
 
 
-@pytest.mark.anyio
-async def test_async_backend_calls_add_their_cost(monkeypatch):
+def test_async_backend_calls_add_their_cost(monkeypatch):
     monkeypatch.setenv("BASETEN_API_KEY", "test-key")
     transport = httpx.MockTransport(lambda request: httpx.Response(200, json=usage_body("meta-models/muse-spark-open-1026")))
-    await backends.OpenWeightsBackend().acomplete({"model": "meta-models/muse-spark-open-1026", "messages": []},
-                                                  transport=transport)
+    asyncio.run(backends.OpenWeightsBackend().acomplete({"model": "meta-models/muse-spark-open-1026", "messages": []},
+                                                        transport=transport))
     assert limits.GUARD.spent_today() == Decimal("0.0055")
-
-
-@pytest.fixture
-def anyio_backend():
-    return "asyncio"
 
 
 # --- A judge can do several full interviews in a row -----------------------------------------
@@ -397,3 +392,47 @@ def test_every_footer_links_the_privacy_page():
         html = template.read_text(encoding="utf-8")
         footer = html[html.index('<footer class="disclosure">'):html.index("</footer>")]
         assert '<a href="/ui/privacy">Privacy</a>' in footer, template.name
+
+
+def test_file_transcription_adds_its_audio_minutes(monkeypatch):
+    import io
+    import wave
+
+    from voice import provider as voice_provider
+
+    buffer = io.BytesIO()
+    with wave.open(buffer, "wb") as out:
+        out.setnchannels(1), out.setsampwidth(2), out.setframerate(16000)
+        out.writeframes(b"\0\0" * 16000 * 30)  # 30 s
+    wav = buffer.getvalue()
+
+    async def convert(audio):
+        return wav
+
+    async def post(self, kind, request, endpoint, files=None):
+        return {"response": {"transcript": "four"}, "kind": "file", "request": request, "run_id": "r",
+                "recorded_at": "t", "latency_s": 0}
+
+    monkeypatch.setattr(voice_provider, "convert_to_wav", convert)
+    monkeypatch.setattr(voice_provider.MetaVoice, "post", post)
+    asyncio.run(voice_provider.MetaVoice("live", "unused").transcribe(b"audio"))
+    assert limits.GUARD.spent_today() == Decimal("0.005")
+    assert voice_provider.wav_seconds(b"x" * 64000) == 2  # unreadable header: 16 kHz mono 16-bit
+
+
+def test_realtime_stream_adds_its_streamed_time(tmp_path, monkeypatch):
+    from test_voice_relay import Browser, Upstream
+
+    from voice import relay
+    from voice.provider import MetaVoice
+
+    async def thinking(self, text):
+        return {"finished": False, "kind": "thinking"}, {}
+
+    monkeypatch.setattr(MetaVoice, "endpoint", thinking)
+    monkeypatch.setenv("MODEL_API_KEY", "synthetic-server-key")
+    times = iter([100.0, 112.0, 130.0, 130.0, 130.0])  # began, stream opened (after the ack), finally
+    monkeypatch.setattr(relay.time, "perf_counter", lambda: next(times, 130.0))
+    asyncio.run(asyncio.wait_for(relay.realtime_answer(Browser(), MetaVoice(record_dir=tmp_path), {"sample_rate": 16000},
+                                                       connect=lambda *a, **k: Upstream()), 2))
+    assert limits.GUARD.spent_today() == Decimal("0.003")  # 18 s of streaming at $0.01 a minute

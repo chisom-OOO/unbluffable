@@ -7,6 +7,7 @@ import math
 import re
 import time
 
+from app import limits
 from llm.http_diagnostics import log_http_exception
 
 from voice.provider import ASR, KEYWORDS, REALTIME, api_key, metadata
@@ -187,6 +188,7 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
     if connect is None:
         from websockets.asyncio.client import connect
     began = time.perf_counter()
+    streaming = None
     try:
         async with connect(REALTIME, open_timeout=30, close_timeout=5, max_size=2**20) as upstream:
             await upstream.send(json.dumps({**settings, "authorization": {"accessToken": "Bearer " + key}}))
@@ -194,6 +196,7 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
             if not acknowledgement.get("sessionId") or acknowledgement.get("type") == "error":
                 raise VoiceError("Transcription could not start. Try file transcription or type your answer.")
             audio_start = asyncio.get_running_loop().time()
+            streaming = time.perf_counter()
             record.event(acknowledgement, 0)
             await browser.send_json({"type": "ready", "silence_s": silence_s,
                                      "model": metadata(record.data, "live", "transcription")})
@@ -302,6 +305,8 @@ async def realtime_answer(browser, provider, start, silence_s=0.8, replay_speed=
             raise
         raise VoiceError("Live transcription failed. Try file transcription or type your answer.") from None
     finally:
+        if streaming is not None:  # decision log 42: streamed audio time counts toward the daily cap
+            limits.GUARD.add_audio(time.perf_counter() - streaming)
         for task in tasks:
             task.cancel()
         for task in tasks:

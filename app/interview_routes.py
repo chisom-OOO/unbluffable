@@ -16,7 +16,7 @@ from contextlib import suppress
 
 from fastapi import APIRouter, HTTPException, Response, WebSocket, WebSocketDisconnect
 
-from app import behavioural, byoq, coding, conversational, interview_report, market, mixed, quant_dev, roles, voice_routes
+from app import behavioural, byoq, coding, conversational, interview_report, limits, market, mixed, quant_dev, roles, voice_routes
 from app.areas import AREAS
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
@@ -403,6 +403,7 @@ async def interview_socket(socket: WebSocket):
             raise VoiceError("Start the interview first.")
         if begin.get("consent") is not True:
             raise VoiceError("Please agree that your answer text is kept before starting.")
+        limits.admit("interview", socket)  # decision log 42: before anything that calls a model
         provider = voice_routes.provider()
 
         async def listen() -> str:
@@ -540,6 +541,8 @@ async def interview_socket(socket: WebSocket):
         await session.run()
     except (WebSocketDisconnect, SessionClosed):
         return
+    except limits.Refused as refused:
+        await voice_routes.refuse(socket, refused)
     except VoiceError as error:
         with suppress(WebSocketDisconnect, RuntimeError):
             await socket.send_json({"type": "error", "message": str(error)})
