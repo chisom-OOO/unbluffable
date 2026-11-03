@@ -441,7 +441,15 @@ document.addEventListener("DOMContentLoaded", () => {
         $("puzzle").textContent = event.text;
         $("provenance").innerHTML = window.UB.provenanceHtml(event.provenance_rows);
         $("market-panel").hidden = event.kind !== "market";
+        const enteringMarket = event.kind === "market" && !marketRoom();
         $("room").classList.toggle("market", event.kind === "market");
+        // A mixed interview (decision log 37): the questions scrolled the page; the market room is one
+        // screen tall and scrolls its own transcript, so the page goes back to the top (live bug: blank view).
+        if (enteringMarket) {
+          window.scrollTo(0, 0);
+          log.scrollTop = log.scrollHeight;
+          follow.jumped(performance.now());
+        }
         $("case-panel").hidden = event.kind !== "case";
         $("puzzle-eyebrow").textContent = (event.opener ? "Spoken opener · then a coding round"
           : event.kind === "check" ? "Drill check"

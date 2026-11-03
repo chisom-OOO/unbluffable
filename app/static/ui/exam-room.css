@@ -1094,7 +1094,9 @@ input[type="checkbox"] { accent-color: var(--active, var(--ink)); width: 18px; h
 .room.market .market-quote { padding-bottom: 0; }
 .room.market .market-num { font-size: 24px; }
 .room.market > .stage { align-self: stretch; min-height: 0; padding-top: 8px; }
-.room.market #log { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 8px; }
+/* The scroll box contains its hidden accessibility spans (position: absolute); without this they
+   escaped it and kept the page thousands of pixels tall after the questions (live bug, Opera). */
+.room.market #log { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 8px; position: relative; }
 .room.market .utterance { scroll-margin-bottom: 0; }
 .room.market .dock { position: static; margin-top: 0; }
 .room.market > .rail { align-self: stretch; position: static; min-height: 0; overflow-y: auto; }
