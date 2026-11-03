@@ -45,6 +45,7 @@ function controller({ saved, load, available = true } = {}) {
 
 // --- The pinned facts and the copy ---
 {
+  assert.equal(N.OFFERED, false, "decision log 46: hidden for everyone until the glitching is fixed");
   assert.equal(N.PIN.kokoro, "1.2.1");
   assert.equal(N.PIN.bundle, "https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/dist/kokoro.web.js");
   assert.equal(N.PIN.model, "onnx-community/Kokoro-82M-v1.0-ONNX");
