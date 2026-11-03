@@ -11,6 +11,7 @@ const { spawn } = require("node:child_process");
 const assert = require("node:assert/strict");
 
 const [, , eventsPath, base, browserExe, profileDir] = process.argv;
+if (!eventsPath) { console.log("market switch browser: driven by tests/test_market_switch.py, skipped standalone"); process.exit(0); }
 const EVENTS = fs.readFileSync(eventsPath, "utf8");
 const PORT = 9300 + Math.floor(Math.random() * 600);
 
