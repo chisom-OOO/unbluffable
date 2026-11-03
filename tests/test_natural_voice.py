@@ -19,12 +19,22 @@ BUNDLE_SHA384 = "suR1TeKe6Fe8fT0n/uTWoohnPJrp1zu3z0bj4VH2anmmq739wlmFSnMFJyMYszA
 
 
 def test_switch_sits_under_interviewer_voice_and_is_off_by_default():
+    # Hidden until WebGPU is confirmed (decision log 44): browsers without it never see it.
+    assert '<label class="checkline natural-switch" id="natural-row" hidden>' in PAGE
     switch = re.search(r'<input type="checkbox" id="natural-voice"[^>]*>', PAGE)
     assert switch and 'role="switch"' in switch[0] and "checked" not in switch[0]
     assert "<span>Natural voice (beta)</span>" in PAGE
     assert PAGE.index("<summary>Interviewer voice</summary>") < PAGE.index('id="natural-voice"') < PAGE.index('id="voice-tip"')
     assert '<p class="fine natural-note" id="natural-note" hidden aria-live="polite"></p>' in PAGE
     assert PAGE.index('src="/ui-static/natural-voice.js"') < PAGE.index('src="/ui-static/interview.js"')
+
+
+def test_switch_shows_only_when_webgpu_is_confirmed():
+    wiring = INTERVIEW[INTERVIEW.index("the natural voice switch"):INTERVIEW.index('$("voice-select").addEventListener')]
+    assert 'kind === "unavailable"' in wiring and '$("natural-row").hidden = true' in wiring
+    assert '$("natural-row").hidden = !window.UBNatural.available()' in wiring
+    glue = NATURAL[NATURAL.index("// ---------- The browser"):]
+    assert "navigator.gpu" in glue and "requestAdapter" in glue and "controller.setAvailable(" in glue
 
 
 def test_one_speaking_path_for_both_voices():
@@ -51,6 +61,10 @@ def test_the_bundle_is_hash_checked_before_it_runs_in_a_worker():
     assert 'crypto.subtle.digest("SHA-384"' in WORKER and 'crypto.subtle.digest("SHA-256"' in WORKER
     assert WORKER.index('digest("SHA-384"') < WORKER.index("await import(")
     assert "dtype: pin.dtype, device: pin.device" in WORKER and "fp32" not in WORKER + NATURAL.replace("never the 326 MB fp32", "")
+    # Decision log 44: fp16 on WebGPU only; no WASM or 8-bit path ships.
+    assert 'dtype: "fp16"' in NATURAL and 'device: "webgpu"' in NATURAL
+    for source in (NATURAL, WORKER):
+        assert '"wasm"' not in source and '"q8"' not in source and "model_quantized" not in source
     # Kokoro never runs on the page's main thread: WASM synthesis would freeze the interview.
     assert "import(" not in NATURAL and 'new Worker(WORKER, { type: "module" })' in NATURAL
 
@@ -62,7 +76,7 @@ def test_no_model_weights_are_committed():
 
 def test_privacy_page_names_hugging_face_and_keeps_speech_text_local():
     html = TestClient(app).get("/ui/privacy").text
-    assert "Hugging Face" in html
+    assert "Hugging Face" in html and "browsers with WebGPU" in html
     assert "never leaves your browser" in html
 
 

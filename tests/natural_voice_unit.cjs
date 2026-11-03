@@ -33,12 +33,13 @@ function store(initial = {}) {
 
 function deferred() { let resolve, reject; const promise = new Promise((a, b) => { resolve = a; reject = b; }); return { promise, resolve, reject }; }
 
-function controller({ saved, load } = {}) {
+function controller({ saved, load, available = true } = {}) {
   const c = clock(), s = store(saved ? { [N.STORE_KEY]: saved } : {}), notices = [], loads = [];
   const ctl = N.createController({
     loadEngine: () => { const d = deferred(); loads.push(d); return load ? load() : d.promise; },
     store: s, setTimer: c.setTimer, clearTimer: c.clearTimer, onNotice: (kind, text) => notices.push([kind, text]),
   });
+  if (available !== null) ctl.setAvailable(available);
   return { ctl, c, s, notices, loads };
 }
 
@@ -48,19 +49,20 @@ function controller({ saved, load } = {}) {
   assert.equal(N.PIN.bundle, "https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/dist/kokoro.web.js");
   assert.equal(N.PIN.model, "onnx-community/Kokoro-82M-v1.0-ONNX");
   assert.equal(N.PIN.revision, "1939ad2a8e416c0acfeecc08a694d14ef25f2231");
-  assert.equal(N.PIN.dtype, "q8", "the 92 MB 8-bit model, never fp32");
-  assert.equal(N.PIN.device, "wasm", "8-bit misbehaves on WebGPU: WASM only (decision log 43)");
+  assert.equal(N.PIN.dtype, "fp16", "the 163 MB fp16 model (decision log 44), never the 326 MB fp32");
+  assert.equal(N.PIN.device, "webgpu", "WebGPU only: no WASM path (decision log 44)");
   assert.equal(N.PIN.voice, "af_heart");
   assert.equal(N.START_TIMEOUT_MS, 20000);
   assert.equal(N.SENTENCE_TIMEOUT_MS, 8000);
   assert.equal(N.PROGRESS_LINE, "Downloading natural voice (first time only)…");
   assert.equal(N.FALLBACK_LINE, "Natural voice didn't load, so the interviewer is using your browser's voice.");
   // Only Kokoro's own files on Hugging Face are pinned; everything else passes through.
-  assert.equal(N.pinnedUrl("https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX/resolve/main/onnx/model_quantized.onnx"),
-    "https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX/resolve/1939ad2a8e416c0acfeecc08a694d14ef25f2231/onnx/model_quantized.onnx");
+  assert.equal(N.pinnedUrl("https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX/resolve/main/onnx/model_fp16.onnx"),
+    "https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX/resolve/1939ad2a8e416c0acfeecc08a694d14ef25f2231/onnx/model_fp16.onnx");
   assert.equal(N.pinnedUrl("https://huggingface.co/other/model/resolve/main/x.onnx"), null);
   assert.equal(N.pinnedUrl("https://example.com/"), null);
-  assert.equal(N.PIN.sha256["onnx/model_quantized.onnx"], "fbae9257e1e05ffc727e951ef9b9c98418e6d79f1c9b6b13bd59f5c9028a1478");
+  assert.equal(N.PIN.sha256["onnx/model_fp16.onnx"], "ba4527a874b42b21e35f468c10d326fdff3c7fc8cac1f85e9eb6c0dfc35c334a");
+  assert.deepEqual(Object.keys(N.PIN.sha256).sort(), ["onnx/model_fp16.onnx", "voices/af_heart.bin"]);
   assert.equal(N.PIN.sha256["voices/af_heart.bin"], "d583ccff3cdca2f7fae535cb998ac07e9fcb90f09737b9a41fa2734ec44a8f0b");
 }
 console.log("pins ok");
@@ -99,6 +101,26 @@ console.log("pins ok");
     const { ctl, loads } = controller({ saved: "on" });
     assert.equal(ctl.enabled(), true);
     assert.equal(loads.length, 1);
+  }
+
+  // --- No WebGPU: the switch is hidden and nothing loads, even if "on" was remembered (row 44) ---
+  {
+    const { ctl, loads, notices } = controller({ saved: "on", available: null });
+    assert.equal(loads.length, 0, "nothing loads before WebGPU is confirmed");
+    assert.equal(ctl.available(), null);
+    ctl.setAvailable(false);
+    assert.equal(loads.length, 0);
+    assert.deepEqual(notices, [["unavailable", ""]], "the page hides the switch");
+    assert.equal(ctl.enabled(), false);
+    ctl.setEnabled(true); ctl.started();
+    assert.equal(loads.length, 0, "a hidden switch can't start a download");
+    assert.equal(ctl.usable(), false);
+  }
+  {
+    const { ctl, loads } = controller({ saved: "on", available: null });
+    ctl.setAvailable(true);
+    assert.equal(loads.length, 1, "WebGPU confirmed: a remembered on starts the download");
+    assert.equal(ctl.available(), true);
   }
 
   // --- Fallback: a failed load ---
