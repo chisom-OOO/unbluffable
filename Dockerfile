@@ -12,6 +12,7 @@ COPY pyproject.toml ./
 COPY app ./app
 COPY engine ./engine
 COPY llm ./llm
+COPY forge ./forge
 COPY voice ./voice
 COPY eval ./eval
 COPY content ./content
