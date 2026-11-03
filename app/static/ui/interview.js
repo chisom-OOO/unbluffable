@@ -81,9 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function scrollTo(el) {
     if (follow.newLine() === "scroll") { newLine.hidden = true; jumpTo(el); return; }
-    if (log.nextElementSibling !== newLine) log.after(newLine);  // the coding room moves the log
-    const page = scroller() === document.scrollingElement;
-    newLine.style.setProperty("--dock-h", page ? `${document.querySelector(".dock")?.offsetHeight || 0}px` : "0px");
+    // Live bug (Opera, ~1900 px): floating over the transcript, it covered the interviewer's line.
+    // In the spoken and market rooms it is a right-aligned row in the dock, above the turn bar, so it
+    // never covers transcript text; the coding room moves the log into a panel with no dock.
+    const dock = log.parentElement.querySelector(":scope > .dock");
+    if (dock) { if (dock.firstElementChild !== newLine) dock.prepend(newLine); }
+    else if (log.nextElementSibling !== newLine) log.after(newLine);
     newLine.hidden = false;
   }
   newLine.addEventListener("click", () => {
