@@ -147,6 +147,9 @@ class DrillSession(ExamSession):
             await self.state("checking")
             analysis = await self.analyzer.analyse(puzzle, text, self.send)
             await self.send({"type": "analysis_complete"})
+            if self.timed_out_turn():  # decision log 48
+                q.said.pop()
+                continue
             answer = self._answer(puzzle, text, analysis)
             if not q.asked_digit and coarse(puzzle, analysis):
                 q.asked_digit = True

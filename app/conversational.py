@@ -19,6 +19,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from app import exam_text as say
+from app import turn_limit
 from app.behavioural import verbatim
 from app.interview_session import SessionClosed, numbers_in
 from voice.endpointing import BehaviouralTurn, cues
@@ -213,6 +214,9 @@ class ConversationalSession:
             await self.send({"type": "model_error", "message": "The model couldn't judge that answer; it is shown without quotes."})
         return j
 
+    async def judge_answer(self, row: Row, question: str, text: str, points) -> Judgement:
+        return await self.judged(await judge(self.provider, row, question, text, points))
+
     async def ask(self, n: int, a: Asked) -> None:
         row, started = a.row, self.clock()
         await self.send({"type": "question", "number": n, "kind": "conversational", "template": row.id, "text": row.question,
@@ -220,16 +224,16 @@ class ConversationalSession:
                          "conversational": {"topic": row.topic, "of": len(self.asked)}})
         self.stage = "answer"
         await self.line("question", row.question)
-        a.first = await self.answer(row.question)
-        first = await self.judged(await judge(self.provider, row, row.question, a.first, row.key_points))
+        checked = lambda question, points: turn_limit.until_checked(  # noqa: E731  (decision log 48)
+            self.provider, lambda: self.answer(question),
+            lambda t: self.judge_answer(row, question, t, points))
+        a.first, first = await checked(row.question, row.key_points)
         a.probe = choose_probe(row, set(first.points))
         await self.line("probe", a.probe)
-        a.second = await self.answer(a.probe)
-        second = await self.judged(await judge(self.provider, row, a.probe, a.second, row.key_points))
+        a.second, second = await checked(a.probe, row.key_points)
         a.judged = [first, second]
         await self.line("question", f"{TWIST_INTRO} {row.twist}")
-        a.third = await self.answer(row.twist)
-        a.twist = await self.judged(await judge(self.provider, row, row.twist, a.third, row.twist_points))
+        a.third, a.twist = await checked(row.twist, row.twist_points)
         if row.capacity:
             self.stage = "capacity"
             await self.line("question", f"{CAPACITY_INTRO} {row.capacity['question']}")

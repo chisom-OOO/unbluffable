@@ -23,6 +23,7 @@ from types import SimpleNamespace
 from pathlib import Path
 
 from app import exam_text as say
+from app import turn_limit
 from app.areas import answer_value, area_for
 from app.behavioural import verbatim
 from app import hint_ladder
@@ -518,9 +519,14 @@ class CodingSession:
                          "guide_seconds": GUIDE_SECONDS, "coding": {**public(spec), "part": 1, "problem": log.number}})
         intro = "Here's a coding problem." if log.number == 1 else "Here's the next problem."
         await self.line("question", f"{intro} {spec['statement']} Before you write any code, talk me through your approach.")
-        log.approach = await self.listen()
-        await self.send({"type": "answer_complete", "transcript": log.approach, "acknowledgement": "Thanks."})
-        log.plan, model = await plan(self.provider, spec, log.approach)
+        async def approach():
+            text = await self.listen()
+            await self.send({"type": "answer_complete", "transcript": text, "acknowledgement": "Thanks."})
+            return text
+
+        # Decision log 48: a plan check that passes the time limit asks for the approach again.
+        log.approach, (log.plan, model) = await turn_limit.until_checked(
+            self.provider, approach, lambda t: plan(self.provider, spec, t))
         await self.model_row(model, "coding_plan")
         await self.send({"type": "coding_plan", **log.plan})
         await self.line("prompt", "Go ahead and code it in Python. Keep talking as you go. Run checks the two examples; "
@@ -544,9 +550,8 @@ class CodingSession:
         await self.model_row(model, "coding_follow_up")
         await self.line("follow_up", fq["question"])
         await self.send({"type": "coding_closed"})
-        answer = await self.listen()
-        await self.send({"type": "answer_complete", "transcript": answer, "acknowledgement": "Thanks."})
-        verdict, model = await judge_follow_up(self.provider, fq["question"], last, answer)
+        answer, (verdict, model) = await turn_limit.until_checked(
+            self.provider, approach, lambda t: judge_follow_up(self.provider, fq["question"], last, t))
         await self.model_row(model, "coding_judge")
         log.follow_up = {**fq, "answer": answer, **verdict}
         log.seconds = self.clock() - started

@@ -23,6 +23,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from app import exam_text as say
+from app import turn_limit
 from app.behavioural import verbatim
 from app.interview_session import SessionClosed
 from engine.answers import normalise_numbers
@@ -250,6 +251,9 @@ class CaseSession:
             await self.send({"type": "model_error", "message": "The model couldn't judge that answer; it is shown without quotes."})
         return quoted
 
+    async def quotes(self, question: str, text: str, points) -> Quoted:
+        return await self.model(await quote_points(self.provider, question, text, points))
+
     async def stage_event(self, n: int, kind: str, extra: dict | None = None) -> None:
         await self.send({"type": "case_stage", "number": n, "kind": kind, **(extra or {})})
 
@@ -304,7 +308,14 @@ class CaseSession:
             stage.probe = s["probes"][0]
             await self.line("probe", stage.probe)
             stage.second = await self.answer(stage.probe)
-        stage.quoted = await self.model(await quote_points(self.provider, s["question"], f"{stage.answer} {stage.second}".strip(), points))
+        if stage.probe:  # decision log 48: a timed-out check asks the last answer again
+            stage.second, stage.quoted = await turn_limit.recheck(
+                self.provider, stage.second, lambda: self.answer(stage.probe),
+                lambda t: self.quotes(s["question"], f"{stage.answer} {t}".strip(), points))
+        else:
+            stage.answer, stage.quoted = await turn_limit.recheck(
+                self.provider, stage.answer, lambda: self.answer(s["question"]),
+                lambda t: self.quotes(s["question"], f"{t} {stage.second}".strip(), points))
         return stage
 
     async def run(self) -> None:
@@ -319,11 +330,13 @@ class CaseSession:
             await self.clarify()
             await self.send({"type": "answer_complete", "transcript": log.structure, "acknowledgement": "Thanks."})
             buckets = case["structure"]["key_buckets"]
-            log.buckets = await self.model(await quote_points(self.provider, "How would you structure the problem?", log.structure, buckets))
+            log.structure, log.buckets = await turn_limit.recheck(
+                self.provider, log.structure, lambda: self.answer(ASK_STRUCTURE),
+                lambda t: self.quotes("How would you structure the problem?", t, buckets))
             if len(log.buckets.points) < len(buckets):
                 await self.line("probe", STRUCTURE_PROBE)
-                log.structure_probe = await self.answer(STRUCTURE_PROBE)
-                more = await self.model(await quote_points(self.provider, STRUCTURE_PROBE, log.structure_probe, buckets))
+                log.structure_probe, more = await turn_limit.until_checked(
+                    self.provider, lambda: self.answer(STRUCTURE_PROBE), lambda t: self.quotes(STRUCTURE_PROBE, t, buckets))
                 for i, q in more.points.items():
                     log.buckets.points.setdefault(i, q)
             for n, s in enumerate(case["stages"], 1):
@@ -335,15 +348,15 @@ class CaseSession:
                 rec = case["recommendation"]
                 await self.stage_event(len(case["stages"]) + 1, "recommendation", {"question": rec["question"]})
                 await self.line("question", rec["question"])
-                log.recommendation = await self.answer(rec["question"])
-                log.rec_quoted = await self.model(await quote_points(self.provider, rec["question"], log.recommendation,
-                                                                     rec["key_points"] + rec.get("risks_and_next_steps", [])))
+                log.recommendation, log.rec_quoted = await turn_limit.until_checked(
+                    self.provider, lambda: self.answer(rec["question"]),
+                    lambda t: self.quotes(rec["question"], t, rec["key_points"] + rec.get("risks_and_next_steps", [])))
                 twist = case["follow_up_twist"]
                 question = f"New information: {twist['new_fact']} What changes?"
                 await self.stage_event(len(case["stages"]) + 2, "follow_up_twist", {"question": question})
                 await self.line("question", question)
-                log.twist = await self.answer(question)
-                log.twist_quoted = await self.model(await quote_points(self.provider, question, log.twist, twist["what_should_change"]))
+                log.twist, log.twist_quoted = await turn_limit.until_checked(
+                    self.provider, lambda: self.answer(question), lambda t: self.quotes(question, t, twist["what_should_change"]))
             log.seconds = self.clock() - started
             if not self.ends_session:
                 self.finished = True

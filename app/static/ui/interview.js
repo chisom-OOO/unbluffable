@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let typing = false, capturing = false, captureRequested = false;
   let question = null, questionStart = 0, answeredThisQuestion = false, offered = false;
   let heard = false;  // any candidate speech, live transcript or typing since this question began
+  let resendReady = false;  // decision log 48: the last answer's check took too long; Done with nothing new sends it again
   let lastCandidate = null;
   // Device gate (decision log 20): see UBTurn.gateProblems for the states.
   let connection = "checking", micStatus = "unchecked", camera = "off", typedPractice = false, replay = false;
@@ -372,6 +373,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function sendTyped() {
     const text = typeAnswer.value.trim();
+    if (!text && resendReady && phase === "listening") {  // Done with nothing new: the same words again
+      resendReady = false;
+      phase = "checking";
+      render();
+      socket.send(JSON.stringify({ type: "resend" }));
+      return;
+    }
     if (!text || phase !== "listening") return;
     finishReveals();
     if (!consent.checked) { setStatus("Please agree that your answer text is kept before sending."); return; }
@@ -436,6 +444,7 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "question":
         question = event;
+        resendReady = false;
         if (event.kind === "coding") {
           window.UBCoding.enter(event.coding, sendCode);
         } else if (window.UBCoding.active) {
@@ -574,6 +583,7 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "answer_complete":
         live.hidden = true;
+        resendReady = false;
         answeredThisQuestion = true;
         lastCandidate = addCandidate(event.transcript);
         cancelSpeech();  // the turn moved on: any line still typing out finishes now
@@ -620,6 +630,14 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "model_error":
         setStatus(event.message);
+        break;
+      case "turn_slow":  // decision log 48: 10 s after the answer
+        setStatus(event.message);
+        break;
+      case "turn_timed_out":  // 30 s: the room gave up on this check and listens again
+        setStatus("");
+        resendReady = true;
+        addInterviewer(event.message, "prompt");
         break;
       case "error":
         if (event.final) closingMessage = event.message;  // decision log 42: the start was turned away

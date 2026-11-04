@@ -17,7 +17,7 @@ from typing import Awaitable, Callable
 
 from app import exam_text as say
 from app import provenance as forge_provenance
-from app import follow_up, hint_ladder, receipts
+from app import follow_up, hint_ladder, receipts, turn_limit
 from engine.answers import StatedNumber, matches, normalise_numbers, parse_number
 from engine import mathtext, speakability
 from engine.bank import ForgePuzzle
@@ -464,6 +464,7 @@ class ExamSession:
         while True:
             text, pending = (pending, None) if pending else (await self.listen(), None)
             q.said.append(text)
+            heard = len(q.numbers)
             q.numbers += numbers_in(text)
             self._note_population(q)
             cue = cues(text)
@@ -479,6 +480,10 @@ class ExamSession:
             await self.state("checking")
             analysis = await self.analyzer.analyse(q.puzzle, text, self.send)
             await self.send({"type": "analysis_complete"})
+            if self.timed_out_turn():  # decision log 48: no answer; the same question again
+                q.said.pop()
+                del q.numbers[heard:]
+                continue
             if analysis.confirm and analysis.stated is not None and self.conditions == "exam":
                 corrected = await self.confirm_number(analysis.stated)
                 if corrected is not None:
@@ -542,6 +547,10 @@ class ExamSession:
             return None  # neither a "no" nor a number: taken as a yes
         return reply[no.end():].strip() if no else reply.strip()
 
+    def timed_out_turn(self) -> bool:
+        """Decision log 48: this answer's check passed the time limit, so it is not an answer."""
+        return turn_limit.gave_up(getattr(self.analyzer, "provider", None))
+
     def keywords(self) -> list[str]:
         """The current question's terms, to bias live transcription (`keywords`, spec/03)."""
         q = self.questions[-1] if self.questions else None
@@ -573,6 +582,8 @@ class ExamSession:
             await self.state("checking")
             analysis = await self.analyzer.analyse(puzzle, text, self.send)
             await self.send({"type": "analysis_complete"})
+            if self.timed_out_turn():
+                continue
             answer = self._answer(puzzle, text, analysis)
             if not q.part2.asked_digit and coarse(puzzle, analysis):
                 q.part2.asked_digit = True
@@ -612,10 +623,12 @@ class ExamSession:
                 continue
             await self.send({"type": "answer_complete", "transcript": text, "acknowledgement": self._ack()})
             await self.state("checking")
-            log.reply = text
-            log.verdict, log.quote, log.note, log.model = await follow_up.judge(
-                self.analyzer.provider, shown, spec.reference, text, self.send)
+            verdict = await follow_up.judge(self.analyzer.provider, shown, spec.reference, text, self.send)
             await self.send({"type": "analysis_complete"})
+            if self.timed_out_turn():
+                continue
+            log.reply = text
+            log.verdict, log.quote, log.note, log.model = verdict
             log.receipt = receipts.follow_up_receipt(log)
             await self.line("close", say.FOLLOW_UP_CLOSE, receipt=log.receipt)
             return
