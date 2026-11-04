@@ -19,7 +19,7 @@ from voice.recording import VoiceError
 SLOW_SECONDS = 10
 GIVE_UP_SECONDS = 30
 STILL_CHECKING = "Still checking your answer…"
-GAVE_UP = "That took too long on my side. Say your answer again, or press Done to move on."
+GAVE_UP = "That took too long on my side. Say your answer again when you're ready."
 
 
 class TurnTimedOut(VoiceError):

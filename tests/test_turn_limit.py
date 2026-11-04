@@ -54,7 +54,7 @@ PROBABILITY = ff.CASES["quant trading: Probability"]
 def test_the_limits_and_lines_are_pinned():
     assert turn_limit.SLOW_SECONDS == 10 and turn_limit.GIVE_UP_SECONDS == 30
     assert turn_limit.STILL_CHECKING == "Still checking your answer…"
-    assert turn_limit.GAVE_UP == "That took too long on my side. Say your answer again, or press Done to move on."
+    assert turn_limit.GAVE_UP == "That took too long on my side. Say your answer again when you're ready."
 
 
 def test_at_10_s_the_status_says_still_checking_and_the_answer_is_still_checked(monkeypatch, short):
