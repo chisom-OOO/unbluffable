@@ -40,7 +40,7 @@ Voice mock interviews for quant, banking, consulting and software roles. You ans
 | --- | --- | --- |
 | **Impact** | Interview practice that questions the number you said, for people with no coach or network to practise against; four tracks | [Why](#why), [live app](https://unbluffable-ptz1.onrender.com) |
 | **Meta tooling** | Three Meta models with separate jobs: Voice Transcribe hears, Spark extracts and quotes, Spark Open (open weights) runs the hosted app and wrote the question families' solvers | [Meta models](#meta-models-used), `llm/`, `voice/`, `forge/` |
-| **Technical depth** | Exact maths with fractions (no model grades a number), a Bayesian engine with a help discount, held-out gate results, a pre-registered comparison, 1,200+ tests | `engine/`, [Measured so far](#measured-so-far), [decision log](spec/DECISION_LOG.md) |
+| **Technical depth** | Exact maths with fractions (no model grades a number), a Bayesian engine with a help discount, held-out gate results, a pre-registered comparison, 1,400+ tests | `engine/`, [Measured so far](#measured-so-far), [decision log](spec/DECISION_LOG.md) |
 | **Demo** | Live app, sample replays per track, the 3-minute video | Links above, [screenshots](#screenshots) |
 
 ## Screenshots
@@ -162,7 +162,7 @@ The hosted app runs on Muse Spark Open because, from our cloud host, Meta's API 
 | **End-of-answer detection** on 60 recorded clips | **0 early cut-offs.** 32/60 completed exactly once; every miss was the app waiting too long, never interrupting. A silence check was added afterwards (rows 11–12). |
 | **Last word to spoken acknowledgement** | About 2 s in a timed run, most of it one Muse Spark call |
 | **Question families shipped** | **305** of 316 families attempted (decision log rows 19, 21–22, 30 and 45) across four tracks (159 quant, 18 quant developer, 60 investment banking, 30 consulting, 38 software engineering), 50 or 75 variants each, plus 54 coding specs. Easy families per track: 38 quant, 4 quant developer, 12 investment banking, 6 consulting, 9 software engineering. For each family Muse Spark Open wrote a solver from two worked examples; the family ships only if that solver reproduces the stored answer on every variant (300 exactly, 5 within the stated tolerance). Families that missed any variant were not shipped, e.g. 2 of the 101 in the main quant pack. 254 families also have wrong-method values verified in code, which the interviewer uses to name a misconception. |
-| **Automated tests** | 1,200+ (pytest, 1,224 in the last full run), including pinned values for the engine maths, plus five Node suites for the browser logic |
+| **Automated tests** | 1,400+ (pytest, 1,492 in the last full run), including pinned values for the engine maths and a test that every track and format moves on after each answer, plus eight Node suites for the browser logic |
 
 Every change from the original plan is in the [decision log](spec/DECISION_LOG.md), with the evidence that forced it, including what failed.
 
