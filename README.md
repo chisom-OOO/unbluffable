@@ -23,6 +23,18 @@ so anyone can know what the room feels like before they're in it.
 
 ---
 
+## Meta speech and reasoning integrations
+
+| Model | Provider | Role in Unbluffable |
+| --- | --- | --- |
+| **Muse Voice Transcribe** (`muse-voice-transcribe-1.0`) | **Meta Model API**, realtime and file transcription | Turns the candidate's speech into a transcript. |
+| **Muse Spark Open** (`meta-models/muse-spark-open-1026`) | **Baseten** Model APIs, open-weight inference | The hosted app's reasoning backend: extracts the committed answer and quoted reasoning, handles turn checks and interviewer responses. |
+| **Muse Spark 1.3** (`muse-spark-1.3`) | **Meta Model API** | Alternative reasoning backend for local runs and the recorded comparison. |
+
+**Hosted flow:** microphone → Muse Voice Transcribe → Muse Spark Open on Baseten → numerical check in code → browser speech synthesis. Spark 1.3 and Spark Open are alternative reasoning backends. Code checks the extracted numerical answer with Fraction arithmetic and explicit rounding/tolerance rules; models interpret the reasoning.
+
+**Implementation:** [Meta and Baseten clients](llm/client.py), [reasoning backends](llm/backends.py), [speech provider](voice/provider.py), [numeric checker](engine/checker.py). [Integration evidence and tests](docs/meta-integration-evidence.md).
+
 Voice mock interviews for quant, banking, consulting and software roles. You answer aloud; code checks every number exactly, the interviewer questions the number you committed to, then asks the same puzzle with new numbers chosen so the suspected mistake gives a clearly different answer.
 
 > [!NOTE]
