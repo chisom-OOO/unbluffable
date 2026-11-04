@@ -15,7 +15,8 @@ so anyone can know what the room feels like before they're in it.
 [![Tests](https://github.com/chisom-OOO/unbluffable/actions/workflows/tests.yml/badge.svg)](https://github.com/chisom-OOO/unbluffable/actions/workflows/tests.yml)
 
 **▶ Live:** https://unbluffable-ptz1.onrender.com (laptop or iPad, Chrome or Safari, allow camera and mic; first load can take ~30 s)<br/>
-**▶ 3-minute video:** VIDEO_LINK_TODO
+**▶ 3-minute video:** VIDEO_LINK_TODO<br/>
+**▶ Public question dataset:** [600 numeric questions · 12 families · Hugging Face](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions)
 
 [How it works](#how-it-works) · [Meta models](#meta-models-used) · [Measured so far](#measured-so-far) · [Run it](#run-it-locally) · [Decision log](spec/DECISION_LOG.md)
 
@@ -217,6 +218,16 @@ This is a follow-up on the same frozen run-1 items (sha256 `b9aeb7f1`), 3 runs. 
 - **Caveat:** the careful arm flagged 39 of 40 items overall, so its 10 / 10 on recited items says little about telling recited answers apart. The two arms also saw different evidence: one answer against two.
 
 Run 2 (pre-registered, decision log row 34): not run, because no testers were available before the deadline.
+
+## Public question dataset
+
+[Unbluffable Numeric Interview Questions on Hugging Face](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions) contains **600 questions from 12 families**, with 150 questions each for quant, investment banking, consulting and software engineering. It is an MIT-licensed subset of the public question bank, pinned to source commit `5db4b18`.
+
+The release includes question text, parameters, exact answer strings, recorded wrong-method values, source-model and verification metadata, a dataset card, source hashes and an offline Python validator. **All 600 released answers were recomputed exactly from their parameters** using the included validator. The [published validation report](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions/blob/main/validation_report.json) records the result.
+
+The questions were generated with ChatGPT, except the selected `qe_` families, written by Claude, as disclosed above. Muse Spark Open wrote the original family solvers. The release validator was prepared with Codex and recomputes the selected answer formulae. Source review labels, including `pending_builder_review`, are preserved. Wrong-method explanations remain source annotations; the release check verifies that their numeric values differ from the correct answer.
+
+This is a public, synthetic question corpus with related variants and no held-out evaluation split. It contains no candidate answers or recordings. Its numerical checks do not establish interview improvement or validate a candidate's reasoning. See the [dataset card and limitations](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions/blob/main/README.md) and [release details](docs/dataset-release.md).
 
 ## Run it locally
 
