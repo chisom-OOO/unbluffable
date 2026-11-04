@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/banner.png" alt="Unbluffable: sounding right isn't the same as being right" width="100%"/>
+<img src="docs/banner.png" alt="Unbluffable landing page: Sounding right ≠ being right, with a challenged answer and a same-puzzle-new-numbers follow-up" width="100%"/>
 
 # Unbluffable
 
