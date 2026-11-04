@@ -186,6 +186,24 @@ Pre-registered and frozen before any model saw it ([decision log](spec/DECISION_
 
 **What it doesn't show.** It doesn't test the live interview, where Unbluffable picks numbers that expose a suspected mistake and challenges the number you commit to.
 
+### Exploratory, not pre-registered (row 47); 39 of 40 items model-written
+
+This is a follow-up on the same frozen run-1 items (sha256 `b9aeb7f1`), 3 runs. We registered it in the [decision log](spec/DECISION_LOG.md) (row 47) before any call, but not in advance like run 1, so treat it as exploratory. It compares one prompt on one model, Muse Spark 1.3, and does not stand for chatbots in general. The carefully prompted Muse Spark arm saw only the first answer. Unbluffable saw the first answer and the new-numbers answer. Full output: [`eval/exploratory/results.md`](eval/exploratory/results.md).
+
+| Category | Items | Careful Muse Spark, first answer only | Unbluffable |
+| --- | --- | --- | --- |
+| Recited | 10 | 10 / 10 flagged | 10 / 10 flagged |
+| Misconception | 10 | 10 / 10 flagged | 10 / 10 flagged |
+| Arithmetic slip | 5 | 5 / 5 flagged | 5 / 5 flagged |
+| Correct | 15 | 14 / 15 flagged | 1 / 15 flagged |
+
+- **Recited items:** both arms flagged all 10.
+- **The 15 correct items:**
+  - Careful Muse Spark, first answer only, flagged 14, and its verdict changed across runs on 5 of the 40 items (4 correct items and 1 arithmetic slip).
+  - Unbluffable flagged 1 (e05, the flawed item described above), with no verdict changing across runs.
+  - Exact McNemar on the majority verdicts: 13 items flagged by the careful arm only, 0 by Unbluffable only, p = 1/4096 ≈ 0.00024 (exploratory, uncorrected).
+- **Caveat:** the careful arm flagged 39 of 40 items overall, so its 10 / 10 on recited items says little about telling recited answers apart. The two arms also saw different evidence: one answer against two.
+
 Run 2 (pre-registered, decision log row 34): not run, because no testers were available before the deadline.
 
 ## Run it locally
