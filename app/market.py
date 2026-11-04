@@ -21,6 +21,7 @@ from dataclasses import dataclass, field
 from fractions import Fraction
 
 from app import exam_text as say
+from app import turn_limit
 from app.areas import CAPS
 from app.interview_session import SessionClosed
 from engine import market as m
@@ -162,6 +163,8 @@ class MarketSession:
             await self.send({"type": "answer_complete", "transcript": text, "acknowledgement": "Got it."})
             parsed = m.parse_quote(text)
             read, model = await spark_quote(self.provider, text)
+            if turn_limit.gave_up(self.provider):
+                continue  # decision log 48: no answer; the same quote is asked again
             if model:
                 await self.send({"type": "market_model", "job": "market_quote", "model": model})
             quote = parsed or read

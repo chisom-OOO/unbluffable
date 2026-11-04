@@ -23,6 +23,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from app import exam_text as say
+from app import turn_limit
 from app.interview_session import SessionClosed
 from engine.checker import values_in
 from voice.endpointing import BehaviouralTurn, cues
@@ -301,15 +302,16 @@ class BehaviouralSession:
                                  "text": a.row.question, "topic": BEHAVIOURAL, "difficulty": None,
                                  "guide_seconds": GUIDE_SECONDS, "behavioural_type": a.row.type, "of": len(self.asked)})
                 await self.line("question", a.row.question)
-                a.first = await self.answer(a, a.row.question)
-                a.judged = await judge(self.provider, a.row, a.first)
+                a.first, a.judged = await turn_limit.until_checked(  # decision log 48
+                    self.provider, lambda: self.answer(a, a.row.question), lambda t: judge(self.provider, a.row, t))
                 await self.judged(a.judged)
                 spec = specificity(a.row, a.judged.steps, a.judged.details)
                 a.weakest = weakest(a.row, a.judged.steps, spec)
                 a.probe = choose_probe(a.row, a.weakest)
                 await self.line("probe", a.probe)
-                a.second = await self.answer(a, a.probe)
-                a.probe_judged = await judge(self.provider, a.row, a.second, earlier=a.first, probe=a.probe)
+                a.second, a.probe_judged = await turn_limit.until_checked(
+                    self.provider, lambda: self.answer(a, a.probe),
+                    lambda t: judge(self.provider, a.row, t, earlier=a.first, probe=a.probe))
                 await self.judged(a.probe_judged)
                 a.steps = merge(a.judged, a.probe_judged)
                 a.spec = specificity(a.row, a.steps, a.judged.details + a.probe_judged.details)

@@ -16,7 +16,7 @@ from contextlib import suppress
 
 from fastapi import APIRouter, HTTPException, Response, WebSocket, WebSocketDisconnect
 
-from app import behavioural, byoq, coding, conversational, interview_report, limits, market, mixed, quant_dev, roles, voice_routes
+from app import behavioural, byoq, coding, conversational, interview_report, limits, market, mixed, quant_dev, roles, turn_limit, voice_routes
 from app.areas import AREAS
 from app.drill import DrillSession, drill_targets
 from app.interview_session import SESSION_SECONDS, ExamSession, SessionClosed, VoiceAnalyzer
@@ -25,6 +25,8 @@ from engine.bank import DEFAULT_PACK, DIFFICULTIES, MIXED, PACKS, START_LEVELS, 
 from engine.interview import Interview
 from voice.recording import VoiceError
 from voice.relay import realtime_answer
+
+NOTHING_HEARD = "No intelligible speech"  # the relay's error for a capture closed with no words
 
 router = APIRouter(prefix="/api/interview")
 
@@ -397,6 +399,7 @@ async def interview_socket(socket: WebSocket):
         await socket.close(code=1008)
         return
     await socket.accept()
+    turn = None
     try:
         begin = await asyncio.wait_for(socket.receive_json(), 30)
         if begin.get("type") != "begin":
@@ -404,20 +407,30 @@ async def interview_socket(socket: WebSocket):
         if begin.get("consent") is not True:
             raise VoiceError("Please agree that your answer text is kept before starting.")
         limits.admit("interview", socket)  # decision log 42: before anything that calls a model
-        provider = voice_routes.provider()
+        turn = turn_limit.TurnClock(socket.send_json)  # decision log 48: one limit per turn
+        provider = turn_limit.TimedProvider(voice_routes.provider(), turn)
 
         async def listen() -> str:
+            turn.stop()
             await socket.send_json({"type": "state", "value": "listening"})
             while True:
                 kind, value = await receive(False)
                 if kind == "speech":
+                    turn.start(value)
                     return value
 
         async def next_event() -> dict:
             """Coding rounds: the next utterance, or a code run, typing pause or submit."""
+            turn.stop()
             await socket.send_json({"type": "state", "value": "listening"})
             kind, value = await receive(True)
+            turn.start(value if kind == "speech" else None)
             return {"type": "speech", "text": value} if kind == "speech" else value
+
+        def again():
+            """Done with nothing new after a turn timed out: the same words, for a fresh check."""
+            text, turn.retry_text = turn.retry_text, None
+            return text
 
         async def receive(codes: bool):
             while True:
@@ -435,9 +448,14 @@ async def interview_socket(socket: WebSocket):
                         return "control", control
                     await socket.send_json({"type": "error", "message": "That code or its results are too large to check."})
                     continue
+                if kind == "resend":
+                    if turn.retry_text:
+                        return "speech", again()
+                    continue
                 if kind == "typed":
                     text = control.get("transcript")
                     if isinstance(text, str) and text.strip() and len(text) <= 20_000:
+                        turn.retry_text = None
                         return "speech", text.strip()
                     await socket.send_json({"type": "error", "message": "Enter a nonempty answer of at most 20,000 characters."})
                     continue
@@ -451,10 +469,13 @@ async def interview_socket(socket: WebSocket):
                                                             keywords=getattr(session, "keywords", list)(),
                                                             silence_prompts=getattr(session, "silence_prompts", lambda: None)())
                     except VoiceError as error:
+                        if turn.retry_text and str(error).startswith(NOTHING_HEARD):
+                            return "speech", again()
                         await socket.send_json({"type": "error", "message": str(error)})
                         await socket.send_json({"type": "state", "value": "listening"})
                         continue
                     await socket.send_json({"type": "transcription_model", "model": model})
+                    turn.retry_text = None
                     return "speech", text
                 if kind == "mic_failed" and session.conditions == "exam":
                     # Decision log 20: the microphone failed after Start, so the rest is typed practice.
@@ -539,6 +560,7 @@ async def interview_socket(socket: WebSocket):
                                 "session_seconds": seconds,
                                 "drill": session.target.misconception if isinstance(session, DrillSession) else None})
         await session.run()
+        turn.stop()
     except (WebSocketDisconnect, SessionClosed):
         return
     except limits.Refused as refused:
@@ -550,5 +572,7 @@ async def interview_socket(socket: WebSocket):
         with suppress(WebSocketDisconnect, RuntimeError):
             await socket.send_json({"type": "error", "message": "The interview stopped unexpectedly. Your report so far is kept for this session."})
     finally:
+        if turn is not None:
+            turn.stop()
         with suppress(RuntimeError):
             await socket.close()
