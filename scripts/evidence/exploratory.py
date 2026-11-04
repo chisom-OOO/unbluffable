@@ -34,7 +34,7 @@ ARMS = ("careful_first_only", "unbluffable")
 NAMES = {"careful_first_only": "Careful Muse Spark, first answer only", "unbluffable": "Unbluffable (original and new numbers)"}
 CATEGORIES = (("memorised", "recited"), ("misconception", "misconception"), ("slip", "arithmetic slip"), ("correct", "correct"))
 LABEL = "EXPLORATORY, not pre-registered (decision log 47, registered before any call); 39 of 40 items model-written"
-CHECKED_PATHS = (*harness.FROZEN_PATHS, "scripts/evidence/exploratory.py")
+CHECKED_PATHS = (*harness.FROZEN_PATHS, "scripts/evidence/exploratory.py", "eval/items_draft.json")
 
 
 def register() -> None:

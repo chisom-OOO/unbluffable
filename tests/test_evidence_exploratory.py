@@ -29,7 +29,7 @@ def test_the_harness_files_are_not_changed_by_the_plan():
     assert exploratory.DESIGN not in harness.DESIGNS or harness.DESIGNS[exploratory.DESIGN] == exploratory.ARMS
     source = (ROOT / "scripts" / "evidence" / "harness.py").read_text(encoding="utf-8")
     assert "exploratory" not in source  # the two-arm plan is added at run time only
-    assert "scripts/evidence/exploratory.py" in exploratory.CHECKED_PATHS
+    assert {"scripts/evidence/exploratory.py", "eval/items_draft.json"} <= set(exploratory.CHECKED_PATHS)
     assert set(harness.FROZEN_PATHS) <= set(exploratory.CHECKED_PATHS)
 
 
