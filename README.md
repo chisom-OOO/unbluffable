@@ -1,8 +1,8 @@
 <div align="center">
 
-# Unbluffable
+<img src="docs/banner.png" alt="Unbluffable landing page: Sounding right ≠ being right, with a challenged answer and a same-puzzle-new-numbers follow-up" width="100%"/>
 
-### Sounding right isn't the same as being right.
+# Unbluffable
 
 A spoken mock interviewer that hears your answer, quotes your words back,<br/>
 checks your numbers exactly and pushes back like a real interviewer,<br/>
