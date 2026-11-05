@@ -15,54 +15,38 @@ so anyone can know what the room feels like before they're in it.
 [![Tests](https://github.com/chisom-OOO/unbluffable/actions/workflows/tests.yml/badge.svg)](https://github.com/chisom-OOO/unbluffable/actions/workflows/tests.yml)
 
 **▶ Live:** https://unbluffable-ptz1.onrender.com (laptop or iPad, Chrome or Safari, allow camera and mic; first load can take ~30 s)<br/>
-**▶ 3-minute video:** VIDEO_LINK_TODO<br/>
+**▶ Demo video:** VIDEO_LINK_TODO<br/>
 **▶ Public question dataset:** [600 numeric questions · 12 families · Hugging Face](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions)
 
-[How it works](#how-it-works) · [Meta models](#meta-models-used) · [Measured so far](#measured-so-far) · [Run it](#run-it-locally) · [Decision log](spec/DECISION_LOG.md)
+[Try it](#try-the-interview) · [How it works](#how-it-works) · [Meta models](#meta-models-used) · [Evidence](#measured-so-far) · [Public artifacts](#open-artifacts-on-hugging-face) · [Run locally](#run-it-locally)
 
 </div>
 
 ---
 
-## Meta speech and reasoning integrations
+## Try the interview
 
-| Model | Provider | Role in Unbluffable |
-| --- | --- | --- |
-| **Muse Voice Transcribe** (`muse-voice-transcribe-1.0`) | **Meta Model API**, realtime and file transcription | Turns the candidate's speech into a transcript. |
-| **Muse Spark Open** (`meta-models/muse-spark-open-1026`) | **Baseten** Model APIs, open-weight inference | The hosted app's reasoning backend: extracts the committed answer and quoted reasoning, handles turn checks and interviewer responses. |
-| **Muse Spark 1.3** (`muse-spark-1.3`) | **Meta Model API** | Alternative reasoning backend for local runs and the recorded comparison. |
-
-**Hosted flow:** microphone → Muse Voice Transcribe → Muse Spark Open on Baseten → numerical check in code → browser speech synthesis. Spark 1.3 and Spark Open are alternative reasoning backends. Code checks the extracted numerical answer with Fraction arithmetic and explicit rounding/tolerance rules; models interpret the reasoning.
-
-**Implementation:** [Meta and Baseten clients](llm/client.py), [reasoning backends](llm/backends.py), [speech provider](voice/provider.py), [numeric checker](engine/checker.py). [Integration evidence and tests](docs/meta-integration-evidence.md).
-
-Voice mock interviews for quant, banking, consulting and software roles. You answer aloud; code checks every number exactly, the interviewer questions the number you committed to, then asks the same puzzle with new numbers chosen so the suspected mistake gives a clearly different answer.
-
-> [!NOTE]
-> **Prior work.** The specification in `spec/` was written before kickoff as a plan. All code was written after kickoff on 26 Oct 2026, and the commit history shows it. Built with AI coding assistants (Claude Code, Codex, Muse Code). More in [Disclosures and limits](#disclosures-and-limits).
-
-### Judge path in 2 minutes
+Voice mock interviews for quant, banking, consulting and software roles. Practise answering aloud, responding to a challenge and explaining your answer with new numbers.
 
 1. Open the [live app](https://unbluffable-ptz1.onrender.com) and press the sample replay on the landing page.
-2. Start a quant interview, allow camera and mic, and give a wrong number on purpose.
-3. Listen to the interviewer question that exact number, then answer the same puzzle with new numbers. Open the receipt to see your quoted words beside the exact computation.
+2. Start a quant interview, allow camera and mic, and give a wrong number on purpose. Typed practice is also available.
+3. Listen to the interviewer question that number, then answer the same puzzle with new numbers. Open the receipt and report to see your quoted words, the numerical check and what to practise next.
+
+**The numeric interview loop:** spoken answer → quoted commitment → check in code → targeted challenge → same puzzle with new numbers → practice report.
 
 ### At a glance for judges
 
-| Criterion | What to look at | Where |
+| Criterion | What to inspect | Evidence |
 | --- | --- | --- |
-| **Impact** | Interview practice that questions the number you said, for people with no coach or network to practise against; four tracks | [Why](#why), [live app](https://unbluffable-ptz1.onrender.com) |
-| **Meta tooling** | Three Meta models with separate jobs: Voice Transcribe hears, Spark extracts and quotes, Spark Open (open weights) runs the hosted app and wrote the question families' solvers | [Meta models](#meta-models-used), `llm/`, `voice/`, `forge/` |
-| **Technical depth** | Exact maths with fractions (no model grades a number), a Bayesian engine with a help discount, held-out gate results, a pre-registered comparison, 1,400+ tests | `engine/`, [Measured so far](#measured-so-far), [decision log](spec/DECISION_LOG.md) |
-| **Demo** | Live app, sample replays per track, the 3-minute video | Links above, [screenshots](#screenshots) |
+| **Impact** | Interview practice for candidates without a coach or network; four tracks, including behavioural questions | [Why](#why), [features](#what-it-does), [live app](https://unbluffable-ptz1.onrender.com) |
+| **Meta tooling** | Muse Voice Transcribe for speech; Muse Spark Open on Baseten for hosted reasoning; Muse Spark 1.3 as an alternative backend | [Model roles and implementation](#meta-models-used) |
+| **Technical depth** | Fraction arithmetic, quoted-answer receipts, help accounting, record/replay and automated tests | [Architecture](#how-it-works), [measured results](#measured-so-far), [decision log](spec/DECISION_LOG.md) |
+| **Demo** | Live interviews, sample replays, report and question upload | [Live app](https://unbluffable-ptz1.onrender.com), [screenshots](#screenshots), [bring your own question](#bring-your-own-question) |
 
-## Screenshots
+**Evidence boundary:** the existing comparison did not establish superiority over a carefully prompted chatbot. The public dataset's 600 answers were recomputed exactly; this does not establish improved interview performance. [Results and limitations](#measured-so-far).
 
-| Landing | Interview room, mid-challenge | Report |
-| --- | --- | --- |
-| ![Landing page: the headline, a track picker and the sample exchange ending with the same puzzle with new numbers](docs/assets/landing.png) | ![Interview room: the candidate said 11/24, the code marked it not the exact answer, and the interviewer asks how they got there](docs/assets/room-challenge.png) | ![Interview report: the label, the counts of challenges and help, and each question's quoted words beside the exact value](docs/assets/report.png) |
-
-<sub>Taken from the local app in replay mode, with no key. The room and report show a scripted session from the test suite, not a real user.</sub>
+> [!NOTE]
+> **Prior work.** The specification in `spec/` was written before kickoff as a plan. All code was written after kickoff on 26 Oct 2026, and the commit history shows it. Built with AI coding assistants (Claude Code, Codex, Muse Code). More in [Disclosures and limits](#disclosures-and-limits).
 
 ## Why
 
@@ -74,28 +58,13 @@ I started building this for quant interviews, my own field. But the problem isn'
 
 **It's the interviewer you'd have if you had the connections.** Built for the theme **Build for Your World**.
 
-## What it does
+## Screenshots
 
-| | |
-| --- | --- |
-| **Four tracks** | Quant, investment banking, consulting and software engineering, each with its own topics and the same interviewer. |
-| **Behavioural questions** | For banking and consulting: "tell me about a time…" and "what would you do if…". Your STAR funnel is filled with your own quoted words, the interviewer probes the weakest step, and your follow-up is checked against your first telling. Model-judged, and labelled that way. |
-| **Hands-free spoken interview** | One tap starts it. The interviewer speaks, you talk it through, and the app decides you've finished from what you said, not from a fixed pause. The interviewer's voice is your browser's built-in speech synthesis. A silence prompt and an optional Done button are fallbacks. Camera and microphone are on, as in a real interview; a typed practice mode is there for anyone who can't use them, labelled *not exam conditions*. |
-| **Exact checking** | The model extracts the answer you committed to and quotes your own words. Every number is checked with exact fractions in code, never by a model. |
-| **Challenge on the step** | A committed wrong answer gets a question that points at the step, not the solution. Nudges and hints are allowed, and the score counts the help it took. |
-| **Same puzzle, new numbers** | A second version with different numbers separates someone who worked it out from someone who remembered an answer. |
-| **Numbers chosen to expose your mistake** | When the interviewer suspects a specific mistake, it picks the new numbers where that mistake gives a clearly different answer from the right method, and says why these numbers. |
-| **Live evidence meter** | The Sound / Misconception / Gap estimate updates after every scored answer, with one line on what the next answer would change. |
-| **Receipts** | Every challenge and every report line opens to show your exact words beside the exact computation: the value read, the check, and the known wrong methods. |
-| **Targeted drill** | From the report, a short drill aims new questions at a detected misconception, asks questions only, then checks with fresh numbers: *Cleared* or *Still showing*. |
-| **Evidence-based scoring** | A Bayesian engine weighs each final answer, discounted by the help used, and stops when the evidence is clear: *Evidence supports understanding*, *Misconception detected*, *Understanding not shown* or *More evidence needed*. |
-| **In-app report** | A headline label, one tab per question, your quoted words beside the exact value, the help taken and time against the guide. |
-| **Which model did what** | Every turn shows which model ran, for which job, with latency and cost. |
-| **Privacy** | Audio and video are never saved; answer text is kept only with consent. The camera self-view stays on this device: never recorded, uploaded or sent to a model. |
+| Landing | Interview room, mid-challenge | Report |
+| --- | --- | --- |
+| ![Landing page: the headline, a track picker and the sample exchange ending with the same puzzle with new numbers](docs/assets/landing.png) | ![Interview room: the candidate said 11/24, the code marked it not the exact answer, and the interviewer asks how they got there](docs/assets/room-challenge.png) | ![Interview report: the label, the counts of challenges and help, and each question's quoted words beside the exact value](docs/assets/report.png) |
 
-## Bring your own question
-
-Upload a screenshot or photo of one question from your own notes or a practice set, or paste it ([/ui/byoq](https://unbluffable-ptz1.onrender.com/ui/byoq)). A Meta model reads the image into text you can correct; it is never asked for the answer, and the image is read once and not stored. The question is practised only if it passes a check in code: two separately written programs (a solver from each of two models, or on the hosted app a solver and an exhaustive simulation) must agree exactly, as fractions, on your question and on at least 10 versions with new numbers, and match the answer in your notes if they show one. Common wrong methods are kept only if they give different values. Then it runs in the normal room: the same challenge of the number you commit to, then the same puzzle with new numbers. The report says "Your question · checked in code on N variants". A question that can't be checked isn't scored, and your own questions never count toward your rating ([decision log 38](spec/DECISION_LOG.md)). Use your own notes or practice questions, not real interview or assessment questions.
+<sub>Taken from the local app in replay mode, with no key. The room and report show a scripted session from the test suite, not a real user.</sub>
 
 ## How it works
 
@@ -149,6 +118,10 @@ sequenceDiagram
 - **No model grades a number.** Models extract and phrase; code computes. A quote is kept only if it appears word for word in your transcript.
 
 ## Meta models used
+
+**Hosted flow:** microphone → Muse Voice Transcribe → Muse Spark Open on Baseten → numerical check in code → browser speech synthesis. Spark 1.3 and Spark Open are alternative reasoning backends. Code checks the extracted numerical answer with Fraction arithmetic and explicit rounding/tolerance rules; models interpret the reasoning.
+
+**Implementation:** [Meta and Baseten clients](llm/client.py), [reasoning backends](llm/backends.py), [speech provider](voice/provider.py), [numeric checker](engine/checker.py). [Integration evidence and tests](docs/meta-integration-evidence.md).
 
 | Model | Runs on | Job |
 | --- | --- | --- |
@@ -237,6 +210,29 @@ The release includes question text, parameters, exact answer strings, recorded w
 The questions were generated with ChatGPT, except the selected `qe_` families, written by Claude, as disclosed above. Muse Spark Open wrote the original family solvers. The release validator was prepared with Codex and recomputes the selected answer formulae. Source review labels, including `pending_builder_review`, are preserved. Wrong-method explanations remain source annotations; the release check verifies that their numeric values differ from the correct answer.
 
 This is a public, synthetic question corpus with related variants and no held-out evaluation split. It contains no candidate answers or recordings. Its numerical checks do not establish interview improvement or validate a candidate's reasoning. See the [dataset card and limitations](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions/blob/main/README.md) and [release details](docs/dataset-release.md).
+
+## What it does
+
+| | |
+| --- | --- |
+| **Four tracks** | Quant, investment banking, consulting and software engineering, each with its own topics and the same interviewer. |
+| **Behavioural questions** | For banking and consulting: "tell me about a time…" and "what would you do if…". Your STAR funnel is filled with your own quoted words, the interviewer probes the weakest step, and your follow-up is checked against your first telling. Model-judged, and labelled that way. |
+| **Hands-free spoken interview** | One tap starts it. The interviewer speaks, you talk it through, and the app decides you've finished from what you said, not from a fixed pause. The interviewer's voice is your browser's built-in speech synthesis. A silence prompt and an optional Done button are fallbacks. Camera and microphone are on, as in a real interview; a typed practice mode is there for anyone who can't use them, labelled *not exam conditions*. |
+| **Exact checking** | The model extracts the answer you committed to and quotes your own words. Every number is checked with exact fractions in code, never by a model. |
+| **Challenge on the step** | A committed wrong answer gets a question that points at the step, not the solution. Nudges and hints are allowed, and the score counts the help it took. |
+| **Same puzzle, new numbers** | A second version with different numbers separates someone who worked it out from someone who remembered an answer. |
+| **Numbers chosen to expose your mistake** | When the interviewer suspects a specific mistake, it picks the new numbers where that mistake gives a clearly different answer from the right method, and says why these numbers. |
+| **Live evidence meter** | The Sound / Misconception / Gap estimate updates after every scored answer, with one line on what the next answer would change. |
+| **Receipts** | Every challenge and every report line opens to show your exact words beside the exact computation: the value read, the check, and the known wrong methods. |
+| **Targeted drill** | From the report, a short drill aims new questions at a detected misconception, asks questions only, then checks with fresh numbers: *Cleared* or *Still showing*. |
+| **Evidence-based scoring** | A Bayesian engine weighs each final answer, discounted by the help used, and stops when the evidence is clear: *Evidence supports understanding*, *Misconception detected*, *Understanding not shown* or *More evidence needed*. |
+| **In-app report** | A headline label, one tab per question, your quoted words beside the exact value, the help taken and time against the guide. |
+| **Which model did what** | Every turn shows which model ran, for which job, with latency and cost. |
+| **Privacy** | Audio and video are never saved; answer text is kept only with consent. The camera self-view stays on this device: never recorded, uploaded or sent to a model. |
+
+## Bring your own question
+
+Upload a screenshot or photo of one question from your own notes or a practice set, or paste it ([/ui/byoq](https://unbluffable-ptz1.onrender.com/ui/byoq)). A Meta model reads the image into text you can correct; it is never asked for the answer, and the image is read once and not stored. The question is practised only if it passes a check in code: two separately written programs (a solver from each of two models, or on the hosted app a solver and an exhaustive simulation) must agree exactly, as fractions, on your question and on at least 10 versions with new numbers, and match the answer in your notes if they show one. Common wrong methods are kept only if they give different values. Then it runs in the normal room: the same challenge of the number you commit to, then the same puzzle with new numbers. The report says "Your question · checked in code on N variants". A question that can't be checked isn't scored, and your own questions never count toward your rating ([decision log 38](spec/DECISION_LOG.md)). Use your own notes or practice questions, not real interview or assessment questions.
 
 ## Run it locally
 
