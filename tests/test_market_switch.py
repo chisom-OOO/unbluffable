@@ -94,10 +94,41 @@ def server():
     thread.join(timeout=10)
 
 
-def test_the_room_stays_in_view_when_a_mixed_interview_switches_to_market_making(recorded, server, tmp_path):
+def _run_browser_check(recorded, server, tmp_path):
     node, browser = shutil.which("node"), _browser()
     if not node or not browser:
         pytest.skip("Needs Node and a Chromium browser (Edge or Chrome) for the headless check.")
     result = subprocess.run([node, str(ROOT / "tests" / "market_switch_browser.cjs"), str(recorded), server, browser,
                              str(tmp_path / "profile")], capture_output=True, text=True, timeout=180)
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_the_room_stays_in_view_when_a_mixed_interview_switches_to_market_making(recorded, server, tmp_path):
+    _run_browser_check(recorded, server, tmp_path)
+
+
+def test_browser_startup_waits_when_the_debugger_has_no_page_yet(recorded, server, tmp_path, monkeypatch):
+    # A reachable debugger can return [] while its first page is still opening.
+    # Keep it empty for one second, then let the real browser interaction proceed.
+    preload = tmp_path / "delay-page.cjs"
+    preload.write_text('''
+const originalFetch = globalThis.fetch;
+let firstReady;
+globalThis.fetch = async (...args) => {
+  if (!/^http:\\/\\/127\\.0\\.0\\.1:\\d+\\/json\\/list$/.test(String(args[0]))) {
+    return originalFetch(...args);
+  }
+  if (firstReady !== undefined && Date.now() - firstReady < 1000) {
+    return Response.json([]);
+  }
+  const response = await originalFetch(...args);
+  if (firstReady === undefined && response.ok) {
+    firstReady = Date.now();
+    return Response.json([]);
+  }
+  return response;
+};
+''', encoding="utf-8")
+    options = os.environ.get("NODE_OPTIONS", "")
+    monkeypatch.setenv("NODE_OPTIONS", f'{options} --require="{preload.as_posix()}"'.strip())
+    _run_browser_check(recorded, server, tmp_path)
