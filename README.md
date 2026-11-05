@@ -15,7 +15,7 @@ so anyone can know what the room feels like before they're in it.
 [![Tests](https://github.com/chisom-OOO/unbluffable/actions/workflows/tests.yml/badge.svg)](https://github.com/chisom-OOO/unbluffable/actions/workflows/tests.yml)
 
 **▶ Live:** https://unbluffable-ptz1.onrender.com (laptop or iPad, Chrome or Safari, allow camera and mic; first load can take ~30 s)<br/>
-**▶ Demo video:** VIDEO_LINK_TODO<br/>
+**▶ Demo video:** [Watch the 2:10 demo on YouTube](https://youtu.be/tIcNkskoIRM)<br/>
 **▶ Public question dataset:** [600 numeric questions · 12 families · Hugging Face](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions)
 
 [Try it](#try-the-interview) · [How it works](#how-it-works) · [Meta models](#meta-models-used) · [Evidence](#measured-so-far) · [Public artifacts](#open-artifacts-on-hugging-face) · [Run locally](#run-it-locally)
