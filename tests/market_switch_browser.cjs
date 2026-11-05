@@ -48,7 +48,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     let target;
     for (let k = 0; k < 100 && !target; k++) {
       try { target = (await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json()).find((t) => t.type === "page"); }
-      catch { await sleep(100); }
+      catch {}
+      // The debugger may be reachable before its first page exists.
+      if (!target) await sleep(100);
     }
     assert.ok(target, "the browser opened a page");
     const ws = new WebSocket(target.webSocketDebuggerUrl);
