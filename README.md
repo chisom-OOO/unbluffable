@@ -219,7 +219,16 @@ This is a follow-up on the same frozen run-1 items (sha256 `b9aeb7f1`), 3 runs. 
 
 Run 2 (pre-registered, decision log row 34): not run, because no testers were available before the deadline.
 
-## Public question dataset
+## Open artifacts on Hugging Face
+
+The public question corpus and its validation tools are available on Hugging Face:
+
+- **Question dataset:** [Unbluffable Numeric Interview Questions](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions) — 600 synthetic questions across 12 families, covering quant, investment banking, consulting and software engineering.
+- **Offline answer validator:** [Python validation script](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions/blob/main/validate_dataset.py) — recomputes answers from question parameters using exact Fraction arithmetic.
+- **Published validation results:** [Validation report](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions/blob/main/validation_report.json) — all 600 released answers passed exact recomputation.
+- **Provenance and limitations:** [Dataset card](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions/blob/main/README.md) and [source manifest](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions/blob/main/manifest.json) — generation attribution, source hashes, licensing and scope.
+
+### Release details
 
 [Unbluffable Numeric Interview Questions on Hugging Face](https://huggingface.co/datasets/unbluff/unbluffable-numeric-interview-questions) contains **600 questions from 12 families**, with 150 questions each for quant, investment banking, consulting and software engineering. It is an MIT-licensed subset of the public question bank, pinned to source commit `5db4b18`.
 
